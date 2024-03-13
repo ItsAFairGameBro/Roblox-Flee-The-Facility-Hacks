@@ -4549,7 +4549,12 @@ AvailableHacks ={
 
 					local Ret1 = (enHacks.BotRunner=="Freeze" and char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart and Beast and Beast.PrimaryPart)
 					local Ret2 = ((not fullLoop or select(2,isInLobby(char))=="Runner") and (fullLoop or not TSM.DisableCrawl.Value) and not isCleared)
-					return (Ret1 and Ret2)
+					local Ret3 = Beast and myBots[Beast.Name:lower()]
+					if not Ret3 and Beast then
+						createCommandLine("Freeze Not Activated: Unrecognized Player")
+						print("Freeze Not Activated: Unrecognized Player")
+					end
+					return (Ret1 and Ret2 and Ret3)
 					--and not TSM.DisableInteraction.Value
 				end
 				task.spawn(function()
@@ -4576,13 +4581,22 @@ AvailableHacks ={
 				end)
 				while canRun(true) do
 					human:SetAttribute("OverrideSpeed",((Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<16 and 25 or 42))
-					local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,Beast:GetPivot()*newVector3(0,0,-2),canRun)
-					while (canRun(true) and (Beast and Beast.PrimaryPart) and ((Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<8 or TSM.Ragdoll.Value)) do
+					local inRange = (Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<8
+					if not inRange then
+						local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,Beast:GetPivot()*newVector3(0,0,-2),canRun)
+					end
+					while (canRun(true) and (Beast and Beast.PrimaryPart) and (inRange or TSM.Ragdoll.Value)) do
 						if (myRunerPlrKey==1 and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
 							task.wait(1/2)
+							if not canRun(true) then
+								return
+							end
 							if not TSM.Ragdoll.Value and Beast and Beast.Parent then
 								Beast.Hammer.HammerEvent:FireServer("HammerHit", char.Head)
 								task.wait(1/4)
+							end
+							if not canRun(true) then
+								return
 							end
 							if TSM.Ragdoll.Value and Beast and Beast.Parent then
 								teleportMyself(Beast:GetPivot()*CFrame.new(0,0,-2))
@@ -5153,16 +5167,6 @@ AvailableHacks ={
 					end
 					return true
 				end
-
-
-
-
-
-
-
-
-
-
 
 				local walkPath = AvailableHacks.Bot[15].WalkPath
 				while calculteMapTarget() and canRun() do

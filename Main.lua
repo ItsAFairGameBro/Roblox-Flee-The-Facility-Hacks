@@ -4063,9 +4063,11 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["ApplyInvi"]=function(instance)
 				for num, object in ipairs(instance:GetDescendants()) do
-					if object:IsA("BasePart") and object.Transparency>=.95 and (object.CanCollide) then
+					if object:IsA("BasePart") and object.Transparency>=.99 and (object.CanCollide) then
 						CS:AddTag(object,"InviWalls")
 						object.CanCollide = false
+						object.Transparency = .9
+						object.Color3 = Color3.fromRGB(0,0,200)
 					end
 
 					if num%50==0 then
@@ -4090,6 +4092,7 @@ AvailableHacks ={
 					for num, object in ipairs(CS:GetTagged("InviWalls")) do
 						object:RemoveTag(object,"InviWalls")
 						object.CanCollide = true
+						object.Transparency = 1
 					end
 				end
 			end,
@@ -5677,6 +5680,7 @@ clear = function(isManualClear)
 		--end
 		AvailableHacks.Utility[2].ActivateFunction(false)
 		AvailableHacks.Utility[-1].ActivateFunction(false)
+		AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
 	end
 
 	plr:SetAttribute("Cleared"..getID,true)

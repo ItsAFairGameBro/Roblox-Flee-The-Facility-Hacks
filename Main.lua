@@ -4067,7 +4067,7 @@ AvailableHacks ={
 						CS:AddTag(object,"InviWalls")
 						object.CanCollide = false
 						object.Transparency = .9
-						object.Color3 = Color3.fromRGB(0,0,200)
+						object.Color = Color3.fromRGB(0,0,200)
 					end
 
 					if num%50==0 then

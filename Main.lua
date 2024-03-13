@@ -4132,7 +4132,7 @@ AvailableHacks ={
 				if (not enHacks.Basic_ResetButton) then
 					return
 				end--it resets itself anyways!
-				AvailableHacks.Utility[-1].ActivateFunction(enHacks.Basic_ResetButton)
+				AvailableHacks.Utility[40].ActivateFunction(enHacks.Basic_ResetButton)
 			end
 		},
 		[60]={

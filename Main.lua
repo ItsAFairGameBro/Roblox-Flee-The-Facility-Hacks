@@ -2980,54 +2980,6 @@ AvailableHacks ={
 				AvailableHacks.Blatant[70].MyBeastAdded=AvailableHacks.Blatant[70].BeastStartUp
 			end,
 		},
-		[75]={
-			["Type"]="ExTextButton",
-			["Title"]="Walk Through Invisible Walls",
-			["Desc"]="Walk Through All Invisible Walls In The Map",
-			["Shortcut"]="Blatant_InviWalls",
-			["Default"]=true,
-			["DontActivate"]=true,
-			["Universes"]={"Global"},
-			["ApplyInvi"]=function(instance)
-				for num, object in ipairs(instance:GetDescendants()) do
-					if object:IsA("BasePart") and object.Transparency>=.95 and (object.CanCollide) then
-						CS:AddTag(object,"InviWalls")
-						object.CanCollide = false
-					end
-
-					if num%50==0 then
-						task.wait()
-					end
-					if not enHacks.Cmd_InviWalls then
-						return
-					end
-				end
-
-			end,
-			["MapAdded"]=function(newMap)
-				if not enHacks.Cmd_InviWalls then
-					return
-				end
-				AvailableHacks.Commands[25].ApplyInvi(newMap)
-			end,
-			["ActivateFunction"]=function(newValue)
-				if newValue then
-					AvailableHacks.Commands[25].ApplyInvi(workspace)
-				else
-					for num, object in ipairs(CS:GetTagged("InviWalls")) do
-						object:RemoveTag(object,"InviWalls")
-						object.CanCollide = true
-					end
-				end
-			end,
-			--[[["MyStartUp"]=function()
-				local isChecking=plr:WaitForChild("IsCheckingLoadData")
-				if not isChecking.Value then
-					plr:WaitForChild("PlayerGui")
-					:WaitForChild("ScreenGui"):WaitForChild("MenusTabFrame").Visible=true
-				end
-			end,--]]
-		},
 
 	},
 	["Utility"]={
@@ -3127,12 +3079,13 @@ AvailableHacks ={
 				local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
 				local IsCheckingLoadData = plr:WaitForChild("IsCheckingLoadData");
 				local function changedFunct()
+					RunS.RenderStepped:Wait()
 					if enHacks.Util_Fix then
 						MenusTabFrame.Visible=not IsCheckingLoadData.Value;
 					end
 				end
 				setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
-				changedFunct();
+				task.spawn(changedFunct);
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					local function slashPressed(name,state)
@@ -3149,39 +3102,6 @@ AvailableHacks ={
 				end
 			end,
 		}),
-		[-1]={
-			["Type"] = "ExTextButton",
-			["Title"] = ("Force Allow Reset"),
-			["Desc"] = ("Allows to reset from the roblox menu gui"),
-			["Shortcut"] = "Util_ResetButton",
-			["DontActivate"] = true,
-			["Options"] = {
-				[false] = {
-					["Title"]="OFF",
-					["TextColor"]=newColor3(255),
-				},
-				["DEFAULT"] = {
-					["Title"]="DEFAULT",
-					["TextColor"]=newColor3(255,255,0)
-				},
-				[true]={
-					["Title"]="CUSTOM",
-					["TextColor"]=newColor3(0,255,255)
-				}
-			},
-			["Universes"]={"Global"},
-			["Default"]=true,
-			["ActivateFunction"]=(function(newValue)
-				game:GetService("StarterGui"):SetCore("ResetButtonCallback", (newValue==true and ResetEvent) or (newValue=="DEFAULT"))
-			end),
-			["MyStartUp"]=function()
-				task.wait(1/2)
-				if (not enHacks.Util_ResetButton) then
-					return
-				end--it resets itself anyways!
-				AvailableHacks.Utility[-1].ActivateFunction(enHacks.Util_ResetButton)
-			end
-		},
 		[4]={
 			["Type"]="ExTextButton",
 			["Title"]="Crawl Type",
@@ -4132,6 +4052,88 @@ AvailableHacks ={
 					char.PrimaryPart=HRP
 				end
 			end,
+		},
+		[20]={
+			["Type"]="ExTextButton",
+			["Title"]="Walk Through Invisible Walls",
+			["Desc"]="Walk Through All Invisible Walls In The Map",
+			["Shortcut"]="Basic_InviWalls",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Universes"]={"Global"},
+			["ApplyInvi"]=function(instance)
+				for num, object in ipairs(instance:GetDescendants()) do
+					if object:IsA("BasePart") and object.Transparency>=.95 and (object.CanCollide) then
+						CS:AddTag(object,"InviWalls")
+						object.CanCollide = false
+					end
+
+					if num%50==0 then
+						task.wait()
+					end
+					if not enHacks.Basic_InviWalls then
+						return
+					end
+				end
+
+			end,
+			["MapAdded"]=function(newMap)
+				if not enHacks.Basic_InviWalls then
+					return
+				end
+				AvailableHacks.Basic[20].ApplyInvi(newMap)
+			end,
+			["ActivateFunction"]=function(newValue)
+				if newValue then
+					AvailableHacks.Basic[20].ApplyInvi(workspace)
+				else
+					for num, object in ipairs(CS:GetTagged("InviWalls")) do
+						object:RemoveTag(object,"InviWalls")
+						object.CanCollide = true
+					end
+				end
+			end,
+			--[[["MyStartUp"]=function()
+				local isChecking=plr:WaitForChild("IsCheckingLoadData")
+				if not isChecking.Value then
+					plr:WaitForChild("PlayerGui")
+					:WaitForChild("ScreenGui"):WaitForChild("MenusTabFrame").Visible=true
+				end
+			end,--]]
+		},
+
+		[40]={
+			["Type"] = "ExTextButton",
+			["Title"] = ("Force Allow Reset"),
+			["Desc"] = ("Allows to reset from the roblox menu gui"),
+			["Shortcut"] = "Basic_ResetButton",
+			["DontActivate"] = true,
+			["Options"] = {
+				[false] = {
+					["Title"]="OFF",
+					["TextColor"]=newColor3(255),
+				},
+				["DEFAULT"] = {
+					["Title"]="DEFAULT",
+					["TextColor"]=newColor3(255,255,0)
+				},
+				[true]={
+					["Title"]="CUSTOM",
+					["TextColor"]=newColor3(0,255,255)
+				}
+			},
+			["Universes"]={"Global"},
+			["Default"]=true,
+			["ActivateFunction"]=(function(newValue)
+				game:GetService("StarterGui"):SetCore("ResetButtonCallback", (newValue==true and ResetEvent) or (newValue=="DEFAULT"))
+			end),
+			["MyStartUp"]=function()
+				task.wait(1/2)
+				if (not enHacks.Basic_ResetButton) then
+					return
+				end--it resets itself anyways!
+				AvailableHacks.Utility[-1].ActivateFunction(enHacks.Basic_ResetButton)
+			end
 		},
 		[60]={
 			["Type"]="ExTextButton",

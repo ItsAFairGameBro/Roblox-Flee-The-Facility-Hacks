@@ -1466,12 +1466,11 @@ local lastHackedPC,lastHackedPosition=nil,Vector3.new(100,100,100)
 local myTSM,mySSM
 
 
-if gameName=="FleeMain" or gameName=="FleeTrade" then
+if gameUniverse=="Flee" then
 	myTSM=plr:WaitForChild("TempPlayerStatsModule");
 	mySSM=plr:WaitForChild("SavedPlayerStatsModule");
 end;
 if gameName=="FleeMain" then
-
 	if plr:WaitForChild("IsCheckingLoadData").Value then
 		local WaitEvent=Instance.new("BindableEvent");
 		local function FinishedCheckingDataFunction()
@@ -3259,7 +3258,7 @@ AvailableHacks ={
 			["Title"]="Walkspeed",
 			["Desc"]="Set to 16 to default",
 			["Shortcut"]="WalkSpeed",
-			["Default"]=((myBots[plr.Name:lower()] and game.PlaceId==893973440) and 48 or defaultCharacterWalkSpeed),
+			["Default"]=(botModeEnabled and 48 or defaultCharacterWalkSpeed),
 			["MinBound"]=0,
 			["MaxBound"]=1e3,
 			["DontActivate"]=true,
@@ -3269,7 +3268,7 @@ AvailableHacks ={
 				if not newSpeed and gameUniverse=="Flee" and enHacks.WalkSpeed==defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4) then
 					newSpeed=myTSM.NormalWalkSpeed.Value
 				else
-					newSpeed=enHacks.WalkSpeed
+					newSpeed=enHacks.WalkSpeed or AvailableHacks.Basic[1].Default
 				end
 				if gameUniverse=="Flee" then
 					newSpeed = newSpeed * (1-((myTSM.IsCrawling.Value and .5) or 0))

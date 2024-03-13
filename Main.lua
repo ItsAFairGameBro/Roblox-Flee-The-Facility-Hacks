@@ -6311,4 +6311,8 @@ local function CloseMenu(actionName, inputState, inputObject)
 end
 CAS:BindActionAtPriority("CloseMenu"..saveIndex,CloseMenu,true,1e5,Enum.KeyCode.V)
 
+VU:CaptureController()
+VU:ClickButton1(Vector2.new())
+
+
 return "Hack Successfully Executed!"

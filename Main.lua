@@ -4060,7 +4060,7 @@ AvailableHacks ={
 			["Title"]="Walk Through Invisible Walls",
 			["Desc"]="Walk Through All Invisible Walls In The Map",
 			["Shortcut"]="Basic_InviWalls",
-			["Default"]=true,
+			["Default"]="Visible",
 			["Options"]={
 				[false]={
 					["Title"]="DISABLED",
@@ -5829,7 +5829,7 @@ local refreshTypes = ({
 		local selectedKey = (enHacks[hackInfo.Shortcut]);
 		local selectedOption = hackInfo.Options[selectedKey];
 		--print(hackInfo.Shortcut, selectedKey, selectedOption);
-		assert(selectedOption.Title,selectedOption.Desc.." doesn't have a Title!")
+		assert(not selectedOption, hackInfo.Title.." doesn't have a Title!")
 
 		hackFrame.Toggle.Text = selectedOption.Title;
 		hackFrame.Toggle.TextColor3 = selectedOption.TextColor;

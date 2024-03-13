@@ -4061,6 +4061,7 @@ AvailableHacks ={
 			["Default"]=true,
 			["Universes"]={"Global"},
 			["ApplyInvi"]=function(instance)
+				local start = os.clock()
 				for num, object in ipairs(instance:GetDescendants()) do
 					if object:IsA("BasePart") and object.Transparency>=.95 and (object.CanCollide) then
 						CS:AddTag(object,"InviWalls")
@@ -4070,13 +4071,13 @@ AvailableHacks ={
 					end
 
 					if num%50==0 then
-						task.wait()
+						RunS.RenderStepped:Wait()
 					end
 					if not enHacks.Basic_InviWalls then
 						return
 					end
 				end
-
+				print(("search completed after %.2f"):format(os.clock()-start))
 			end,
 			["MapAdded"]=function(newMap)
 				if not enHacks.Basic_InviWalls then

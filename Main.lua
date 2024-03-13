@@ -4059,11 +4059,10 @@ AvailableHacks ={
 			["Desc"]="Walk Through All Invisible Walls In The Map",
 			["Shortcut"]="Basic_InviWalls",
 			["Default"]=true,
-			["DontActivate"]=true,
 			["Universes"]={"Global"},
 			["ApplyInvi"]=function(instance)
 				for num, object in ipairs(instance:GetDescendants()) do
-					if object:IsA("BasePart") and object.Transparency>=.99 and (object.CanCollide) then
+					if object:IsA("BasePart") and object.Transparency>=.95 and (object.CanCollide) then
 						CS:AddTag(object,"InviWalls")
 						object.CanCollide = false
 						object.Transparency = .9

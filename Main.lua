@@ -286,7 +286,8 @@ local function GuiCreationFunction()
 
 	HackGUI.Name = "HackGUI";
 	HackGUI.ResetOnSpawn = false;
-	local hackGUIParent = (isStudio and plr:WaitForChild("PlayerGui") or game:GetService("CoreGui"));
+	
+	local hackGUIParent = (isStudio and plr:WaitForChild("PlayerGui") or gethui());
 	HackGUI.Parent = hackGUIParent;
 	HackGUI.DisplayOrder = (-100);
 
@@ -3079,7 +3080,6 @@ AvailableHacks ={
 				local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
 				local IsCheckingLoadData = plr:WaitForChild("IsCheckingLoadData");
 				local function changedFunct()
-					RunS.RenderStepped:Wait()
 					if enHacks.Util_Fix then
 						MenusTabFrame.Visible=not IsCheckingLoadData.Value;
 					end
@@ -3100,6 +3100,9 @@ AvailableHacks ={
 					AvailableHacks.Utility[3].Active=nil
 					CAS:UnbindAction("PushSlash"..saveIndex)
 				end
+			end,
+			["MyStartUp"]=function()
+				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
 			end,
 		}),
 		[4]={
@@ -4059,25 +4062,39 @@ AvailableHacks ={
 			["Desc"]="Walk Through All Invisible Walls In The Map",
 			["Shortcut"]="Basic_InviWalls",
 			["Default"]=true,
+			["Options"]={
+				[false]={
+					["Title"]="DISABLED",
+					["TextColor"]=newColor3(255, 0, 0),
+				},
+				["Visible"]={
+					["Title"]="VISIBLE",
+					["TextColor"]=newColor3(255, 0, 0),
+				},
+				["Invisible"]={
+					["Title"]="INVISIBLE",
+					["TextColor"]=newColor3(255, 0, 0),
+				},
+			},
 			["Universes"]={"Global"},
 			["ApplyInvi"]=function(instance)
-				local start = os.clock()
+				--local start = os.clock()
 				for num, object in ipairs(instance:GetDescendants()) do
 					if object:IsA("BasePart") and object.Transparency>=.95 and (object.CanCollide) then
 						CS:AddTag(object,"InviWalls")
 						object.CanCollide = false
-						object.Transparency = .9
+						object.Transparency = enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 						object.Color = Color3.fromRGB(0,0,200)
 					end
 
-					if num%50==0 then
+					if num%70==0 then
 						RunS.RenderStepped:Wait()
 					end
 					if not enHacks.Basic_InviWalls then
 						return
 					end
 				end
-				print(("search completed after %.2f"):format(os.clock()-start))
+				--print(("search completed after %.2f"):format(os.clock()-start))
 			end,
 			["MapAdded"]=function(newMap)
 				if not enHacks.Basic_InviWalls then

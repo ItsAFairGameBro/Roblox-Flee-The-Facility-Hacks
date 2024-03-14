@@ -1488,11 +1488,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				local v77 = v10.BillboardGuiIcons.EmptyPodBillboardGui:Clone()
 				v77.Parent = v23:FindFirstChild("IconBillboardGuis")
 				v77.Adornee = v74:FindFirstChild("PodRoof")
-				v77.Enabled = podTrigger.ActionSign.Value==11
+				v77.Enabled = podTrigger.ActionSign.Value~=11
 				
 				--TODO HERE
 				table.insert(ShowFreezeConnections, podTrigger.ActionSign.Changed:Connect(function()
-					v77.Enabled = podTrigger.ActionSign.Value==11
+					v77.Enabled = podTrigger.ActionSign.Value~=11
 				end))
 			end
 		end
@@ -1561,27 +1561,22 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 								v137 = false
 								return v149
 							else
-								print("Exit1")
 								return
 							end
 						else
-							print("Exit2")
 							return
 						end
 					else
-						print("Exit3")
 						return
 					end
 				else
-					print("Exit4")
 					return
 				end
 			else
-				print("Exit5")
 				return
 			end
 		end
-		print("Weapons Raycast exited after i =",i)
+		print("Weapons Raycast failed after i =",i)
 		return
 	end
 	OnClick = function()

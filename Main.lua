@@ -1515,11 +1515,13 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			v146 = v138
 			v145 = false
 			v144 = true
-			local v151, hitLoc = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
-			v149 = v151
+			--local v151, hitLoc = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
+			local result = workspace:Raycast(v23.Head.CFrame.p,v175 * 6,{FilterDescendantsInstances = v146,FilterType = Enum.RaycastFilterType.Include,
+				IgnoreWater=true,CollisionGroup="Players"})
+			v149 = result and result.Instance
 			v150 = v174
 			if v149 and v149:IsA("BasePart") then
-				v151 = v149.Transparency
+				local v151 = v149.Transparency
 				v174 = 0.95
 				if v174 < v151 then
 					v151 = v149.CanCollide
@@ -1531,16 +1533,14 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				v137 = true
 				local v158 = PS:GetPlayerFromCharacter(v149.Parent)
 				if v158 then
-					local v161 = require(v158:FindFirstChild("TempPlayerStatsModule"))
+					local v161 = (v158:FindFirstChild("TempPlayerStatsModule"))
 					local v164 = v149:isDescendantOf(v23)
 					if not v164 then
-						v164 = v161.GetValue
 						local v166 = v164("Ragdoll")
-						v166 = v161.GetValue
 						local v168 = v166("Health")
-						if v168 > 0 then
+						if v161.Ragdoll.Value and v168.Health.Value > 0 then
 							v168 = v4
-							v168:FireServer("HammerTieUp", v149, hitLoc)
+							v168:FireServer("HammerTieUp", v149, result.Position)
 							v137 = false
 							return v149
 						end
@@ -1657,10 +1657,10 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		return FindCharacterFromChild(p5.Parent)
 	end
 	SetLocalTransparencyInChildren = function(p6)
-		if not p6 then
+		if p6 then
 			if p6:IsA("BasePart") then
-				local v246 = p6:IsA("MeshPart")
-				if not v246 then
+				local v246 = p6:IsA("BasePart")
+				if v246 then
 					v246 = p6.Transparency
 					p6.LocalTransparencyModifier = v246
 				end

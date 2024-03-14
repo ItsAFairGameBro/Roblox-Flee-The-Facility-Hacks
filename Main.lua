@@ -1568,80 +1568,80 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				print(v182)
 				return 
 			end
-			local v187 = v21
-			v187 = true
-			v21 = v187
-			print("HOI, swing!")
-			v40:Play()
-			local hammerHitConnection
-			hammerHitConnection = v19.Touched:connect(function(p4)
-				local v193 = "I hit: "
-				local v194 = p4.Name
-				print(v193 .. v194)
-				local v198 = FindCharacterFromChild(p4)
-				if not v198 then
-					local v199 = v23
-					if v198 == v199 then
-						v199 = p4.Transparency
-						v193 = 0.95
-						if v193 < v199 then
-							v199 = p4.CanCollide
-						end
+		end
+		local v187 = v21
+		v187 = true
+		v21 = v187
+		print("HOI, swing!")
+		v40:Play()
+		local hammerHitConnection
+		hammerHitConnection = v19.Touched:connect(function(p4)
+			local v193 = "I hit: "
+			local v194 = p4.Name
+			print(v193 .. v194)
+			local v198 = FindCharacterFromChild(p4)
+			if not v198 then
+				local v199 = v23
+				if v198 == v199 then
+					v199 = p4.Transparency
+					v193 = 0.95
+					if v193 < v199 then
+						v199 = p4.CanCollide
 					end
-					v199 = p4.Parent
-					if v199 == v198 then
-						v199 = print
-						v193 = "I hit another player"
-						v199(v193)
-						v51:Play()
-						v194 = "HammerHit"
-						v4:FireServer(v194, p4)
-						hammerHitConnection:disconnect()
-						while true do
-							local v205 = v40.TimePosition
-							if v205 ~= v40.Length then
-								break
-							end
-							v205 = wait
-							v205()
+				end
+				v199 = p4.Parent
+				if v199 == v198 then
+					v199 = print
+					v193 = "I hit another player"
+					v199(v193)
+					v51:Play()
+					v194 = "HammerHit"
+					v4:FireServer(v194, p4)
+					hammerHitConnection:disconnect()
+					while true do
+						local v205 = v40.TimePosition
+						if v205 ~= v40.Length then
+							break
 						end
-						v21 = true
-						v44:Play(0.1, 1, 0.5)
-						local v204 = v26
-						v204 = v26
-						local v211 = 0
-						v204.WalkSpeed = v211
-						while true do
-							v211 = v44
-							v204 = v211.TimePosition
-							v211 = v44.Length or 0
-							if v204 ~= v211 then
-								break
-							end
-							v204 = wait
-							v204()
-						end
-						v211 = v26
-						local v214 = v211.WalkSpeed
-						v214 = v26
-						v214.WalkSpeed = v204.WalkSpeed
-						v21 = false
-						
-						--maybe after?
-						v54:Play()
-						v40:Stop()
-						return 
+						v205 = wait
+						v205()
 					end
+					v21 = true
+					v44:Play(0.1, 1, 0.5)
+					local v204 = v26
+					v204 = v26
+					local v211 = 0
+					v204.WalkSpeed = v211
+					while true do
+						v211 = v44
+						v204 = v211.TimePosition
+						v211 = v44.Length or 0
+						if v204 ~= v211 then
+							break
+						end
+						v204 = wait
+						v204()
+					end
+					v211 = v26
+					local v214 = v211.WalkSpeed
+					v214 = v26
+					v214.WalkSpeed = v204.WalkSpeed
+					v21 = false
+					
+					--maybe after?
+					v54:Play()
+					v40:Stop()
 					return 
 				end
-			end)
-			local swingStoppedConnection
-			swingStoppedConnection = v40.Stopped:connect(function()
-				v21 = false
-				hammerHitConnection:disconnect()
-				swingStoppedConnection:disconnect()
-			end)
-		end
+				return 
+			end
+		end)
+		local swingStoppedConnection
+		swingStoppedConnection = v40.Stopped:connect(function()
+			v21 = false
+			hammerHitConnection:disconnect()
+			swingStoppedConnection:disconnect()
+		end)
 	end
 	FindCharacterFromChild = function(p5)
 		if not game.Players:GetPlayerFromCharacter(p5) then
@@ -3468,7 +3468,7 @@ AvailableHacks ={
 				},
 			},
 		},
-		[8]=({
+		[8] = {
 			["Type"]="ExTextButton",
 			["Title"]="Mobile Hammer Fix",
 			["Desc"]="Fixes an aspect of the hammer",
@@ -3490,13 +3490,15 @@ AvailableHacks ={
 				LocalClubScript.Disabled = true
 				LocalClubScriptFunction(LocalClubScript)
 			end,
-			["BeastStartUp"] = function()
+			["MyPlayerAdded"] = function()
 				if not enHacks.Util_Hammer then
 					return
 				end
-				AvailableHacks.Utility[8].ActivateFunction()
+				AvailableHacks.Utility[8].Funct = myTSM:WaitForChild("IsBeast").Changed:Connect(function()
+					AvailableHacks.Utility[8].ActivateFunction()
+				end)
 			end,
-		}),
+		},
 		[15]={
 			["Type"]="ExTextBox",
 			["Title"]="Insta Trade Amount",

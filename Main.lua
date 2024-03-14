@@ -1529,7 +1529,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			if result and v149 and v149:IsA("BasePart") then
 				local v151 = v149.Transparency
 				v174 = 0.95
-				if not v149.CanCollide or (v151.Parent and v151.Parent:FindFirstChild("Humanoid")) then
+				if not v149.CanCollide or (v149.Parent and v149.Parent:FindFirstChild("Humanoid")) then
 					table.insert(v146, v149)
 					v137 = true
 					local v158 = PS:GetPlayerFromCharacter(v149.Parent)

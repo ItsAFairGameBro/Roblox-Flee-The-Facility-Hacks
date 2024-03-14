@@ -286,7 +286,7 @@ local function GuiCreationFunction()
 
 	HackGUI.Name = "HackGUI";
 	HackGUI.ResetOnSpawn = false;
-	
+
 	local hackGUIParent = (isStudio and plr:WaitForChild("PlayerGui") or game:GetService("CoreGui"));
 	HackGUI.Parent = hackGUIParent;
 	HackGUI.DisplayOrder = (-100);
@@ -742,7 +742,7 @@ local function createCommandLine(message,printType)
 		elseif printType=="warn" then
 			warn(printType)
 		elseif printType=="error" then
-			
+
 		end
 	end
 	while Console.AbsoluteCanvasSize.Y>Console.AbsoluteWindowSize.Y*5 do
@@ -1438,12 +1438,12 @@ end
 local function LocalClubScriptFunction(Original_LocalClubScript)
 	local script = Original_LocalClubScript
 	local Hammer = Original_LocalClubScript.Parent
-	
-	local ClubConnections = {}
-	
+
+	local ClubConnections = AvailableHacks.Utility[8].ClubFuncts
+
 	local ShowRaycast, RagdollLimbRaycast, FindCharacterFromChild, SetLocalTransparencyInChildren
 	local ShowEmptyFreezePodBillboardIcons, ClearFreezePodBillboardIcons, OnClick
-	
+
 	local v2 = script.Parent
 	local v4 = v2:WaitForChild("HammerEvent")
 	local v7 = game:GetService("UserInputService")
@@ -1629,7 +1629,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 					v214 = v26
 					v214.WalkSpeed = v204.WalkSpeed
 					v21 = false
-					
+
 					--maybe after?
 					v54:Play()
 					v40:Stop()
@@ -2961,56 +2961,56 @@ AvailableHacks ={
 				["CaptureSurvivor"] = function(theirPlr,theirChar,override)
 					local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
 					if not TSM:WaitForChild("IsBeast") or not Beast then
-						return
-					end
+					return
+				end
 					if Beast.CarriedTorso.Value==nil then
-						return
-					end
+					return
+				end
 					if not enHacks.AutoCapture and not override then
-						return
-					end
+					return
+				end
 					--if enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
 					local capsule,closestDist=nil,10000
 					for num,cap in pairs(CS:GetTagged("Capsule")) do
-						if cap.PrimaryPart~=nil then
-							local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
-							if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
-								capsule,closestDist=cap,dist
-							end
+					if cap.PrimaryPart~=nil then
+						local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
+						if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
+							capsule,closestDist=cap,dist
 						end
 					end
+				end
 					--print("Capturing survivor!")
 					local Trigger = capsule.PodTrigger
 					local isOpened = (Trigger.ActionSign.Value==11)
 					for s=1,3,1 do
-						if capsule.PodTrigger.CapturedTorso.Value~=nil then 
-							break --we got ourselves a trapped survivor!
-						elseif s~=1 then
-							wait(.15)
-						end
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-						if isOpened then
-							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
-						end
+					if capsule.PodTrigger.CapturedTorso.Value~=nil then 
+						break --we got ourselves a trapped survivor!
+					elseif s~=1 then
+						wait(.15)
 					end
+					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+					if isOpened then
+						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+					end
+				end
 				end,
 				["ChangedFunction"]=function()
 					local TSM=plr:WaitForChild("TempPlayerStatsModule")
 					if not TSM:WaitForChild("IsBeast").Value then
-						return
-					end
+					return
+				end
 					local CarriedTorso=char:WaitForChild("CarriedTorso",20)
 					if CarriedTorso~=nil then
-						local function captureSurvivorFunction()
-							AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
-						end
-						local input = enHacks.AutoCapture and captureSurvivorFunction
-						setChangedAttribute(CarriedTorso,"Value",input)
+					local function captureSurvivorFunction()
 						AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
-					else
-						warn("rope not found!!!! hackssss bro!", char:GetFullName())
 					end
+					local input = enHacks.AutoCapture and captureSurvivorFunction
+					setChangedAttribute(CarriedTorso,"Value",input)
+					AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
+				else
+					warn("rope not found!!!! hackssss bro!", char:GetFullName())
+				end
 				end,
 
 
@@ -3453,7 +3453,7 @@ AvailableHacks ={
 				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
 			end,
 		}),
-		
+
 
 		[4]={
 			["Type"]="ExTextButton",
@@ -3481,8 +3481,16 @@ AvailableHacks ={
 			["Title"]="Mobile Hammer Fix",
 			["Desc"]="Fixes an aspect of the hammer",
 			["Shortcut"]="Util_Hammer",
+			["ClubFuncts"] = {},
 			["Default"]=true,
 			["ActivateFunction"]=function(newValue)
+				for s = #AvailableHacks.Utility[8].ClubFuncts, 1, -1 do
+					local funct = AvailableHacks.Utility[8].ClubFuncts[s]
+					if funct then
+						funct:Disconnect()
+					end
+					table.remove(AvailableHacks.Utility[8].ClubFuncts,s)
+				end
 				if not myTSM.IsBeast.Value then
 					return
 				end
@@ -3495,8 +3503,11 @@ AvailableHacks ={
 					return warn("LocalClubScript Not Found, Hacks Bro!")
 				end
 				print("LocalClubScript Disabled!")
-				LocalClubScript.Disabled = true
-				LocalClubScriptFunction(LocalClubScript)
+				
+				LocalClubScript.Disabled = newValue
+				if newValue then
+					LocalClubScriptFunction(LocalClubScript)
+				end
 			end,
 			["MyPlayerAdded"] = function()
 				if not enHacks.Util_Hammer then
@@ -3690,9 +3701,9 @@ AvailableHacks ={
 					--print("Set Jump",isCleared)
 					human.JumpPower=newValue;
 				end;
-				
+
 				setJump();
-				
+
 				if ((newValue) == (50)) then
 					setChangedAttribute(human,"JumpPower",false);
 				else
@@ -3795,7 +3806,7 @@ AvailableHacks ={
 				local Attack2 = Attach:Clone()
 
 				AvailableHacks.Basic[4].IsActive=false
-				
+
 				local IsActive = AvailableHacks.Basic[4].IsActive
 				local movement = {forward = 0, backward = 0, right = 0, left = 0, down = 0, up = 0}
 				local mouse = plr:GetMouse()
@@ -4033,7 +4044,7 @@ AvailableHacks ={
 				AvailableHacks.Basic[4].ToggleFunct(AvailableHacks.Basic[4].IsActive)
 			end,
 			["JetpackScript"]=function()
-			local inputBegan, inputEnded, v167, jumpBoost
+				local inputBegan, inputEnded, v167, jumpBoost
 
 				local jetpackGui= Instance.new("ScreenGui")
 				local Jetpack = Instance.new("Frame")
@@ -6083,7 +6094,7 @@ clear = function(isManualClear)
 		if Beast == char then
 			RunS.RenderStepped:Wait()
 			CAS:UnbindAction("Crawl")
-			
+
 			local LocalClubScript = char:FindFirstChild("LocalClubScript",true)
 			if LocalClubScript then
 				LocalClubScript.Disabled = false
@@ -6096,6 +6107,9 @@ clear = function(isManualClear)
 		AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
 		AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
+	end
+	if gameName == "FleeMain" then
+		AvailableHacks.Utility[8].ActivateFunction(false)
 	end
 
 	plr:SetAttribute("Cleared"..getID,true)
@@ -6428,7 +6442,7 @@ local function CharacterAdded(theirChar)
 	local theirPlr=PS:GetPlayerFromCharacter(theirChar)
 	local theirHumanoid=theirChar:WaitForChild("Humanoid")
 	local hrp=theirChar:WaitForChild("HumanoidRootPart",1) or theirChar.PrimaryPart
-	
+
 	local isMyChar=theirPlr==plr
 	if isMyChar then
 		char=theirChar
@@ -6473,7 +6487,7 @@ local function PlayerAdded(theirPlr)
 			end
 		end))
 	end
-	
+
 	if gameUniverse=="Flee" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		if theirTSM then

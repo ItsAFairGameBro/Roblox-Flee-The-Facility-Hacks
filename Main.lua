@@ -3514,7 +3514,7 @@ AvailableHacks ={
 					return
 				end
 				AvailableHacks.Utility[8].Funct = myTSM:WaitForChild("IsBeast").Changed:Connect(function()
-					AvailableHacks.Utility[8].ActivateFunction()
+					AvailableHacks.Utility[8].ActivateFunction(enHacks.Util_Hammer)
 				end)
 			end,
 		},

@@ -3686,7 +3686,8 @@ AvailableHacks ={
 			["UpdateSpeed"]=function()
 				local crawlSlowDown = 1/2
 				local newSpeed = human:GetAttribute("OverrideSpeed")
-				if not newSpeed and gameUniverse=="Flee" and enHacks.WalkSpeed==defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4) then
+				if isCleared or
+					(not newSpeed and gameUniverse=="Flee" and enHacks.WalkSpeed==defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4)) then
 					newSpeed=myTSM.NormalWalkSpeed.Value
 				else
 					newSpeed=enHacks.WalkSpeed or AvailableHacks.Basic[1].Default
@@ -6117,7 +6118,7 @@ clear = function(isManualClear)
 	end;--effectively disables all hacks!
 	AvailableHacks.Basic[4].ActivateFunction(false);--disble hacks
 	AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
-	AvailableHacks.Basic[1].ActivateFunction(false);--disable walkspeed
+	AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
 	if AvailableHacks.Blatant then
 		AvailableHacks.Blatant[2].IsCrawling=false;--disable crawl
 		AvailableHacks.Blatant[2].Crawl(false);--disable crawl

@@ -1515,7 +1515,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			v146 = v138
 			v145 = false
 			v144 = true
-			local v151, v140 = v175:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
+			local v151, v140 = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
 			v149 = v151
 			v150 = v174
 			v174 = v149.Parent

@@ -1520,32 +1520,34 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			local v151, v140 = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
 			v149 = v151
 			v150 = v174
-			v151 = v149.Transparency
-			v174 = 0.95
-			if v174 < v151 then
-				v151 = v149.CanCollide
-				v151 = v149.Parent
-				local v153 = v151:FindFirstChild("Humanoid")
-			end
-			v174 = v138
-			table.insert(v174, v149)
-			v137 = true
-			local v155 = game
-			local v158 = v155.Players:GetPlayerFromCharacter(v149.Parent)
-			if not v158 then
-				v155 = require
-				local v161 = v155(v158:FindFirstChild("TempPlayerStatsModule"))
-				local v164 = v149:isDescendantOf(v23)
-				if v164 then
-					v164 = v161.GetValue
-					local v166 = v164("Ragdoll")
-					v166 = v161.GetValue
-					local v168 = v166("Health")
-					if v168 > 0 then
-						v168 = v4
-						v168:FireServer("HammerTieUp", v149, v150)
-						v137 = false
-						return v149
+			if v149 and v149:IsA("BasePart") then
+				v151 = v149.Transparency
+				v174 = 0.95
+				if v174 < v151 then
+					v151 = v149.CanCollide
+					v151 = v149.Parent
+					local v153 = v151:FindFirstChild("Humanoid")
+				end
+				v174 = v138
+				table.insert(v174, v149)
+				v137 = true
+				local v155 = game
+				local v158 = v155.Players:GetPlayerFromCharacter(v149.Parent)
+				if not v158 then
+					v155 = require
+					local v161 = v155(v158:FindFirstChild("TempPlayerStatsModule"))
+					local v164 = v149:isDescendantOf(v23)
+					if v164 then
+						v164 = v161.GetValue
+						local v166 = v164("Ragdoll")
+						v166 = v161.GetValue
+						local v168 = v166("Health")
+						if v168 > 0 then
+							v168 = v4
+							v168:FireServer("HammerTieUp", v149, v150)
+							v137 = false
+							return v149
+						end
 					end
 				end
 			end

@@ -1436,7 +1436,7 @@ function Path:Run(target)
 	return true
 end
 --MODULE 3: LOCAL CLUB SCRIPT
-local currentRaycastParams = Instance.new("RaycastParams")
+local currentRaycastParams = RaycastParams.new()
 print("CG",game.PhysicsService:GetRegisteredCollisionGroups())
 local function LocalClubScriptFunction(Original_LocalClubScript)
 	local script = Original_LocalClubScript

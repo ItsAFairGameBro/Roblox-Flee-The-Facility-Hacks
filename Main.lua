@@ -1439,6 +1439,8 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	local script = Original_LocalClubScript
 	local Hammer = Original_LocalClubScript.Parent
 	
+	local ClubConnections = {}
+	
 	local ShowRaycast, RagdollLimbRaycast, FindCharacterFromChild, SetLocalTransparencyInChildren
 	local ShowEmptyFreezePodBillboardIcons, ClearFreezePodBillboardIcons, OnClick
 	
@@ -1568,9 +1570,10 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				return 
 			end
 		end
-		local v187 = v21
-		v187 = true
-		v21 = v187
+		if v21 then
+			return
+		end
+		v21 = true
 		print("HOI, swing!")
 		v40:Play()
 		local hammerHitConnection
@@ -1581,13 +1584,13 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			local v198 = FindCharacterFromChild(p4)
 			if v198 then
 				local v199 = v23
-				if v198 == v199 then
+				--[[if v198 == v199 then
 					v199 = p4.Transparency
 					v193 = 0.95
 					if v193 < v199 then
 						v199 = p4.CanCollide
 					end
-				end
+				end--]]
 				v199 = p4.Parent
 				if v199 == v198 then
 					v199 = print
@@ -1643,9 +1646,15 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		end)
 	end
 	FindCharacterFromChild = function(p5)
-		if not game.Players:GetPlayerFromCharacter(p5) then
+		if p5==workspace or p5==game then
+			return
+		elseif PS:GetPlayerFromCharacter(p5) then
 			local v237 = p5:FindFirstChild("Humanoid")
-			return p5
+			if v237 then
+				return p5
+			else
+				return
+			end
 		end
 		return FindCharacterFromChild(p5.Parent)
 	end
@@ -1697,22 +1706,22 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	local IsInsideGuiBox = IsInsideGuiBox_1
 	IsInsideGuiBox_1 = UIS.TouchEnabled
 	IsInsideGuiBox_1 = UIS.TouchTapInWorld
-	IsInsideGuiBox_1:connect(function(p9, p10)
+	table.insert(ClubConnections, IsInsideGuiBox_1:connect(function(p9, p10)
 		if p10 then
 			RS.RemoteEvent:FireServer("HammerClick", true)
 			OnClick()
 		end
-	end)
-	plr:GetMouse().Button1Down:connect(function()
+	end))
+	table.insert(ClubConnections, plr:GetMouse().Button1Down:connect(function()
 		v4:FireServer("HammerClick", true)
 		OnClick()
-	end)
-	game:GetService("RunService").RenderStepped:connect(function()
+	end))
+	table.insert(ClubConnections, game:GetService("RunService").RenderStepped:connect(function()
 		char:FindFirstChild("Left Arm").LocalTransparencyModifier = char:FindFirstChild("Left Arm").Transparency
 		char:FindFirstChild("Right Arm").LocalTransparencyModifier = char:FindFirstChild("Right Arm").Transparency
 		SetLocalTransparencyInChildren(Hammer)
-	end)
-	local carriedTorsoConnection = v32.Changed:connect(function()
+	end))
+	local function carriedTorsoChangedFunction()
 		local v295 = v32.Value
 		if not v295 then
 			v295 = true
@@ -1723,18 +1732,22 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		end
 		v20 = false
 		ClearFreezePodBillboardIcons()
-	end)
-	Hammer.ChildRemoved:connect(function(p11)
+
+	end
+	local carriedTorsoConnection = v32.Changed:connect(carriedTorsoChangedFunction)
+	table.insert(ClubConnections,carriedTorsoConnection)
+	table.insert(ClubConnections, Hammer.ChildRemoved:connect(function(p11)
 		local v300 = p11.Name
 		v300 = v48
 		v300:Stop()
 		ClearFreezePodBillboardIcons()
 		v24.CameraMode = Enum.CameraMode.Classic
-	end)
+	end))
 	v24.CameraMode = Enum.CameraMode.LockFirstPerson
 	v19:WaitForChild("SoundHeartBeat").Volume = 0
 	v19:WaitForChild("SoundChaseMusic").Volume = 0
 	v48:Play(0.100000001, 1, 0.5)
+	carriedTorsoChangedFunction()
 end
 
 --USER COLOR COMPUTATION

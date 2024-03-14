@@ -6412,7 +6412,11 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 
 			hack.Options = (hack.Options or (defaultOptionsTable))
 			assert(getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
-			local overrideDefault = (GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]) or (getgenv().enHacks and getgenv().enHacks[hack.Shortcut])
+			local overrideDefault = (GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut])
+			print(getgenv().enHacks)
+			if overrideDefault==nil and getgenv().enHacks then
+				overrideDefault = getgenv().enHacks[hack.Shortcut]
+			end
 			if overrideDefault~=nil then
 				enHacks[hack.Shortcut]=overrideDefault;
 			else

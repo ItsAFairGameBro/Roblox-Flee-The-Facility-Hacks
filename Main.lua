@@ -1535,17 +1535,17 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 						local v161 = (v158:FindFirstChild("TempPlayerStatsModule"))
 						local v164 = v149:isDescendantOf(v23)
 						if not v164 then
-							local v166 = v164("Ragdoll")
-							local v168 = v166("Health")
-							if v161.Ragdoll.Value and v168.Health.Value > 0 then
-								v168 = v4
-								v168:FireServer("HammerTieUp", v149, result.Position)
+							if v161.Ragdoll.Value and v161.Health.Value > 0 then
+								v4:FireServer("HammerTieUp", v149, result.Position)
 								v137 = false
 								return v149
 							end
 						end
+					else
+						return
 					end
-
+				else
+					return
 				end
 			else
 				return

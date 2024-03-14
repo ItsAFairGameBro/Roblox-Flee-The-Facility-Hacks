@@ -1559,7 +1559,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	OnClick = function()
 		print("Mouse pressed!")
 		local v180 = v20
-		if v180 then
+		if not v180 then
 			v180 = RagdollLimbRaycast
 			local v181 = v28
 			local v182 = v181.Hit

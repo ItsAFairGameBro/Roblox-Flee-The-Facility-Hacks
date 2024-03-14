@@ -6079,6 +6079,33 @@ clear = function(isManualClear)
 			funct=nil;
 		end;
 	end;
+	if isManualClear then
+		print("Manual Clear Activated!")
+		local LocalPlayerScript = char:WaitForChild("LocalPlayerScript")
+		if LocalPlayerScript then
+			LocalPlayerScript.Disabled = true
+			LocalPlayerScript.Disabled = false
+		end
+		if Beast == char then
+			task.delay(0,CAS.UnbindAction,CAS,"Crawl")
+
+			task.spawn(function()
+				local LocalClubScript = char:FindFirstChild("LocalClubScript",true)
+				if LocalClubScript then
+					LocalClubScript.Disabled = false
+				end
+			end)
+		end
+		--local CrawlScript=char:WaitForChild("CrawlScript") 
+		--if CrawlScript then
+		--	CrawlScript.Disabled=false
+		--end
+		AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
+		AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
+		AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
+	else
+		getgenv().enHacks = table.clone(enHacks)
+	end
 	for hackName,enabled in pairs(enHacks) do
 		enHacks[hackName]=nil;  --disables all running hacks to stop them!
 	end;--effectively disables all hacks!
@@ -6116,31 +6143,6 @@ clear = function(isManualClear)
 	CAS:UnbindAction("PushSlash"..saveIndex)
 
 
-	if isManualClear then
-		print("Manual Clear Activated!")
-		local LocalPlayerScript = char:WaitForChild("LocalPlayerScript")
-		if LocalPlayerScript then
-			LocalPlayerScript.Disabled = true
-			LocalPlayerScript.Disabled = false
-		end
-		if Beast == char then
-			task.delay(0,CAS.UnbindAction,CAS,"Crawl")
-
-			task.spawn(function()
-				local LocalClubScript = char:FindFirstChild("LocalClubScript",true)
-				if LocalClubScript then
-					LocalClubScript.Disabled = false
-				end
-			end)
-		end
-		--local CrawlScript=char:WaitForChild("CrawlScript") 
-		--if CrawlScript then
-		--	CrawlScript.Disabled=false
-		--end
-		AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
-		AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
-		AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
-	end
 	if gameName == "FleeMain" then
 		AvailableHacks.Utility[8].Cleanup()
 	end
@@ -6410,7 +6412,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 
 			hack.Options = (hack.Options or (defaultOptionsTable))
 			assert(getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
-			local overrideDefault = GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]
+			local overrideDefault = (GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]) or (getgenv().enHacks and getgenv().enHacks[hack.Shortcut])
 			if overrideDefault~=nil then
 				enHacks[hack.Shortcut]=overrideDefault;
 			else

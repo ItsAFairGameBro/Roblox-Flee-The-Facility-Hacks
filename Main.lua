@@ -1501,7 +1501,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	end
 	currentRaycastParams.FilterType = Enum.RaycastFilterType.Include
 	currentRaycastParams.IgnoreWater = true
-	currentRaycastParams.CollisionGroup = "Players"
+	currentRaycastParams.CollisionGroup = "PLAYERS_BODIES"
 	RagdollLimbRaycast = function(p3)
 		print("weapon raycast")
 		local v137 = false
@@ -6201,7 +6201,6 @@ end;
 ResetEvent = Instance.new("BindableEvent");
 ResetEvent.Event:Connect(resetEventFunction);
 CS:AddTag(ResetEvent, "RemoveOnDestroy");
-currentRaycastParams:AddTag("RemoveOnDestroy")
 ResetEvent.Parent = RS;
 
 -- GUI CREATION / Instances:

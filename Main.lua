@@ -4613,6 +4613,12 @@ AvailableHacks ={
 			},
 			["ActivateFunction"]=function(newValue)
 				if reloadFunction then
+					if lastRunningEnv.GlobalSettings and lastRunningEnv.GlobalSettings.enHacks then
+						for hackID, value in pairs(enHacks) do
+							lastRunningEnv.GlobalSettings.enHacks[hackID] = value
+						end
+						print("Pre-Enabled",getDictLength(enHacks),"Values!")
+					end
 					reloadFunction()
 				else
 					print("Update/Reload Function Not Found!")
@@ -6402,17 +6408,22 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 
 			hack.Options = (hack.Options or (defaultOptionsTable))
 			assert(getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
-			if hack.Default==nil then
-				local HackOptions = Random.new():NextInteger(1,getDictLength(hack.Options))
-				local HackIndex = 0
-				for key, val in pairs(hack.Options) do
-					HackIndex = HackIndex + 1
-					if HackIndex==HackOptions then
-						hack.Default = key break
+			local overrideDefault = GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]
+			if overrideDefault then
+				enHacks[hack.Shortcut]=overrideDefault;
+			else
+				if hack.Default==nil then
+					local HackOptions = Random.new():NextInteger(1,getDictLength(hack.Options))
+					local HackIndex = 0
+					for key, val in pairs(hack.Options) do
+						HackIndex = HackIndex + 1
+						if HackIndex==HackOptions then
+							hack.Default = key break
+						end
 					end
 				end
+				enHacks[hack.Shortcut]=hack.Default;
 			end
-			enHacks[hack.Shortcut]=hack.Default;
 			--print(hack.Shortcut,hack.Type);
 			local miniHackFrame = TextBoxExamples[hack.Type]:Clone();
 			miniHackFrame.Parent = newProperty;

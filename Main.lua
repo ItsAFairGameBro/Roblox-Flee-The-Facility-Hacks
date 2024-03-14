@@ -1503,7 +1503,9 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	ClearFreezePodBillboardIcons = function()
 		ClearFreezeConnection()
 		for v95, v94 in ipairs(v23:FindFirstChild("IconBillboardGuis"):GetChildren()) do
-			v94:Destroy()
+			if v94.Name == "EmptyPodBillboardGui" then
+				v94:Destroy()
+			end
 		end
 	end
 	ShowRaycast = function(p1, p2)
@@ -3500,7 +3502,7 @@ AvailableHacks ={
 			["ClubFuncts"] = {},
 			["ShowFreezeConnections"]={},
 			["Default"]=true,
-			["Cleanup"]=function()
+			["CleanUp"]=function()
 				for s = #AvailableHacks.Utility[8].ClubFuncts, 1, -1 do
 					local funct = AvailableHacks.Utility[8].ClubFuncts[s]
 					if funct then
@@ -3520,7 +3522,7 @@ AvailableHacks ={
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				AvailableHacks.Utility[8].Cleanup()
+				AvailableHacks.Utility[8].CleanUp()
 				if not myTSM.IsBeast.Value then
 					return
 				end
@@ -6065,7 +6067,7 @@ clear = function(isManualClear)
 		AvailableHacks.Bot[15].CurrentPath:Stop()
 	end
 	if gameName == "FleeMain" then
-		AvailableHacks.Utility[8].Cleanup()
+		AvailableHacks.Utility[8].CleanUp()
 	end
 	local searchList = objectFuncts or {}
 	for obj,objectEventsList in pairs(searchList) do

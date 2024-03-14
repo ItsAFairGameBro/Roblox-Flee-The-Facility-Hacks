@@ -3486,6 +3486,7 @@ AvailableHacks ={
 				if not LocalClubScript then
 					return warn("LocalClubScript Not Found, Hacks Bro!")
 				end
+				print("LocalClubScript Disabled!")
 				LocalClubScript.Disabled = true
 				LocalClubScriptFunction(LocalClubScript)
 			end,

@@ -1751,11 +1751,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		v300 = v48
 		v300:Stop()
 		ClearFreezePodBillboardIcons()
-		v24.CameraMode = Enum.CameraMode.Classic
+		--v24.CameraMode = Enum.CameraMode.Classic
 	end))
 	if (enHacks.Util_CanZoom==false) then
 		print("Zooming Locked!")
-		v24.CameraMode = Enum.CameraMode.LockFirstPerson
+		--v24.CameraMode = Enum.CameraMode.LockFirstPerson
 	end
 	v19:WaitForChild("SoundHeartBeat").Volume = 0
 	v19:WaitForChild("SoundChaseMusic").Volume = 0

@@ -736,7 +736,7 @@ end
 local CommandCountIndex = 0
 local CommandInstances = {}
 
-local function createCommandLine(message)
+local function createCommandLine(message,printType)
 	CommandCountIndex=(CommandCountIndex+1)%1000;
 	local CommandClone = CommandBarLine:Clone();
 	CommandClone.Text = message;
@@ -745,6 +745,15 @@ local function createCommandLine(message)
 	CommandClone.Parent = Console;
 	table.insert(CommandInstances,CommandClone);
 	ConsoleButton.Visible=true;
+	if printType then
+		if printType == true then
+			print(message)
+		elseif printType=="warn" then
+			warn(printType)
+		elseif printType=="error" then
+			
+		end
+	end
 	while Console.AbsoluteCanvasSize.Y>Console.AbsoluteWindowSize.Y*5 do
 		CommandInstances[1]:Destroy();
 		table.remove(CommandInstances,1);
@@ -2130,11 +2139,15 @@ AvailableHacks ={
 				AvailableHacks.Blatant[2].Crawl(inputToCrawlFunction_INPUT)
 			end,
 			["MyPlayerAdded"]=function()
-				local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				local function crawlFunction()
 					AvailableHacks.Blatant[(2)].Crawl()
 				end
-				TSM.DisableCrawl.Changed:Connect(crawlFunction)
+				table.insert(functs, myTSM:WaitForChild("DisableCrawl").Changed:Connect(function()
+					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
+					if Beast ~= char then
+						game.ContextActionService:UnbindAction("Crawl")
+					end
+				end))
 			end,
 			["IsCrawling"]=false,
 			["Crawl"]=function(set)
@@ -2626,9 +2639,6 @@ AvailableHacks ={
 				["Desc"] = "Instantly capture other survivors",
 				["Shortcut"] = "AutoCapture",
 				["Default"] = botModeEnabled,
-
-
-
 				["ActivateFunction"] = (function(newValue)
 
 					local TSM = plr:WaitForChild("TempPlayerStatsModule");
@@ -2681,19 +2691,19 @@ AvailableHacks ={
 				["ChangedFunction"]=function()
 					local TSM=plr:WaitForChild("TempPlayerStatsModule")
 					if not TSM:WaitForChild("IsBeast").Value then
-					return
-				end
+						return
+					end
 					local CarriedTorso=char:WaitForChild("CarriedTorso",20)
 					if CarriedTorso~=nil then
-					setChangedAttribute(
-						CarriedTorso,
-						"Value",enHacks.AutoCapture and function()
+						local function captureSurvivorFunction()
 							AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
-						end or false)
-					AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
-				else
-					warn("rope not found!!!! hackssss bro!", char:GetFullName())
-				end
+						end
+						local input = enHacks.AutoCapture and captureSurvivorFunction
+						setChangedAttribute(CarriedTorso,"Value",input)
+						AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
+					else
+						warn("rope not found!!!! hackssss bro!", char:GetFullName())
+					end
 				end,
 
 
@@ -4118,7 +4128,7 @@ AvailableHacks ={
 			["ApplyInvi"]=function(instance)
 				--local start = os.clock()
 				for num, object in ipairs(instance:GetDescendants()) do
-					if object:IsA("BasePart") and object.Transparency>=.95 and (object.CanCollide) then
+					if object:IsA("BasePart") and ((object.Transparency>=.95 and object.CanCollide) or object:HasTag("InviWalls")) then
 						AvailableHacks.Basic[20].InstanceAdded(object)
 					end
 					if num%70==0 then
@@ -4585,11 +4595,11 @@ AvailableHacks ={
 					--end
 
 					local Ret1 = (enHacks.BotRunner=="Freeze" and char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart and Beast and Beast.PrimaryPart)
-					local Ret2 = ((not fullLoop or select(2,isInLobby(char))=="Runner") and (fullLoop or not TSM.DisableCrawl.Value) and TSM.Health.Value>0 and not isCleared)
+					local Ret2 = ((select(2,isInLobby(char))=="Runner") and not isCleared)
 					local Ret3 = Beast and myBots[Beast.Name:lower()]
 					if not Ret3 and Beast then
-						createCommandLine("Freeze Not Activated: Unrecognized Player")
-						print("Freeze Not Activated: Unrecognized Player")
+						createCommandLine("Freeze Disabled: Unrecognized Player\n\tSet ")
+						print("Freeze Disabled: Unrecognized Player")
 					end
 					return (Ret1 and Ret2 and Ret3)
 					--and not TSM.DisableInteraction.Value
@@ -4636,7 +4646,7 @@ AvailableHacks ={
 								return
 							end
 							if TSM.Ragdoll.Value and Beast and Beast.Parent then
-								teleportMyself(Beast:GetPivot()*CFrame.new(0,0,-2))
+								teleportMyself(Beast:GetPivot()*CFrame.new(0,0,2))
 								RunS.RenderStepped:Wait()
 								AvailableHacks.Blatant[7].RopeSurvivor(TSM,plr,true)
 								task.wait(1/2)
@@ -6025,7 +6035,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			task.spawn(refreshTypes[hack.Type], miniHackFrame, hack, true);
 			--pls work!
 			local initilizationType_FUNCTION = initilizationTypes[hack.Type];
-			initilizationType_FUNCTION(hack);
+			task.spawn(initilizationType_FUNCTION,hack);
 		else
 			differentHacks[num]=nil
 		end

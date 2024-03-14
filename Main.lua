@@ -1514,7 +1514,9 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		local v175 = v174.unit
 		local v149
 		local v150
-		while true do
+		local i = 0
+		while i >= 10 do
+			i+=1
 			v147 = Ray.new(v23.Head.CFrame.p, v175 * 6)
 			v146 = v138
 			v145 = false
@@ -1539,7 +1541,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 								v4:FireServer("HammerTieUp", v149, result.Position)
 								v137 = false
 								return v149
+							else
+								return
 							end
+						else
+							return
 						end
 					else
 						return
@@ -1551,6 +1557,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				return
 			end
 		end
+		print("Exited after i =",i)
 		return
 	end
 	OnClick = function()

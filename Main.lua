@@ -1489,11 +1489,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				local v77 = v10.BillboardGuiIcons.EmptyPodBillboardGui:Clone()
 				v77.Parent = v23:FindFirstChild("IconBillboardGuis")
 				v77.Adornee = v74:FindFirstChild("PodRoof")
-				v77.Enabled = podTrigger.ActionSign.Value~=11
+				v77.Enabled = podTrigger.ActionSign.Value==30
 				
 				--TODO HERE
 				table.insert(ShowFreezeConnections, podTrigger.ActionSign.Changed:Connect(function()
-					v77.Enabled = podTrigger.ActionSign.Value~=11
+					v77.Enabled = podTrigger.ActionSign.Value==30
 				end))
 			end
 		end
@@ -1619,14 +1619,13 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				end--]]
 				v199 = p4.Parent
 				if v199 == v198 then
-					v199 = print
-					v193 = "I hit another player"
-					v199(v193)
+					print( "I hit another player")
 					v51:Play()
 					v194 = "HammerHit"
 					v4:FireServer(v194, p4)
 					hammerHitConnection:Disconnect()
 					swingStoppedConnection:Disconnect()
+					v21 = true
 					while true do
 						local v205 = v40.TimePosition
 						if v205 ~= v40.Length then
@@ -1635,12 +1634,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 						v205 = wait
 						v205()
 					end
-					v21 = true
 					v44:Play(0.1, 1, 0.5)
 					local v204 = v26
 					v204 = v26
 					local v211 = 0
-					v204.WalkSpeed = v211
+					v204.WalkSpeed = 0
 					while true do
 						v211 = v44
 						v204 = v211.TimePosition
@@ -3094,7 +3092,7 @@ AvailableHacks ={
 					elseif s~=1 then
 						wait(.075)
 					end
-					local isOpened=Trigger.ActionSign.Value==11
+					local isOpened=Trigger.ActionSign.Value==30--30 for open, 31 for survivor
 					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
 					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
 					if isOpened then
@@ -3689,6 +3687,7 @@ AvailableHacks ={
 			["MaxBound"]=1e3,
 			["DontActivate"]=true,
 			["UpdateSpeed"]=function()
+				print("Speed Updated!")
 				local crawlSlowDown = 1/2
 				local newSpeed = human:GetAttribute("OverrideSpeed")
 				if not newSpeed and gameUniverse=="Flee" and enHacks.WalkSpeed==defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4) then
@@ -3697,7 +3696,7 @@ AvailableHacks ={
 					newSpeed=enHacks.WalkSpeed or AvailableHacks.Basic[1].Default
 				end
 				if gameUniverse=="Flee" then
-					newSpeed = newSpeed * (1-((myTSM.IsCrawling.Value and .5) or 0))
+					newSpeed = newSpeed * (1-((myTSM.IsCrawling.Value and crawlSlowDown) or 0))
 				end
 				human.WalkSpeed=newSpeed
 			end,

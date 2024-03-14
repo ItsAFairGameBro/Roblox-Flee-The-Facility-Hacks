@@ -1515,7 +1515,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		local v149
 		local v150
 		local i = 0
-		while i >= 10 do
+		while i < 10 do
 			i+=1
 			v147 = Ray.new(v23.Head.CFrame.p, v175 * 6)
 			v146 = v138

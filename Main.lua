@@ -1533,7 +1533,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				v137 = true
 				local v155 = game
 				local v158 = v155.Players:GetPlayerFromCharacter(v149.Parent)
-				if not v158 then
+				if v158 then
 					v155 = require
 					local v161 = v155(v158:FindFirstChild("TempPlayerStatsModule"))
 					local v164 = v149:isDescendantOf(v23)

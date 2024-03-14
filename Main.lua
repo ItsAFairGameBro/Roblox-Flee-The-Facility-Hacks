@@ -3069,8 +3069,8 @@ AvailableHacks ={
 		},
 		[3]=({
 			["Type"]="ExTextButton",
-			["Title"]="Client Performance Improvements",
-			["Desc"]="Fixes elements of the GUI",
+			["Title"]="Client Improvements",
+			["Desc"]="Fixes elements",
 			["Shortcut"]="Util_Fix",
 			["Default"]=true,
 			--["Universes"]={"Global"},
@@ -3099,6 +3099,21 @@ AvailableHacks ={
 					AvailableHacks.Utility[3].Active=nil
 					CAS:UnbindAction("PushSlash"..saveIndex)
 				end
+				if ((newValue or Beast == char) and not AvailableHacks.Utility[3].Funct) then
+					local mouse = plr:GetMouse()
+					AvailableHacks.Utility[3].Funct = mouse.Button1Down:Connect(function()
+						
+					end)
+				elseif ((not newValue or Beast ~= char) and AvailableHacks.Utility[3].Funct) then
+					AvailableHacks.Utility[3].Funct:Disconnect()
+					AvailableHacks.Utility[3].Funct = nil
+				end
+			end,
+			["MyBeastAdded"]=function()
+				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
+			end,
+			["CleanUp"]=function()
+				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
 			end,
 			["MyStartUp"]=function()
 				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
@@ -4068,24 +4083,27 @@ AvailableHacks ={
 				},
 				["Visible"]={
 					["Title"]="VISIBLE",
-					["TextColor"]=newColor3(255, 0, 0),
+					["TextColor"]=newColor3(0,255),
 				},
 				["Invisible"]={
 					["Title"]="INVISIBLE",
-					["TextColor"]=newColor3(255, 0, 0),
+					["TextColor"]=newColor3(255, 255, 255),
 				},
 			},
 			["Universes"]={"Global"},
+			["InstanceAdded"]=function(object)
+				CS:AddTag(object,"InviWalls")
+				object.CanCollide = false
+				object.CastShadow = false
+				object.Transparency = enHacks.Basic_InviWalls=="Invisible" and 1 or .85
+				object.Color = Color3.fromRGB(0,0,200)
+			end,
 			["ApplyInvi"]=function(instance)
 				--local start = os.clock()
 				for num, object in ipairs(instance:GetDescendants()) do
 					if object:IsA("BasePart") and object.Transparency>=.95 and (object.CanCollide) then
-						CS:AddTag(object,"InviWalls")
-						object.CanCollide = false
-						object.Transparency = enHacks.Basic_InviWalls=="Invisible" and 1 or .85
-						object.Color = Color3.fromRGB(0,0,200)
+						AvailableHacks.Basic[20].InstanceAdded(object)
 					end
-
 					if num%70==0 then
 						RunS.RenderStepped:Wait()
 					end
@@ -4096,7 +4114,10 @@ AvailableHacks ={
 				--print(("search completed after %.2f"):format(os.clock()-start))
 			end,
 			["MapAdded"]=function(newMap)
-				if not enHacks.Basic_InviWalls then
+				if not RS:WaitForChild("IsGameActive").Value then
+					RS.IsGameActive.Changed:Wait()
+				end
+				if not enHacks.Basic_InviWalls or not newMap.Parent then
 					return
 				end
 				AvailableHacks.Basic[20].ApplyInvi(newMap)
@@ -4547,7 +4568,7 @@ AvailableHacks ={
 					--end
 
 					local Ret1 = (enHacks.BotRunner=="Freeze" and char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart and Beast and Beast.PrimaryPart)
-					local Ret2 = ((not fullLoop or select(2,isInLobby(char))=="Runner") and (fullLoop or not TSM.DisableCrawl.Value) and not isCleared)
+					local Ret2 = ((not fullLoop or select(2,isInLobby(char))=="Runner") and (fullLoop or not TSM.DisableCrawl.Value) and TSM.Health.Value>0 and not isCleared)
 					local Ret3 = Beast and myBots[Beast.Name:lower()]
 					if not Ret3 and Beast then
 						createCommandLine("Freeze Not Activated: Unrecognized Player")
@@ -4581,7 +4602,7 @@ AvailableHacks ={
 				while canRun(true) do
 					human:SetAttribute("OverrideSpeed",((Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<16 and 25 or 42))
 					local inRange = (Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<8
-					if not inRange then
+					if not inRange and not myTSM.Captured.Value then
 						local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
 					while (canRun(true) and (Beast and Beast.PrimaryPart) and (inRange or TSM.Ragdoll.Value)) do
@@ -5471,6 +5492,7 @@ AvailableHacks ={
 						human.Health = 0
 					end
 					task.wait(1)
+					teleportMyself(CFrame.new(1e3,1e-3,1e3))
 					task.wait(.25)
 					if char.Humanoid.Health<=0 then
 						local chardescendants = char:GetDescendants();
@@ -5480,11 +5502,7 @@ AvailableHacks ={
 							end;
 						end;
 					end
-					task.delay(15,function()
-						if char==saveChar and botModeEnabled and enHacks.BotRunner and not isCleared then
-							teleportMyself(CFrame.new(1e3,1e-3,1e3))
-						end
-						task.wait(15)
+					task.delay(30,function()
 						if char==saveChar and botModeEnabled and enHacks.BotRunner and not isCleared then
 							createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>")
 							plr:Kick("Reset Activation Failed")
@@ -6183,7 +6201,7 @@ local function updateCurrentMap(newMap)
 		end))
 	elseif Map and not newMap then
 		local clonedMap = Map
-		Map=nil
+		Map,Beast = nil, nil
 		defaultFunction("CleanUp",{clonedMap})
 	end
 end

@@ -20,6 +20,7 @@ local isStudio=RunS:IsStudio()
 local functs = {}
 
 local Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
+local myTSM,mySSM
 local plr = PS.LocalPlayer
 local PlayerGui = plr:WaitForChild("PlayerGui");
 local isActionProgress=false
@@ -1577,6 +1578,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		print("HOI, swing!")
 		v40:Play()
 		local hammerHitConnection
+		local swingStoppedConnection
 		hammerHitConnection = v19.Touched:connect(function(p4)
 			local v193 = "I hit: "
 			local v194 = p4.Name
@@ -1599,7 +1601,8 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 					v51:Play()
 					v194 = "HammerHit"
 					v4:FireServer(v194, p4)
-					hammerHitConnection:disconnect()
+					hammerHitConnection:Disconnect()
+					swingStoppedConnection:Disconnect()
 					while true do
 						local v205 = v40.TimePosition
 						if v205 ~= v40.Length then
@@ -1624,10 +1627,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 						v204 = wait
 						v204()
 					end
-					v211 = v26
-					local v214 = v211.WalkSpeed
-					v214 = v26
-					v214.WalkSpeed = v204.WalkSpeed
+					--v211 = v26
+					--local v214 = v211.WalkSpeed
+					--v214 = v26
+					--v214.WalkSpeed = v204.WalkSpeed
+					v26.WalkSpeed = myTSM.NormalWalkSpeed.Value
 					v21 = false
 					return 
 				end
@@ -1637,7 +1641,6 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				v40:Stop()
 			end
 		end)
-		local swingStoppedConnection
 		swingStoppedConnection = v40.Stopped:connect(function()
 			v21 = false
 			hammerHitConnection:disconnect()
@@ -1722,7 +1725,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	end))
 	local function carriedTorsoChangedFunction()
 		local v295 = v32.Value
-		if not v295 then
+		if v295 then
 			v295 = true
 			v20 = v295
 			v295 = ShowEmptyFreezePodBillboardIcons
@@ -1791,7 +1794,6 @@ local hackChanged=Instance.new("BindableEvent")
 local enHacks,playerEvents,objectFuncts={},{},{}
 local computerHackStartTime=os.clock()
 local lastHackedPC,lastHackedPosition=nil,Vector3.new(100,100,100)
-local myTSM,mySSM
 
 
 if gameUniverse=="Flee" then
@@ -3489,6 +3491,13 @@ AvailableHacks ={
 						funct:Disconnect()
 					end
 					table.remove(AvailableHacks.Utility[8].ClubFuncts,s)
+				end
+				local hammerAnims = {"AnimSwing","AnimWipe","AnimArmIdle"}
+				for _, track in ipairs(human:WaitForChild("Animator"):GetPlayingAnimationTracks()) do
+					if table.find(hammerAnims,track.Animation.Name) then
+						track:Stop(0)
+						track:Destroy()
+					end
 				end
 				if not myTSM.IsBeast.Value then
 					return

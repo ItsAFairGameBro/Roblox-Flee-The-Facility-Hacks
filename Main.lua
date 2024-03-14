@@ -3475,9 +3475,9 @@ AvailableHacks ={
 			["Shortcut"]="Util_Hammer",
 			["Default"]=true,
 			["ActivateFunction"]=function(newValue)
-				
-			end,
-			["BeastStartUp"] = function()
+				if not myTSM.IsBeast.Value then
+					return
+				end
 				local Hammer = char:WaitForChild("Hammer",30)
 				if not Hammer then
 					return warn("Hammer Not Found, Hacks Bro!")
@@ -3489,6 +3489,12 @@ AvailableHacks ={
 				print("LocalClubScript Disabled!")
 				LocalClubScript.Disabled = true
 				LocalClubScriptFunction(LocalClubScript)
+			end,
+			["BeastStartUp"] = function()
+				if not enHacks.Util_Hammer then
+					return
+				end
+				AvailableHacks.Utility[8].ActivateFunction()
 			end,
 		}),
 		[15]={

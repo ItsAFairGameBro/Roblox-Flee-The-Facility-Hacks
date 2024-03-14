@@ -1498,7 +1498,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		v100.CFrame = CFrame.new(p1.Origin, p2) * CFrame.new(0, 0, -v128 / 2)
 		DS:AddItem(v100, 1)
 	end
-	currentRaycastParams.FilterType = Enum.RaycastFilterType.Include
+	currentRaycastParams.FilterType = Enum.RaycastFilterType.Exclude
 	currentRaycastParams.IgnoreWater = true
 	--currentRaycastParams.CollisionGroup = "PLAYERS_BODIES"
 	RagdollLimbRaycast = function(p3)

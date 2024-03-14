@@ -1437,6 +1437,7 @@ function Path:Run(target)
 end
 --MODULE 3: LOCAL CLUB SCRIPT
 local currentRaycastParams = RaycastParams.new()
+local ClearFreezePodBillboardIcons
 local function LocalClubScriptFunction(Original_LocalClubScript)
 	local script = Original_LocalClubScript
 	local Hammer = Original_LocalClubScript.Parent
@@ -1445,7 +1446,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	local ShowFreezeConnections = AvailableHacks.Utility[8].ShowFreezeConnections
 
 	local ShowRaycast, RagdollLimbRaycast, FindCharacterFromChild, SetLocalTransparencyInChildren
-	local ShowEmptyFreezePodBillboardIcons, ClearFreezePodBillboardIcons, OnClick
+	local ShowEmptyFreezePodBillboardIcons, OnClick
 
 	local v2 = script.Parent
 	local v4 = v2:WaitForChild("HammerEvent")
@@ -1483,7 +1484,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		for v69, v74 in ipairs(v70.Value:GetChildren()) do
 			local v73 = v74.Name
 			local podTrigger = v74:FindFirstChild("PodTrigger")
-			if podTrigger then
+			if podTrigger and podTrigger:FindFirstChild("ActionSign") then
 				local v77 = v10.BillboardGuiIcons.EmptyPodBillboardGui:Clone()
 				v77.Parent = v23:FindFirstChild("IconBillboardGuis")
 				v77.Adornee = v74:FindFirstChild("PodRoof")
@@ -3520,13 +3521,7 @@ AvailableHacks ={
 					end
 					table.remove(AvailableHacks.Utility[8].ClubFuncts,s)
 				end
-				for s = #AvailableHacks.Utility[8].ShowFreezeConnections, 1, -1 do
-					local funct = AvailableHacks.Utility[8].ShowFreezeConnections[s]
-					if funct then
-						funct:Disconnect()
-					end
-					table.remove(AvailableHacks.Utility[8].ShowFreezeConnections,s)
-				end
+				ClearFreezePodBillboardIcons()
 				local hammerAnims = {"AnimSwing","AnimWipe","AnimArmIdle"}
 				for _, track in ipairs(human:WaitForChild("Animator"):GetPlayingAnimationTracks()) do
 					if table.find(hammerAnims,track.Animation.Name) then

@@ -1629,13 +1629,12 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 					v214 = v26
 					v214.WalkSpeed = v204.WalkSpeed
 					v21 = false
-
-					--maybe after?
-					v54:Play()
-					v40:Stop()
 					return 
 				end
 				return 
+			else
+				v54:Play()
+				v40:Stop()
 			end
 		end)
 		local swingStoppedConnection

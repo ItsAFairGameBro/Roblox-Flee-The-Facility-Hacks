@@ -1628,25 +1628,19 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 					v26.WalkSpeed = 0
 					v21 = true
 					while true do
-						local v205 = v40.TimePosition
-						if v205 ~= v40.Length then
+						if v40.TimePosition ~= v40.Length then
 							break
 						end
-						v205 = wait
-						v205()
+						wait()
 					end
 					v44:Play(0.1, 1, 0.5)
 					local v204
 					local v211 = 0
 					while true do
-						v211 = v44
-						v204 = v211.TimePosition
-						v211 = v44.Length or 0
-						if v204 ~= v211 then
+						if not v44.IsPlaying then
 							break
 						end
-						v204 = wait
-						v204()
+						wait()
 					end
 					--v211 = v26
 					--local v214 = v211.WalkSpeed
@@ -3537,7 +3531,7 @@ AvailableHacks ={
 				
 				LocalClubScript.Disabled = newValue
 				if newValue then
-					LocalClubScriptFunction(LocalClubScript)
+					task.delay(3,LocalClubScriptFunction,LocalClubScript)
 				end
 			end,
 			["MyPlayerAdded"] = function()

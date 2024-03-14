@@ -28,8 +28,8 @@ local isJumpBeingHeld = false
 
 local lastRunningEnv = getfenv()
 local reloadFunction = lastRunningEnv.ReloadFunction
-local savedSettings = lastRunningEnv.GlobalSettings or {}
-local isTeleportingAllowed = savedSettings.isTeleportingAllowed~=false
+local GlobalSettings = lastRunningEnv.GlobalSettings or {}
+local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
 
 local emojiDesc = {
 	["Level"] = "⭐",
@@ -57,7 +57,7 @@ local mainZIndex = 2
 local getscriptfunction = require
 
 --DEBUG--
-local botModeEnabled=savedSettings.botModeEnabled
+local botModeEnabled=GlobalSettings.botModeEnabled
 local myBots={--has faster default walkspeed for all my bot's and their usernames
 	["itsafairgamebro"]=true,
 	["molliethetroller"]=true,
@@ -84,7 +84,7 @@ local whitelistedUsers={
 	["kitcat4681"]=true,
 	["goldenbear25"]=true,
 };
-if not botModeEnabled or not myBots[plr.Name:lower()] or savedSettings.ForceBotMode then
+if not botModeEnabled or not myBots[plr.Name:lower()] or GlobalSettings.ForceBotMode then
 	myBots={};
 	botModeEnabled = false;
 end
@@ -100,7 +100,7 @@ local defaultCharacterWalkSpeed=SP.CharacterWalkSpeed
 local defaultCharacterJumpPower=SP.CharacterJumpPower
 
 
-local NameTagEx,HackGUI,Map
+local NameTagEx,HackGUI
 
 
 --GUI CREATION
@@ -287,7 +287,7 @@ local function GuiCreationFunction()
 	HackGUI.Name = "HackGUI";
 	HackGUI.ResetOnSpawn = false;
 	
-	local hackGUIParent = (isStudio and plr:WaitForChild("PlayerGui") or gethui());
+	local hackGUIParent = (isStudio and plr:WaitForChild("PlayerGui") or game:GetService("CoreGui"));
 	HackGUI.Parent = hackGUIParent;
 	HackGUI.DisplayOrder = (-100);
 
@@ -658,15 +658,6 @@ local function myPrint(...)
 end
 local print = myPrint;
 --PRINT ENVIRONMENT END
-
-local function triggerConnection(connection)
-	for _, signal in ipairs(getconnections(connection)) do
-		if signal.Enabled then
-			signal:Fire(true)
-		end
-	end
-end
-
 local function findClosestObj(objs,poso,maxDist,yMult)
 	local closest,closestDist=nil,maxDist or 2000
 	for num,current in ipairs(objs) do
@@ -1446,6 +1437,10 @@ end
 --MODULE 3: LOCAL CLUB SCRIPT
 local function LocalClubScriptFunction(Original_LocalClubScript)
 	local script = Original_LocalClubScript
+	local Hammer = Original_LocalClubScript.Parent
+	
+	local ShowRaycast, RagdollLimbRaycast, FindCharacterFromChild, SetLocalTransparencyInChildren
+	local ShowEmptyFreezePodBillboardIcons, ClearFreezePodBillboardIcons, OnClick
 	
 	local v2 = script.Parent
 	local v4 = v2:WaitForChild("HammerEvent")
@@ -1500,7 +1495,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		local v128 = p1.Origin - p2.magnitude
 		v100.Size = Vector3.new(0.01, 0.01, v128)
 		v100.CFrame = CFrame.new(p1.Origin, p2) * CFrame.new(0, 0, -v128 / 2)
-		(game:GetService("Debris")):AddItem(v100, 1)
+		DS:AddItem(v100, 1)
 	end
 	RagdollLimbRaycast = function(p3)
 		print("weapon raycast")
@@ -1534,8 +1529,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				local v153 = v151:FindFirstChild("Humanoid")
 			end
 			v174 = v138
-			v153 = table.insert
-			v153(v174, v149)
+			table.insert(v174, v149)
 			v137 = true
 			local v155 = game
 			local v158 = v155.Players:GetPlayerFromCharacter(v149.Parent)
@@ -1556,11 +1550,9 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 					end
 				end
 			end
-			v161 = nil
-			return v161
+			return
 		end
-		v158 = nil
-		return v158
+		return
 	end
 	OnClick = function()
 		print("Mouse pressed!")
@@ -1581,6 +1573,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			v21 = v187
 			print("HOI, swing!")
 			v40:Play()
+			local hammerHitConnection
 			hammerHitConnection = v19.Touched:connect(function(p4)
 				local v193 = "I hit: "
 				local v194 = p4.Name
@@ -1613,9 +1606,8 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 							v205()
 						end
 						v21 = true
-						v206 = 0.100000001
-						v44:Play(v206, 1, 0.5)
-						v204 = v26
+						v44:Play(0.1, 1, 0.5)
+						local v204 = v26
 						v204 = v26
 						local v211 = 0
 						v204.WalkSpeed = v211
@@ -1634,13 +1626,16 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 						v214 = v26
 						v214.WalkSpeed = v204.WalkSpeed
 						v21 = false
-						return 
-							v54:Play()
+						
+						--maybe after?
+						v54:Play()
 						v40:Stop()
+						return 
 					end
 					return 
 				end
 			end)
+			local swingStoppedConnection
 			swingStoppedConnection = v40.Stopped:connect(function()
 				v21 = false
 				hammerHitConnection:disconnect()
@@ -1649,9 +1644,6 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		end
 	end
 	FindCharacterFromChild = function(p5)
-		local v231 = p5.Name
-		v231 = nil
-		return v231
 		if not game.Players:GetPlayerFromCharacter(p5) then
 			local v237 = p5:FindFirstChild("Humanoid")
 			if not v237 then
@@ -1660,7 +1652,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			v237 = nil
 			return v237
 		end
-		return FindCharacterFromChild(v239.Parent)
+		return FindCharacterFromChild(p5.Parent)
 	end
 	SetLocalTransparencyInChildren = function(p6)
 		if not p6 then
@@ -1707,25 +1699,25 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		end
 		return false
 	end
-	IsInsideGuiBox = IsInsideGuiBox_1
-	IsInsideGuiBox_1 = v7.TouchEnabled
-	IsInsideGuiBox_1 = v7.TouchTapInWorld
+	local IsInsideGuiBox = IsInsideGuiBox_1
+	IsInsideGuiBox_1 = UIS.TouchEnabled
+	IsInsideGuiBox_1 = UIS.TouchTapInWorld
 	IsInsideGuiBox_1:connect(function(p9, p10)
 		if p10 then
-			v4:FireServer("HammerClick", true)
+			RS.RemoteEvent:FireServer("HammerClick", true)
 			OnClick()
 		end
 	end)
-	v28.Button1Down:connect(function()
+	plr:GetMouse().Button1Down:connect(function()
 		v4:FireServer("HammerClick", true)
 		OnClick()
 	end)
 	game:GetService("RunService").RenderStepped:connect(function()
-		v23:FindFirstChild("Left Arm").LocalTransparencyModifier = v23:FindFirstChild("Left Arm").Transparency
-		v23:FindFirstChild("Right Arm").LocalTransparencyModifier = v23:FindFirstChild("Right Arm").Transparency
-		SetLocalTransparencyInChildren(v2)
+		char:FindFirstChild("Left Arm").LocalTransparencyModifier = char:FindFirstChild("Left Arm").Transparency
+		char:FindFirstChild("Right Arm").LocalTransparencyModifier = char:FindFirstChild("Right Arm").Transparency
+		SetLocalTransparencyInChildren(Hammer)
 	end)
-	carriedTorsoConnection = v32.Changed:connect(function()
+	local carriedTorsoConnection = v32.Changed:connect(function()
 		local v295 = v32.Value
 		if not v295 then
 			v295 = true
@@ -1737,7 +1729,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		v20 = false
 		ClearFreezePodBillboardIcons()
 	end)
-	v2.ChildRemoved:connect(function(p11)
+	Hammer.ChildRemoved:connect(function(p11)
 		local v300 = p11.Name
 		v300 = v48
 		v300:Stop()
@@ -3495,7 +3487,7 @@ AvailableHacks ={
 					return warn("LocalClubScript Not Found, Hacks Bro!")
 				end
 				LocalClubScript.Disabled = true
-				LocalClubScriptFunction(LocalClubFunction)
+				LocalClubScriptFunction(LocalClubScript)
 			end,
 		}),
 		[15]={
@@ -6556,8 +6548,8 @@ local function registerObject(object,registerfunct,shouldntWait)
 	end
 end
 local function updateCurrentMap(newMap)
-	if newMap~=Map and newMap then
-		Map=newMap;
+	if newMap ~= Map and newMap then
+		Map = newMap;
 		local inputArray = {newMap};
 		defaultFunction("MapAdded",{newMap});
 		registerObject(newMap,MapChildAdded)
@@ -6566,7 +6558,7 @@ local function updateCurrentMap(newMap)
 		end))
 	elseif Map and not newMap then
 		local clonedMap = Map
-		Map,Beast = nil, nil
+		Map = nil; Beast = nil;
 		defaultFunction("CleanUp",{clonedMap})
 	end
 end

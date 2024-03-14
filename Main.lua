@@ -17,6 +17,7 @@ local gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893
 local gameUniverse=gameName:find("Flee") and "Flee" or "Unknown"
 local newVector3, newColor3 = Vector3.new, Color3.fromRGB
 local isStudio=RunS:IsStudio()
+local enHacks,playerEvents,objectFuncts={},{},{}
 local functs = {}
 
 local Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
@@ -1685,17 +1686,13 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	end
 	SetLocalTransparencyInChildren = function(p6)
 		if p6 then
-			if p6:IsA("BasePart") then
-				local v246 = p6:IsA("BasePart")
-				if v246 then
-					v246 = p6.Transparency
-					p6.LocalTransparencyModifier = v246
-				end
-				local v248, v249, v250 = pairs(p6:GetChildren())
-				for v254, v253 in v248, v249, v250 do
-					SetLocalTransparencyInChildren(v253)
-				end
-				return 
+			local v246 = p6:IsA("BasePart")
+			if v246 then
+				v246 = p6.Transparency
+				p6.LocalTransparencyModifier = v246
+			end
+			for _, obj in  ipairs(p6:GetChildren()) do
+				SetLocalTransparencyInChildren(obj)
 			end
 		end
 	end
@@ -1768,7 +1765,9 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		ClearFreezePodBillboardIcons()
 		v24.CameraMode = Enum.CameraMode.Classic
 	end))
-	v24.CameraMode = Enum.CameraMode.LockFirstPerson
+	if (not enHacks.Util_CanZoom) then
+		v24.CameraMode = Enum.CameraMode.LockFirstPerson
+	end
 	v19:WaitForChild("SoundHeartBeat").Volume = 0
 	v19:WaitForChild("SoundChaseMusic").Volume = 0
 	v48:Play(0.100000001, 1, 0.5)
@@ -1814,7 +1813,6 @@ char=plr.Character or plr.CharacterAdded:Wait()
 local human=char:WaitForChild("Humanoid")
 local camera=workspace:WaitForChild("Camera")
 local hackChanged=Instance.new("BindableEvent")
-local enHacks,playerEvents,objectFuncts={},{},{}
 local computerHackStartTime=os.clock()
 local lastHackedPC,lastHackedPosition=nil,Vector3.new(100,100,100)
 
@@ -3394,11 +3392,10 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=true,
 			["UpdateZoom"]=function(void,reset)--NOT e-learning!
-				print("Zoom2",reset==true,isCleared,plr.CameraMaxZoomDistance,plr.CameraMode)
 				if reset then
-					plr.CameraMinZoomDistance=SP.CameraMinZoomDistance--(Beast == char and 0.5 or SP.CameraMinZoomDistance)
+					plr.CameraMinZoomDistance=SP.CameraMinZoomDistance
 					plr.CameraMaxZoomDistance=(SP.CameraMaxZoomDistance)
-					plr.CameraMode=(Enum.CameraMode[SP.CameraMode.Name])
+					plr.CameraMode=(char==Beast and Enum.CameraMode.LockFirstPerson or Enum.CameraMode[SP.CameraMode.Name])
 				else
 					--plr:SetAttribute("CameraMinZoomDistance",plr.CameraMinZoomDistance)
 					plr.CameraMinZoomDistance=.5--minimum

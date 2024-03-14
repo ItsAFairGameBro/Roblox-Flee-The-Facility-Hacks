@@ -1729,9 +1729,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		v4:FireServer("HammerClick", true)
 		OnClick()
 	end))
+	local LArm = char:FindFirstChild("Left Arm")
+	local RArm = char:FindFirstChild("Right Arm")
 	table.insert(ClubConnections, game:GetService("RunService").RenderStepped:connect(function()
-		char:FindFirstChild("Left Arm").LocalTransparencyModifier = char:FindFirstChild("Left Arm").Transparency
-		char:FindFirstChild("Right Arm").LocalTransparencyModifier = char:FindFirstChild("Right Arm").Transparency
+		LArm.LocalTransparencyModifier = LArm.Transparency
+		RArm.LocalTransparencyModifier = RArm.Transparency
 		SetLocalTransparencyInChildren(Hammer)
 	end))
 	local function carriedTorsoChangedFunction()
@@ -6087,7 +6089,6 @@ clear = function(isManualClear)
 		end;
 	end;
 	if isManualClear then
-		print("Manual Clear Activated!")
 		local LocalPlayerScript = char:WaitForChild("LocalPlayerScript")
 		if LocalPlayerScript then
 			LocalPlayerScript.Disabled = true

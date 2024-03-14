@@ -4110,7 +4110,7 @@ AvailableHacks ={
 				},
 				["Visible"]={
 					["Title"]="VISIBLE",
-					["TextColor"]=newColor3(0,255),
+					["TextColor"]=newColor3(0,170,170),
 				},
 				["Invisible"]={
 					["Title"]="INVISIBLE",

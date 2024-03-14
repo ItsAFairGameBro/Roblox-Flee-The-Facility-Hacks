@@ -1436,6 +1436,8 @@ function Path:Run(target)
 	return true
 end
 --MODULE 3: LOCAL CLUB SCRIPT
+local currentRaycastParams = Instance.new("RaycastParams")
+print("CG",game.PhysicsService:GetRegisteredCollisionGroups())
 local function LocalClubScriptFunction(Original_LocalClubScript)
 	local script = Original_LocalClubScript
 	local Hammer = Original_LocalClubScript.Parent
@@ -1470,7 +1472,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		local v70 = v10.CurrentMap
 		for v69, v74 in ipairs(v70.Value:GetChildren()) do
 			local v73 = v74.Name
-			if not v74:FindFirstChild("PodTrigger") then
+			if v74:FindFirstChild("PodTrigger") then
 				local v77 = v10.BillboardGuiIcons.EmptyPodBillboardGui:Clone()
 				v77.Parent = v23:FindFirstChild("IconBillboardGuis")
 				v77.Adornee = v74:FindFirstChild("PodRoof")
@@ -1497,6 +1499,9 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		v100.CFrame = CFrame.new(p1.Origin, p2) * CFrame.new(0, 0, -v128 / 2)
 		DS:AddItem(v100, 1)
 	end
+	currentRaycastParams.FilterType = Enum.RaycastFilterType.Include
+	currentRaycastParams.IgnoreWater = true
+	currentRaycastParams.CollisionGroup = "Players"
 	RagdollLimbRaycast = function(p3)
 		print("weapon raycast")
 		local v137 = false
@@ -1516,35 +1521,32 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			v145 = false
 			v144 = true
 			--local v151, hitLoc = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
-			local result = workspace:Raycast(v23.Head.CFrame.p,v175 * 6,{FilterDescendantsInstances = v146,FilterType = Enum.RaycastFilterType.Include,
-				IgnoreWater=true,CollisionGroup="Players"})
+			currentRaycastParams.FilterDescendantsInstances = v146
+			local result = workspace:Raycast(v23.Head.CFrame.p,v175 * 6,currentRaycastParams)
 			v149 = result and result.Instance
 			v150 = v174
 			if v149 and v149:IsA("BasePart") then
 				local v151 = v149.Transparency
 				v174 = 0.95
-				if v174 < v151 then
-					v151 = v149.CanCollide
-					v151 = v149.Parent
-					local v153 = v151:FindFirstChild("Humanoid")
-				end
-				v174 = v138
-				table.insert(v174, v149)
-				v137 = true
-				local v158 = PS:GetPlayerFromCharacter(v149.Parent)
-				if v158 then
-					local v161 = (v158:FindFirstChild("TempPlayerStatsModule"))
-					local v164 = v149:isDescendantOf(v23)
-					if not v164 then
-						local v166 = v164("Ragdoll")
-						local v168 = v166("Health")
-						if v161.Ragdoll.Value and v168.Health.Value > 0 then
-							v168 = v4
-							v168:FireServer("HammerTieUp", v149, result.Position)
-							v137 = false
-							return v149
+				if not v149.CanCollide or (v151.Parent and v151.Parent:FindFirstChild("Humanoid")) then
+					table.insert(v174, v149)
+					v137 = true
+					local v158 = PS:GetPlayerFromCharacter(v149.Parent)
+					if v158 then
+						local v161 = (v158:FindFirstChild("TempPlayerStatsModule"))
+						local v164 = v149:isDescendantOf(v23)
+						if not v164 then
+							local v166 = v164("Ragdoll")
+							local v168 = v166("Health")
+							if v161.Ragdoll.Value and v168.Health.Value > 0 then
+								v168 = v4
+								v168:FireServer("HammerTieUp", v149, result.Position)
+								v137 = false
+								return v149
+							end
 						end
 					end
+
 				end
 			else
 				return
@@ -6199,6 +6201,7 @@ end;
 ResetEvent = Instance.new("BindableEvent");
 ResetEvent.Event:Connect(resetEventFunction);
 CS:AddTag(ResetEvent, "RemoveOnDestroy");
+currentRaycastParams:AddTag("RemoveOnDestroy")
 ResetEvent.Parent = RS;
 
 -- GUI CREATION / Instances:

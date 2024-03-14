@@ -3113,14 +3113,14 @@ AvailableHacks ={
 					CAS:UnbindAction("PushSlash"..saveIndex)
 				end
 				if ((newValue and Beast == char) and not AvailableHacks.Utility[3].Funct) then
-					AvailableHacks.Utility[3].Funct = UIS.InputBegan:Connect(function(input, gameprocesssed)
+					--[[AvailableHacks.Utility[3].Funct = UIS.InputBegan:Connect(function(input, gameprocesssed)
 						if gameprocesssed then
 							return
 						end
 						if input.UserInputType == Enum.UserInputType.MouseButton1 and UIS.TouchEnabled then
 							triggerConnection(UIS.TouchTapInWorld)
 						end
-					end)
+					end)--]]
 				elseif ((not newValue or Beast ~= char) and AvailableHacks.Utility[3].Funct) then
 					AvailableHacks.Utility[3].Funct:Disconnect()
 					AvailableHacks.Utility[3].Funct = nil

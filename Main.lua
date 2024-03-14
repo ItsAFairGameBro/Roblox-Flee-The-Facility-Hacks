@@ -3495,7 +3495,7 @@ AvailableHacks ={
 			["ClubFuncts"] = {},
 			["ShowFreezeConnections"]={},
 			["Default"]=true,
-			["ActivateFunction"]=function(newValue)
+			["Cleanup"]=function()
 				for s = #AvailableHacks.Utility[8].ClubFuncts, 1, -1 do
 					local funct = AvailableHacks.Utility[8].ClubFuncts[s]
 					if funct then
@@ -3513,6 +3513,9 @@ AvailableHacks ={
 						track:Destroy()
 					end
 				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				AvailableHacks.Utility[8].Cleanup()
 				if not myTSM.IsBeast.Value then
 					return
 				end
@@ -3529,7 +3532,7 @@ AvailableHacks ={
 				LocalClubScript.Disabled = newValue
 				if newValue then
 					task.delay(0,LocalClubScriptFunction,LocalClubScript)
-				end
+				end--TODO HERE
 			end,
 			["MyPlayerAdded"] = function()
 				if not enHacks.Util_Hammer then
@@ -6139,7 +6142,7 @@ clear = function(isManualClear)
 		AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
 	end
 	if gameName == "FleeMain" then
-		task.delay(5,AvailableHacks.Utility[8].ActivateFunction,false)
+		AvailableHacks.Utility[8].Cleanup()
 	end
 
 	plr:SetAttribute("Cleared"..getID,true)

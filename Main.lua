@@ -1442,6 +1442,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	local Hammer = Original_LocalClubScript.Parent
 
 	local ClubConnections = AvailableHacks.Utility[8].ClubFuncts
+	local ShowFreezeConnections = AvailableHacks.Utility[8].ShowFreezeConnections
 
 	local ShowRaycast, RagdollLimbRaycast, FindCharacterFromChild, SetLocalTransparencyInChildren
 	local ShowEmptyFreezePodBillboardIcons, ClearFreezePodBillboardIcons, OnClick
@@ -1467,19 +1468,36 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	local v48 = v26:LoadAnimation(v2:WaitForChild("AnimArmIdle"))
 	local v51 = v19:WaitForChild("SoundHitPlayer")
 	local v54 = v19:WaitForChild("SoundHitWall")
+	local function ClearFreezeConnection()
+		for s = #AvailableHacks.Utility[8].ShowFreezeConnections, 1, -1 do
+			local funct = AvailableHacks.Utility[8].ShowFreezeConnections[s]
+			if funct then
+				funct:Disconnect()
+			end
+			table.remove(AvailableHacks.Utility[8].ShowFreezeConnections,s)
+		end
+	end
 	ShowEmptyFreezePodBillboardIcons = function()
+		ClearFreezeConnection()
 		local v70 = v10.CurrentMap
 		for v69, v74 in ipairs(v70.Value:GetChildren()) do
 			local v73 = v74.Name
-			if v74:FindFirstChild("PodTrigger") then
+			local podTrigger = v74:FindFirstChild("PodTrigger")
+			if podTrigger then
 				local v77 = v10.BillboardGuiIcons.EmptyPodBillboardGui:Clone()
 				v77.Parent = v23:FindFirstChild("IconBillboardGuis")
 				v77.Adornee = v74:FindFirstChild("PodRoof")
-				v77.Enabled = true
+				v77.Enabled = podTrigger.ActionSign.Value==11
+				
+				--TODO HERE
+				table.insert(ShowFreezeConnections, podTrigger.ActionSign.Changed:Connect(function()
+					v77.Enabled = podTrigger.ActionSign.Value==11
+				end))
 			end
 		end
 	end
 	ClearFreezePodBillboardIcons = function()
+		ClearFreezeConnection()
 		for v95, v94 in ipairs(v23:FindFirstChild("IconBillboardGuis"):GetChildren()) do
 			v94:Destroy()
 		end
@@ -1562,7 +1580,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				return
 			end
 		end
-		print("Exited after i =",i)
+		print("Weapons Raycast exited after i =",i)
 		return
 	end
 	OnClick = function()
@@ -1580,7 +1598,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				return 
 			end
 		end
-		if v21 then
+		if v21 or v20 then
 			return
 		end
 		v21 = true
@@ -3492,6 +3510,7 @@ AvailableHacks ={
 			["Desc"]="Fixes an aspect of the hammer",
 			["Shortcut"]="Util_Hammer",
 			["ClubFuncts"] = {},
+			["ShowFreezeConnections"]={},
 			["Default"]=true,
 			["ActivateFunction"]=function(newValue)
 				for s = #AvailableHacks.Utility[8].ClubFuncts, 1, -1 do
@@ -3500,6 +3519,13 @@ AvailableHacks ={
 						funct:Disconnect()
 					end
 					table.remove(AvailableHacks.Utility[8].ClubFuncts,s)
+				end
+				for s = #AvailableHacks.Utility[8].ShowFreezeConnections, 1, -1 do
+					local funct = AvailableHacks.Utility[8].ShowFreezeConnections[s]
+					if funct then
+						funct:Disconnect()
+					end
+					table.remove(AvailableHacks.Utility[8].ShowFreezeConnections,s)
 				end
 				local hammerAnims = {"AnimSwing","AnimWipe","AnimArmIdle"}
 				for _, track in ipairs(human:WaitForChild("Animator"):GetPlayingAnimationTracks()) do

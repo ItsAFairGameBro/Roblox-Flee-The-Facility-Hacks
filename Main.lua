@@ -1563,7 +1563,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			local v181 = v28
 			local v182 = v181.Hit
 			local v184 = v180(v182.p)
-			if not v184 then
+			if v184 then
 				v181 = "tie up player's: "
 				v182 = v181 .. v184.Name
 				print(v182)

@@ -89,7 +89,7 @@ if not botModeEnabled or not myBots[plr.Name:lower()] or savedSettings.ForceBotM
 	botModeEnabled = false;
 end
 local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
-local hitBoxesEnabled=true
+local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
 local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
 local absMinTimeBetweenPCs=9.5 --abs min time to hack, overrides minspeed
 local botBeastBreakMin=13.5 --in minutes
@@ -1443,6 +1443,313 @@ function Path:Run(target)
 	end
 	return true
 end
+--MODULE 3: LOCAL CLUB SCRIPT
+local function LocalClubScriptFunction(Original_LocalClubScript)
+	local script = Original_LocalClubScript
+	
+	local v2 = script.Parent
+	local v4 = v2:WaitForChild("HammerEvent")
+	local v7 = game:GetService("UserInputService")
+	local v10 = game:GetService("ReplicatedStorage")
+	local v13 = game:GetService("ContextActionService")
+	local v19 = v2:WaitForChild("Handle")
+	local v20 = false
+	local v21 = false
+	local v23 = game.Players
+	local v24 = v23.LocalPlayer
+	v23 = v24.Character
+	local v26 = v23:WaitForChild("Humanoid")
+	local v28 = v24:GetMouse()
+	local v30 = workspace.CurrentCamera
+	local v32 = v23:WaitForChild("CarriedTorso")
+	local v36 = require(v24:WaitForChild("TempPlayerStatsModule"))
+	local v40 = v26:LoadAnimation(v2:WaitForChild("AnimSwing"))
+	local v44 = v26:LoadAnimation(v2:WaitForChild("AnimWipe"))
+	local v48 = v26:LoadAnimation(v2:WaitForChild("AnimArmIdle"))
+	local v51 = v19:WaitForChild("SoundHitPlayer")
+	local v54 = v19:WaitForChild("SoundHitWall")
+	ShowEmptyFreezePodBillboardIcons = function()
+		local v70 = v10.CurrentMap
+		local v71, v72, v70 = pairs(v70.Value:GetChildren())
+		for v69, v74 in v71, v72, v70 do
+			local v73 = v74.Name
+			if not v74:FindFirstChild("PodTrigger") then
+				local v77 = v10.BillboardGuiIcons.EmptyPodBillboardGui:Clone()
+				v77.Parent = v23:FindFirstChild("IconBillboardGuis")
+				v77.Adornee = v74:FindFirstChild("PodRoof")
+				v77.Enabled = true
+			end
+		end
+	end
+	ClearFreezePodBillboardIcons = function()
+		local v90, v91, v92 = pairs((v23:FindFirstChild("IconBillboardGuis")):GetChildren())
+		for v95, v94 in v90, v91, v92 do
+			local v93 = v94.Name
+			v94:Destroy()
+		end
+	end
+	ShowRaycast = function(p1, p2)
+		local v100 = Instance.new("Part", v2)
+		v100.BrickColor = BrickColor.new("Bright red")
+		v100.FormFactor = "Custom"
+		v100.Material = "Neon"
+		v100.Transparency = 0.25
+		v100.Anchored = true
+		v100.Locked = true
+		v100.CanCollide = false
+		local v128 = p1.Origin - p2.magnitude
+		v100.Size = Vector3.new(0.01, 0.01, v128)
+		v100.CFrame = CFrame.new(p1.Origin, p2) * CFrame.new(0, 0, -v128 / 2)
+		(game:GetService("Debris")):AddItem(v100, 1)
+	end
+	RagdollLimbRaycast = function(p3)
+		print("weapon raycast")
+		local v137 = false
+		local v138 = {}
+		v138[1] = v23
+		local v144 = v23
+		local v145 = v144.Head
+		local v146 = v145.CFrame
+		local v147 = v146.p
+		local v174 = p3 - v147
+		local v175 = v174.unit
+		local v149
+		local v150
+		while true do
+			v175 = workspace
+			v147 = Ray.new(v23.Head.CFrame.p, v175 * 6)
+			v146 = v138
+			v145 = false
+			v144 = true
+			local v151, v140 = v175:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
+			v149 = v151
+			v150 = v174
+			v174 = v149.Parent
+			v151 = v174.ClassName
+			v151 = v149.Transparency
+			v174 = 0.95
+			if v174 < v151 then
+				v151 = v149.CanCollide
+				v151 = v149.Parent
+				local v153 = v151:FindFirstChild("Humanoid")
+			end
+			v174 = v138
+			v153 = table.insert
+			v153(v174, v149)
+			v137 = true
+			local v155 = game
+			local v158 = v155.Players:GetPlayerFromCharacter(v149.Parent)
+			if not v158 then
+				v155 = require
+				local v161 = v155(v158:FindFirstChild("TempPlayerStatsModule"))
+				local v164 = v149:isDescendantOf(v23)
+				if v164 then
+					v164 = v161.GetValue
+					local v166 = v164("Ragdoll")
+					v166 = v161.GetValue
+					local v168 = v166("Health")
+					if v168 > 0 then
+						v168 = v4
+						v168:FireServer("HammerTieUp", v149, v150)
+						v137 = false
+						return v149
+					end
+				end
+			end
+			v161 = nil
+			return v161
+		end
+		v158 = nil
+		return v158
+	end
+	OnClick = function()
+		print("Mouse pressed!")
+		local v180 = v20
+		if v180 then
+			v180 = RagdollLimbRaycast
+			local v181 = v28
+			local v182 = v181.Hit
+			local v184 = v180(v182.p)
+			if not v184 then
+				v181 = "tie up player's: "
+				v182 = v181 .. v184.Name
+				print(v182)
+				return 
+			end
+			local v187 = v21
+			v187 = true
+			v21 = v187
+			print("HOI, swing!")
+			v40:Play()
+			hammerHitConnection = v19.Touched:connect(function(p4)
+				local v193 = "I hit: "
+				local v194 = p4.Name
+				print(v193 .. v194)
+				local v198 = FindCharacterFromChild(p4)
+				if not v198 then
+					local v199 = v23
+					if v198 == v199 then
+						v199 = p4.Transparency
+						v193 = 0.95
+						if v193 < v199 then
+							v199 = p4.CanCollide
+						end
+					end
+					v199 = p4.Parent
+					if v199 == v198 then
+						v199 = print
+						v193 = "I hit another player"
+						v199(v193)
+						v51:Play()
+						v194 = "HammerHit"
+						v4:FireServer(v194, p4)
+						hammerHitConnection:disconnect()
+						while true do
+							local v205 = v40.TimePosition
+							if v205 ~= v40.Length then
+								break
+							end
+							v205 = wait
+							v205()
+						end
+						v21 = true
+						v206 = 0.100000001
+						v44:Play(v206, 1, 0.5)
+						v204 = v26
+						v204 = v26
+						local v211 = 0
+						v204.WalkSpeed = v211
+						while true do
+							v211 = v44
+							v204 = v211.TimePosition
+							v211 = v44.Length or 0
+							if v204 ~= v211 then
+								break
+							end
+							v204 = wait
+							v204()
+						end
+						v211 = v26
+						local v214 = v211.WalkSpeed
+						v214 = v26
+						v214.WalkSpeed = v204.WalkSpeed
+						v21 = false
+						return 
+							v54:Play()
+						v40:Stop()
+					end
+					return 
+				end
+			end)
+			swingStoppedConnection = v40.Stopped:connect(function()
+				v21 = false
+				hammerHitConnection:disconnect()
+				swingStoppedConnection:disconnect()
+			end)
+		end
+	end
+	FindCharacterFromChild = function(p5)
+		local v231 = p5.Name
+		v231 = nil
+		return v231
+		if not game.Players:GetPlayerFromCharacter(p5) then
+			local v237 = p5:FindFirstChild("Humanoid")
+			if not v237 then
+				return p5
+			end
+			v237 = nil
+			return v237
+		end
+		return FindCharacterFromChild(v239.Parent)
+	end
+	SetLocalTransparencyInChildren = function(p6)
+		if not p6 then
+			if p6:IsA("BasePart") then
+				local v246 = p6:IsA("MeshPart")
+				if not v246 then
+					v246 = p6.Transparency
+					p6.LocalTransparencyModifier = v246
+				end
+				local v248, v249, v250 = pairs(p6:GetChildren())
+				for v254, v253 in v248, v249, v250 do
+					SetLocalTransparencyInChildren(v253)
+				end
+				return 
+			end
+		end
+	end
+	local function IsInsideGuiBox_1(p7, p8)
+		local v257 = p7.X
+		local v258 = p8.AbsolutePosition
+		local v259 = v258.X
+		if v257 > v259 then
+			v257 = p7.X
+			local v260 = p8.AbsolutePosition
+			local v261 = p8.AbsoluteSize
+			v258 = v260 + v261
+			v259 = v258.X
+			if v259 > v257 then
+				v257 = p7.Y
+				v258 = p8.AbsolutePosition
+				v259 = v258.Y
+				if v257 > v259 then
+					v257 = p7.Y
+					v260 = p8.AbsolutePosition
+					v261 = p8.AbsoluteSize
+					v258 = v260 + v261
+					v259 = v258.Y
+					if v259 > v257 then
+						v257 = true
+						return v257
+					end
+				end
+			end
+		end
+		return false
+	end
+	IsInsideGuiBox = IsInsideGuiBox_1
+	IsInsideGuiBox_1 = v7.TouchEnabled
+	IsInsideGuiBox_1 = v7.TouchTapInWorld
+	IsInsideGuiBox_1:connect(function(p9, p10)
+		if p10 then
+			v4:FireServer("HammerClick", true)
+			OnClick()
+		end
+	end)
+	v28.Button1Down:connect(function()
+		v4:FireServer("HammerClick", true)
+		OnClick()
+	end)
+	game:GetService("RunService").RenderStepped:connect(function()
+		v23:FindFirstChild("Left Arm").LocalTransparencyModifier = v23:FindFirstChild("Left Arm").Transparency
+		v23:FindFirstChild("Right Arm").LocalTransparencyModifier = v23:FindFirstChild("Right Arm").Transparency
+		SetLocalTransparencyInChildren(v2)
+	end)
+	carriedTorsoConnection = v32.Changed:connect(function()
+		local v295 = v32.Value
+		if not v295 then
+			v295 = true
+			v20 = v295
+			v295 = ShowEmptyFreezePodBillboardIcons
+			v295()
+			return 
+		end
+		v20 = false
+		ClearFreezePodBillboardIcons()
+	end)
+	v2.ChildRemoved:connect(function(p11)
+		local v300 = p11.Name
+		v300 = v48
+		v300:Stop()
+		ClearFreezePodBillboardIcons()
+		v24.CameraMode = Enum.CameraMode.Classic
+	end)
+	v24.CameraMode = Enum.CameraMode.LockFirstPerson
+	v19:WaitForChild("SoundHeartBeat").Volume = 0
+	v19:WaitForChild("SoundChaseMusic").Volume = 0
+	v48:Play(0.100000001, 1, 0.5)
+end
+
 --USER COLOR COMPUTATION
 --[[local ChatColors = {
 	newColor3(0.768628, 0.156863, 0.109804),
@@ -3146,6 +3453,8 @@ AvailableHacks ={
 				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
 			end,
 		}),
+		
+
 		[4]={
 			["Type"]="ExTextButton",
 			["Title"]="Crawl Type",
@@ -3167,6 +3476,28 @@ AvailableHacks ={
 				},
 			},
 		},
+		[8]=({
+			["Type"]="ExTextButton",
+			["Title"]="Mobile Hammer Fix",
+			["Desc"]="Fixes an aspect of the hammer",
+			["Shortcut"]="Util_Hammer",
+			["Default"]=true,
+			["ActivateFunction"]=function(newValue)
+				
+			end,
+			["BeastStartUp"] = function()
+				local Hammer = char:WaitForChild("Hammer",30)
+				if not Hammer then
+					return warn("Hammer Not Found, Hacks Bro!")
+				end
+				local LocalClubScript = Hammer:WaitForChild("LocalClubScript",5)
+				if not LocalClubScript then
+					return warn("LocalClubScript Not Found, Hacks Bro!")
+				end
+				LocalClubScript.Disabled = true
+				LocalClubScriptFunction(LocalClubFunction)
+			end,
+		}),
 		[15]={
 			["Type"]="ExTextBox",
 			["Title"]="Insta Trade Amount",
@@ -4100,7 +4431,7 @@ AvailableHacks ={
 		[20]={
 			["Type"]="ExTextButton",
 			["Title"]="Walk Through Invisible Walls",
-			["Desc"]="Walk Through All Invisible Walls In The Map",
+			["Desc"]="Walk Through All Invisible Walls In The Game",
 			["Shortcut"]="Basic_InviWalls",
 			["Default"]="Visible",
 			["Options"]={
@@ -4127,6 +4458,7 @@ AvailableHacks ={
 			end,
 			["ApplyInvi"]=function(instance)
 				--local start = os.clock()
+				local saveEn = enHacks.Basic_InviWalls
 				for num, object in ipairs(instance:GetDescendants()) do
 					if object:IsA("BasePart") and ((object.Transparency>=.95 and object.CanCollide) or object:HasTag("InviWalls")) then
 						AvailableHacks.Basic[20].InstanceAdded(object)
@@ -4134,7 +4466,7 @@ AvailableHacks ={
 					if num%70==0 then
 						RunS.RenderStepped:Wait()
 					end
-					if not enHacks.Basic_InviWalls then
+					if saveEn ~= enHacks.Basic_InviWalls then
 						return
 					end
 				end
@@ -5738,6 +6070,12 @@ clear = function(isManualClear)
 		if LocalPlayerScript then
 			LocalPlayerScript.Disabled = true
 			LocalPlayerScript.Disabled = false
+		end
+		if Beast == char then
+			local LocalClubScript = char:FindFirstChild("LocalClubScript",true)
+			if LocalClubScript then
+				LocalClubScript.Disabled = false
+			end
 		end
 		--local CrawlScript=char:WaitForChild("CrawlScript") 
 		--if CrawlScript then

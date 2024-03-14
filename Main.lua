@@ -6064,6 +6064,9 @@ clear = function(isManualClear)
 			LocalPlayerScript.Disabled = false
 		end
 		if Beast == char then
+			RunS.RenderStepped:Wait()
+			CAS:UnbindAction("Crawl")
+			
 			local LocalClubScript = char:FindFirstChild("LocalClubScript",true)
 			if LocalClubScript then
 				LocalClubScript.Disabled = false

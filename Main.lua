@@ -3382,7 +3382,7 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=true,
 			["UpdateZoom"]=function(void,reset)--NOT e-learning!
-				if reset then
+				if reset and false then
 					plr.CameraMinZoomDistance=SP.CameraMinZoomDistance
 					plr.CameraMaxZoomDistance=(SP.CameraMaxZoomDistance)
 					plr.CameraMode=(char==Beast and Enum.CameraMode.LockFirstPerson or Enum.CameraMode[SP.CameraMode.Name])

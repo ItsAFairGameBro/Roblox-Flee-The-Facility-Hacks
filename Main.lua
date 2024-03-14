@@ -1437,7 +1437,6 @@ function Path:Run(target)
 end
 --MODULE 3: LOCAL CLUB SCRIPT
 local currentRaycastParams = RaycastParams.new()
-print("CG",game.PhysicsService:GetRegisteredCollisionGroups())
 local function LocalClubScriptFunction(Original_LocalClubScript)
 	local script = Original_LocalClubScript
 	local Hammer = Original_LocalClubScript.Parent
@@ -1529,7 +1528,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				local v151 = v149.Transparency
 				v174 = 0.95
 				if not v149.CanCollide or (v151.Parent and v151.Parent:FindFirstChild("Humanoid")) then
-					table.insert(v174, v149)
+					table.insert(v146, v149)
 					v137 = true
 					local v158 = PS:GetPlayerFromCharacter(v149.Parent)
 					if v158 then

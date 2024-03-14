@@ -1511,7 +1511,6 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		local v149
 		local v150
 		while true do
-			v175 = workspace
 			v147 = Ray.new(v23.Head.CFrame.p, v175 * 6)
 			v146 = v138
 			v145 = false

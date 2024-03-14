@@ -1542,18 +1542,23 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 								v137 = false
 								return v149
 							else
+								print("Exit1")
 								return
 							end
 						else
+							print("Exit2")
 							return
 						end
 					else
+						print("Exit3")
 						return
 					end
 				else
+					print("Exit4")
 					return
 				end
 			else
+				print("Exit5")
 				return
 			end
 		end

@@ -6077,8 +6077,8 @@ clear = function(isManualClear)
 		--if CrawlScript then
 		--	CrawlScript.Disabled=false
 		--end
-		AvailableHacks.Utility[2].ActivateFunction(false)
-		AvailableHacks.Utility[-1].ActivateFunction(false)
+		AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
+		AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
 	end
 

@@ -3495,7 +3495,7 @@ AvailableHacks ={
 			["Shortcut"]="Util_Hammer",
 			["ClubFuncts"] = {},
 			["ShowFreezeConnections"]={},
-			["Default"]=false,
+			["Default"]=true,
 			["ActivateFunction"]=function(newValue)
 				for s = #AvailableHacks.Utility[8].ClubFuncts, 1, -1 do
 					local funct = AvailableHacks.Utility[8].ClubFuncts[s]
@@ -3529,7 +3529,7 @@ AvailableHacks ={
 				
 				LocalClubScript.Disabled = newValue
 				if newValue then
-					task.delay(69,LocalClubScriptFunction,LocalClubScript)
+					task.delay(0,LocalClubScriptFunction,LocalClubScript)
 				end
 			end,
 			["MyPlayerAdded"] = function()

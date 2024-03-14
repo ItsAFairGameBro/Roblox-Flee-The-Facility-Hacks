@@ -1754,7 +1754,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		ClearFreezePodBillboardIcons()
 		v24.CameraMode = Enum.CameraMode.Classic
 	end))
-	if (not enHacks.Util_CanZoom) then
+	if (enHacks.Util_CanZoom==false) then
 		print("Zooming Locked!")
 		v24.CameraMode = Enum.CameraMode.LockFirstPerson
 	end

@@ -3382,7 +3382,7 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=true,
 			["UpdateZoom"]=function(void,reset)--NOT e-learning!
-				if reset and false then
+				if reset then
 					plr.CameraMinZoomDistance=SP.CameraMinZoomDistance
 					plr.CameraMaxZoomDistance=(SP.CameraMaxZoomDistance)
 					plr.CameraMode=(char==Beast and Enum.CameraMode.LockFirstPerson or Enum.CameraMode[SP.CameraMode.Name])
@@ -3495,7 +3495,7 @@ AvailableHacks ={
 			["Shortcut"]="Util_Hammer",
 			["ClubFuncts"] = {},
 			["ShowFreezeConnections"]={},
-			["Default"]=true,
+			["Default"]=false,
 			["ActivateFunction"]=function(newValue)
 				for s = #AvailableHacks.Utility[8].ClubFuncts, 1, -1 do
 					local funct = AvailableHacks.Utility[8].ClubFuncts[s]
@@ -3529,7 +3529,7 @@ AvailableHacks ={
 				
 				LocalClubScript.Disabled = newValue
 				if newValue then
-					task.delay(3,LocalClubScriptFunction,LocalClubScript)
+					task.delay(69,LocalClubScriptFunction,LocalClubScript)
 				end
 			end,
 			["MyPlayerAdded"] = function()
@@ -3679,7 +3679,6 @@ AvailableHacks ={
 			["MaxBound"]=1e3,
 			["DontActivate"]=true,
 			["UpdateSpeed"]=function()
-				print("Speed Updated!")
 				local crawlSlowDown = 1/2
 				local newSpeed = human:GetAttribute("OverrideSpeed")
 				if not newSpeed and gameUniverse=="Flee" and enHacks.WalkSpeed==defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4) then
@@ -6117,13 +6116,14 @@ clear = function(isManualClear)
 			LocalPlayerScript.Disabled = false
 		end
 		if Beast == char then
-			RunS.RenderStepped:Wait()
-			CAS:UnbindAction("Crawl")
+			task.delay(0,CAS.UnbindAction,CAS,"Crawl")
 
-			local LocalClubScript = char:FindFirstChild("LocalClubScript",true)
-			if LocalClubScript then
-				LocalClubScript.Disabled = false
-			end
+			task.spawn(function()
+				local LocalClubScript = char:FindFirstChild("LocalClubScript",true)
+				if LocalClubScript then
+					LocalClubScript.Disabled = false
+				end
+			end)
 		end
 		--local CrawlScript=char:WaitForChild("CrawlScript") 
 		--if CrawlScript then

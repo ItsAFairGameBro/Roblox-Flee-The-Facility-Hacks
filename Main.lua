@@ -6119,6 +6119,7 @@ clear = function(isManualClear)
 	AvailableHacks.Basic[4].ActivateFunction(false);--disble hacks
 	AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
 	AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
+	human:SetAttribute("OverrideSpeed",nil)
 	if AvailableHacks.Blatant then
 		AvailableHacks.Blatant[2].IsCrawling=false;--disable crawl
 		AvailableHacks.Blatant[2].Crawl(false);--disable crawl

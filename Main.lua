@@ -1500,7 +1500,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	end
 	currentRaycastParams.FilterType = Enum.RaycastFilterType.Include
 	currentRaycastParams.IgnoreWater = true
-	currentRaycastParams.CollisionGroup = "PLAYERS_BODIES"
+	--currentRaycastParams.CollisionGroup = "PLAYERS_BODIES"
 	RagdollLimbRaycast = function(p3)
 		print("weapon raycast")
 		local v137 = false
@@ -1524,7 +1524,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			local result = workspace:Raycast(v23.Head.CFrame.p,v175 * 6,currentRaycastParams)
 			v149 = result and result.Instance
 			v150 = v174
-			if v149 and v149:IsA("BasePart") then
+			if result and v149 and v149:IsA("BasePart") then
 				local v151 = v149.Transparency
 				v174 = 0.95
 				if not v149.CanCollide or (v151.Parent and v151.Parent:FindFirstChild("Humanoid")) then

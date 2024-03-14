@@ -615,6 +615,9 @@ local function isInLobby(theirChar)
 	return false,"Lobby"--]]
 end
 local jumpChangedEvent
+
+
+--PRINT ENVIRONMENT START
 local function printInstances(...)
 	local printVal = ""
 	for num, val in ipairs({...}) do
@@ -654,6 +657,16 @@ local function myPrint(...)
 	print(recurseLoopPrint({...},"",0))
 end
 local print = myPrint;
+--PRINT ENVIRONMENT END
+
+local function triggerConnection(connection)
+	for _, signal in ipairs(getconnections(connection)) do
+		if signal.Enabled then
+			signal:Fire(true)
+		end
+	end
+end
+
 local function findClosestObj(objs,poso,maxDist,yMult)
 	local closest,closestDist=nil,maxDist or 2000
 	for num,current in ipairs(objs) do
@@ -3099,10 +3112,14 @@ AvailableHacks ={
 					AvailableHacks.Utility[3].Active=nil
 					CAS:UnbindAction("PushSlash"..saveIndex)
 				end
-				if ((newValue or Beast == char) and not AvailableHacks.Utility[3].Funct) then
-					local mouse = plr:GetMouse()
-					AvailableHacks.Utility[3].Funct = mouse.Button1Down:Connect(function()
-						
+				if ((newValue and Beast == char) and not AvailableHacks.Utility[3].Funct) then
+					AvailableHacks.Utility[3].Funct = UIS.InputBegan:Connect(function(input, gameprocesssed)
+						if gameprocesssed then
+							return
+						end
+						if input.UserInputType == Enum.UserInputType.MouseButton1 and UIS.TouchEnabled then
+							triggerConnection(UIS.TouchTapInWorld)
+						end
 					end)
 				elseif ((not newValue or Beast ~= char) and AvailableHacks.Utility[3].Funct) then
 					AvailableHacks.Utility[3].Funct:Disconnect()
@@ -6328,9 +6345,6 @@ local function CloseMenu(actionName, inputState, inputObject)
 	end
 end
 CAS:BindActionAtPriority("CloseMenu"..saveIndex,CloseMenu,true,1e5,Enum.KeyCode.V)
-
-VU:CaptureController()
-VU:ClickButton1(Vector2.new())
 
 
 return "Hack Successfully Executed!"

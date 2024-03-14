@@ -1580,7 +1580,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			local v194 = p4.Name
 			print(v193 .. v194)
 			local v198 = FindCharacterFromChild(p4)
-			if not v198 then
+			if v198 then
 				local v199 = v23
 				if v198 == v199 then
 					v199 = p4.Transparency
@@ -1646,11 +1646,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	FindCharacterFromChild = function(p5)
 		if not game.Players:GetPlayerFromCharacter(p5) then
 			local v237 = p5:FindFirstChild("Humanoid")
-			if not v237 then
-				return p5
-			end
-			v237 = nil
-			return v237
+			return p5
 		end
 		return FindCharacterFromChild(p5.Parent)
 	end

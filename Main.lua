@@ -1625,6 +1625,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 					v4:FireServer(v194, p4)
 					hammerHitConnection:Disconnect()
 					swingStoppedConnection:Disconnect()
+					v26.WalkSpeed = 0
 					v21 = true
 					while true do
 						local v205 = v40.TimePosition
@@ -1635,10 +1636,8 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 						v205()
 					end
 					v44:Play(0.1, 1, 0.5)
-					local v204 = v26
-					v204 = v26
+					local v204
 					local v211 = 0
-					v204.WalkSpeed = 0
 					while true do
 						v211 = v44
 						v204 = v211.TimePosition
@@ -1764,6 +1763,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		v24.CameraMode = Enum.CameraMode.Classic
 	end))
 	if (not enHacks.Util_CanZoom) then
+		print("Zooming Locked!")
 		v24.CameraMode = Enum.CameraMode.LockFirstPerson
 	end
 	v19:WaitForChild("SoundHeartBeat").Volume = 0

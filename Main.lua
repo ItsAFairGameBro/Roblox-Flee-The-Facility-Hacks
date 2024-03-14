@@ -3521,7 +3521,9 @@ AvailableHacks ={
 					end
 					table.remove(AvailableHacks.Utility[8].ClubFuncts,s)
 				end
-				ClearFreezePodBillboardIcons()
+				if ClearFreezePodBillboardIcons then
+					ClearFreezePodBillboardIcons()
+				end
 				local hammerAnims = {"AnimSwing","AnimWipe","AnimArmIdle"}
 				for _, track in ipairs(human:WaitForChild("Animator"):GetPlayingAnimationTracks()) do
 					if table.find(hammerAnims,track.Animation.Name) then
@@ -6124,6 +6126,7 @@ clear = function(isManualClear)
 
 
 	if isManualClear then
+		print("Manual Clear Activated!")
 		local LocalPlayerScript = char:WaitForChild("LocalPlayerScript")
 		if LocalPlayerScript then
 			LocalPlayerScript.Disabled = true

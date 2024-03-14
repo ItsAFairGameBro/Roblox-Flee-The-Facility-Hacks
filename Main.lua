@@ -3394,7 +3394,7 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=true,
 			["UpdateZoom"]=function(void,reset)--NOT e-learning!
-				print("Zoom2",reset==true,isCleared)
+				print("Zoom2",reset==true,isCleared,plr.CameraMaxZoomDistance,plr.CameraMode)
 				if reset then
 					plr.CameraMinZoomDistance=SP.CameraMinZoomDistance--(Beast == char and 0.5 or SP.CameraMinZoomDistance)
 					plr.CameraMaxZoomDistance=(SP.CameraMaxZoomDistance)

@@ -1520,8 +1520,6 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			local v151, v140 = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
 			v149 = v151
 			v150 = v174
-			v174 = v149.Parent
-			v151 = v174.ClassName
 			v151 = v149.Transparency
 			v174 = 0.95
 			if v174 < v151 then

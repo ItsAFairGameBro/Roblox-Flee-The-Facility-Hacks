@@ -105,7 +105,7 @@ local defaultCharacterJumpPower=SP.CharacterJumpPower
 local NameTagEx,HackGUI
 
 
---GUI CREATION
+--INTERFACE/GUI CREATION
 local MainListEx,myList,PropertiesEx,Properties,ServerCreditsGained,Main;
 local TextBoxExamples, CreditsGained,ServerXPGained,XPGained;
 local function createToggleButton(Toggle, ExTextButton)
@@ -580,6 +580,9 @@ local function StringWaitForChild(instance,str2Parse,duration)
 		instance = instance:WaitForChild(stringLeft,duration)
 	end
 	return instance
+end
+local function getgenv()
+	return _G
 end
 local function isInLobby(theirChar)
 	--[[local a=Vector3.new(410.495, 59.4767, -197.00)
@@ -6058,6 +6061,9 @@ clear = function(isManualClear)
 	if (AvailableHacks.Bot[15] and AvailableHacks.Bot[15].CurrentPath~=nil) then
 		AvailableHacks.Bot[15].CurrentPath:Stop()
 	end
+	if gameName == "FleeMain" then
+		AvailableHacks.Utility[8].Cleanup()
+	end
 	local searchList = objectFuncts or {}
 	for obj,objectEventsList in pairs(searchList) do
 		local insideSearchList = objectEventsList or {}
@@ -6111,6 +6117,7 @@ clear = function(isManualClear)
 	end;--effectively disables all hacks!
 	AvailableHacks.Basic[4].ActivateFunction(false);--disble hacks
 	AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
+	AvailableHacks.Basic[1].ActivateFunction(false);--disable walkspeed
 	if AvailableHacks.Blatant then
 		AvailableHacks.Blatant[2].IsCrawling=false;--disable crawl
 		AvailableHacks.Blatant[2].Crawl(false);--disable crawl
@@ -6141,11 +6148,6 @@ clear = function(isManualClear)
 	CAS:UnbindAction("Crawl"..saveIndex)
 	CAS:UnbindAction("CloseMenu"..saveIndex)
 	CAS:UnbindAction("PushSlash"..saveIndex)
-
-
-	if gameName == "FleeMain" then
-		AvailableHacks.Utility[8].Cleanup()
-	end
 
 	plr:SetAttribute("Cleared"..getID,true)
 	DS:AddItem(HackGUI,1)
@@ -6413,7 +6415,6 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			hack.Options = (hack.Options or (defaultOptionsTable))
 			assert(getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
 			local overrideDefault = (GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut])
-			print(getgenv().enHacks)
 			if overrideDefault==nil and getgenv().enHacks then
 				overrideDefault = getgenv().enHacks[hack.Shortcut]
 			end

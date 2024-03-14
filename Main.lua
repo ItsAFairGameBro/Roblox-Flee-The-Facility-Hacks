@@ -1468,8 +1468,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	local v54 = v19:WaitForChild("SoundHitWall")
 	ShowEmptyFreezePodBillboardIcons = function()
 		local v70 = v10.CurrentMap
-		local v71, v72, v70 = pairs(v70.Value:GetChildren())
-		for v69, v74 in v71, v72, v70 do
+		for v69, v74 in ipairs(v70.Value:GetChildren()) do
 			local v73 = v74.Name
 			if not v74:FindFirstChild("PodTrigger") then
 				local v77 = v10.BillboardGuiIcons.EmptyPodBillboardGui:Clone()
@@ -1480,9 +1479,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		end
 	end
 	ClearFreezePodBillboardIcons = function()
-		local v90, v91, v92 = pairs((v23:FindFirstChild("IconBillboardGuis")):GetChildren())
-		for v95, v94 in v90, v91, v92 do
-			local v93 = v94.Name
+		for v95, v94 in ipairs(v23:FindFirstChild("IconBillboardGuis"):GetChildren()) do
 			v94:Destroy()
 		end
 	end
@@ -1518,8 +1515,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			v146 = v138
 			v145 = false
 			v144 = true
-			local v151, v140 = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
-			print("Ray",v151)
+			local v151, hitLoc = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
 			v149 = v151
 			v150 = v174
 			if v149 and v149:IsA("BasePart") then
@@ -1544,7 +1540,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 						local v168 = v166("Health")
 						if v168 > 0 then
 							v168 = v4
-							v168:FireServer("HammerTieUp", v149, v150)
+							v168:FireServer("HammerTieUp", v149, hitLoc)
 							v137 = false
 							return v149
 						end
@@ -1710,7 +1706,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	IsInsideGuiBox_1 = UIS.TouchTapInWorld
 	table.insert(ClubConnections, IsInsideGuiBox_1:connect(function(p9, p10)
 		if p10 then
-			RS.RemoteEvent:FireServer("HammerClick", true)
+			v4:FireServer("HammerClick", true)
 			OnClick()
 		end
 	end))

@@ -1491,7 +1491,6 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				v77.Adornee = v74:FindFirstChild("PodRoof")
 				v77.Enabled = podTrigger.ActionSign.Value==30
 				
-				--TODO HERE
 				table.insert(ShowFreezeConnections, podTrigger.ActionSign.Changed:Connect(function()
 					v77.Enabled = podTrigger.ActionSign.Value==30
 				end))
@@ -1522,7 +1521,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	currentRaycastParams.IgnoreWater = true
 	--currentRaycastParams.CollisionGroup = "PLAYERS_BODIES"
 	RagdollLimbRaycast = function(p3)
-		print("weapon raycast")
+		--print("weapon raycast")
 		local v137 = false
 		local v138 = {}
 		v138[1] = v23
@@ -1575,11 +1574,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				return
 			end
 		end
-		print("Weapons Raycast failed after i =",i)
+		--print("Weapons Raycast failed after i =",i)
 		return
 	end
 	OnClick = function()
-		print("Mouse pressed!")
+		--print("Mouse pressed!")
 		local v180 = v20
 		if not v180 then
 			v180 = RagdollLimbRaycast
@@ -1597,14 +1596,14 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			return
 		end
 		v21 = true
-		print("HOI, swing!")
+		--print("HOI, swing!")
 		v40:Play()
 		local hammerHitConnection
 		local swingStoppedConnection
 		hammerHitConnection = v19.Touched:connect(function(p4)
 			local v193 = "I hit: "
 			local v194 = p4.Name
-			print(v193 .. v194)
+			--print(v193 .. v194)
 			local v198 = FindCharacterFromChild(p4)
 			if v198 then
 				local v199 = v23
@@ -1617,7 +1616,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				end--]]
 				v199 = p4.Parent
 				if v199 == v198 then
-					print( "I hit another player")
+					--print( "I hit another player")
 					v51:Play()
 					v194 = "HammerHit"
 					v4:FireServer(v194, p4)
@@ -3528,7 +3527,7 @@ AvailableHacks ={
 				print("LocalClubScript Disabled!")
 				
 				LocalClubScript.Disabled = newValue
-				if newValue then
+				if newValue and false then
 					task.delay(0,LocalClubScriptFunction,LocalClubScript)
 				end
 			end,
@@ -4618,7 +4617,6 @@ AvailableHacks ={
 						for hackID, value in pairs(enHacks) do
 							lastRunningEnv.GlobalSettings.enHacks[hackID] = value
 						end
-						print("Pre-Enabled",getDictLength(enHacks),"Values!")
 					end
 					reloadFunction()
 				else
@@ -6411,7 +6409,6 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			assert(getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
 			local overrideDefault = GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]
 			if overrideDefault~=nil then
-				print("Overriden",hack.Shortcut)
 				enHacks[hack.Shortcut]=overrideDefault;
 			else
 				if hack.Default==nil then

@@ -3527,7 +3527,7 @@ AvailableHacks ={
 				print("LocalClubScript Disabled!")
 				
 				LocalClubScript.Disabled = newValue
-				if newValue and false then
+				if newValue then
 					task.delay(0,LocalClubScriptFunction,LocalClubScript)
 				end
 			end,

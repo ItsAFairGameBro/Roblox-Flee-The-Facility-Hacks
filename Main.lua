@@ -4613,7 +4613,8 @@ AvailableHacks ={
 			},
 			["ActivateFunction"]=function(newValue)
 				if reloadFunction then
-					if lastRunningEnv.GlobalSettings and lastRunningEnv.GlobalSettings.enHacks then
+					if lastRunningEnv.GlobalSettings then
+						lastRunningEnv.GlobalSettings.enHacks = {}
 						for hackID, value in pairs(enHacks) do
 							lastRunningEnv.GlobalSettings.enHacks[hackID] = value
 						end

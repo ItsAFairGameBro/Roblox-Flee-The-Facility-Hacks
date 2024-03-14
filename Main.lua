@@ -1519,6 +1519,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			v145 = false
 			v144 = true
 			local v151, v140 = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
+			print("Ray",v151)
 			v149 = v151
 			v150 = v174
 			if v149 and v149:IsA("BasePart") then
@@ -1532,13 +1533,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				v174 = v138
 				table.insert(v174, v149)
 				v137 = true
-				local v155 = game
-				local v158 = v155.Players:GetPlayerFromCharacter(v149.Parent)
+				local v158 = PS:GetPlayerFromCharacter(v149.Parent)
 				if v158 then
-					v155 = require
-					local v161 = v155(v158:FindFirstChild("TempPlayerStatsModule"))
+					local v161 = require(v158:FindFirstChild("TempPlayerStatsModule"))
 					local v164 = v149:isDescendantOf(v23)
-					if v164 then
+					if not v164 then
 						v164 = v161.GetValue
 						local v166 = v164("Ragdoll")
 						v166 = v161.GetValue
@@ -1551,8 +1550,9 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 						end
 					end
 				end
+			else
+				return
 			end
-			return
 		end
 		return
 	end

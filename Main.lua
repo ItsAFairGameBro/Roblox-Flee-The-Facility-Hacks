@@ -6131,8 +6131,8 @@ clear = function(isManualClear)
 			obj:Destroy();
 		end;
 	end;
-	for userID,functList in ipairs(playerEvents) do
-		for num,funct in ipairs(functList or {}) do
+	for userID,functList in pairs(playerEvents) do
+		for num,funct in pairs(functList or {}) do
 			funct:Disconnect();
 			funct=nil;
 		end;
@@ -6712,7 +6712,7 @@ local function intermediatePlayerRemovingFunction(theirPlr)
 	if plr==theirPlr then
 		return
 	end
-	for num,funct in ipairs((playerEvents[theirPlr.UserId] or ({}))) do
+	for num,funct in pairs((playerEvents[theirPlr.UserId] or ({}))) do
 		funct:Disconnect()
 	end
 	playerEvents[theirPlr.UserId]=nil

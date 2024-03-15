@@ -3020,10 +3020,12 @@ AvailableHacks ={
 					elseif s~=1 then
 						wait(.15)
 					end
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-					if isOpened then
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+					if Trigger:FindFirstChild("Event") then
+						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+						if isOpened then
+							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+						end
 					end
 				end
 				end,
@@ -3570,7 +3572,7 @@ AvailableHacks ={
 				if not LocalClubScript then
 					return warn("LocalClubScript Not Found, Hacks Bro!")
 				end
-				print("LocalClubScript Disabled!")
+				newValue = enHacks.Util_Hammer--reset it because we yielded!
 				
 				LocalClubScript.Disabled = newValue
 				if newValue then
@@ -4872,7 +4874,7 @@ AvailableHacks ={
 				function canRun(fullLoop)
 					local Check1 = enHacks.BotRunner=="Hack" and char~=nil and human~=nil and human.Health>0 and camera.CameraSubject==human;
 					local Check2 = savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart;
-					local Check3 = (not fullLoop or select(2,isInLobby(char))=="Runner") and not isCleared;
+					local Check3 = select(2,isInLobby(char))=="Runner" and not isCleared;--(not fullLoop or select(2,isInLobby(char))=="Runner") and not isCleared;
 					return Check1 and Check2 and Check3;
 				end
 				AvailableHacks.Bot[15].CanRun=canRun;
@@ -4970,13 +4972,17 @@ AvailableHacks ={
 									end
 								end --print("hacking ", closestTrigger.Parent:GetFullName())
 								--if TSM.CurrentAnimation.Value=="Typing" then
-								RunS.RenderStepped:Wait()
+								task.wait(1)
+								print(canRun(),TSM.CurrentAnimation.Value)
 								while canRun() and TSM.CurrentAnimation.Value=="Typing" do
+									print("Hacking!")
 									if TSM.CurrentAnimation.Value == "Typing" then
 										local savePC = closestTrigger.Parent
+										print("Computer Triggers Disabled!")
 										setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
 										task.delay(10,function()
 											if lastHackedPC == savePC and not isCleared then
+												print("Computer Triggers Enabled!")
 												setTriggers({PodTrigger = true, Computer = true, Exit = true, Door = true})
 											end
 										end)
@@ -6830,4 +6836,4 @@ end
 CAS:BindActionAtPriority("CloseMenu"..saveIndex,CloseMenu,true,1e5,Enum.KeyCode.V)
 
 
-return "Hack Successfully Executed V1.01!"
+return "Hack Successfully Executed V1.02!"

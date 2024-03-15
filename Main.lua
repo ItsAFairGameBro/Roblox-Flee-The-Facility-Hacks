@@ -4992,7 +4992,7 @@ AvailableHacks ={
 						local closestExitArea,dist=findClosestObj(getExitDoors(),(char.PrimaryPart and char.PrimaryPart.Position or newVector3()),3000,1)
 						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..saveIndex) and not TSM.Escaped.Value do
 							local exitDoor = closestExitArea.Parent
-							if exitDoor:FindFirstChild("ExitDoorTrigger") and exitDoor.ExitDoorTrigger.ActionSign.Value == 10 and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then
+							if exitDoor:FindFirstChild("ExitDoorTrigger") and exitDoor.ExitDoorTrigger.ActionSign.Value == 12 and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then
 								AvailableHacks.Blatant[15].DoorFuncts[exitDoor]()
 							end
 							local exitDoorTrigger = closestExitArea.Parent.ExitDoorTrigger
@@ -6092,7 +6092,8 @@ local function attributeAddedFunction()
 end
 
 if script==nil or plr:GetAttribute(getID)~=saveIndex then
-	return setChangedAttribute()
+	setChangedAttribute()
+	return "Saved Index Changed (Code 101)"
 end
 table.insert(functs,(plr:GetAttributeChangedSignal(getID):Connect(attributeAddedFunction)))
 
@@ -6239,7 +6240,7 @@ if previousCopy then
 		changedEvent.Event:Wait()
 		if isCleared then
 			DS:AddItem(script,1)
-			return
+			return "Cleared While Waiting (Code 102)"
 		end
 		if os.clock()-startTime>=maxWaitTime then
 			warn(( "Maximum Wait Time Reached ("..maxWaitTime.."s), Starting Script..." ))
@@ -6252,7 +6253,7 @@ if previousCopy then
 end
 if isCleared then
 	DS:AddItem(script,1)
-	return
+	return "After Waiting Cleared (Code 103)"
 end
 
 local numOfFriends = (0) 
@@ -6431,7 +6432,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 	local newButton, newProperty
 	for num,hack in pairs(differentHacks) do
 		if isCleared then
-			return
+			return "Load Hacks Cleared (Code 104)"
 		end
 		local canPass = categoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,gameUniverse))) or (not hack.Universes and not hack.Places and gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,gameName)));
 		if canPass then
@@ -6662,7 +6663,9 @@ local function MapChildAdded(child,shouldntWait)
 	end
 end
 local function registerObject(object,registerfunct,shouldntWait)
+	if isCleared then return end
 	table.insert(functs,object.ChildAdded:Connect(function(child)
+		if isCleared then return end
 		local function IntermediateDescendantRemovingFunction(newParent)
 			DescendantRemoving(child);
 		end;
@@ -6681,6 +6684,7 @@ local function updateCurrentMap(newMap)
 	if newMap ~= Map and newMap then
 		Map = newMap;
 		task.wait(1);
+		if isCleared then return end
 		local inputArray = {newMap};
 		defaultFunction("MapAdded",{newMap});
 		task.spawn(registerObject,newMap,MapChildAdded)

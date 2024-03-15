@@ -2457,6 +2457,8 @@ AvailableHacks ={
 				end
 				table.insert(functs, myTSM:WaitForChild("DisableCrawl").Changed:Connect(function()
 					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
+					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
+					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
 					if Beast ~= char then
 						game.ContextActionService:UnbindAction("Crawl")
 					end
@@ -5015,7 +5017,7 @@ AvailableHacks ={
 						if myGuyToRescuePlr and myGuyToRescuePlr.TempPlayerStatsModule.Captured.Value then
 							local targetCapsule
 							for num, capsule in pairs(CS:GetTagged("Capsule")) do
-								if capsule:FindFirstChild("PodTrigger")~=nil then
+								if capsule:FindFirstChild("PodTrigger")~=nil and capsule.Parent then
 									local capturedTorso = capsule.PodTrigger.CapturedTorso.Value
 									if capturedTorso and capturedTorso.Parent and capturedTorso:IsDescendantOf(myGuyToRescuePlr.Character) then
 										targetCapsule=capsule

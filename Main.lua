@@ -396,21 +396,9 @@ local function GuiCreationFunction()
 	ExpandingBar.Name = ("ExpandingBar")
 	ExpandingBar.Parent = (NameTagEx)
 	ExpandingBar.AnchorPoint = (Vector2.new(0, 1))
-	--ExpandingBar.BackgroundColor3 = Color3.fromRGB(32,32,32)
-
-
-
-
-	ExpandingBar.BackgroundTransparency = (0.2)
-
-
-
-
+	ExpandingBar.BackgroundColor3 = Color3.fromRGB(32,32,32)
+	ExpandingBar.BackgroundTransparency = (0.5)
 	ExpandingBar.Position = UDim2.new(0, 0, 1.49, 0)
-
-
-
-
 	ExpandingBar.Size = UDim2.new(1, 0, 0.5, 0)
 	ExpandingBar.Visible = false
 
@@ -6634,6 +6622,7 @@ end
 local function updateCurrentMap(newMap)
 	if newMap ~= Map and newMap then
 		Map = newMap;
+		task.wait(1);
 		local inputArray = {newMap};
 		defaultFunction("MapAdded",{newMap});
 		registerObject(newMap,MapChildAdded)

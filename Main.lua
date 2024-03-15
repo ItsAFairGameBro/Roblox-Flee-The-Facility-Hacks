@@ -2485,13 +2485,12 @@ AvailableHacks ={
 				local function crawlFunction()
 					AvailableHacks.Blatant[(2)].Crawl()
 				end
+				
 				table.insert(functs, myTSM:WaitForChild("DisableCrawl").Changed:Connect(function()
 					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
 					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
 					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
-					if Beast ~= char then
-						game.ContextActionService:UnbindAction("Crawl")
-					end
+					CAS:UnbindAction("Crawl")
 				end))
 			end,
 			["IsCrawling"]=false,

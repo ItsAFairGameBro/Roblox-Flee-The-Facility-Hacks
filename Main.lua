@@ -2993,41 +2993,41 @@ AvailableHacks ={
 				["CaptureSurvivor"] = function(theirPlr,theirChar,override)
 					local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
 					if not TSM:WaitForChild("IsBeast") or not Beast then
-					return
-				end
+						return
+					end
 					if Beast.CarriedTorso.Value==nil then
-					return
-				end
+						return
+					end
 					if not enHacks.AutoCapture and not override then
-					return
-				end
+						return
+					end
 					--if enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
 					local capsule,closestDist=nil,10000
 					for num,cap in pairs(CS:GetTagged("Capsule")) do
-					if cap.PrimaryPart~=nil then
-						local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
-						if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
-							capsule,closestDist=cap,dist
+						if cap.PrimaryPart~=nil then
+							local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
+							if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
+								capsule,closestDist=cap,dist
+							end
 						end
 					end
-				end
 					--print("Capturing survivor!")
 					local Trigger = capsule.PodTrigger
-					local isOpened = (Trigger.ActionSign.Value==11)
 					for s=1,3,1 do
-					if capsule.PodTrigger.CapturedTorso.Value~=nil then 
-						break --we got ourselves a trapped survivor!
-					elseif s~=1 then
-						wait(.15)
-					end
-					if Trigger:FindFirstChild("Event") then
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-						if isOpened then
-							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+						local isOpened = (Trigger.ActionSign.Value==11)
+						if capsule.PodTrigger.CapturedTorso.Value~=nil or not enHacks.AutoCapture then 
+							break --we got ourselves a trapped survivor!
+						elseif s~=1 then
+							wait(.15)
+						end
+						if Trigger:FindFirstChild("Event") then
+							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+							if isOpened then
+								game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+							end
 						end
 					end
-				end
 				end,
 				["ChangedFunction"]=function()
 					local TSM=plr:WaitForChild("TempPlayerStatsModule")
@@ -4974,23 +4974,23 @@ AvailableHacks ={
 								--if TSM.CurrentAnimation.Value=="Typing" then
 								task.wait(1)
 								print(canRun(),TSM.CurrentAnimation.Value)
-								while canRun() and TSM.CurrentAnimation.Value=="Typing" do
-									print("Hacking!")
-									if TSM.CurrentAnimation.Value == "Typing" then
-										local savePC = closestTrigger.Parent
-										print("Computer Triggers Disabled!")
-										setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
-										task.delay(10,function()
-											if lastHackedPC == savePC and not isCleared then
-												print("Computer Triggers Enabled!")
-												setTriggers({PodTrigger = true, Computer = true, Exit = true, Door = true})
-											end
-										end)
+								if canRun() and TSM.CurrentAnimation.Value=="Typing" then
+									local savePC = closestTrigger.Parent
+									print("Computer Triggers Disabled!")
+									setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
+									task.delay(30,function()
+										if lastHackedPC == savePC and not isCleared then
+											print("Computer Triggers Enabled!")
+											setTriggers({PodTrigger = true, Computer = true, Exit = true, Door = true})
+										end
+									end)
+									while canRun() and TSM.CurrentAnimation.Value=="Typing" do
+										task.wait(1/3)
+										computerHackStartTime=os.clock() 
+										lastHackedPC,lastHackedPosition=closestTrigger.Parent,closestTrigger.Position
 									end
-									task.wait(1/3)
-									computerHackStartTime=os.clock() 
-									lastHackedPC,lastHackedPosition=closestTrigger.Parent,closestTrigger.Position
 								end
+									
 							end
 							if char.PrimaryPart~=nil then
 								closestTrigger,dist=findClosestObj(getGoodTriggers(closestTrigger.Parent),char.PrimaryPart.Position,3000,1)

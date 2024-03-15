@@ -4960,9 +4960,10 @@ AvailableHacks ={
 								RunS.RenderStepped:Wait()
 								while canRun() and TSM.CurrentAnimation.Value=="Typing" do
 									if TSM.CurrentAnimation.Value == "Typing" then
-										setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {closestTrigger.Parent}})
+										local savePC = closestTrigger.Parent
+										setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
 										task.delay(10,function()
-											if lastHackedPC == closestTrigger.Parent then
+											if lastHackedPC == savePC and not isCleared then
 												setTriggers({PodTrigger = true, Computer = true, Exit = true, Door = true})
 											end
 										end)

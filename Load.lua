@@ -4972,6 +4972,7 @@ AvailableHacks ={
 								--if TSM.CurrentAnimation.Value=="Typing" then
 								RunS.RenderStepped:Wait()
 								while canRun() and TSM.CurrentAnimation.Value=="Typing" do
+									print("Hacking!")
 									if TSM.CurrentAnimation.Value == "Typing" then
 										local savePC = closestTrigger.Parent
 										print("Computer Triggers Disabled!")

@@ -3127,7 +3127,7 @@ AvailableHacks ={
 					end
 					AvailableHacks.Blatant[86].IsRunning=true
 					while AvailableHacks.Blatant[86].IsRunning and Beast~=nil and workspace:IsAncestorOf(Beast) and enHacks.AutoTroll do
-						local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),Beast.PrimaryPart.Position,12,1.5)
+						local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),Beast.PrimaryPart.Position,20,1.5)
 						if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
 							and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
 							--print("closed door")
@@ -3138,9 +3138,14 @@ AvailableHacks ={
 							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
 							--task.wait()
 							--AvailableHacks.Blatant[10].CloseDoor(Trigger)
+							local wasClosed = Trigger.ActionSign.Value ~= 11 
 							AvailableHacks.Blatant[15].DoorFuncts[Trigger.Parent]()
+							if wasClosed then
+								task.wait(2/3)
+								RS.RemoteEvent:FireServer("Input", "Trigger", false)
+							end
 						end
-						task.wait()
+						RunS.RenderStepped:Wait()
 					end
 					AvailableHacks.Blatant[86].IsRunning=false
 				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")

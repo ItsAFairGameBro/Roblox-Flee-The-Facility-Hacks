@@ -745,14 +745,14 @@ local function createCommandLine(message,printType)
 end;
 --SET TRIGGERS uses the following format for setting active triggers that the user can interact with:
 --triggerParams = true/false, toggle ALL triggers.
---table: {PodTrigger = true, Computer = true, Exit = false, Door = true}
+--table: {PodTrigger = true, Computer = true, Exit = false, Door = true, AllowExceptions = {Door, Computer, ExitModel, etc}}
 local function setTriggers(triggerParams)
 	for num,trigger in pairs(CS:GetTagged("Trigger")) do
 		if trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
 			local triggerType = (trigger.Parent.Name=="PodTrigger" and "PodTrigger")
 				or (trigger.Parent:HasTag("Computer") and "Computer") or (trigger.Parent:HasTag("Exit") and "Exit") or (trigger.Parent:HasTag("DoorTrigger") and "Door")
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
-			local enabled = triggerParams==true or triggerParams[triggerType]
+			local enabled = triggerParams==true or triggerParams[triggerType] or (triggerType.AllowExceptions and table.find(triggerType.AllowExceptions,trigger.Parent))
 			if enabled and trigger:GetAttribute("OrgSize")~=nil then
 				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
 			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
@@ -4957,6 +4957,14 @@ AvailableHacks ={
 								end --print("hacking ", closestTrigger.Parent:GetFullName())
 								--if TSM.CurrentAnimation.Value=="Typing" then
 								while canRun() and TSM.CurrentAnimation.Value=="Typing" do
+									if TSM.CurrentAnimation.Value == "Typing" then
+										setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {closestTrigger.Parent}})
+										task.delay(10,function()
+											if lastHackedPC == closestTrigger.Parent then
+												setTriggers({PodTrigger = true, Computer = true, Exit = true, Door = true})
+											end
+										end)
+									end
 									task.wait(1/3)
 									computerHackStartTime=os.clock() 
 									lastHackedPC,lastHackedPosition=closestTrigger.Parent,closestTrigger.Position

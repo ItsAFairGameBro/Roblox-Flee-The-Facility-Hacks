@@ -4953,10 +4953,11 @@ AvailableHacks ={
 										VU:SetKeyDown("e") --print("force 'e'")
 										RunS.RenderStepped:Wait()
 										VU:SetKeyUp("e")
-										task.wait(2/3)
+										task.wait(1/3)
 									end
 								end --print("hacking ", closestTrigger.Parent:GetFullName())
 								--if TSM.CurrentAnimation.Value=="Typing" then
+								RunS.RenderStepped:Wait()
 								while canRun() and TSM.CurrentAnimation.Value=="Typing" do
 									if TSM.CurrentAnimation.Value == "Typing" then
 										setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {closestTrigger.Parent}})

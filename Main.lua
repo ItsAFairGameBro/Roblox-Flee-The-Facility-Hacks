@@ -4997,7 +4997,7 @@ AvailableHacks ={
 							end
 							local exitDoorTrigger = closestExitArea.Parent.ExitDoorTrigger
 							local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
-							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 10) do
+							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12) do
 
 								if human.FloorMaterial~=Enum.Material.Air then
 									human:ChangeState(Enum.HumanoidStateType.Jumping)

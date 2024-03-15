@@ -4993,12 +4993,14 @@ AvailableHacks ={
 						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..saveIndex) and not TSM.Escaped.Value do
 							local exitDoor = closestExitArea.Parent
 							print(exitDoor:FindFirstChild("ExitDoorTrigger"),exitDoor.ExitDoorTrigger.ActionSign.Value,AvailableHacks.Blatant[15].DoorFuncts[exitDoor])
-							if exitDoor:FindFirstChild("ExitDoorTrigger") and exitDoor.ExitDoorTrigger.ActionSign.Value == 12 and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then
+							if exitDoor:FindFirstChild("ExitDoorTrigger") and (exitDoor.ExitDoorTrigger.ActionSign.Value == 12 or exitDoor.ExitDoorTrigger.ActionSign.Value == 10)
+								and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then
 								AvailableHacks.Blatant[15].DoorFuncts[exitDoor]()
 							end
 							local exitDoorTrigger = closestExitArea.Parent.ExitDoorTrigger
 							local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
-							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12) do
+							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) 
+								and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12 and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 10) do
 
 								if human.FloorMaterial~=Enum.Material.Air then
 									human:ChangeState(Enum.HumanoidStateType.Jumping)

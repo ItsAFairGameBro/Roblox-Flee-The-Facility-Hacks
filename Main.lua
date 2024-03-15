@@ -761,7 +761,12 @@ local function setTriggers(triggerParams)
 			local triggerType = (trigger.Name=="PodTrigger" and "PodTrigger")
 				or (trigger.Parent:HasTag("Computer") and "Computer") or (trigger.Parent:HasTag("Exit") and "Exit") or (trigger.Parent:HasTag("Door") and "Door")
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
-			local enabled = triggerParams==true or triggerParams[triggerType] or (triggerParams.AllowExceptions and table.find(triggerParams.AllowExceptions,trigger.Parent))
+			local enabled
+			if typeof(triggerParams)=="boolean" then
+				enabled = triggerParams
+			else
+				enabled = triggerParams[triggerType] or (triggerParams.AllowExceptions and table.find(triggerParams.AllowExceptions,trigger.Parent))
+			end
 			if enabled and trigger:GetAttribute("OrgSize")~=nil then
 				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
 			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then

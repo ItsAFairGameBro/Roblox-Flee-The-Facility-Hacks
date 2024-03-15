@@ -750,7 +750,7 @@ local function setTriggers(triggerParams)
 	for num,trigger in pairs(CS:GetTagged("Trigger")) do
 		if trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
 			local triggerType = (trigger.Parent.Name=="PodTrigger" and "PodTrigger")
-				or (trigger.Parent:HasTag("Computer") and "Computer") or (trigger.Parent:HasTag("Exit") and "Exit") or (trigger.Parent:HasTag("DoorTrigger") and "Door")
+				or (trigger.Parent:HasTag("Computer") and "Computer") or (trigger.Parent:HasTag("Exit") and "Exit") or (trigger.Parent:HasTag("Door") and "Door")
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
 			local enabled = triggerParams==true or triggerParams[triggerType] or (triggerType.AllowExceptions and table.find(triggerType.AllowExceptions,trigger.Parent))
 			if enabled and trigger:GetAttribute("OrgSize")~=nil then
@@ -1539,6 +1539,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		local v138 = {}
 		v138[1] = v23
 		local v144 = v23
+		if not v23.Parent then return end
 		local v145 = v144.Head
 		local v146 = v145.CFrame
 		local v147 = v146.p

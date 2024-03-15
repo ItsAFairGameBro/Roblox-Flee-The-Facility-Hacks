@@ -4973,7 +4973,6 @@ AvailableHacks ={
 								end --print("hacking ", closestTrigger.Parent:GetFullName())
 								--if TSM.CurrentAnimation.Value=="Typing" then
 								task.wait(1)
-								print(canRun(),TSM.CurrentAnimation.Value)
 								if canRun() and TSM.CurrentAnimation.Value=="Typing" then
 									local savePC = closestTrigger.Parent
 									print("Computer Triggers Disabled!")
@@ -5494,6 +5493,7 @@ AvailableHacks ={
 						createBoxPart(sendTable,newVector3(1.9, 18, 2.5),"WindowWalkThru","Window",newColor3(0,255,255),true)
 					end
 				end
+				setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
 			end,--]]
 		},
 		[20] = {

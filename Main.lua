@@ -743,6 +743,26 @@ local function createCommandLine(message,printType)
 		table.remove(CommandInstances,1);
 	end;
 end;
+--SET TRIGGERS uses the following format for setting active triggers that the user can interact with:
+--triggerParams = true/false, toggle ALL triggers.
+--table: {PodTrigger = true, Computer = true, Exit = false, Door = true}
+local function setTriggers(triggerParams)
+	for num,trigger in pairs(CS:GetTagged("Trigger")) do
+		if trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
+			local triggerType = (trigger.Parent.Name=="PodTrigger" and "PodTrigger")
+				or (trigger.Parent:HasTag("Computer") and "Computer") or (trigger.Parent:HasTag("Exit") and "Exit") or (trigger.Parent:HasTag("DoorTrigger") and "Door")
+			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
+			local enabled = triggerParams==true or triggerParams[triggerType]
+			if enabled and trigger:GetAttribute("OrgSize")~=nil then
+				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
+			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
+				trigger:SetAttribute("OrgSize",trigger.Size)
+				trigger.Size=newVector3(.0001,trigger.Size.Y,.0001)
+			end
+			trigger.CanTouch=enabled
+		end
+	end
+end
 
 local function requireModule(module: ModuleScript): Table
 	return require(module)
@@ -2808,19 +2828,6 @@ AvailableHacks ={
 				end
 				local function getState()
 					return actionSign.Value==11--returns true if opened!
-				end
-				local function setTriggers(enabled)
-					for num,trigger in pairs(CS:GetTagged("Trigger")) do
-						if trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
-							if enabled and trigger:GetAttribute("OrgSize")~=nil then
-								trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
-							elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
-								trigger:SetAttribute("OrgSize",trigger.Size)
-								trigger.Size=newVector3(.0001,trigger.Size.Y,.0001)
-							end
-							trigger.CanTouch=enabled
-						end
-					end
 				end
 				local function setToggleFunction()
 					if actionSign.Value==0 then
@@ -5038,7 +5045,7 @@ AvailableHacks ={
 					if not inRange and not myTSM.Captured.Value then
 						local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
-					while (canRun(true) and (Beast and Beast.PrimaryPart) and (inRange or TSM.Ragdoll.Value)) do
+					while (canRun(true) and (Beast and Beast.PrimaryPart) and ((Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<8 or TSM.Ragdoll.Value)) do
 						if (myRunerPlrKey==1 and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
 							task.wait(1/2)
 							if not canRun(true) then
@@ -6652,7 +6659,7 @@ local function updateCurrentMap(newMap)
 		task.wait(1);
 		local inputArray = {newMap};
 		defaultFunction("MapAdded",{newMap});
-		registerObject(newMap,MapChildAdded)
+		task.spawn(registerObject,newMap,MapChildAdded)
 		table.insert(functs,newMap.AncestryChanged:Connect(function(newParent)
 			updateCurrentMap(nil)
 		end))
@@ -6667,7 +6674,7 @@ end
 if gameName == "FleeMain" then
 	local MapChangedValue = RS:WaitForChild("CurrentMap")
 
-	updateCurrentMap(MapChangedValue.Value)
+	task.spawn(updateCurrentMap,MapChangedValue.Value)
 	table.insert(functs,MapChangedValue.Changed:Connect(updateCurrentMap))
 end
 

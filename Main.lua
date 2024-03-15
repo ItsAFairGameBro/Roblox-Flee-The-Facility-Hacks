@@ -4992,6 +4992,7 @@ AvailableHacks ={
 						local closestExitArea,dist=findClosestObj(getExitDoors(),(char.PrimaryPart and char.PrimaryPart.Position or newVector3()),3000,1)
 						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..saveIndex) and not TSM.Escaped.Value do
 							local exitDoor = closestExitArea.Parent
+							print(exitDoor:FindFirstChild("ExitDoorTrigger"),exitDoor.ExitDoorTrigger.ActionSign.Value,AvailableHacks.Blatant[15].DoorFuncts[exitDoor])
 							if exitDoor:FindFirstChild("ExitDoorTrigger") and exitDoor.ExitDoorTrigger.ActionSign.Value == 12 and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then
 								AvailableHacks.Blatant[15].DoorFuncts[exitDoor]()
 							end

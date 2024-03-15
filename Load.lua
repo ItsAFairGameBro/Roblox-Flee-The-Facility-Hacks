@@ -4872,7 +4872,7 @@ AvailableHacks ={
 				function canRun(fullLoop)
 					local Check1 = enHacks.BotRunner=="Hack" and char~=nil and human~=nil and human.Health>0 and camera.CameraSubject==human;
 					local Check2 = savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart;
-					local Check3 = (not fullLoop or select(2,isInLobby(char))=="Runner") and not isCleared;
+					local Check3 = select(2,isInLobby(char))=="Runner" and not isCleared;--(not fullLoop or select(2,isInLobby(char))=="Runner") and not isCleared;
 					return Check1 and Check2 and Check3;
 				end
 				AvailableHacks.Bot[15].CanRun=canRun;
@@ -4970,7 +4970,8 @@ AvailableHacks ={
 									end
 								end --print("hacking ", closestTrigger.Parent:GetFullName())
 								--if TSM.CurrentAnimation.Value=="Typing" then
-								RunS.RenderStepped:Wait()
+								task.wait(1)
+								print(canRun(),TSM.CurrentAnimation.Value)
 								while canRun() and TSM.CurrentAnimation.Value=="Typing" do
 									print("Hacking!")
 									if TSM.CurrentAnimation.Value == "Typing" then

@@ -763,9 +763,9 @@ local function sortPlayersByXPThenCredits(plrList)
 	plrList = plrList or PS:GetPlayers()
 
 	local function tableSortFunction(a,b)
-		local aStats=a:WaitForChild("SavedPlayerStatsModule")
-		local bStats=b:WaitForChild("SavedPlayerStatsModule")
-		local doesExistA, doesExistB = aStats.Parent~=nil, bStats.Parent~=nil
+		local aStats=a:FindFirstChild("SavedPlayerStatsModule")
+		local bStats=b:FindFirstChild("SavedPlayerStatsModule")
+		local doesExistA, doesExistB = aStats and aStats.Parent, bStats and bStats.Parent
 		if not doesExistA or not doesExistB then
 			return doesExistA and not doesExistB
 		end
@@ -774,16 +774,16 @@ local function sortPlayersByXPThenCredits(plrList)
 		if isABot~=isBBot then
 			return isABot
 		end
-		local aLevel = aStats:WaitForChild("Level",10)
-		local bLevel = bStats:WaitForChild("Level",10)
+		local aLevel = aStats:FindFirstChild("Level")
+		local bLevel = bStats:FindFirstChild("Level")
 		if not aLevel or not bLevel then
 			return aLevel~=nil
 		end
 		if aLevel.Value~=bLevel.Value then
 			return (aLevel.Value>bLevel.Value)
 		end
-		local aXP = aStats:WaitForChild("Xp",10)
-		local bXP = bStats:WaitForChild("Xp",10)
+		local aXP = aStats:FindFirstChild("Xp")
+		local bXP = bStats:FindFirstChild("Xp")
 		if not aXP or not bXP then
 			return aXP~=nil
 		end
@@ -2698,7 +2698,7 @@ AvailableHacks ={
 			end,
 			["Default"]=false,
 			["ActivateFunction"]=function(newValue)
-				setChangedAttribute(plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("ActionInput"),"Value",(newValue and AvailableHacks.Blatant[4].EnableScript or false))
+				setChangedAttribute(plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("ActionInput"),"Value",(newValue and AvailableHacks.Blatant[10].EnableScript or false))
 				if newValue then
 					AvailableHacks.Blatant[10].EnableScript()
 				end
@@ -2729,6 +2729,7 @@ AvailableHacks ={
 					newColor3(255)
 				},
 			},
+			["DoorFuncts"]={},
 			["ChangedFunction"] = function(door,tag,doorType)
 				local myDoorTrigger = door:FindFirstChild("DoorTrigger");
 				if not myDoorTrigger then
@@ -2765,6 +2766,7 @@ AvailableHacks ={
 				for num,tag in ipairs(hackDisplayList) do
 					tag:Destroy()
 				end
+				AvailableHacks.Blatant[15].DoorFuncts = {}
 			end,
 			["UpdateDisplays"]=function()
 				AvailableHacks.Blatant[15].ActivateFunction(enHacks.RemotelyOpenDoors)
@@ -2857,6 +2859,7 @@ AvailableHacks ={
 						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
 					end
 				end
+				AvailableHacks.Blatant[15].DoorFuncts[door] = setToggleFunction
 				newTag.Toggle.MouseButton1Up:Connect(setToggleFunction)
 				AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
 				wait(.075)
@@ -3112,33 +3115,33 @@ AvailableHacks ={
 				end),
 				["ActivateFunction"]=(function(enabled)
 					if enabled then
-					AvailableHacks.Blatant[86].OthersBeastAdded()
-				end
+						AvailableHacks.Blatant[86].OthersBeastAdded()
+					end
 				end),
 				["OthersBeastAdded"]=(function()
 					if AvailableHacks.Blatant[86].IsRunning then
-					return
-				end
-					if Beast==char then
-					return
-				end
-					AvailableHacks.Blatant[86].IsRunning=true
-					while AvailableHacks.Blatant[86].IsRunning and Beast~=nil and workspace:IsAncestorOf(Beast)
-					and enHacks.AutoTroll do
-					local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),Beast.PrimaryPart.Position,12,1.5)
-					if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
-						and Trigger.ActionSign.Value==11 then
-						--print("closed door")
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", false)
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-						--task.wait()
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
-						--task.wait()
-						AvailableHacks.Blatant[10].CloseDoor(Trigger)
+						return
 					end
-					task.wait()
-				end
+					if Beast==char then
+						return
+					end
+					AvailableHacks.Blatant[86].IsRunning=true
+					while AvailableHacks.Blatant[86].IsRunning and Beast~=nil and workspace:IsAncestorOf(Beast) and enHacks.AutoTroll do
+						local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),Beast.PrimaryPart.Position,12,1.5)
+						if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
+							and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
+							--print("closed door")
+							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", false)
+							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+							--task.wait()
+							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
+							--task.wait()
+							--AvailableHacks.Blatant[10].CloseDoor(Trigger)
+							AvailableHacks.Blatant[15].DoorFuncts[Trigger.Parent]()
+						end
+						task.wait()
+					end
 					AvailableHacks.Blatant[86].IsRunning=false
 				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				local myChar=char

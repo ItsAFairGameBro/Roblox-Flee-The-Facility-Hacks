@@ -3232,7 +3232,7 @@ AvailableHacks ={
 				local saveState=enHacks.AutoBeastHit
 				local beast=Beast--the current Beast
 				local Hammer=beast:WaitForChild("Hammer",2)
-				while beast~=nil and beast.Parent~=nil and Hammer~=nil and enHacks.AutoBeastHit==saveState
+				while beast~=nil and beast.Parent~=nil and Hammer and Hammer.Parent and enHacks.AutoBeastHit==saveState
 					and (enHacks.AutoBeastHit=="All" 
 						or (enHacks.AutoBeastHit=="Me" and beast==char)) do
 					for num,theirPlr in pairs(PS:GetPlayers()) do
@@ -3252,6 +3252,7 @@ AvailableHacks ={
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
+				error("W");
 				if newValue~="None" and Beast then
 					AvailableHacks.Blatant[66].BeastStartUp()
 				end

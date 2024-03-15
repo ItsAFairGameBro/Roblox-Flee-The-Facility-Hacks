@@ -749,7 +749,7 @@ end;
 local function setTriggers(triggerParams)
 	for num,trigger in pairs(CS:GetTagged("Trigger")) do
 		if trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
-			local triggerType = (trigger.Parent.Name=="PodTrigger" and "PodTrigger")
+			local triggerType = (trigger.Name=="PodTrigger" and "PodTrigger")
 				or (trigger.Parent:HasTag("Computer") and "Computer") or (trigger.Parent:HasTag("Exit") and "Exit") or (trigger.Parent:HasTag("Door") and "Door")
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
 			local enabled = triggerParams==true or triggerParams[triggerType] or (triggerType.AllowExceptions and table.find(triggerType.AllowExceptions,trigger.Parent))
@@ -4953,7 +4953,7 @@ AvailableHacks ={
 										VU:SetKeyDown("e") --print("force 'e'")
 										RunS.RenderStepped:Wait()
 										VU:SetKeyUp("e")
-										task.wait(1/3)
+										task.wait(2/3)
 									end
 								end --print("hacking ", closestTrigger.Parent:GetFullName())
 								--if TSM.CurrentAnimation.Value=="Typing" then

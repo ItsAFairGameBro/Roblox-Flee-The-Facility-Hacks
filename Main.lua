@@ -609,7 +609,16 @@ local function isInLobby(theirChar)
 end
 local jumpChangedEvent
 
-
+--CLOSEST POINT ON PART
+local function ClosestPointOnPart(Part, Point)
+	local Transform = Part.CFrame:pointToObjectSpace(Point) -- Transform into local space
+	local HalfSize = Part.Size * 0.5
+	return Part.CFrame * Vector3.new( -- Clamp & transform into world space
+		math.clamp(Transform.x, -HalfSize.x, HalfSize.x),
+		math.clamp(Transform.y, -HalfSize.y, HalfSize.y),
+		math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
+	)
+end
 --PRINT ENVIRONMENT START
 local function printInstances(...)
 	local printVal = ""
@@ -4983,6 +4992,11 @@ AvailableHacks ={
 					else--escape time :D
 						local closestExitArea,dist=findClosestObj(getExitDoors(),(char.PrimaryPart and char.PrimaryPart.Position or newVector3()),3000,1)
 						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..saveIndex) and not TSM.Escaped.Value do
+							local exitDoor = closestExitArea.Parent
+							if exitDoor:FindFirstChild("ExitDoorTrigger") and exitDoor.ExitDoorTrigger.ActionSign.Value == 12 then
+								AvailableHacks.Blatant[15].DoorFuncts[exitDoor]()
+							end
+							local exitDoorTrigger = closestExitArea.Parent.ExitDoorTrigger
 							local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
 							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value)) do
 

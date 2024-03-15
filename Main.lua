@@ -2693,14 +2693,14 @@ AvailableHacks ={
 				local isOpened = (Trigger.ActionSign.Value==11 or Trigger.ActionSign.Value==0)
 
 				if (isOpened) then
-					AvailableHacks.Blatant[4].CloseDoor(Trigger)
+					AvailableHacks.Blatant[10].CloseDoor(Trigger)
 				end
 			end,
 			["Default"]=false,
 			["ActivateFunction"]=function(newValue)
 				setChangedAttribute(plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("ActionInput"),"Value",(newValue and AvailableHacks.Blatant[4].EnableScript or false))
 				if newValue then
-					AvailableHacks.Blatant[4].EnableScript()
+					AvailableHacks.Blatant[10].EnableScript()
 				end
 			end,
 		},
@@ -3135,7 +3135,7 @@ AvailableHacks ={
 						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
 						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
 						--task.wait()
-						AvailableHacks.Blatant[4].CloseDoor(Trigger)
+						AvailableHacks.Blatant[10].CloseDoor(Trigger)
 					end
 					task.wait()
 				end
@@ -3252,7 +3252,6 @@ AvailableHacks ={
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				error("W");
 				if newValue~="None" and Beast then
 					AvailableHacks.Blatant[66].BeastStartUp()
 				end
@@ -3414,6 +3413,8 @@ AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				local ScreenGui = PlayerGui:WaitForChild("ScreenGui");
 				local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
+				local BeastPowerMenuFrame = ScreenGui:WaitForChild("BeastPowerMenuFrame")
+				local SurvivorStartFrame = ScreenGui:WaitForChild("SurvivorStartFrame")
 				local IsCheckingLoadData = plr:WaitForChild("IsCheckingLoadData");
 				local function changedFunct()
 					if enHacks.Util_Fix then
@@ -3421,7 +3422,19 @@ AvailableHacks ={
 					end
 				end
 				setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
-				task.spawn(changedFunct);
+				local function beastScreen()
+					if enHacks.Util_Fix then
+						BeastPowerMenuFrame.Visible=false;
+					end
+				end
+				setChangedAttribute(BeastPowerMenuFrame, "Visible", (newValue and beastScreen or nil));
+				local function survivorScreen()
+					if enHacks.Util_Fix then
+						SurvivorStartFrame.Visible=false;
+					end
+				end
+				setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
+
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					local function slashPressed(name,state)

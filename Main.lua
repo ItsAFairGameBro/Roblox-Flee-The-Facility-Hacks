@@ -2843,7 +2843,7 @@ AvailableHacks ={
 						if isOpened then
 							RS.RemoteEvent:FireServer("Input", "Trigger", false)
 						end
-						wait()
+						RunS.RenderStepped:Wait()
 					end
 					local function TaskSpawnDelayedFunction()
 						while actionSign.Value==0 do
@@ -2852,7 +2852,7 @@ AvailableHacks ={
 						setTriggers(true)
 					end
 					task.spawn(TaskSpawnDelayedFunction)
-					wait()
+					--wait()
 					if currentEvent~=nil then
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
 						--wait()
@@ -3143,9 +3143,12 @@ AvailableHacks ={
 							if wasClosed then
 								task.wait(2/3)
 								RS.RemoteEvent:FireServer("Input", "Trigger", false)
+							else
+								RunS.RenderStepped:Wait()
 							end
+						else
+							RunS.RenderStepped:Wait()
 						end
-						RunS.RenderStepped:Wait()
 					end
 					AvailableHacks.Blatant[86].IsRunning=false
 				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")

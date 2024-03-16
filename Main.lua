@@ -767,6 +767,14 @@ local function createCommandLine(message,printType)
 		table.remove(CommandInstances,1);
 	end;
 end;
+
+local function stopCurrentAction()
+	for s = 3, 1, -1 do
+		RemoteEvent:FireServer("Input", "Action", false)
+		RemoteEvent:FireServer("Input", "Trigger", false)
+		RunS.RenderStepped:Wait()
+	end
+end
 --SET TRIGGERS uses the following format for setting active triggers that the user can interact with:
 --triggerParams = true/false, toggle ALL triggers.
 --name: identifier
@@ -847,8 +855,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 		if beforeEn and not afterEn then
 			--myTSM.ActionInput.Value = false
 			--myTSM.ActionEvent.Value = nil
-			RemoteEvent:FireServer("Input", "Action", false)
-			RemoteEvent:FireServer("Input", "Trigger", false)
+			task.spawn(stopCurrentAction)
 		end
 	end
 end
@@ -2975,10 +2982,8 @@ AvailableHacks ={
 					if ActionEventVal and TriggerType=="Computer" then
 						--myTSM.ActionInput.Value = false
 						--myTSM.ActionEvent.Value = nil
-						RemoteEvent:FireServer("Input", "Action", false)
-						RemoteEvent:FireServer("Input", "Trigger", false)
+						task.spawn(stopCurrentAction)
 						print("Disabled Action, Trigger, and Stuff!")
-						RunS.RenderStepped:Wait()
 					end
 					local goodTriggers = AvailableHacks.Bot[15].getGoodTriggers(Computer)
 					if #goodTriggers>0 then

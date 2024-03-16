@@ -841,7 +841,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	if currentEvent then
 		if beforeEn and not afterEn then
-			myTSM.Action.Value = false
+			myTSM.ActionInput.Value = false
 			myTSM.ActionEvent.Value = nil
 		end
 	end

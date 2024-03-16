@@ -840,9 +840,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 		end
 	end
 	if currentEvent then
-		print("Checking",beforeEn,afterEn,currentEvent:GetFullName())
 		if beforeEn and not afterEn then
-			print("Disabling",currentEvent)
 			myTSM.Action.Value = false
 			myTSM.ActionEvent.Value = nil
 		end
@@ -2969,7 +2967,14 @@ AvailableHacks ={
 					else
 						teleportMyself(BestTrigger:GetPivot())
 					end
-					--TODO HERE					
+					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
+					local TriggerType = trigger_gettype(ActionEventVal.Parent.Parent)
+					print("Checking",TriggerType)
+					if ActionEventVal and trigger_gettype(TriggerType)=="Computer" then
+						print("Disabled")
+						myTSM.Action.Value = false
+						myTSM.ActionEvent.Value = nil
+					end
 				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
 				newTag.Enabled=(enHacks.RemotelyHackComputers and (camera.CameraType==Enum.CameraType.Custom and isInGame))

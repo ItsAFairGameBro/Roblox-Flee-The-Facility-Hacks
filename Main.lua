@@ -2925,7 +2925,7 @@ AvailableHacks ={
 					if not trigger then
 						return
 					end
-					local angle = math.acos(ComputerBase.CFrame.LookVector:Dot((trigger.Position - ComputerBase.Position).Unit))
+					local angle = math.abs(math.acos(ComputerBase.CFrame.LookVector:Dot((trigger.Position - ComputerBase.Position).Unit)))
 					if angle < bestAngle then
 						bestAngle = angle
 						BestTrigger = trigger
@@ -2935,7 +2935,7 @@ AvailableHacks ={
 				local newTag=ToggleTag:Clone()
 				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
-				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 8, 0)
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 16, 0)
 				newTag.Adornee=ComputerBase
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay3")

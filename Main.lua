@@ -5024,7 +5024,7 @@ AvailableHacks ={
 									local savePC = closestTrigger.Parent
 									print("Computer Triggers Disabled!")
 									trigger_setTriggers("PC_Hack",{PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
-									task.delay(30,function()
+									task.delay(60,function()
 										if lastHackedPC == savePC and not isCleared then
 											print("Computer Triggers Enabled!")
 											trigger_setTriggers("PC_Hack",{PodTrigger = true, Computer = true, Exit = true, Door = true})

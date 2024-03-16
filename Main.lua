@@ -2354,19 +2354,27 @@ AvailableHacks ={
 			["Desc"]="Works under most conditions",
 			["Shortcut"]="ESP_PCProg",
 			["Default"]=false,
-			["RefreshBar"]=function(theirPlr,CenterPoso,ActionProgress)
+			["RefreshBar"]=function(theirPlr,CenterPoso,ActionProgress,lastEvent)
 				local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
 				if (TSM.ActionEvent.Value==nil or (TSM.CurrentAnimation.Value~=("Typing")) or (string.sub(TSM.ActionEvent.Value.Parent.Name,1,15)~=("ComputerTrigger"))) then
 					return
 				end
-				local closestPC,dist=nil,15
-				for num, tag in pairs(CS:GetTagged("HackDisplays2")) do
-					local Screen=tag.Parent
-					local PC=Screen.Parent
-					local newDist=(Screen.Position-CenterPoso.Position).magnitude
-					if newDist<dist then
-						closestPC,dist=PC,newDist
+				local function checkPC()
+					local closestPC,dist=nil,150
+					for num, tag in pairs(CS:GetTagged("HackDisplays2")) do
+						local Screen=tag.Parent
+						local PC=Screen.Parent
+						local newDist=(Screen.Position-CenterPoso.Position).magnitude
+						if newDist<dist then
+							closestPC,dist=PC,newDist
+						end
 					end
+					return closestPC
+				end
+				
+				local closestPC = lastEvent and lastEvent.Parent and lastEvent.Parent.Parent
+				if not closestPC then
+					closestPC = checkPC()
 				end
 				if (closestPC~=nil) then
 					AvailableHacks.Render[7].SetBar(closestPC,ActionProgress.Value)
@@ -2392,6 +2400,8 @@ AvailableHacks ={
 			["MyPlayerAdded"]=function()
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				local ActionProgress=TSM:WaitForChild("ActionProgress")
+				local ActionEvent = TSM:WaitForChild("ActionInput")
+				--local lastEvent
 				local function ActionChanged()
 					local theirChar=plr.Character 
 					if theirChar==nil then
@@ -2402,9 +2412,10 @@ AvailableHacks ={
 						return
 					end
 					if TSM.CurrentAnimation.Value=="Typing" then
-						AvailableHacks.Render[7].RefreshBar(plr,Head,ActionProgress)
+						--lastEvent = ActionEvent.Value or lastEvent
+						AvailableHacks.Render[7].RefreshBar(plr,Head,ActionProgress,ActionEvent.Value)
 					end
-					local function SetMiniGameResultFunction()
+					--[[local function SetMiniGameResultFunction()
 						for s=1,1,-1 do
 							if not enHacks.Util_AutoHack then
 								return
@@ -2413,7 +2424,7 @@ AvailableHacks ={
 							task.wait((0.05))
 						end
 					end
-					task.spawn(SetMiniGameResultFunction)
+					task.spawn(SetMiniGameResultFunction)--]]
 				end
 				setChangedAttribute(ActionProgress,"Value",ActionChanged)
 				ActionChanged()
@@ -2838,6 +2849,7 @@ AvailableHacks ={
 					--print(...)
 					if not ... then
 						AvailableHacks.Blatant[15].UpdateDisplays()
+						AvailableHacks.Blatant[20].UpdateDisplays()
 					end
 				end))--]]
 				local function updateDisplays()
@@ -2940,18 +2952,7 @@ AvailableHacks ={
 			["UpdateDisplays"]=function()
 				AvailableHacks.Blatant[15].ActivateFunction(enHacks.RemotelyHackComputers)
 			end,
-			["MyPlayerAdded"]=function()
-				local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				table.insert(functs,RS:WaitForChild("AnnouncementEvent").OnClientEvent:Connect(function(...)
-					--print(...)
-					if not ... then
-						AvailableHacks.Blatant[15].UpdateDisplays()
-					end
-				end))--]]
-				setChangedAttribute(RS.IsGameActive,"Value",AvailableHacks.Blatant[15].UpdateDisplays)
-				setChangedAttribute(camera,"CameraSubject",AvailableHacks.Blatant[15].UpdateDisplays)
-				setChangedAttribute(TSM:WaitForChild("Escaped"),"Value",AvailableHacks.Blatant[15].UpdateDisplays)
-			end,
+			--CHECKED UNDER REMOTE DOORS HACK!
 			["ComputerAdded"]=function(Computer)
 				local ComputerBase = Computer.PrimaryPart
 				local BestTrigger
@@ -6687,6 +6688,15 @@ local function CharacterAdded(theirChar)
 	end
 	local inputFunctions = ({theirPlr,theirChar})
 	defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
+	if gameUniverse=="Flee" then
+		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
+		if theirTSM then
+			local isBeastValue = theirTSM:WaitForChild("IsBeast");
+			if isBeastValue and isBeastValue.Value then
+				BeastAdded(theirPlr,theirPlr.Character);
+			end
+		end
+	end
 end
 local function CharacterRemoving(theirPlr,theirChar)
 	if isCleared then 
@@ -6732,9 +6742,9 @@ local function PlayerAdded(theirPlr)
 		if theirTSM then
 			local isBeastValue = theirTSM:WaitForChild("IsBeast");
 			if isBeastValue then
-				if isBeastValue.Value then
-					BeastAdded(theirPlr,theirPlr.Character);
-				end
+				--if isBeastValue.Value then
+					--BeastAdded(theirPlr,theirPlr.Character);
+				--end--ONLY DO BEAST ADD IN CHARACER ADDED FUNCT
 				table.insert(playerEvents[theirPlr.UserId], isBeastValue.Changed:Connect(function(new)
 					if new then
 						BeastAdded(theirPlr,theirPlr.Character);

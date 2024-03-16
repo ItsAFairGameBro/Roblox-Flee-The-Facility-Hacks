@@ -802,6 +802,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 			local previousValue = previously[name]
 			local addition = (((setValue and (not previousValue or previousValue==nil) ) and 1) or ((not setValue and (not previousValue or previousValue==nil)) and -1) or 0)
 			assert(trigger_params[name],tostring(name).." of Trigger_Params Not Found!")
+			warn("Addition",addition,setValue,previousValue)
 			trigger_params[name] += addition
 			previously[name] = setValue
 		end

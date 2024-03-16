@@ -802,7 +802,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 			if previously[name] ~= setTriggerParams[name] then
 				if setTriggerParams[name] ~= nil then
 					local addition = (((setTriggerParams[name] and not previously[name]) and 1) or ((not setTriggerParams[name] and previously[name]) and -1) or 0)
-					print("Addition",addition,"With",setTriggerParams[name],previously[name])
+					assert(trigger_params[name],tostring(name).." of Trigger_Params Not Found!")
 					trigger_params[name] += addition
 				end
 			end

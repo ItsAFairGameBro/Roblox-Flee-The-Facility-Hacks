@@ -1068,15 +1068,6 @@ local function compareArrays(arr1, arr2)
 
 end;
 
-
-
-
-
-
-
-
-
-
 local raycast;
 
 function raycast(from, target, filter, distance, passThroughTransparency,passThroughCanCollide)
@@ -6079,9 +6070,9 @@ AvailableHacks ={
 					elseif human.Health>0 then
 						human.Health = 0
 					end
-					task.wait(1)
+					task.wait(1);
 					teleportMyself(CFrame.new(1e3,1e-3,1e3))
-					task.wait(.25)
+					task.wait(.25);
 					if char.Humanoid.Health<=0 then
 						local chardescendants = char:GetDescendants();
 						for num,part in ipairs(chardescendants) do
@@ -6089,7 +6080,9 @@ AvailableHacks ={
 								part:Destroy();
 							end;
 						end;
-					end
+					else
+						char.Humanoid.Health = 0;
+					end;
 					task.delay(30,function()
 						if char==saveChar and botModeEnabled and enHacks.BotRunner and not isCleared then
 							createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>")

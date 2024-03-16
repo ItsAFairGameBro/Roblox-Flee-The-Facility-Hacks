@@ -2917,15 +2917,26 @@ AvailableHacks ={
 				setChangedAttribute(TSM:WaitForChild("Escaped"),"Value",AvailableHacks.Blatant[15].UpdateDisplays)
 			end,
 			["ComputerAdded"]=function(Computer)
-				local BestTrigger = Computer:WaitForChild("ComputerTrigger3",20)
-				if not BestTrigger then
-					return
+				local ComputerBase = Computer.PrimaryPart
+				local BestTrigger
+				local bestAngle = 360
+				for _, trigger_name in ipairs({"ComputerTrigger1","ComputerTrigger2","ComputerTrigger3"}) do
+					local trigger = Computer:WaitForChild(trigger_name, 20)
+					if not trigger then
+						return
+					end
+					local angle = math.acos(ComputerBase.CFrame.LookVector:Dot((trigger.Position - ComputerBase.Position).Unit))
+					if angle < bestAngle then
+						bestAngle = angle
+						BestTrigger = trigger
+					end
 				end
+				
 				local newTag=ToggleTag:Clone()
 				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
-				ToggleTag.ExtentsOffsetWorldSpace = Vector3.new(0, 8, 0)
-				newTag.Adornee=Computer.Screen
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 8, 0)
+				newTag.Adornee=ComputerBase
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay3")
 				task.wait()

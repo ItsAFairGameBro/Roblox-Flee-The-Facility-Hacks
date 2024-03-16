@@ -3420,7 +3420,7 @@ AvailableHacks ={
 						if plr.PlayerGui.ScreenGui.TimingCircle.TimingPin.Rotation>=plr.PlayerGui.ScreenGui.TimingCircle.TimingBase.Rotation+45 then
 							TSM.ActionInput.Value=true
 							if not TSM.MinigameResult.Value then
-								RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+								--RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
 							end
 						end
 						task.wait()
@@ -3430,7 +3430,7 @@ AvailableHacks ={
 							return
 						end
 						if not TSM.MinigameResult.Value then
-							RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+							--RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
 						end
 						task.wait()
 					end
@@ -3447,6 +3447,18 @@ AvailableHacks ={
 			end,
 			["MyStartUp"]=function()
 				AvailableHacks.Utility[1].ActivateFunction(enHacks.Util_AutoHack)
+			end,
+			["MyPlayerAdded"] = function()
+				local minigameResult = myTSM:WaitForChild("MinigameResult")
+				local function updateMiniGameResult()
+					if minigameResult and enHacks.Util_AutoHack then
+						RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+					end
+				end
+				setChangedAttribute(minigameResult,"Value",updateMiniGameResult)
+				updateMiniGameResult()
+				
+				
 			end,
 		},
 		[2]={
@@ -3490,6 +3502,7 @@ AvailableHacks ={
 			["Desc"]="Fixes elements",
 			["Shortcut"]="Util_Fix",
 			["Default"]=true,
+			["DontActivate"] = true,
 			--["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
 				local ScreenGui = PlayerGui:WaitForChild("ScreenGui");
@@ -3503,18 +3516,21 @@ AvailableHacks ={
 					end
 				end
 				setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
+				changedFunct()
 				local function beastScreen()
 					if enHacks.Util_Fix then
 						BeastPowerMenuFrame.Visible=false;
 					end
 				end
 				setChangedAttribute(BeastPowerMenuFrame, "Visible", (newValue and beastScreen or nil));
+				beastScreen()
 				local function survivorScreen()
 					if enHacks.Util_Fix then
 						SurvivorStartFrame.Visible=false;
 					end
 				end
 				setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
+				survivorScreen()
 
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
@@ -3551,11 +3567,10 @@ AvailableHacks ={
 				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
 			end,
 			["MyStartUp"]=function()
+				RunS.RenderStepped:Wait()--Delay it
 				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
 			end,
 		}),
-
-
 		[4]={
 			["Type"]="ExTextButton",
 			["Title"]="Crawl Type",
@@ -6785,9 +6800,7 @@ if gameName=="FleeMain" then
 		return getPC(obj.Parent)
 	end
 	local function updateAnimation()
-		print("Updated",currentAnimation.Value)
 		if currentAnimation.Value=="Typing" then
-			print("Setting LastPC")
 			lastPC = getPC(myTSM.ActionEvent.Value)
 			if not lastPC then
 				if not myTSM.ActionEvent.Value then
@@ -6796,14 +6809,11 @@ if gameName=="FleeMain" then
 					warn("PC Not Found:",myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
-			print("LastPC Set!",lastPC)
 		elseif lastPC and lastAnimationName=="Typing" then
-			print("Last PC Enabled")
 			lastPC_time = os.clock()
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastPC}})
-			task.delay(60,function()
-				if (os.clock() - lastPC_time) >= 60 then
-					print("Last PC Disabled")
+			task.delay(15,function()
+				if (os.clock() - lastPC_time) >= 15 then
 					trigger_setTriggers("LastPC",{Computer=true})
 				end
 			end)

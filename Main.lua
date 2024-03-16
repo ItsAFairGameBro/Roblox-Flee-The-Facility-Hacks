@@ -767,8 +767,8 @@ local function trigger_gettype(triggerParent)
 	return triggerType
 end
 local function trigger_updateException(object,previously,allowed_setTriggerParams,isInPrevious)
-	isInPrevious = isInPrevious or table.find(object,previously.AllowExceptions)
-	local isInCurrent = not isInPrevious or table.find(object,allowed_setTriggerParams)
+	isInPrevious = isInPrevious or table.find(previously.AllowExceptions,object)
+	local isInCurrent = not isInPrevious or table.find(allowed_setTriggerParams,object)
 	if not isInPrevious and isInCurrent then
 		object:SetAttribute("Trigger_AllowException",(object:GetAttribute("Trigger_AllowException") or 0) + 1)
 	elseif isInPrevious and not isInCurrent then

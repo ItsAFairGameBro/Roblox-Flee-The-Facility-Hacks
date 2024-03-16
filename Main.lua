@@ -769,7 +769,7 @@ local function createCommandLine(message,printType)
 end;
 
 local function stopCurrentAction()
-	for s = 3, 1, -1 do
+	for s = 15, 1, -1 do
 		RemoteEvent:FireServer("Input", "Action", false)
 		RemoteEvent:FireServer("Input", "Trigger", false)
 		RunS.RenderStepped:Wait()

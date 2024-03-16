@@ -2916,7 +2916,7 @@ AvailableHacks ={
 				setChangedAttribute(TSM:WaitForChild("Escaped"),"Value",AvailableHacks.Blatant[15].UpdateDisplays)
 			end,
 			["ComputerAdded"]=function(Computer)
-				local BestTrigger = Computer:WaitForChild("ComputerTrigger2",20)
+				local BestTrigger = Computer:WaitForChild("ComputerTrigger3",20)
 				if not BestTrigger then
 					return
 				end

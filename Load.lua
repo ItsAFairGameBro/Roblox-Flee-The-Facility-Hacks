@@ -74,4 +74,4 @@ function ReloadFunction()
 	print(("%s %s Callback: %s (%.2fs)"):format(PrintName,scriptName or "Unknown",tostring(Callback) or "Exited Mysteriously",os.clock()-StartTime))
 end
 
-ReloadFunction()
+task.spawn(ReloadFunction)

@@ -777,7 +777,7 @@ local function trigger_updateException(object,previously,allowed_setTriggerParam
 	object:AddTag("Trigger_AllowException")
 end
 local function trigger_setTriggers(name,setTriggerParams)
-	if isCleared then return end
+	if isCleared and name ~= "Override" then return end
 	if setTriggerParams==true then
 		setTriggerParams = table.clone(trigger_allEnabled)
 	elseif setTriggerParams==false then
@@ -787,7 +787,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	local previously = trigger_enabledNames[name]
 	if not previously then
-		previously = table.clone(trigger_allDisabled)
+		previously = {}
 		trigger_enabledNames[name] = previously
 	end
 	for num, object in ipairs(previously.AllowExceptions or {}) do
@@ -807,12 +807,12 @@ local function trigger_setTriggers(name,setTriggerParams)
 			previously[name] = setValue
 		end
 	end
-	for num,trigger in pairs(CS:GetTagged("Trigger")) do
+	for num,trigger in ipairs(CS:GetTagged("Trigger")) do
 		local triggerParent = trigger.Parent
 		if triggerParent and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
 			local triggerType = trigger_gettype(triggerParent)
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
-			local enabled = trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
+			local enabled = name=="Override" or trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
 			if triggerType=="Computer" then
 				print("Computer",triggerParent.Name,enabled,trigger_params[triggerType],(triggerParent:GetAttribute("Trigger_AllowException") or 0))
 			end
@@ -6254,6 +6254,7 @@ clear = function(isManualClear)
 	CAS:UnbindAction("Crawl"..saveIndex)
 	CAS:UnbindAction("CloseMenu"..saveIndex)
 	CAS:UnbindAction("PushSlash"..saveIndex)
+	trigger_setTriggers("Override",{})
 
 	plr:SetAttribute("Cleared"..getID,true)
 	DS:AddItem(HackGUI,1)

@@ -799,13 +799,9 @@ local function trigger_setTriggers(name,setTriggerParams)
 	previously.AllowExceptions = setTriggerParams.AllowExceptions
 	for name, val in pairs(setTriggerParams) do
 		if name ~= "AllowExceptions" then
-			if previously[name] ~= setTriggerParams[name] then
-				if setTriggerParams[name] ~= nil then
-					local addition = (((setTriggerParams[name] and not previously[name]) and 1) or ((not setTriggerParams[name] and previously[name]) and -1) or 0)
-					assert(trigger_params[name],tostring(name).." of Trigger_Params Not Found!")
-					trigger_params[name] += addition
-				end
-			end
+			local addition = (((setTriggerParams[name] and not previously[name]) and 1) or ((not setTriggerParams[name] and previously[name]) and -1) or 0)
+			assert(trigger_params[name],tostring(name).." of Trigger_Params Not Found!")
+			trigger_params[name] += addition
 			previously[name] = setTriggerParams[name]
 		end
 	end

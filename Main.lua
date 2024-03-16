@@ -622,7 +622,7 @@ end
 --PRINT ENVIRONMENT START
 local function printInstances(...)
 	local printVal = ""
-	for num, val in ipairs({...}) do
+	for num, val in pairs({...}) do
 		if num~=1 then
 			printVal ..= " "
 		end
@@ -814,8 +814,10 @@ local function trigger_setTriggers(name,setTriggerParams)
 		if triggerParent and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
 			local triggerType = trigger_gettype(triggerParent)
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
-			local enabled
-			enabled = trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
+			local enabled = trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
+			if triggerType=="Computer" then
+				print("Computer",triggerParent.Name,enabled,trigger_params[triggerType],(triggerParent:GetAttribute("Trigger_AllowException") or 0))
+			end
 			if enabled and trigger:GetAttribute("OrgSize")~=nil then
 				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
 			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then

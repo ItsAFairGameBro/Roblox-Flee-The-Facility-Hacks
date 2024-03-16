@@ -797,12 +797,13 @@ local function trigger_setTriggers(name,setTriggerParams)
 		trigger_updateException(object,previously,setTriggerParams.AllowExceptions)
 	end
 	previously.AllowExceptions = setTriggerParams.AllowExceptions
-	for name, val in pairs(setTriggerParams) do
+	for name, setValue in pairs(setTriggerParams) do
 		if name ~= "AllowExceptions" then
-			local addition = (((setTriggerParams[name] and not previously[name]) and 1) or ((not setTriggerParams[name] and previously[name]) and -1) or 0)
+			local previousValue = previously[name]
+			local addition = (((setValue and (not previousValue or previousValue==nil) ) and 1) or ((not setValue and (not previousValue or previousValue==nil)) and -1) or 0)
 			assert(trigger_params[name],tostring(name).." of Trigger_Params Not Found!")
 			trigger_params[name] += addition
-			previously[name] = setTriggerParams[name]
+			previously[name] = setValue
 		end
 	end
 	for num,trigger in pairs(CS:GetTagged("Trigger")) do
@@ -5245,9 +5246,10 @@ AvailableHacks ={
 					end;
 					local from=Torso.Position;
 					local to = nextWayPoint.Position+newVector3(0,getHumanoidHeight(char),0);
-					local didHit,instance=raycast(from,to,{"Whitelist",table.unpack(CS:GetTagged("Door"))},5,0.001,true);
+					
+					local didHit,instance=raycast(from,to,{"Whitelist",table.unpack(CS:GetTagged("DoorAndExit"))},5,0.001,true);
 					local didHit2,instance2=raycast(from,to,{"Whitelist",Map},5,0.001,true);
-					if nextWayPoint.Label=="DoorPath" or (didHit and (CS:HasTag(instance.Parent,"Door") or CS:HasTag(instance.Parent.Parent,"Door") or CS:HasTag(instance.Parent.Parent.Parent,"Door"))) then
+					if nextWayPoint.Label=="DoorPath" or (didHit and (CS:HasTag(instance.Parent,"DoorAndExit") or CS:HasTag(instance.Parent.Parent,"DoorAndExit") or CS:HasTag(instance.Parent.Parent.Parent,"DoorAndExit"))) then
 						return AvailableHacks.Bot[15].UnlockDoor(true);
 					elseif (nextWayPoint.Label=="Vent" or (didHit2 and instance2.Name~="VentPartWalkThru") ) then
 						return AvailableHacks.Bot[(15)].CrawlVent(true);
@@ -6173,6 +6175,9 @@ clear = function(isManualClear)
 	end
 	for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
 		if obj~=nil then
+			for _, tag in ipairs(obj:GetTags()) do
+				obj:RemoveTag(tag)
+			end
 			obj:Destroy();
 		end;
 	end;
@@ -6220,7 +6225,7 @@ clear = function(isManualClear)
 		AvailableHacks.Blatant[2].Crawl(false);--disable crawl
 	end
 
-	local allTheTages = {"WalkThruDoor","Computer","Trigger","Capsule","Door"}
+	local allTheTages = {"WalkThruDoor","Computer","Trigger","Capsule","DoorAndExit","Door","DoorTrigger","Exit"}
 	for num,tagName in ipairs(allTheTages) do
 		local loopList = CS:GetTagged(tagName)
 		for num,tagPart in ipairs(loopList) do
@@ -6657,7 +6662,9 @@ local function DescendantRemoving(child)
 		CS:RemoveTag(child,"Capsule")
 		defaultFunction("CapsuleRemoved",{child})
 	elseif child.Name=="SingleDoor" or child.Name=="DoubleDoor" or child.Name=="ExitDoor" then
+		CS:RemoveTag(child,"DoorAndExit")
 		CS:RemoveTag(child,"Door")
+		CS:RemoveTag(child,"Exit")
 		local inputArray = {child,child.Name}
 		defaultFunction("DoorRemoved",inputArray)
 	end
@@ -6699,11 +6706,12 @@ local function MapChildAdded(child,shouldntWait)
 			return;
 		end;
 		local doorTrigger_NAME = "DoorTrigger";
-		CS:AddTag(child,"Door");
 		CS:AddTag(doorTrigger,"Trigger");
+		CS:AddTag(doorTrigger,"DoorAndExit");
 		if child.Name=="ExitDoor" then
 			CS:AddTag(child,"Exit");
 		else
+			CS:AddTag(child,"Door");
 			CS:AddTag(doorTrigger,doorTrigger_NAME);
 		end;
 		local doorAdded_NAME = "DoorAdded";

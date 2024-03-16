@@ -789,6 +789,7 @@ local function trigger_updateException(object,previously,allowed_setTriggerParam
 end
 local function trigger_setTriggers(name,setTriggerParams)
 	if isCleared and name ~= "Override" then return end
+	local beforeAltar = table.clone(trigger_params)
 	if setTriggerParams==true then
 		setTriggerParams = table.clone(trigger_allEnabled)
 	elseif setTriggerParams==false then
@@ -830,6 +831,15 @@ local function trigger_setTriggers(name,setTriggerParams)
 				trigger.Size=newVector3(.0001,trigger.Size.Y,.0001)
 			end
 			trigger.CanTouch=enabled
+		end
+	end
+	local currentEvent = myTSM:WaitForChild("ActionEvent").Value
+	if currentEvent then
+		local triggerType = trigger_gettype(currentEvent.Parent)
+		print("Checking",triggerType,currentEvent:GetFullName())
+		if beforeAltar[triggerType] and not trigger_params[triggerType] then
+			print("Disabling",triggerType)
+			myTSM.Action.Value = false
 		end
 	end
 end
@@ -6861,6 +6871,8 @@ if gameName=="FleeMain" then
 	end
 	setChangedAttribute(currentAnimation,"Value",updateAnimation)
 	updateAnimation()
+	trigger_setTriggers("StartUp",{Computer=false})
+	task.delay(5,trigger_setTriggers,"StartUp",{Computer=true})--careful with computers at the start!
 	
 	
 	local totalXPEarned = 0;

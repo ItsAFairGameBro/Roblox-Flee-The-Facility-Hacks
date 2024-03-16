@@ -754,19 +754,66 @@ local function createCommandLine(message,printType)
 end;
 --SET TRIGGERS uses the following format for setting active triggers that the user can interact with:
 --triggerParams = true/false, toggle ALL triggers.
---table: {PodTrigger = true, Computer = true, Exit = false, Door = true, AllowExceptions = {Door, Computer, ExitModel, etc}}
-local function setTriggers(triggerParams)
+--name: identifier
+--table: {FreezePod = true, Computer = true, Exit = false, Door = true, AllowExceptions = {Door, Computer, ExitModel, etc}}
+local trigger_params = {PodTrigger = 0, Computer = 0, Exit = 0, Door = 0}
+local trigger_enabledNames = {}
+local trigger_allowedExceptions
+local trigger_allEnabled = {PodTrigger = true, Computer = true, Exit = true, Door = true, AllowExceptions={}}
+local trigger_allDisabled = {PodTrigger = true, Computer = true, Exit = true, Door = true, AllowExceptions={}}
+local function trigger_gettype(triggerParent)
+	local triggerType = (triggerParent.Name=="FreezePod" and "FreezePod")
+		or (triggerParent:HasTag("Computer") and "Computer") or (triggerParent:HasTag("Exit") and "Exit") or (triggerParent:HasTag("Door") and "Door")
+	return triggerType
+end
+local function trigger_updateException(object,previously,allowed_setTriggerParams,isInPrevious)
+	isInPrevious = isInPrevious or table.find(object,previously.AllowExceptions)
+	local isInCurrent = not isInPrevious or table.find(object,allowed_setTriggerParams)
+	if not isInPrevious and isInCurrent then
+		object:SetAttribute("Trigger_AllowException",(object:GetAttribute("Trigger_AllowException") or 0) + 1)
+	elseif isInPrevious and not isInCurrent then
+		object:SetAttribute("Trigger_AllowException",(object:GetAttribute("Trigger_AllowException") or 0) - 1)
+	end
+	object:AddTag("Trigger_AllowException")
+end
+local function trigger_setTriggers(name,setTriggerParams)
+	if isCleared then return end
+	if setTriggerParams==true then
+		setTriggerParams = table.clone(trigger_allEnabled)
+	elseif setTriggerParams==false then
+		setTriggerParams = table.clone(trigger_allDisabled)
+	elseif not setTriggerParams.AllowExceptions then
+		setTriggerParams.AllowExceptions = {}
+	end
+	local previously = trigger_enabledNames[name]
+	if not previously then
+		previously = table.clone(trigger_allEnabled)
+		trigger_enabledNames[name] = previously
+	end
+	for num, object in ipairs(previously.AllowExceptions or {}) do
+		trigger_updateException(object,previously,setTriggerParams.AllowExceptions)
+	end
+	for num, object in ipairs(setTriggerParams.AllowExceptions or {}) do
+		trigger_updateException(object,previously,setTriggerParams.AllowExceptions)
+	end
+	previously.AllowExceptions = setTriggerParams.AllowExceptions
+	for name, val in pairs(setTriggerParams) do
+		if name ~= "AllowExceptions" then
+			if previously[name] ~= setTriggerParams[name] then
+				if setTriggerParams[name] ~= nil then
+					trigger_params[name] += ((setTriggerParams[name] and not previously[name]) and 1) or ((not setTriggerParams[name] and previously[name]) and -1) or 0
+				end
+			end
+			previously[name] = setTriggerParams[name]
+		end
+	end
 	for num,trigger in pairs(CS:GetTagged("Trigger")) do
-		if trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
-			local triggerType = (trigger.Name=="PodTrigger" and "PodTrigger")
-				or (trigger.Parent:HasTag("Computer") and "Computer") or (trigger.Parent:HasTag("Exit") and "Exit") or (trigger.Parent:HasTag("Door") and "Door")
+		local triggerParent = trigger.Parent
+		if triggerParent and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
+			local triggerType = trigger_gettype(trigger)
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
 			local enabled
-			if typeof(triggerParams)=="boolean" then
-				enabled = triggerParams
-			else
-				enabled = triggerParams[triggerType] or (triggerParams.AllowExceptions and table.find(triggerParams.AllowExceptions,trigger.Parent))
-			end
+			enabled = trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
 			if enabled and trigger:GetAttribute("OrgSize")~=nil then
 				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
 			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
@@ -2856,7 +2903,7 @@ AvailableHacks ={
 						return
 					end
 					local isOpened,currentEvent=getState(),TSM.ActionEvent.Value
-					setTriggers(false)
+					trigger_setTriggers("RemoteDoorControl",false)
 					for s=5,1,-1 do
 						if isOpened~=getState() or actionSign.Value==0 then
 							break
@@ -2872,7 +2919,7 @@ AvailableHacks ={
 						while actionSign.Value==0 do
 							actionSign.Changed:Wait()
 						end
-						setTriggers(true)
+						trigger_setTriggers("RemoteDoorControl",true)
 					end
 					task.spawn(TaskSpawnDelayedFunction)
 					--wait()
@@ -3012,7 +3059,7 @@ AvailableHacks ={
 						end
 					end
 					--print("Capturing survivor!")
-					local Trigger = capsule.PodTrigger
+					local Trigger = capsule:WaitForChild("PodTrigger",5)
 					for s=1,3,1 do
 						local isOpened = (Trigger.ActionSign.Value==11)
 						if capsule.PodTrigger.CapturedTorso.Value~=nil or not enHacks.AutoCapture then 
@@ -3032,19 +3079,19 @@ AvailableHacks ={
 				["ChangedFunction"]=function()
 					local TSM=plr:WaitForChild("TempPlayerStatsModule")
 					if not TSM:WaitForChild("IsBeast").Value then
-					return
-				end
+						return
+					end
 					local CarriedTorso=char:WaitForChild("CarriedTorso",20)
 					if CarriedTorso~=nil then
-					local function captureSurvivorFunction()
+						local function captureSurvivorFunction()
+							AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
+						end
+						local input = enHacks.AutoCapture and captureSurvivorFunction
+						setChangedAttribute(CarriedTorso,"Value",input)
 						AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
+					else
+						warn("rope not found!!!! hackssss bro!", char:GetFullName())
 					end
-					local input = enHacks.AutoCapture and captureSurvivorFunction
-					setChangedAttribute(CarriedTorso,"Value",input)
-					AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
-				else
-					warn("rope not found!!!! hackssss bro!", char:GetFullName())
-				end
 				end,
 
 
@@ -4976,11 +5023,11 @@ AvailableHacks ={
 								if canRun() and TSM.CurrentAnimation.Value=="Typing" then
 									local savePC = closestTrigger.Parent
 									print("Computer Triggers Disabled!")
-									setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
+									trigger_setTriggers("PC_Hack",{PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
 									task.delay(30,function()
 										if lastHackedPC == savePC and not isCleared then
 											print("Computer Triggers Enabled!")
-											setTriggers({PodTrigger = true, Computer = true, Exit = true, Door = true})
+											trigger_setTriggers("PC_Hack",{PodTrigger = true, Computer = true, Exit = true, Door = true})
 										end
 									end)
 									while canRun() and TSM.CurrentAnimation.Value=="Typing" do
@@ -5493,7 +5540,6 @@ AvailableHacks ={
 						createBoxPart(sendTable,newVector3(1.9, 18, 2.5),"WindowWalkThru","Window",newColor3(0,255,255),true)
 					end
 				end
-				setTriggers({PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
 			end,--]]
 		},
 		[20] = {
@@ -5689,21 +5735,6 @@ AvailableHacks ={
 				};
 
 				--DEAD ZONE:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 				local TSM=plr:WaitForChild("TempPlayerStatsModule");
 				local newPath = Path.new(char, PathConfigurationTable);
@@ -6195,6 +6226,9 @@ clear = function(isManualClear)
 		for num,tagPart in ipairs(loopList) do
 			CS:RemoveTag(tagPart,tagName)
 		end
+	end
+	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do
+		tagPart:SetAttribute("Trigger_AllowException",nil)
 	end
 	for category, categoryList in pairs(AvailableHacks) do
 		for index,tbl in pairs(categoryList) do

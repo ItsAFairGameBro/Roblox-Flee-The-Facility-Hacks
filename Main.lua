@@ -6787,6 +6787,7 @@ if gameName=="FleeMain" then
 	local function updateAnimation()
 		print("Updated",currentAnimation.Value)
 		if currentAnimation=="Typing" then
+			print("Setting LastPC")
 			lastPC = getPC(myTSM.ActionEvent.Value)
 			if not lastPC then
 				if not myTSM.ActionEvent.Value then
@@ -6795,7 +6796,7 @@ if gameName=="FleeMain" then
 					warn("PC Not Found:",myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
-			print("LastPC Set!")
+			print("LastPC Set!",lastPC)
 		elseif lastPC and lastAnimationName=="Typing" then
 			print("Last PC Enabled")
 			lastPC_time = os.clock()

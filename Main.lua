@@ -4787,13 +4787,15 @@ AvailableHacks ={
 					["TextColor"]=newColor3(0,170,170),
 				},
 			},
-			["ActivateFunction"]=function(newValue)
+			["ActivateFunction"]=function(newValue,dontKeep)
 				if reloadFunction then
-					if lastRunningEnv.GlobalSettings then
+					if lastRunningEnv.GlobalSettings and not dontKeep then
 						lastRunningEnv.GlobalSettings.enHacks = {}
 						for hackID, value in pairs(enHacks) do
 							lastRunningEnv.GlobalSettings.enHacks[hackID] = value
 						end
+					elseif dontKeep then
+						enHacks = {}--reset hacks!
 					end
 					reloadFunction()
 				else
@@ -6719,6 +6721,8 @@ local function PlayerAdded(theirPlr)
 		table.insert(playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
 			if message == "/re" then
 				AvailableHacks.Basic[99].ActivateFunction()
+			elseif message == "/reset" then
+				AvailableHacks.Basic[99].ActivateFunction(true,true)
 			end
 		end))
 	end

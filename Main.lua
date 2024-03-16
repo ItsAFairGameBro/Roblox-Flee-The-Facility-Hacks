@@ -2968,9 +2968,9 @@ AvailableHacks ={
 						teleportMyself(BestTrigger:GetPivot())
 					end
 					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
-					local TriggerType = trigger_gettype(ActionEventVal.Parent.Parent)
+					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
 					print("Checking",TriggerType)
-					if ActionEventVal and trigger_gettype(TriggerType)=="Computer" then
+					if ActionEventVal and TriggerType=="Computer" then
 						print("Disabled")
 						myTSM.Action.Value = false
 						myTSM.ActionEvent.Value = nil

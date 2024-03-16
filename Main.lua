@@ -802,7 +802,6 @@ local function trigger_setTriggers(name,setTriggerParams)
 			local previousValue = previously[name]
 			local addition = (((setValue and (not previousValue) ) and -1) or ((not setValue and ( previousValue)) and 1) or 0)
 			assert(trigger_params[name],tostring(name).." of Trigger_Params Not Found!")
-			warn("Addition",name,addition,setValue,previousValue)
 			trigger_params[name] += addition
 			previously[name] = setValue
 		end
@@ -5023,15 +5022,6 @@ AvailableHacks ={
 								--if TSM.CurrentAnimation.Value=="Typing" then
 								task.wait(1)
 								if canRun() and TSM.CurrentAnimation.Value=="Typing" then
-									local savePC = closestTrigger.Parent
-									print("Computer Triggers Disabled!")
-									trigger_setTriggers("PC_Hack",{FreezePod = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
-									task.delay(60,function()
-										if lastHackedPC == savePC and not isCleared then
-											print("Computer Triggers Enabled!")
-											trigger_setTriggers("PC_Hack",{FreezePod = true, Computer = true, Exit = true, Door = true})
-										end
-									end)
 									while canRun() and TSM.CurrentAnimation.Value=="Typing" do
 										task.wait(1/3)
 										computerHackStartTime=os.clock() 
@@ -6783,9 +6773,45 @@ for num,theirPlr in ipairs(PS:GetPlayers()) do
 end
 
 
-
 --MENU FUNCTS
 if gameName=="FleeMain" then
+	local lastPC_time
+	local lastPC
+	local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
+	local lastAnimationName
+	local function getPC(obj)
+		if obj:HasTag("Computer") then
+			return obj
+		elseif obj == workspace or obj == Map then
+			return
+		end
+		return getPC(obj.Parent)
+	end
+	local function updateAnimation()
+		if currentAnimation=="Typing" then
+			lastPC = getPC(myTSM.ActionEvent.Value)
+			if not lastPC then
+				if not myTSM.ActionEvent.Value then
+					warn("PC Not Found: ActionEvent.Value nil")
+				else
+					warn("PC Not Found:",myTSM.ActionEvent.Value:GetFullName())
+				end
+			end
+		elseif lastPC and lastAnimationName=="Typing" then
+			lastPC_time = os.clock()
+			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastPC}})
+			task.delay(60,function()
+				if (os.clock() - lastPC_time) >= 60 then
+					trigger_setTriggers("LastPC",{Computer=true})
+				end
+			end)
+		end
+		lastAnimationName = currentAnimation.Value
+	end
+	setChangedAttribute(currentAnimation,"Value",updateAnimation)
+	updateAnimation()
+	
+	
 	local totalXPEarned = 0;
 	local totalCreditsEarned = 0;
 	local totCreditsOffset = PS:GetAttribute("TotalServerCreditsOffset");

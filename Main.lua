@@ -3431,7 +3431,7 @@ AvailableHacks ={
 						end
 						if not TSM.MinigameResult.Value then
 							--RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
-						end
+						end 	
 						task.wait()
 					end
 					if not enHacks.Util_AutoHack then
@@ -3592,6 +3592,21 @@ AvailableHacks ={
 				},
 			},
 		},
+		[7]=(UIS.TouchEnabled and {
+			["Type"]="ExTextButton",
+			["Title"]="Hide Touchscreen",
+			["Desc"]="Prevents Touchscreen from appearing!",
+			["Shortcut"]="Util_HideTouchscreen",
+			["Default"]=true,
+			["Universes"]={"Global"},
+			["ActivateFunction"]=function(newValue)
+				local TouchGui = PlayerGui:WaitForChild("TouchGui");
+				local function updateTouchScreenEnability()
+					TouchGui.Enabled = not enHacks.Util_HideTouchscreen
+				end
+				setChangedAttribute(TouchGui,"Enabled",(enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
+			end,
+		}),
 		[8] = {
 			["Type"]="ExTextButton",
 			["Title"]="Mobile Hammer Fix",
@@ -4792,7 +4807,13 @@ AvailableHacks ={
 				AvailableHacks.Bot[15].CurrentTarget = target
 
 				if isTeleportingAllowed then
-					teleportMyself(CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char))))
+					local setCFrame
+					if (typeof(target)=="Instance") then
+						setCFrame = CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char)),target.Position)
+					else
+						setCFrame = CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char)))
+					end
+					teleportMyself(setCFrame)
 					return true
 				end
 
@@ -6278,6 +6299,7 @@ local function iterPageItems(page)
 	until page.IsFinished
 	return PlayersFriends
 end
+getgenv()["ActiveScript"..getID] = getgenv()["ActiveScript"..getID] or {} 
 if previousCopy then
 	local changedEvent=Instance.new("BindableEvent")
 	local startTime=os.clock()
@@ -6292,7 +6314,6 @@ if previousCopy then
 	local function clearFunct()
 		changedEvent:Fire()
 	end
-	getgenv()["ActiveScript"..getID] = getgenv()["ActiveScript"..getID] or {} 
 	local clearedConnection=(plr:GetAttributeChangedSignal("Cleared"..getID):Connect(clearFunct))
 	while getDictLength(getgenv()["ActiveScript"..getID])>0 do
 		changedEvent.Event:Wait()

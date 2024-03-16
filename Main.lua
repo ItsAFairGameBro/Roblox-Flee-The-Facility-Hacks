@@ -801,7 +801,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 		if name ~= "AllowExceptions" then
 			if previously[name] ~= setTriggerParams[name] then
 				if setTriggerParams[name] ~= nil then
-					trigger_params[name] += ((setTriggerParams[name] and not previously[name]) and 1) or ((not setTriggerParams[name] and previously[name]) and -1) or 0
+					trigger_params[name] += (((setTriggerParams[name] and not previously[name]) and 1) or ((not setTriggerParams[name] and previously[name]) and -1) or 0)
 				end
 			end
 			previously[name] = setTriggerParams[name]

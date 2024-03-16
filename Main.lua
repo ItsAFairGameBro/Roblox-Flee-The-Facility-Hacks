@@ -810,7 +810,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	for num,trigger in pairs(CS:GetTagged("Trigger")) do
 		local triggerParent = trigger.Parent
 		if triggerParent and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
-			local triggerType = trigger_gettype(trigger)
+			local triggerType = trigger_gettype(triggerParent)
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
 			local enabled
 			enabled = trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)

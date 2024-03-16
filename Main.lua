@@ -802,7 +802,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 			local previousValue = previously[name]
 			local addition = (((setValue and (not previousValue or previousValue==nil) ) and 1) or ((not setValue and (not previousValue or previousValue==nil)) and -1) or 0)
 			assert(trigger_params[name],tostring(name).." of Trigger_Params Not Found!")
-			warn("Addition",addition,setValue,previousValue)
+			warn("Addition",name,addition,setValue,previousValue)
 			trigger_params[name] += addition
 			previously[name] = setValue
 		end
@@ -6225,7 +6225,7 @@ clear = function(isManualClear)
 		AvailableHacks.Blatant[2].IsCrawling=false;--disable crawl
 		AvailableHacks.Blatant[2].Crawl(false);--disable crawl
 	end
-
+	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
 	local allTheTages = {"WalkThruDoor","Computer","Trigger","Capsule","DoorAndExit","Door","DoorTrigger","Exit"}
 	for num,tagName in ipairs(allTheTages) do
 		local loopList = CS:GetTagged(tagName)
@@ -6254,9 +6254,9 @@ clear = function(isManualClear)
 	CAS:UnbindAction("Crawl"..saveIndex)
 	CAS:UnbindAction("CloseMenu"..saveIndex)
 	CAS:UnbindAction("PushSlash"..saveIndex)
-	trigger_setTriggers("Override",{})
 
-	plr:SetAttribute("Cleared"..getID,true)
+	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
+	getgenv()["ActiveScript"..getID][saveIndex] = nil
 	DS:AddItem(HackGUI,1)
 	DS:AddItem(script,1)
 	clear=nil
@@ -6290,8 +6290,9 @@ if previousCopy then
 	local function clearFunct()
 		changedEvent:Fire()
 	end
+	getgenv()["ActiveScript"..getID] = getgenv()["ActiveScript"..getID] or {} 
 	local clearedConnection=(plr:GetAttributeChangedSignal("Cleared"..getID):Connect(clearFunct))
-	while not plr:GetAttribute("Cleared"..getID) do
+	while getDictLength(getgenv()["ActiveScript"..getID])>0 do
 		changedEvent.Event:Wait()
 		if isCleared then
 			DS:AddItem(script,1)
@@ -6310,6 +6311,7 @@ if isCleared then
 	DS:AddItem(script,1)
 	return "After Waiting Cleared (Code 103)"
 end
+getgenv()["ActiveScript"..getID][saveIndex] = true
 
 local numOfFriends = (0) 
 

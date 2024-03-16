@@ -845,8 +845,9 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	if currentEvent then
 		if beforeEn and not afterEn then
-			myTSM.ActionInput.Value = false
-			myTSM.ActionEvent.Value = nil
+			--myTSM.ActionInput.Value = false
+			--myTSM.ActionEvent.Value = nil
+			RemoteEvent:FireServer("Input", "Action", false)
 			RemoteEvent:FireServer("Input", "Trigger", false)
 		end
 	end
@@ -2979,8 +2980,9 @@ AvailableHacks ={
 					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
 					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
 					if ActionEventVal and TriggerType=="Computer" then
-						myTSM.ActionInput.Value = false
-						myTSM.ActionEvent.Value = nil
+						--myTSM.ActionInput.Value = false
+						--myTSM.ActionEvent.Value = nil
+						RemoteEvent:FireServer("Input", "Action", false)
 						RemoteEvent:FireServer("Input", "Trigger", false)
 					end
 				end

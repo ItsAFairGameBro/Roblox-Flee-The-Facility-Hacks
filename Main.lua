@@ -818,12 +818,18 @@ local function trigger_setTriggers(name,setTriggerParams)
 			previously[name] = setValue
 		end
 	end
+	local currentEvent = myTSM:WaitForChild("ActionEvent").Value
+	local beforeEn,afterEn
 	for num,trigger in ipairs(CS:GetTagged("Trigger")) do
 		local triggerParent = trigger.Parent
 		if triggerParent and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
 			local triggerType = trigger_gettype(triggerParent)
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
 			local enabled = name=="Override" or trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
+			if currentEvent and currentEvent.Parent.Parent==triggerParent then
+				beforeEn = trigger.CanTouch--checks if it was enabled previously
+				afterEn = enabled
+			end
 			if enabled and trigger:GetAttribute("OrgSize")~=nil then
 				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
 			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
@@ -833,12 +839,10 @@ local function trigger_setTriggers(name,setTriggerParams)
 			trigger.CanTouch=enabled
 		end
 	end
-	local currentEvent = myTSM:WaitForChild("ActionEvent").Value
 	if currentEvent then
-		local triggerType = trigger_gettype(currentEvent.Parent.Parent)
-		print("Checking",triggerType,currentEvent:GetFullName())
-		if beforeAltar[triggerType] and not trigger_params[triggerType] then
-			print("Disabling",triggerType)
+		print("Checking",beforeEn,afterEn,currentEvent:GetFullName())
+		if beforeEn and not afterEn then
+			print("Disabling",currentEvent)
 			myTSM.Action.Value = false
 			myTSM.ActionEvent.Value = nil
 		end

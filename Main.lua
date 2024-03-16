@@ -6214,7 +6214,7 @@ clear = function(isManualClear)
 			obj:Destroy();
 		end;
 	end;--]]
-	RemoveAllTaggedObjects("RemoveOnDestroy")
+	DestroyAllTaggedObjects("RemoveOnDestroy")
 	for userID,functList in pairs(playerEvents) do
 		for num,funct in pairs(functList or {}) do
 			funct:Disconnect();

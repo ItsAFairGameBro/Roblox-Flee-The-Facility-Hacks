@@ -4006,7 +4006,7 @@ AvailableHacks ={
 				local i = 0
 
 				local function setCollisionGroupRecursive(object,flying)
-					if object:IsA("BasePart") then
+					if object:IsA("BasePart") and not object:HasTag("InviWalls") then
 						if not flying then
 							object.CanCollide=object:GetAttribute("OriginalCollide") or object.CanCollide
 						else

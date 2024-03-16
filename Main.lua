@@ -6785,6 +6785,7 @@ if gameName=="FleeMain" then
 		return getPC(obj.Parent)
 	end
 	local function updateAnimation()
+		print("Updated",currentAnimation.Value)
 		if currentAnimation=="Typing" then
 			lastPC = getPC(myTSM.ActionEvent.Value)
 			if not lastPC then

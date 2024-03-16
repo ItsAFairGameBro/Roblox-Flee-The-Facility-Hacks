@@ -23,6 +23,7 @@ local functs = {}
 local Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
 local myTSM,mySSM
 local plr = PS.LocalPlayer
+local human
 local PlayerGui = plr:WaitForChild("PlayerGui");
 local isActionProgress=false
 local isCleared=false
@@ -545,14 +546,12 @@ local isTeleporting = false
 
 local function teleport_module_teleportQueue()
 	if isTeleporting then return end isTeleporting = true
-	while #TPStack>0 do
+	while #TPStack>0 and isTeleporting do
 		local currentTP = TPStack[1]
 		if os.clock()-(plr:GetAttribute("LastTP") or 0) >= minTimeBetweenTeleport then
-			if not char.PrimaryPart then
-				local HRP = char:WaitForChild("HumanoidRootPart",1/4)
-				char.PrimaryPart = HRP
-				print("Reset",char,"PrimaryPart!")
-			end
+			local teleportPart = char.PrimaryPart or 
+				(human.RigType == Enum.HumanoidRigType.R6 and char:FindFirstChild("Torso"))
+				or (human.RigType == Enum.HumanoidRigType.R15 and char:FindFirstChild("UpperTorso"))
 			if char.PrimaryPart then
 				char:SetPrimaryPartCFrame(currentTP)
 				plr:SetAttribute("LastTP",os.clock())
@@ -1918,7 +1917,7 @@ end--]]
 --Important Variables:
 plr=PS.LocalPlayer
 char=plr.Character or plr.CharacterAdded:Wait()
-local human=char:WaitForChild("Humanoid")
+human=char:WaitForChild("Humanoid")
 local camera=workspace:WaitForChild("Camera")
 local hackChanged=Instance.new("BindableEvent")
 local computerHackStartTime=os.clock()
@@ -2987,10 +2986,7 @@ AvailableHacks ={
 					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
 					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
 					if ActionEventVal and TriggerType=="Computer" then
-						--myTSM.ActionInput.Value = false
-						--myTSM.ActionEvent.Value = nil
 						task.spawn(stopCurrentAction)
-						print("Disabled Action, Trigger, and Stuff!")
 					end
 					local goodTriggers = AvailableHacks.Bot[15].getGoodTriggers(Computer)
 					if #goodTriggers>0 then
@@ -3127,7 +3123,7 @@ AvailableHacks ={
 					local Trigger = capsule:WaitForChild("PodTrigger",5)
 					for s=1,3,1 do
 						local isOpened = (Trigger.ActionSign.Value==11)
-						if capsule.PodTrigger.CapturedTorso.Value~=nil or not enHacks.AutoCapture then 
+						if Trigger and Trigger.CapturedTorso.Value~=nil or not enHacks.AutoCapture then 
 							break --we got ourselves a trapped survivor!
 						elseif s~=1 then
 							wait(.15)
@@ -6675,6 +6671,8 @@ local function CharacterAdded(theirChar)
 	if isCleared then
 		return
 	end
+	TPStack = {}--clears TPStack!
+	isTeleporting = false--if its still teleporting then stap it!
 	task.wait()
 	local theirPlr=PS:GetPlayerFromCharacter(theirChar)
 	local theirHumanoid=theirChar:WaitForChild("Humanoid")

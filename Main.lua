@@ -422,9 +422,10 @@ local function GuiCreationFunction()
 	ToggleButton.Size = UDim2.new(1, 0, 1, 0)
 	ToggleButton.Font = textFont
 	ToggleButton.Text = "Close"
-	ToggleButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+	ToggleButton.TextColor3 = Color3.fromRGB(255,255,255)
 	ToggleButton.TextScaled = true
-	ToggleButton.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+	ToggleButton.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+	ToggleButton.TextStrokeTransparency = 0
 	ToggleButton.TextWrapped = true
 
 	TestPart.Size=Vector3.new(1.15,1.15,1.15)
@@ -628,7 +629,7 @@ local function DestroyInstance(instance)
 	RemoveAllTags(instance)
 	instance:Destroy()
 end
-local function RemoveAllTaggedObjects(tag)
+local function DestroyAllTaggedObjects(tag)
 	for _, obj in ipairs(CS:GetTagged(tag)) do
 		DestroyInstance(obj)
 	end
@@ -1160,7 +1161,7 @@ end
 
 local function destroyVisualWaypoints(waypoints)
 	for _, waypoint in ipairs(CS:GetTagged("Waypoints")) do
-		waypoint:Destroy()
+		DestroyInstance(waypoint)
 	end
 	return
 end
@@ -2122,12 +2123,6 @@ AvailableHacks ={
 					VPF.Visible=newValue
 				end
 			end,
-			["OthersShutDown"]=function(theirPlr,theirChar)
-				local VPF=HackGUI:FindFirstChild(theirPlr.Name)
-				if VPF~=nil then 
-					VPF:Destroy()
-				end
-			end,
 			["OthersStartUp"]=function(theirPlr,theirChar)
 				local Head=theirChar:WaitForChild("Head",1e5)
 				if not Head then
@@ -2137,26 +2132,6 @@ AvailableHacks ={
 				if not Head then
 					return
 				end
-				--[[local function changeRenderVisibility(Place,Trans,Color)
-					if Place:GetAttribute("Color")==Color and Place:GetAttribute("Trans")==Trans then
-						return
-					end
-					for num,part in pairs(Place:GetDescendants()) do
-						if part:IsA("BasePart") or part:IsA("Decal") then
-							if part:GetAttribute("OrgTrans")==nil then
-								part:SetAttribute("OrgTrans",part.Transparency)
-							end
-							if part:GetAttribute("OrgTrans")<.9999 then
-								part.Transparency=Trans
-							end
-							if part:IsA("BasePart") then
-								part.Color=Color or part.Color
-							end
-						end
-					end
-					Place:SetAttribute("Color",Color)
-					Place:SetAttribute("Trans",Trans)
-				end--]]
 				local function changeVisibility(Place,Trans,Color)
 					Place.FillTransparency = Trans
 					Place.OutlineTransparency = Trans>.99 and 1 or 0
@@ -2164,10 +2139,6 @@ AvailableHacks ={
 						Place.FillColor = Color
 					end
 				end
-				--local myRenderer = ObjectHighlighter.createRenderer(HackGUI)
-				--local myHighlight = ObjectHighlighter.createFromTarget(theirChar)
-				--local VPF=myRenderer:addToStack(myHighlight) task.wait()
-				--VPF.Name=theirPlr.Name
 				local robloxHighlight = Instance.new("Highlight")
 				robloxHighlight.Parent = theirChar
 				CS:AddTag(robloxHighlight,"RemoveOnDestroy")
@@ -2231,7 +2202,6 @@ AvailableHacks ={
 			["CleanUp"]=function()
 				for num, computerElement in pairs(HackGUI:GetChildren()) do
 					if string.sub(computerElement.Name,1,13)=="ComputerTable" then
-						--computerElement:Destroy()
 						DestroyInstance(computerElement)
 					end
 				end
@@ -2448,36 +2418,6 @@ AvailableHacks ={
 			["Desc"]="Very obvious",
 			["Shortcut"]="OverrideCrawl",
 			["LoadedAnim"]=nil,
-			["DisableScript"]=function()
-				--[[local enableCrawl=enHacks.OverrideCrawl or ({isInLobby(char)})[2]~="Beast"
-				local CrawlScript=char:WaitForChild("CrawlScript",1) if CrawlScript==nil then return end
-				if (plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("DisableCrawl").Value~=enableCrawl
-					and CrawlScript.Disabled~=enableCrawl)
-					or (AvailableHacks.Blatant[2].IsRunning) then
-					return
-				end 
-				if char:FindFirstChild("Hammer")==nil then
-					char:WaitForChild("Hammer",18)
-				end
-				wait(.1)
-				AvailableHacks.Blatant[2].IsRunning=true
-				--if CrawlScript.Disabled then
-
-				--end
-				CrawlScript.Disabled=not enableCrawl
-				wait(.65)
-				plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("DisableCrawl").Value=not enableCrawl
-				--s%2==0 and (not enableCrawl) or enableCrawl
-				--wait(.075)
-				for num,animTrack in pairs(char.Humanoid.Animator:GetPlayingAnimationTracks()) do
-					if animTrack.Animation.AnimationId=="rbxassetid://961932719" then
-						animTrack:Stop(0) animTrack:Destroy()
-						human.HipHeight=0
-					end
-				end
-				AvailableHacks.Blatant[2].IsRunning=false--]]
-
-			end,
 			["Default"]=false,
 			["DontActivate"]=true,
 			["ActivateFunction"]=function(newValue)
@@ -2853,7 +2793,7 @@ AvailableHacks ={
 				end
 			end,
 			["CleanUp"]=function()
-				RemoveAllTags("HackDisplay2")
+				DestroyAllTaggedObjects("HackDisplay2")
 				AvailableHacks.Blatant[15].DoorFuncts = {}
 			end,
 			["UpdateDisplays"]=function()
@@ -2958,7 +2898,7 @@ AvailableHacks ={
 				end
 			end,
 			["CleanUp"]=function()
-				RemoveAllTags("HackDisplay3")
+				DestroyAllTaggedObjects("HackDisplay3")
 			end,
 			["UpdateDisplays"]=function()
 				AvailableHacks.Blatant[15].ActivateFunction(enHacks.RemotelyHackComputers)
@@ -4530,12 +4470,12 @@ AvailableHacks ={
 				CAS:UnbindAction("down"..saveIndex)
 				local JetpackGUI=plr.PlayerGui:FindFirstChild("JetpackGUI")
 				if JetpackGUI~=nil then 
-					JetpackGUI:Destroy() 
+					JetpackGUI:Destroy()
 				end
 				if char:FindFirstChild("Head") then
 					local JetpackVelocity = char.Head:FindFirstChild("JetpackVelocity")
 					if JetpackVelocity then 
-						JetpackVelocity:Destroy() 
+						JetpackVelocity:Destroy()
 					end
 				end
 			end),
@@ -5459,7 +5399,7 @@ AvailableHacks ={
 				local exitArea=door.Name=="ExitDoor" and door:WaitForChild("ExitArea")
 				local walkThruPart=doorTrigger:Clone() 
 				walkThruPart:ClearAllChildren()
-				removeAllTags(walkThruPart)
+				RemoveAllTags(walkThruPart)
 				walkThruPart.Name="WalkThru"
 				walkThruPart.Parent=door
 				walkThruPart.Transparency=hitBoxesEnabled and .6 or 1
@@ -6266,14 +6206,15 @@ clear = function(isManualClear)
 			end
 		end
 	end
-	for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
+	--[[for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
 		if obj~=nil then
 			for _, tag in ipairs(obj:GetTags()) do
 				obj:RemoveTag(tag)
 			end
 			obj:Destroy();
 		end;
-	end;
+	end;--]]
+	RemoveAllTaggedObjects("RemoveOnDestroy")
 	for userID,functList in pairs(playerEvents) do
 		for num,funct in pairs(functList or {}) do
 			funct:Disconnect();
@@ -6318,15 +6259,15 @@ clear = function(isManualClear)
 		AvailableHacks.Blatant[2].Crawl(false);--disable crawl
 	end
 	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
-	local allTheTages = {"WalkThruDoor","Computer","Trigger","Capsule","DoorAndExit","Door","DoorTrigger","Exit"}
+	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do
+		tagPart:SetAttribute("Trigger_AllowException",nil)
+	end
+	local allTheTages = {"WalkThruDoor","Computer","Trigger","Capsule","DoorAndExit","Door","DoorTrigger","Exit","Trigger_AllowException"}
 	for num,tagName in ipairs(allTheTages) do
 		local loopList = CS:GetTagged(tagName)
 		for num,tagPart in ipairs(loopList) do
 			CS:RemoveTag(tagPart,tagName)
-		end
-	end
-	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do
-		tagPart:SetAttribute("Trigger_AllowException",nil)
+		end--]]
 	end
 	for category, categoryList in pairs(AvailableHacks) do
 		for index,tbl in pairs(categoryList) do

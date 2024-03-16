@@ -2926,7 +2926,7 @@ AvailableHacks ={
 						return
 					end
 					local angle = math.abs(math.acos(ComputerBase.CFrame.LookVector:Dot((trigger.Position - ComputerBase.Position).Unit)))
-					if angle < bestAngle then
+					if angle > bestAngle then
 						bestAngle = angle
 						BestTrigger = trigger
 					end

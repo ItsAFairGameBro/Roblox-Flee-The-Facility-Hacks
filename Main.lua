@@ -787,7 +787,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	local previously = trigger_enabledNames[name]
 	if not previously then
-		previously = {AllowExceptions={}}
+		previously = table.clone(trigger_allEnabled)
 		trigger_enabledNames[name] = previously
 	end
 	for num, object in ipairs(previously.AllowExceptions or {}) do
@@ -800,7 +800,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	for name, setValue in pairs(setTriggerParams) do
 		if name ~= "AllowExceptions" then
 			local previousValue = previously[name]
-			local addition = (((setValue and (not previousValue or previousValue==nil) ) and 1) or ((not setValue and (not previousValue or previousValue==nil)) and -1) or 0)
+			local addition = (((setValue and (not previousValue) ) and -1) or ((not setValue and ( previousValue)) and 1) or 0)
 			assert(trigger_params[name],tostring(name).." of Trigger_Params Not Found!")
 			warn("Addition",name,addition,setValue,previousValue)
 			trigger_params[name] += addition

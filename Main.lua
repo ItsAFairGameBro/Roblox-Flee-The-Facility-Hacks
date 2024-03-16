@@ -619,6 +619,20 @@ local function ClosestPointOnPart(Part, Point)
 		math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
 	)
 end
+local function RemoveAllTags(obj)
+	for _, tag in ipairs(obj:GetTags()) do
+		obj:RemoveTag(tag)
+	end
+end
+local function DestroyInstance(instance)
+	RemoveAllTags(instance)
+	instance:Destroy()
+end
+local function RemoveAllTaggedObjects(tag)
+	for _, obj in ipairs(CS:GetTagged(tag)) do
+		DestroyInstance(obj)
+	end
+end
 --PRINT ENVIRONMENT START
 local function printInstances(...)
 	local printVal = ""
@@ -669,11 +683,6 @@ local function findClosestObj(objs,poso,maxDist,yMult)
 		end
 	end
 	return closest,closestDist
-end
-local function removeAllTags(obj)
-	for num,tag in pairs(CS:GetTags(obj)) do
-		CS:RemoveTag(obj,tag)
-	end
 end
 local function createModifer(obj,label,passThru)
 	local modifer=Instance.new("PathfindingModifier")
@@ -2222,7 +2231,8 @@ AvailableHacks ={
 			["CleanUp"]=function()
 				for num, computerElement in pairs(HackGUI:GetChildren()) do
 					if string.sub(computerElement.Name,1,13)=="ComputerTable" then
-						computerElement:Destroy()
+						--computerElement:Destroy()
+						DestroyInstance(computerElement)
 					end
 				end
 			end,
@@ -2843,10 +2853,7 @@ AvailableHacks ={
 				end
 			end,
 			["CleanUp"]=function()
-				local hackDisplayList = CS:GetTagged("HackDisplay2")
-				for num,tag in ipairs(hackDisplayList) do
-					tag:Destroy()
-				end
+				RemoveAllTags("HackDisplay2")
 				AvailableHacks.Blatant[15].DoorFuncts = {}
 			end,
 			["UpdateDisplays"]=function()
@@ -2935,6 +2942,69 @@ AvailableHacks ={
 					AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
 				end
 				setChangedAttribute(actionSign,"Value", (actionSignChangedFunct))
+			end,
+		},
+		[20]={
+			["Type"]="ExTextButton",
+			["Title"]="Remote Computers",
+			["Desc"]="Remotely Hack Computers",
+			["Shortcut"]="RemotelyHackComputers",
+			["Default"]=false,
+			["ActivateFunction"]=function(newValue)
+				local isInGame=isInLobby(camera.CameraSubject.Parent)
+				local hackDisplayList = CS:GetTagged("HackDisplay3")
+				for num,tag in ipairs(hackDisplayList) do
+					tag.Enabled=newValue and camera.CameraType==Enum.CameraType.Custom and isInGame
+				end
+			end,
+			["CleanUp"]=function()
+				RemoveAllTags("HackDisplay3")
+			end,
+			["UpdateDisplays"]=function()
+				AvailableHacks.Blatant[15].ActivateFunction(enHacks.RemotelyHackComputers)
+			end,
+			["MyPlayerAdded"]=function()
+				local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				table.insert(functs,RS:WaitForChild("AnnouncementEvent").OnClientEvent:Connect(function(...)
+					--print(...)
+					if not ... then
+						AvailableHacks.Blatant[15].UpdateDisplays()
+					end
+				end))--]]
+				setChangedAttribute(RS.IsGameActive,"Value",AvailableHacks.Blatant[15].UpdateDisplays)
+				setChangedAttribute(camera,"CameraSubject",AvailableHacks.Blatant[15].UpdateDisplays)
+				setChangedAttribute(TSM:WaitForChild("Escaped"),"Value",AvailableHacks.Blatant[15].UpdateDisplays)
+			end,
+			["ComputerAdded"]=function(Computer)
+				local BestTrigger = Computer:WaitForChild("ComputerTrigger2",20)
+				if not BestTrigger then
+					return
+				end
+				local newTag=ToggleTag:Clone()
+				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
+				newTag.Enabled=(enHacks.RemotelyHackComputers and (camera.CameraType==Enum.CameraType.Custom and isInGame))
+				newTag.Parent=HackGUI
+				newTag.Adornee=Computer.Screen
+				CS:AddTag(newTag,"RemoveOnDestroy")
+				CS:AddTag(newTag,"HackDisplay3")
+				task.wait()
+				if newTag==nil or newTag.Parent==nil or newTag:FindFirstChild("Toggle")==nil then
+					return
+				end
+				local ToggleButton = newTag.Toggle
+				ToggleButton.BackgroundColor3 = Color3.fromRGB(0,0,170)
+				ToggleButton.Text = "Teleport"
+				local function setToggleFunction()
+					local goodTriggers = AvailableHacks.Bot[15].getGoodTriggers(Computer)
+					if #goodTriggers>0 then
+						local selectedTriggerKey = table.find(goodTriggers,BestTrigger) or 1
+						teleportMyself(goodTriggers[selectedTriggerKey]:GetPivot())
+					else
+						teleportMyself(BestTrigger:GetPivot())
+					end
+					--TODO HERE					
+				end
+				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
 			end,
 		},
 		[71]={
@@ -4950,6 +5020,23 @@ AvailableHacks ={
 				human:MoveTo(char.Torso.CFrame*(5*Random.new():NextUnitVector()))
 				wait(1/3)
 			end,
+			["getGoodTriggers"]=function(pc)
+				local screen = pc:FindFirstChild("Screen")
+				if ((screen.Color.G*255)<128) and ((screen.Color.G*255)>126) then--check if its green, meaning no hack hecked pcs!
+					return {}
+				end
+				local list={}
+				for num,triggerName in pairs(({"ComputerTrigger1","ComputerTrigger2","ComputerTrigger3"})) do
+					local trigger=pc:FindFirstChild(triggerName)
+					local canContinue1 = (trigger~=nil and trigger.Parent~=nil and Map~=nil and workspace:IsAncestorOf(trigger))
+					if canContinue1 then
+						if (screen~=nil and trigger:FindFirstChild("ActionSign")~=nil and trigger.ActionSign.Value==20 and not trigger:GetAttribute("Unreachable"..saveIndex)) then
+							table.insert(list,trigger)
+						end
+					end
+				end
+				return list
+			end,
 			["RUNNERHack"]=function(TSM,currentPath,savedDeb)
 				local canRun;
 				function canRun(fullLoop)
@@ -4959,28 +5046,11 @@ AvailableHacks ={
 					return Check1 and Check2 and Check3;
 				end
 				AvailableHacks.Bot[15].CanRun=canRun;
-				local function getGoodTriggers(pc)
-					local screen = pc:FindFirstChild("Screen")
-					if ((screen.Color.G*255)<128) and ((screen.Color.G*255)>126) then--check if its green, meaning no hack hecked pcs!
-						return {}
-					end
-					local list={}
-					for num,triggerName in pairs(({"ComputerTrigger1","ComputerTrigger2","ComputerTrigger3"})) do
-						local trigger=pc:FindFirstChild(triggerName)
-						local canContinue1 = (trigger~=nil and trigger.Parent~=nil and Map~=nil and workspace:IsAncestorOf(trigger))
-						if canContinue1 then
-							if (screen~=nil and trigger:FindFirstChild("ActionSign")~=nil and trigger.ActionSign.Value==20 and not trigger:GetAttribute("Unreachable"..saveIndex)) then
-								table.insert(list,trigger)
-							end
-						end
-					end
-					return list
-				end
 
 				local function getComputerTriggers()
 					local triggers = {}
 					for num,pc in ipairs(CS:GetTagged("Computer")) do
-						for num,goodTrigger in pairs(getGoodTriggers(pc)) do
+						for num,goodTrigger in pairs(AvailableHacks.Bot[15].getGoodTriggers(pc)) do
 							table.insert(triggers,goodTrigger)
 						end
 					end 
@@ -5064,7 +5134,7 @@ AvailableHacks ={
 									
 							end
 							if char.PrimaryPart~=nil then
-								closestTrigger,dist=findClosestObj(getGoodTriggers(closestTrigger.Parent),char.PrimaryPart.Position,3000,1)
+								closestTrigger,dist=findClosestObj(AvailableHacks.Bot[15].getGoodTriggers(closestTrigger.Parent),char.PrimaryPart.Position,3000,1)
 							end
 							task.wait(0)
 						end
@@ -5078,7 +5148,6 @@ AvailableHacks ={
 								and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then
 								AvailableHacks.Blatant[15].DoorFuncts[exitDoor]()
 							end
-							local exitDoorTrigger = closestExitArea.Parent.ExitDoorTrigger
 							local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
 							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) 
 								and (not exitDoor:FindFirstChild("ExitDoorTrigger") 

@@ -3192,9 +3192,9 @@ AvailableHacks ={
 					end
 				end
 			end,
-			["RescueSurvivor"]=function(capsule)
+			["RescueSurvivor"]=function(capsule,override)
 				if capsule.PodTrigger.CapturedTorso.Value==nil then return end
-				if not enHacks.AutoRescue then return end
+				if not enHacks.AutoRescue and not override then return end
 				if char:FindFirstChild("Hammer")~=nil then return end
 				local Trigger=capsule.PodTrigger
 				for s=5,1,-1 do

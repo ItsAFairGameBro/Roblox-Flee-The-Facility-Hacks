@@ -2821,9 +2821,13 @@ AvailableHacks ={
 						AvailableHacks.Blatant[15].UpdateDisplays()
 					end
 				end))--]]
-				setChangedAttribute(RS.IsGameActive,"Value",AvailableHacks.Blatant[15].UpdateDisplays)
-				setChangedAttribute(camera,"CameraSubject",AvailableHacks.Blatant[15].UpdateDisplays)
-				setChangedAttribute(TSM:WaitForChild("Escaped"),"Value",AvailableHacks.Blatant[15].UpdateDisplays)
+				local function updateDisplays()
+					AvailableHacks.Blatant[15].UpdateDisplays()
+					AvailableHacks.Blatant[20].UpdateDisplays()
+				end
+				setChangedAttribute(RS.IsGameActive,"Value",updateDisplays)
+				setChangedAttribute(camera,"CameraSubject",updateDisplays)
+				setChangedAttribute(TSM:WaitForChild("Escaped"),"Value",updateDisplays)
 			end,
 			["DoorAdded"]=function(door,doorType)
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
@@ -2969,10 +2973,8 @@ AvailableHacks ={
 					end
 					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
 					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
-					print("Checking",TriggerType)
 					if ActionEventVal and TriggerType=="Computer" then
-						print("Disabled")
-						myTSM.Action.Value = false
+						myTSM.ActionInput.Value = false
 						myTSM.ActionEvent.Value = nil
 					end
 				end
@@ -4615,7 +4617,7 @@ AvailableHacks ={
 					table.insert(objectFuncts_ADD, connection_1);
 					local lastTouch = 0;
 					local function TouchTapFunction(touchPositions,gameProcessedEvent)
-						if gameProcessedEvent then
+						if gameProcessedEvent or not PlayerGui.TouchGui.Enabled then
 							return;
 						end;
 						if os.clock() - lastTouch <= .5 then
@@ -4850,11 +4852,9 @@ AvailableHacks ={
 				AvailableHacks.Bot[15].CurrentTarget = target
 
 				if isTeleportingAllowed then
-					local setCFrame
+					local setCFrame = CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char)))
 					if (typeof(target)=="Instance") then
-						setCFrame = CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char)),target.Position)
-					else
-						setCFrame = CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char)))
+						setCFrame = CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char)),Vector3.new(target.Position.X,setCFrame.Y,target.Position.Z))
 					end
 					teleportMyself(setCFrame)
 					return true

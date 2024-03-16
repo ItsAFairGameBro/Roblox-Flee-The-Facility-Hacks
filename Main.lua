@@ -2919,15 +2919,14 @@ AvailableHacks ={
 			["ComputerAdded"]=function(Computer)
 				local ComputerBase = Computer.PrimaryPart
 				local BestTrigger
-				local bestAngle = 0
+				local bestAngle = 3
 				for _, trigger_name in ipairs({"ComputerTrigger1","ComputerTrigger2","ComputerTrigger3"}) do
 					local trigger = Computer:WaitForChild(trigger_name, 20)
 					if not trigger then
 						return
 					end
 					local angle = math.abs(math.acos(ComputerBase.CFrame.LookVector:Dot((trigger.Position - ComputerBase.Position).Unit)))
-					print(trigger_name,angle)
-					if angle > bestAngle then
+					if math.abs(angle - 1.57) < bestAngle then
 						bestAngle = angle
 						BestTrigger = trigger
 					end

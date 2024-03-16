@@ -412,6 +412,7 @@ local function GuiCreationFunction()
 	TextBoxExamples["ToggleTag"] = ToggleTag
 	ToggleTag["Active"] = true
 	ToggleTag.AlwaysOnTop = true
+	ToggleTag.Enabled = false	
 	ToggleTag.LightInfluence = 1.000
 	ToggleTag.Size = UDim2.new(1, 30, 0.75, 10)
 	ToggleTag.ExtentsOffsetWorldSpace = Vector3.new(0, 4, 0)
@@ -2823,7 +2824,6 @@ AvailableHacks ={
 				end
 				local newTag=ToggleTag:Clone()
 				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
-				newTag.Enabled=(enHacks.RemotelyOpenDoors and (camera.CameraType==Enum.CameraType.Custom and isInGame))
 				newTag.Parent=HackGUI
 				newTag.Adornee=doorTrigger
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -2877,6 +2877,7 @@ AvailableHacks ={
 				AvailableHacks.Blatant[15].DoorFuncts[door] = setToggleFunction
 				newTag.Toggle.MouseButton1Up:Connect(setToggleFunction)
 				AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
+				newTag.Enabled=(enHacks.RemotelyOpenDoors and (camera.CameraType==Enum.CameraType.Custom and isInGame))
 				wait(.075)
 				local function actionSignChangedFunct()
 					AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
@@ -2922,8 +2923,8 @@ AvailableHacks ={
 				end
 				local newTag=ToggleTag:Clone()
 				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
-				newTag.Enabled=(enHacks.RemotelyHackComputers and (camera.CameraType==Enum.CameraType.Custom and isInGame))
 				newTag.Parent=HackGUI
+				ToggleTag.ExtentsOffsetWorldSpace = Vector3.new(0, 8, 0)
 				newTag.Adornee=Computer.Screen
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay3")
@@ -2945,6 +2946,7 @@ AvailableHacks ={
 					--TODO HERE					
 				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
+				newTag.Enabled=(enHacks.RemotelyHackComputers and (camera.CameraType==Enum.CameraType.Custom and isInGame))
 			end,
 		},
 		[71]={

@@ -2935,7 +2935,7 @@ AvailableHacks ={
 				local newTag=ToggleTag:Clone()
 				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
-				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 10, 0)
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
 				newTag.Adornee=ComputerBase
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay3")
@@ -6573,24 +6573,14 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			if overrideDefault==nil and getgenv().enHacks then
 				overrideDefault = getgenv().enHacks[hack.Shortcut]
 			end
-			if hack.Options[overrideDefault] == nil then
+			if (hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
+				(hack.Type=="ExTextBox" and (overrideDefault > hack.MinBound or overrideDefault < hack.MaxBound))) then
 				warn("Invalid Option For "..hack.Title..": "..overrideDefault..". Reverting To Original...")
 				overrideDefault = nil
 			end
 			if overrideDefault~=nil then
 				enHacks[hack.Shortcut]=overrideDefault;
 			else
-				if hack.Default==nil then
-					error("No Default No Longer Supported For "..hack.Title.."!")
-					local HackOptions = Random.new():NextInteger(1,getDictLength(hack.Options))
-					local HackIndex = 0
-					for key, val in pairs(hack.Options) do
-						HackIndex = HackIndex + 1
-						if HackIndex==HackOptions then
-							hack.Default = key break
-						end
-					end
-				end
 				enHacks[hack.Shortcut]=hack.Default;
 			end
 			--print(hack.Shortcut,hack.Type);

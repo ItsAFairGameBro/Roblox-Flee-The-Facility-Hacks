@@ -2970,13 +2970,6 @@ AvailableHacks ={
 				ToggleButton.BackgroundColor3 = Color3.fromRGB(0,0,170)
 				ToggleButton.Text = "Teleport"
 				local function setToggleFunction()
-					local goodTriggers = AvailableHacks.Bot[15].getGoodTriggers(Computer)
-					if #goodTriggers>0 then
-						local selectedTriggerKey = table.find(goodTriggers,BestTrigger) or 1
-						teleportMyself(goodTriggers[selectedTriggerKey]:GetPivot())
-					else
-						teleportMyself(BestTrigger:GetPivot())
-					end
 					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
 					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
 					if ActionEventVal and TriggerType=="Computer" then
@@ -2984,6 +2977,15 @@ AvailableHacks ={
 						--myTSM.ActionEvent.Value = nil
 						RemoteEvent:FireServer("Input", "Action", false)
 						RemoteEvent:FireServer("Input", "Trigger", false)
+						print("Disabled Action, Trigger, and Stuff!")
+						RunS.RenderStepped:Wait()
+					end
+					local goodTriggers = AvailableHacks.Bot[15].getGoodTriggers(Computer)
+					if #goodTriggers>0 then
+						local selectedTriggerKey = table.find(goodTriggers,BestTrigger) or 1
+						teleportMyself(goodTriggers[selectedTriggerKey]:GetPivot())
+					else
+						teleportMyself(BestTrigger:GetPivot())
 					end
 				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
@@ -3658,6 +3660,10 @@ AvailableHacks ={
 					TouchGui.Enabled = not enHacks.Util_HideTouchscreen
 				end
 				setChangedAttribute(TouchGui,"Enabled",(enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
+				human.AutoJumpEnabled = not enHacks.Util_HideTouchscreen
+			end,
+			["MyStartUp"]=function()
+				AvailableHacks.Utility[7].ActivateFunction()
 			end,
 		}),
 		[8] = {
@@ -6564,6 +6570,7 @@ local initilizationTypes = ({
 	end,
 })
 
+print(("Hacks Starting %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 local hacks2LoopThru = (AvailableHacks or {})
 for categoryName, differentHacks in pairs(hacks2LoopThru) do
@@ -6635,6 +6642,8 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 		end
 	end
 end
+
+print(("Hacks Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 --COMMAND BAR CONTROL
 
@@ -6834,6 +6843,7 @@ local function updateCurrentMap(newMap)
 	end
 end
 
+print(("Functions Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 if gameName == "FleeMain" then
 	local MapChangedValue = RS:WaitForChild("CurrentMap")
@@ -6854,10 +6864,14 @@ local function intermediatePlayerRemovingFunction(theirPlr)
 	playerEvents[theirPlr.UserId]=nil
 end
 table.insert(functs,(PS.PlayerRemoving:Connect(intermediatePlayerRemovingFunction)))
+
+print(("Map Functs Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+
 for num,theirPlr in ipairs(PS:GetPlayers()) do
 	PlayerAdded(theirPlr)
 end
 
+print(("Players Loaded (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 --MENU FUNCTS
 if gameName=="FleeMain" then
@@ -6979,6 +6993,8 @@ if gameName=="FleeMain" then
 		calculateCreditsForPlayer(theirPlr);
 	end;
 end;
+
+print(("Flee Specific Functs Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 DraggableMain=DraggableObject.new(Main)
 DraggableMain:Enable()

@@ -2919,7 +2919,7 @@ AvailableHacks ={
 			["ComputerAdded"]=function(Computer)
 				local ComputerBase = Computer.PrimaryPart
 				local BestTrigger
-				local bestAngle = 360
+				local bestAngle = 0
 				for _, trigger_name in ipairs({"ComputerTrigger1","ComputerTrigger2","ComputerTrigger3"}) do
 					local trigger = Computer:WaitForChild(trigger_name, 20)
 					if not trigger then

@@ -835,11 +835,12 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	local currentEvent = myTSM:WaitForChild("ActionEvent").Value
 	if currentEvent then
-		local triggerType = trigger_gettype(currentEvent.Parent)
+		local triggerType = trigger_gettype(currentEvent.Parent.Parent)
 		print("Checking",triggerType,currentEvent:GetFullName())
 		if beforeAltar[triggerType] and not trigger_params[triggerType] then
 			print("Disabling",triggerType)
 			myTSM.Action.Value = false
+			myTSM.ActionEvent.Value = nil
 		end
 	end
 end

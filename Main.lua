@@ -5023,11 +5023,11 @@ AvailableHacks ={
 								if canRun() and TSM.CurrentAnimation.Value=="Typing" then
 									local savePC = closestTrigger.Parent
 									print("Computer Triggers Disabled!")
-									trigger_setTriggers("PC_Hack",{PodTrigger = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
+									trigger_setTriggers("PC_Hack",{FreezePod = true, Computer = false, Exit = true, Door = true, AllowExceptions = {savePC}})
 									task.delay(60,function()
 										if lastHackedPC == savePC and not isCleared then
 											print("Computer Triggers Enabled!")
-											trigger_setTriggers("PC_Hack",{PodTrigger = true, Computer = true, Exit = true, Door = true})
+											trigger_setTriggers("PC_Hack",{FreezePod = true, Computer = true, Exit = true, Door = true})
 										end
 									end)
 									while canRun() and TSM.CurrentAnimation.Value=="Typing" do

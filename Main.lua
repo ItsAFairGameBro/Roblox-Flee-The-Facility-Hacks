@@ -756,11 +756,11 @@ end;
 --triggerParams = true/false, toggle ALL triggers.
 --name: identifier
 --table: {FreezePod = true, Computer = true, Exit = false, Door = true, AllowExceptions = {Door, Computer, ExitModel, etc}}
-local trigger_params = {PodTrigger = 0, Computer = 0, Exit = 0, Door = 0}
+local trigger_params = {FreezePod = 0, Computer = 0, Exit = 0, Door = 0}
 local trigger_enabledNames = {}
 local trigger_allowedExceptions
-local trigger_allEnabled = {PodTrigger = true, Computer = true, Exit = true, Door = true, AllowExceptions={}}
-local trigger_allDisabled = {PodTrigger = true, Computer = true, Exit = true, Door = true, AllowExceptions={}}
+local trigger_allEnabled = {FreezePod = true, Computer = true, Exit = true, Door = true, AllowExceptions={}}
+local trigger_allDisabled = {FreezePod = true, Computer = true, Exit = true, Door = true, AllowExceptions={}}
 local function trigger_gettype(triggerParent)
 	local triggerType = (triggerParent.Name=="FreezePod" and "FreezePod")
 		or (triggerParent:HasTag("Computer") and "Computer") or (triggerParent:HasTag("Exit") and "Exit") or (triggerParent:HasTag("Door") and "Door")

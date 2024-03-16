@@ -6583,8 +6583,8 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			if overrideDefault==nil and getgenv().enHacks then
 				overrideDefault = getgenv().enHacks[hack.Shortcut]
 			end
-			if (hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
-				(hack.Type=="ExTextBox" and (overrideDefault < hack.MinBound or overrideDefault > hack.MaxBound)) then
+			if overrideDefault~=nil and ((hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
+				(hack.Type=="ExTextBox" and (overrideDefault < hack.MinBound or overrideDefault > hack.MaxBound))) then
 				warn("Invalid Option For "..hack.Title..": "..overrideDefault..". Reverting To Original...")
 				overrideDefault = nil
 			end

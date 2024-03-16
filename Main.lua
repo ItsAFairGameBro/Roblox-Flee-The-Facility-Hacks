@@ -549,12 +549,14 @@ local function teleport_module_teleportQueue()
 		local currentTP = TPStack[1]
 		if os.clock()-(plr:GetAttribute("LastTP") or 0) >= minTimeBetweenTeleport then
 			if not char.PrimaryPart then
-				local HRP = char:WaitForChild("HumanoidRootPart")
+				local HRP = char:WaitForChild("HumanoidRootPart",1/4)
 				char.PrimaryPart = HRP
 				print("Reset",char,"PrimaryPart!")
 			end
-			char:SetPrimaryPartCFrame(currentTP)
-			plr:SetAttribute("LastTP",os.clock())
+			if char.PrimaryPart then
+				char:SetPrimaryPartCFrame(currentTP)
+				plr:SetAttribute("LastTP",os.clock())
+			end
 			table.remove(TPStack,1)
 		end
 		RunS.RenderStepped:Wait()

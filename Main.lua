@@ -675,6 +675,10 @@ local function myPrint(...)
 	print(recurseLoopPrint({...},"",0))
 end
 local print = myPrint;
+local RemoteEvent
+if gameUniverse=="Flee" then
+	RemoteEvent = RS:WaitForChild("RemoteEvent")
+end
 --PRINT ENVIRONMENT END
 local function findClosestObj(objs,poso,maxDist,yMult)
 	local closest,closestDist=nil,maxDist or 2000
@@ -843,6 +847,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 		if beforeEn and not afterEn then
 			myTSM.ActionInput.Value = false
 			myTSM.ActionEvent.Value = nil
+			RemoteEvent:FireServer("Input", "Trigger", false)
 		end
 	end
 end
@@ -2976,6 +2981,7 @@ AvailableHacks ={
 					if ActionEventVal and TriggerType=="Computer" then
 						myTSM.ActionInput.Value = false
 						myTSM.ActionEvent.Value = nil
+						RemoteEvent:FireServer("Input", "Trigger", false)
 					end
 				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
@@ -6354,6 +6360,7 @@ if previousCopy then
 		changedEvent:Fire()
 	end
 	task.delay(maxWaitTime,maxWaitTimeReturnFunction)
+	changedEvent:AddTag("RemoveOnDestroy")
 	local function clearFunct()
 		changedEvent:Fire()
 	end
@@ -6362,6 +6369,7 @@ if previousCopy then
 		changedEvent.Event:Wait()
 		if isCleared then
 			DS:AddItem(script,1)
+			clearedConnection:Disconnect()
 			return "Cleared While Waiting (Code 102)"
 		end
 		if os.clock()-startTime>=maxWaitTime then
@@ -6378,6 +6386,8 @@ if isCleared then
 	return "After Waiting Cleared (Code 103)"
 end
 getgenv()["ActiveScript"..getID][saveIndex] = true
+local startTime = os.clock()--DEL
+print(("Starting Instance %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 local numOfFriends = (0) 
 
@@ -6398,6 +6408,7 @@ local mainAccountDetected = (success and ((numOfFriends)>=(15)) and not isStudio
 if mainAccountDetected then
 	plr:Kick("Anti Main Hack: Main Account Detected!");
 end;
+print(("Friend Check Finished %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 local function resetEventFunction()
 	if AvailableHacks.Commands[24] then
@@ -6413,6 +6424,8 @@ ResetEvent.Parent = RS;
 
 GuiCreationFunction();
 GuiCreationFunction = nil;
+
+print(("Gui Creation Finished %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 --JUMP CONTROL
 jumpChangedEvent = Instance.new("BindableEvent")

@@ -812,9 +812,6 @@ local function trigger_setTriggers(name,setTriggerParams)
 			local triggerType = trigger_gettype(triggerParent)
 			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
 			local enabled = name=="Override" or trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
-			if triggerType=="Computer" then
-				print("Computer",triggerParent.Name,enabled,trigger_params[triggerType],(triggerParent:GetAttribute("Trigger_AllowException") or 0))
-			end
 			if enabled and trigger:GetAttribute("OrgSize")~=nil then
 				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
 			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
@@ -6797,11 +6794,14 @@ if gameName=="FleeMain" then
 					warn("PC Not Found:",myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
+			print("LastPC Set!")
 		elseif lastPC and lastAnimationName=="Typing" then
+			print("Last PC Enabled")
 			lastPC_time = os.clock()
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastPC}})
 			task.delay(60,function()
 				if (os.clock() - lastPC_time) >= 60 then
+					print("Last PC Disabled")
 					trigger_setTriggers("LastPC",{Computer=true})
 				end
 			end)

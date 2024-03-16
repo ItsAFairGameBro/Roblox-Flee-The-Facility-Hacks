@@ -787,7 +787,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	local previously = trigger_enabledNames[name]
 	if not previously then
-		previously = {}
+		previously = {AllowExceptions={}}
 		trigger_enabledNames[name] = previously
 	end
 	for num, object in ipairs(previously.AllowExceptions or {}) do

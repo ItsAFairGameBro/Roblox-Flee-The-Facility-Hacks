@@ -548,6 +548,11 @@ local function teleport_module_teleportQueue()
 	while #TPStack>0 do
 		local currentTP = TPStack[1]
 		if os.clock()-(plr:GetAttribute("LastTP") or 0) >= minTimeBetweenTeleport then
+			if not char.PrimaryPart then
+				local HRP = char:WaitForChild("HumanoidRootPart")
+				char.PrimaryPart = HRP
+				print("Reset",char,"PrimaryPart!")
+			end
 			char:SetPrimaryPartCFrame(currentTP)
 			plr:SetAttribute("LastTP",os.clock())
 			table.remove(TPStack,1)
@@ -6876,7 +6881,7 @@ for num,theirPlr in ipairs(PS:GetPlayers()) do
 	PlayerAdded(theirPlr)
 end
 
-print(("Players Loaded (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+print(("Players Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 --MENU FUNCTS
 if gameName=="FleeMain" then

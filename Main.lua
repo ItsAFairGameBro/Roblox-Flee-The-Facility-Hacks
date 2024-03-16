@@ -787,7 +787,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	local previously = trigger_enabledNames[name]
 	if not previously then
-		previously = table.clone(trigger_allEnabled)
+		previously = table.clone(trigger_allDisabled)
 		trigger_enabledNames[name] = previously
 	end
 	for num, object in ipairs(previously.AllowExceptions or {}) do
@@ -6684,7 +6684,7 @@ local function MapChildAdded(child,shouldntWait)
 				trigger:SetAttribute("WalkToPoso",Vector3.new(Screen.Position.X,trigger.Position.Y,Screen.Position.Z):lerp(trigger.Position,1.17));
 			end;
 		end;
-		child.Name = "ComputerTable/"..(table.find(CS:GetTagged("Computer"),child));
+		child.Name = "ComputerTable/"..(#CS:GetTagged("Computer"));
 		defaultFunction("ComputerAdded",{child});
 	elseif string.sub(child.Name,1,9)=="FreezePod" then
 		local PodTrigger=child:WaitForChild("PodTrigger",3);

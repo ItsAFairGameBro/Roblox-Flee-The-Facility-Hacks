@@ -1,7 +1,6 @@
 --SCRIPT GITHUB LINK:
 local gitType = "blob"
-local scriptName = "Main.lua"
-local githubLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/%s/main/%s"
+local githubLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/%s/main/Main.lua"
 
 
 --GLOBAL SETTINGS DATA:
@@ -26,14 +25,17 @@ local requestFunction = IsStudio and requestCaller.InvokeServer or game.HttpGet
 function ReloadFunction()
 	local StartTime = os.clock()
 	GlobalSettings = GlobalSettings; -- refresh so that all caller functions can see this!
-	local URL = githubLink:format(gitType,scriptName);
+	local URL = githubLink:format(gitType:lower());
 	local success, response = pcall(requestFunction,requestCaller,URL,false)
 
 	if not success then
 		return warn(PrintName.." Error Requesting Script: "..response)
 	end
+	local scriptName = URL:sub(20)
+	scriptName = scriptName:sub(scriptName:find("/")+1)
+	scriptName = scriptName:sub(1,scriptName:find("/")-1):gsub("-"," ")
 	local success3, codeString
-	if gitType=="blob" then
+	if URL:find("blob") then
 		local success2, decodedJSON = pcall(HS.JSONDecode,HS,response)
 
 		if not success2 then
@@ -48,14 +50,14 @@ function ReloadFunction()
 			return warn(PrintName.." Location Error: Display Name!")
 		end
 
-		scriptName = decodedJSON.payload.blob.displayName or scriptName
+		--scriptName = decodedJSON.payload.blob.displayName
 
 		success3, codeString = pcall(table.concat, decodedJSON.payload.blob.rawLines, "\n")
 
 		if not success3 then
 			return warn(PrintName.." Error Parsing Code: "..codeString)
 		end
-	elseif gitType=="raw" then
+	elseif URL:find("raw") then
 		codeString = response
 	end
 
@@ -69,7 +71,7 @@ function ReloadFunction()
 
 	local Callback = compiledFunction()
 
-	print(("%s %s Callback: %s (%.2fs)"):format(PrintName,scriptName,tostring(Callback) or "Exited Mysteriously",os.clock()-StartTime))
+	print(("%s %s Callback: %s (%.2fs)"):format(PrintName,scriptName or "Unknown",tostring(Callback) or "Exited Mysteriously",os.clock()-StartTime))
 end
 
 ReloadFunction()

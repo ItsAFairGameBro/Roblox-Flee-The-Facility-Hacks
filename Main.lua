@@ -6573,10 +6573,15 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			if overrideDefault==nil and getgenv().enHacks then
 				overrideDefault = getgenv().enHacks[hack.Shortcut]
 			end
+			if hack.Options[overrideDefault] == nil then
+				warn("Invalid Option For "..hack.Title..": "..overrideDefault..". Reverting To Original...")
+				overrideDefault = nil
+			end
 			if overrideDefault~=nil then
 				enHacks[hack.Shortcut]=overrideDefault;
 			else
 				if hack.Default==nil then
+					error("No Default No Longer Supported For "..hack.Title.."!")
 					local HackOptions = Random.new():NextInteger(1,getDictLength(hack.Options))
 					local HackIndex = 0
 					for key, val in pairs(hack.Options) do

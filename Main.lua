@@ -3109,7 +3109,7 @@ AvailableHacks ={
 				end
 				objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
 					CapturedTorso.Changed:Connect(setVisible),
-					workspace:WaitForChild("CarriedTorsoChanged",30).Changed:Connect(setVisible)
+					workspace:WaitForChild("CarriedTorsoChanged",30).Event:Connect(setVisible)
 				}
 				setVisible()
 			end,

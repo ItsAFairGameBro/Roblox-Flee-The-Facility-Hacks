@@ -6322,6 +6322,7 @@ clear = function(isManualClear)
 	else
 		getgenv().enHacks = table.clone(enHacks)
 	end
+	saveSaveData()--save before we delete stuff!
 	for hackName,enabled in pairs(enHacks) do
 		enHacks[hackName]=nil;  --disables all running hacks to stop them!
 	end;--effectively disables all hacks!
@@ -6901,7 +6902,9 @@ table.insert(functs,PS.PlayerAdded:Connect(PlayerAdded))
 
 local function intermediatePlayerRemovingFunction(theirPlr)
 	if plr==theirPlr then
-		
+		if not isCleared then
+			saveSaveData()
+		end
 		return
 	end
 	for num,funct in pairs((playerEvents[theirPlr.UserId] or ({}))) do

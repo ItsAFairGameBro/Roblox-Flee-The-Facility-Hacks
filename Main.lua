@@ -3101,7 +3101,7 @@ AvailableHacks ={
 					if isBeast.Value and ActionSign.Value == 30 
 						and Beast and Beast:FindFirstChild("CarriedTorso") and Beast.CarriedTorso.Value then--30: TRAP
 						ToggleButton.Visible = true
-					elseif not isBeast.Value and ActionSign.Value == 31 then--31: FREE
+					elseif not isBeast.Value and ActionSign.Value == 31 and CapturedTorso.Value then--31: FREE
 						ToggleButton.Visible = true
 					else
 						ToggleButton.Visible = false
@@ -3114,10 +3114,12 @@ AvailableHacks ={
 				}
 				setVisible()
 			end,
-			["MyBeastAdded"]=function()
+			["MapAdded"]=function()
 				AvailableHacks.Blatant[20].Event = AvailableHacks.Blatant[20].Event or Instance.new("BindableEvent",workspace)
 				AvailableHacks.Blatant[20].Event:AddTag("RemoveOnDestroy")
 				AvailableHacks.Blatant[20].Event.Name="CarriedTorsoChanged"
+			end,
+			["MyBeastAdded"]=function()
 				objectFuncts[AvailableHacks.Blatant[20].Event]={Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
 					AvailableHacks.Blatant[20].Event:Fire()
 				end)}

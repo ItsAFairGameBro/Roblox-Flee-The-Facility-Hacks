@@ -3072,6 +3072,10 @@ AvailableHacks ={
 				local CapsulePrimaryPart = Capsule.PrimaryPart
 				local CapturedTorso = Capsule:WaitForChild("PodTrigger"):WaitForChild("CapturedTorso")
 				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
+				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
+				if not carriedTorso then
+					return
+				end
 				local isBeast = myTSM:WaitForChild("IsBeast")
 
 				local newTag=ToggleTag:Clone()
@@ -3110,14 +3114,15 @@ AvailableHacks ={
 				objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
 					CapturedTorso.Changed:Connect(setVisible),
 					ActionSign.Changed:Connect(setVisible),
-					workspace:WaitForChild("CarriedTorsoChanged",30).Event:Connect(setVisible)
+					carriedTorso.Event:Connect(setVisible)
 				}
 				setVisible()
 			end,
 			["MapAdded"]=function()
-				AvailableHacks.Blatant[20].Event = AvailableHacks.Blatant[20].Event or Instance.new("BindableEvent",workspace)
+				AvailableHacks.Blatant[20].Event = AvailableHacks.Blatant[20].Event or Instance.new("BindableEvent")
 				AvailableHacks.Blatant[20].Event:AddTag("RemoveOnDestroy")
 				AvailableHacks.Blatant[20].Event.Name="CarriedTorsoChanged"
+				AvailableHacks.Blatant[20].Event.Parent = workspace
 			end,
 			["MyBeastAdded"]=function()
 				objectFuncts[AvailableHacks.Blatant[20].Event]={Beast:WaitForChild("CarriedTorso").Changed:Connect(function()

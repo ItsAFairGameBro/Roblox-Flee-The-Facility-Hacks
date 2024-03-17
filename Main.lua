@@ -3109,12 +3109,13 @@ AvailableHacks ={
 				end
 				objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
 					CapturedTorso.Changed:Connect(setVisible),
-					script:WaitForChild("CarriedTorsoChanged",30).Changed:Connect(setVisible)
+					workspace:WaitForChild("CarriedTorsoChanged",30).Changed:Connect(setVisible)
 				}
 				setVisible()
 			end,
 			["MyBeastAdded"]=function()
-				AvailableHacks.Blatant[20].Event = AvailableHacks.Blatant[20].Event or Instance.new("BindableEvent",script)
+				AvailableHacks.Blatant[20].Event = AvailableHacks.Blatant[20].Event or Instance.new("BindableEvent",workspace)
+				AvailableHacks.Blatant[20].Event:AddTag("RemoveOnDestroy")
 				AvailableHacks.Blatant[20].Event.Name="CarriedTorsoChanged"
 				objectFuncts[AvailableHacks.Blatant[20].Event]={Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
 					AvailableHacks.Blatant[20].Event:Fire()

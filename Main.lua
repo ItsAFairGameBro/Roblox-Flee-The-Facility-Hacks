@@ -3099,7 +3099,8 @@ AvailableHacks ={
 				AvailableHacks.Blatant[20].SetEnabled(newTag)
 				local function setToggleFunction()
 					if isBeast.Value then
-						AvailableHacks.Blatant[60].CaptureSurvivor(Capsule)
+						local theirChar = Beast.CarriedTorso.Value.Parent
+						AvailableHacks.Blatant[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar)
 					else
 						AvailableHacks.Blatant[80].RescueSurvivor(Capsule)
 					end

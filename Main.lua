@@ -775,12 +775,13 @@ local function createCommandLine(message,printType)
 end;
 
 local function stopCurrentAction()
-	for s = 1, 1, -1 do
+	for s = 2, 1, -1 do
 		RemoteEvent:FireServer("Input", "Action", false)
 		RemoteEvent:FireServer("Input", "Trigger", false)
 		myTSM:WaitForChild("DisableInteraction").Value = true
 		RunS.RenderStepped:Wait()
 		myTSM:WaitForChild("DisableInteraction").Value = false
+		RunS.RenderStepped:Wait()
 	end
 end
 --SET TRIGGERS uses the following format for setting active triggers that the user can interact with:

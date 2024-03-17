@@ -2965,19 +2965,56 @@ AvailableHacks ={
 		},
 		[20]={
 			["Type"]="ExTextButton",
-			["Title"]="Remote Computers",
-			["Desc"]="Remotely Hack Computers",
+			["Title"]="Remote Computers and Freezing Pods",
+			["Desc"]="Remotely Hack Computers & Interact with Freezing Pods",
 			["Shortcut"]="RemotelyHackComputers",
+			["Options"]={
+				[false]={
+					["Title"]="NOTHING",
+					["TextColor"]=newColor3(255),
+				},
+				["PCs"]={
+					["Title"]="PCs ONLY",
+					["TextColor"]=newColor3(255,0,255),
+				},
+				["Pods"]={
+					["Title"]="Pods ONLY",
+					["TextColor"]=newColor3(0, 0, 255),
+				},
+				[true]={
+					["Title"]="Both",
+					["TextColor"]=newColor3(0, 255, 255),
+				},
+			},
 			["Default"]=false,
+			["Event"]=nil,
+			["SetEnabled"]=function(tag)
+				local isInGame=isInLobby(camera.CameraSubject.Parent)
+				local newValue = enHacks.RemotelyHackComputers
+				
+				local canBeActive = newValue == true or (tag.Name=="Pod" and newValue=="Pods") or (tag.Name=="PC" and newValue=="PCs")
+				tag.Enabled=canBeActive and camera.CameraType==Enum.CameraType.Custom and isInGame
+				if tag:FindFirstChild("Toggle") and tag.Name=="Pod" then
+					tag.Toggle.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+				end
+			end,
 			["ActivateFunction"]=function(newValue)
 				local isInGame=isInLobby(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay3")
 				for num,tag in ipairs(hackDisplayList) do
-					tag.Enabled=newValue and camera.CameraType==Enum.CameraType.Custom and isInGame
+					AvailableHacks.Blatant[20].SetEnabled(tag)
 				end
 			end,
 			["CleanUp"]=function()
 				DestroyAllTaggedObjects("HackDisplay3")
+				if AvailableHacks.Blatant[20].Event then
+					AvailableHacks.Blatant[20].Event:Destroy()
+				end
+				AvailableHacks.Blatant[20].Event=nil
+				if objectFuncts[AvailableHacks.Blatant[20].Event] then
+					objectFuncts[AvailableHacks.Blatant[20].Event][1]:Disconnect()
+					objectFuncts[AvailableHacks.Blatant[20].Event] = nil
+				end
 			end,
 			["UpdateDisplays"]=function()
 				AvailableHacks.Blatant[20].ActivateFunction(enHacks.RemotelyHackComputers)
@@ -3001,6 +3038,7 @@ AvailableHacks ={
 				
 				local newTag=ToggleTag:Clone()
 				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
+				newTag.Name = "PC"
 				newTag.Parent=HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
 				newTag.Adornee=ComputerBase
@@ -3028,7 +3066,58 @@ AvailableHacks ={
 					end
 				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
-				newTag.Enabled=(enHacks.RemotelyHackComputers and (camera.CameraType==Enum.CameraType.Custom and isInGame))
+				AvailableHacks.Blatant[20].SetEnabled(newTag)
+			end,
+			["CapsuleAdded"]=function(Capsule)
+				local CapsulePrimaryPart = Capsule.PrimaryPart
+				local CapturedTorso = Capsule:WaitForChild("PodTrigger"):WaitForChild("CapturedTorso")
+				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
+				local isBeast = myTSM:WaitForChild("IsBeast")
+
+				local newTag=ToggleTag:Clone()
+				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
+				newTag.Name = "Pod"
+				newTag.Parent=HackGUI
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
+				newTag.Adornee=CapsulePrimaryPart
+				CS:AddTag(newTag,"RemoveOnDestroy")
+				CS:AddTag(newTag,"HackDisplay3")
+				task.wait()
+				if newTag==nil or newTag.Parent==nil or newTag:FindFirstChild("Toggle")==nil then
+					return
+				end
+				local ToggleButton = newTag.Toggle
+				ToggleButton.BackgroundColor3 = Color3.fromRGB(255,0,255)
+				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+				AvailableHacks.Blatant[20].SetEnabled(newTag)
+				local function setToggleFunction()
+					if isBeast.Value then
+						AvailableHacks.Blatant[60].CaptureSurvivor()
+					else
+						AvailableHacks.Blatant[80].RescueSurvivor()
+					end
+				end
+				local function setVisible()
+					if isBeast.Value and ActionSign.Value == 30 then--30: TRAP
+						ToggleButton.Visible = true
+					elseif not isBeast.Value and ActionSign.Value == 31 then--31: FREE
+						ToggleButton.Visible = true
+					else
+						ToggleButton.Visible = false
+					end
+				end
+				objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
+					CapturedTorso.Changed:Connect(setVisible),
+					script:WaitForChild("CarriedTorsoChanged").Changed:Connect(setVisible)
+				}
+				setVisible()
+			end,
+			["MyBeastAdded"]=function()
+				AvailableHacks.Blatant[20].Event = AvailableHacks.Blatant[20].Event or Instance.new("BindableEvent",script)
+				AvailableHacks.Blatant[20].Event.Name="CarriedTorsoChanged"
+				objectFuncts[AvailableHacks.Blatant[20].Event]={Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
+					AvailableHacks.Blatant[20].Event:Fire()
+				end)}
 			end,
 		},
 		[71]={

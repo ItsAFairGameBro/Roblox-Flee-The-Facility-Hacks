@@ -3092,13 +3092,14 @@ AvailableHacks ={
 				AvailableHacks.Blatant[20].SetEnabled(newTag)
 				local function setToggleFunction()
 					if isBeast.Value then
-						AvailableHacks.Blatant[60].CaptureSurvivor()
+						AvailableHacks.Blatant[60].CaptureSurvivor(Capsule)
 					else
-						AvailableHacks.Blatant[80].RescueSurvivor()
+						AvailableHacks.Blatant[80].RescueSurvivor(Capsule)
 					end
 				end
 				local function setVisible()
-					if isBeast.Value and ActionSign.Value == 30 then--30: TRAP
+					if isBeast.Value and ActionSign.Value == 30 
+						and Beast and Beast:FindFirstChild("CarriedTorso") and Beast.CarriedTorso.Value then--30: TRAP
 						ToggleButton.Visible = true
 					elseif not isBeast.Value and ActionSign.Value == 31 then--31: FREE
 						ToggleButton.Visible = true
@@ -3108,7 +3109,7 @@ AvailableHacks ={
 				end
 				objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
 					CapturedTorso.Changed:Connect(setVisible),
-					script:WaitForChild("CarriedTorsoChanged").Changed:Connect(setVisible)
+					script:WaitForChild("CarriedTorsoChanged",30).Changed:Connect(setVisible)
 				}
 				setVisible()
 			end,

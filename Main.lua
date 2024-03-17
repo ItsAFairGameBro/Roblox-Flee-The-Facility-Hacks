@@ -5,6 +5,7 @@ local CS=game:GetService("CollectionService")
 local RS=game:GetService("ReplicatedStorage")
 local DS=game:GetService("Debris")
 local CAS=game:GetService("ContextActionService")
+local HS=game:GetService("HttpService")
 local UIS=game:GetService("UserInputService")
 local RunS=game:GetService("RunService")
 local VU=game:GetService('VirtualUser')
@@ -34,6 +35,7 @@ local reloadFunction = lastRunningEnv.ReloadFunction
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
 
+local getID="HackGUI1"
 local emojiDesc = {
 	["Level"] = "⭐",
 	["Money"] = "💰",
@@ -784,6 +786,40 @@ local function stopCurrentAction()
 		RunS.RenderStepped:Wait()
 	end
 end
+
+--SAVE/LOAD MODULE
+local function loadSaveData()
+	local path = getID.."/enHacks/"..gameName..".txt"
+	if isfile(path) then
+		local success, result = pcall(readfile,path)
+		if success then
+			local success2, result2 = pcall(HS.JSONDecode,HS,result)
+			if success2 then
+				enHacks = result2
+			else
+				warn("Load Error (JSONDecode):", result2)
+			end
+		else
+			warn("Load Error (Readfile):", result)
+		end
+	else
+		--no save file found!
+	end
+end
+local function saveSaveData()
+	local success,result = pcall(HS.JSONEncode,HS,enHacks)
+	if not success then
+		warn("Save Error (JSONEncode):",result)
+		return
+	end
+	if not isfolder(getID) then
+		makefolder(getID)
+	end
+	if not isfolder(getID.."/enHacks") then
+		makefolder(getID.."/enHacks")
+	end
+	writefile(getID.."/enHacks/"..gameName..".txt",result)
+end
 --SET TRIGGERS uses the following format for setting active triggers that the user can interact with:
 --triggerParams = true/false, toggle ALL triggers.
 --name: identifier
@@ -855,7 +891,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
 			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
 				trigger:SetAttribute("OrgSize",trigger.Size)
-				trigger.Size=newVector3(.0001,trigger.Size.Y,.0001)
+				trigger.Size=newVector3(.0001,.0001,.0001)
 			end
 			trigger.CanTouch=enabled
 		end
@@ -2944,7 +2980,7 @@ AvailableHacks ={
 				DestroyAllTaggedObjects("HackDisplay3")
 			end,
 			["UpdateDisplays"]=function()
-				AvailableHacks.Blatant[15].ActivateFunction(enHacks.RemotelyHackComputers)
+				AvailableHacks.Blatant[20].ActivateFunction(enHacks.RemotelyHackComputers)
 			end,
 			--CHECKED UNDER REMOTE DOORS HACK!
 			["ComputerAdded"]=function(Computer)
@@ -6194,7 +6230,6 @@ end;
 
 
 --Multi Script Check:
-local getID="HackGUI1"
 saveIndex = ((plr:GetAttribute(getID) or 0)+1)
 --if plr:GetAttribute("Cleared"..getID) then plr:SetAttribute("Cleared"..getID,false) end
 local previousCopy = (plr:GetAttribute(getID)~=nil)
@@ -6562,6 +6597,7 @@ local initilizationTypes = ({
 		table.insert(functs, myFocusLost_CONNECTION);
 	end,
 })
+loadSaveData()
 
 print(("Hacks Starting %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
@@ -6607,6 +6643,9 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			local overrideDefault = (GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut])
 			if overrideDefault==nil and getgenv().enHacks then
 				overrideDefault = getgenv().enHacks[hack.Shortcut]
+			end
+			if overrideDefault==nil then
+				overrideDefault = enHacks[hack.Shortcut]
 			end
 			if overrideDefault~=nil and ((hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
 				(hack.Type=="ExTextBox" and (overrideDefault < hack.MinBound or overrideDefault > hack.MaxBound))) then
@@ -6862,6 +6901,7 @@ table.insert(functs,PS.PlayerAdded:Connect(PlayerAdded))
 
 local function intermediatePlayerRemovingFunction(theirPlr)
 	if plr==theirPlr then
+		
 		return
 	end
 	for num,funct in pairs((playerEvents[theirPlr.UserId] or ({}))) do

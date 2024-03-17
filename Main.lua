@@ -3782,12 +3782,16 @@ AvailableHacks ={
 			["Default"]=true,
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
+				local ContextActionGui = PlayerGui:WaitForChild("ContextActionGui")
 				local TouchGui = PlayerGui:WaitForChild("TouchGui");
 				local function updateTouchScreenEnability()
 					TouchGui.Enabled = not enHacks.Util_HideTouchscreen
+					ContextActionGui.Enabled = not enHacks.Util_HideTouchscreen
 				end
 				setChangedAttribute(TouchGui,"Enabled",(enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
+				setChangedAttribute(ContextActionGui,"Enabled",(enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
 				human.AutoJumpEnabled = not enHacks.Util_HideTouchscreen
+				updateTouchScreenEnability()
 			end,
 			["MyStartUp"]=function()
 				AvailableHacks.Utility[7].ActivateFunction()

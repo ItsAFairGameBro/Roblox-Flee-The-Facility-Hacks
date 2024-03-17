@@ -94,11 +94,11 @@ end
 local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
 local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
 local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
-local absMinTimeBetweenPCs=9.5 --abs min time to hack, overrides minspeed
+local absMinTimeBetweenPCs=7 --abs min time to hack, overrides minspeed
 local botBeastBreakMin=13.5 --in minutes
 local waitForChildTimout = 20
 local max_tpStackSize = 1
-local minTimeBetweenTeleport = 5
+local minTimeBetweenTeleport = .5
 local defaultCharacterWalkSpeed=SP.CharacterWalkSpeed
 local defaultCharacterJumpPower=SP.CharacterJumpPower
 
@@ -6903,8 +6903,8 @@ if gameName=="FleeMain" then
 		elseif lastPC and lastAnimationName=="Typing" then
 			lastPC_time = os.clock()
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastPC}})
-			task.delay(minTimeBetweenTeleport,function()
-				if (os.clock() - lastPC_time) >= minTimeBetweenTeleport then
+			task.delay(absMinTimeBetweenPCs,function()
+				if (os.clock() - lastPC_time) >= absMinTimeBetweenPCs then
 					trigger_setTriggers("LastPC",{Computer=true})
 				end
 			end)

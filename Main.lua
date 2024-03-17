@@ -3109,6 +3109,7 @@ AvailableHacks ={
 				end
 				objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
 					CapturedTorso.Changed:Connect(setVisible),
+					ActionSign.Changed:Connect(setVisible),
 					workspace:WaitForChild("CarriedTorsoChanged",30).Event:Connect(setVisible)
 				}
 				setVisible()
@@ -4750,7 +4751,7 @@ AvailableHacks ={
 						if gameProcessedEvent or not PlayerGui.TouchGui.Enabled then
 							return;
 						end;
-						if os.clock() - lastTouch <= .5 then
+						if os.clock() - lastTouch <= .3 then
 							lastTouch = 0;
 							keyDownFunction("t");
 						else

@@ -98,7 +98,7 @@ local absMinTimeBetweenPCs=9.5 --abs min time to hack, overrides minspeed
 local botBeastBreakMin=13.5 --in minutes
 local waitForChildTimout = 20
 local max_tpStackSize = 1
-local minTimeBetweenTeleport = .5
+local minTimeBetweenTeleport = 5
 local defaultCharacterWalkSpeed=SP.CharacterWalkSpeed
 local defaultCharacterJumpPower=SP.CharacterJumpPower
 
@@ -2391,7 +2391,7 @@ AvailableHacks ={
 			["MyPlayerAdded"]=function()
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				local ActionProgress=TSM:WaitForChild("ActionProgress")
-				local ActionEvent = TSM:WaitForChild("ActionInput")
+				local ActionEvent = TSM:WaitForChild("ActionEvent")
 				--local lastEvent
 				local function ActionChanged()
 					local theirChar=plr.Character 
@@ -6903,8 +6903,8 @@ if gameName=="FleeMain" then
 		elseif lastPC and lastAnimationName=="Typing" then
 			lastPC_time = os.clock()
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastPC}})
-			task.delay(15,function()
-				if (os.clock() - lastPC_time) >= 15 then
+			task.delay(minTimeBetweenTeleport,function()
+				if (os.clock() - lastPC_time) >= minTimeBetweenTeleport then
 					trigger_setTriggers("LastPC",{Computer=true})
 				end
 			end)

@@ -6599,6 +6599,7 @@ local initilizationTypes = ({
 	end,
 })
 loadSaveData()
+print(enHacks)
 
 print(("Hacks Starting %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 

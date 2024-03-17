@@ -3074,6 +3074,9 @@ AvailableHacks ={
 				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
 				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
 				if not carriedTorso then
+					if Map then
+						print("uh oh! not found")
+					end
 					return
 				end
 				local isBeast = myTSM:WaitForChild("IsBeast")

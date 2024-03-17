@@ -3102,7 +3102,7 @@ AvailableHacks ={
 						local theirChar = Beast.CarriedTorso.Value.Parent
 						AvailableHacks.Blatant[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar)
 					else
-						AvailableHacks.Blatant[80].RescueSurvivor(Capsule)
+						AvailableHacks.Blatant[80].RescueSurvivor(Capsule,true)
 					end
 				end
 				local function setVisible()

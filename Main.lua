@@ -3849,17 +3849,36 @@ AvailableHacks ={
 		[9]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto Mute Music",
-			["Desc"]="Activate To Force Stop Music",
+			["Desc"]="Activate To Force Stop Lobby and/or Beast Music",
 			["Shortcut"]="Util_MuteMusic",
 			["Default"]=true,
 			["DontActivate"]=true,
+			["Options"]={
+				[false] = ({
+					["Title"] = "OFF",
+					["TextColor"] = newColor3(255),
+				}),
+				["Lobby"] = ({
+					["Title"] = "LOBBY",
+					["TextColor"] = newColor3(0,0,255),
+				}),
+				["Beast"] = ({
+					["Title"] = "BEAST",
+					["TextColor"] = newColor3(0,255,255),
+				}),
+				["Both"]={
+					["Title"] = "BOTH",
+					["TextColor"] = newColor3(255,255,0),
+				},
+			},
 			["Universes"]={"Flee"},
 			["MusicValue"] = nil,
 			["MusicValue2"] = nil,
 			["MusicValue3"] = nil,
 			["ActivateFunction"]=function(newValue)
-				local function applyToSound(musicSound)
+				local function applyToSound(musicSound,needs)
 					if musicSound then
+						local shouldBe = newValue == needs or newValue == "Both"
 						if newValue and musicSound.IsPlaying then
 							musicSound:Stop()
 						elseif not newValue and not musicSound.IsPlaying then
@@ -3870,9 +3889,9 @@ AvailableHacks ={
 					end
 				end
 				local lobbyMusicSound = AvailableHacks.Utility[9].MusicValue
-				applyToSound(AvailableHacks.Utility[9].MusicValue)
-				applyToSound(AvailableHacks.Utility[9].MusicValue2)
-				applyToSound(AvailableHacks.Utility[9].MusicValue3)
+				applyToSound(AvailableHacks.Utility[9].MusicValue,"Lobby")
+				applyToSound(AvailableHacks.Utility[9].MusicValue2,"Beast")
+				applyToSound(AvailableHacks.Utility[9].MusicValue3,"Beast")
 
 				local musicButton = StringWaitForChild(PlayerGui,"MenusScreenGui.MainMenuWindow.Body.InfoFrame.MuteBGMusicButton")
 				musicButton.Image = lobbyMusicSound and lobbyMusicSound.IsPlaying and "rbxassetid://2973636435" or "rbxassetid://2973636234"

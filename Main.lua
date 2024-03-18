@@ -5374,13 +5374,13 @@ AvailableHacks ={
 						local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
 					while (canRun(true) and (Beast and Beast.PrimaryPart) and ((Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<8 or TSM.Ragdoll.Value))  do
-						print(myRunerPlrKey, plr:GetAttribute("HasCaptured"), plr:GetAttribute("HasRescued"))
 						local keyNeeded = 0
 						for key, theirPlr in ipairs(runnerPlrs) do
 							if not theirPlr:GetAttribute("HasCaptured") then
 								keyNeeded = key
 							end
 						end
+						print("Key/MYKey",keyNeeded,myRunerPlrKey, plr:GetAttribute("HasCaptured")==true, plr:GetAttribute("HasRescued")==true)
 						if (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
 							task.wait(1/2)
 							if not canRun(true) then

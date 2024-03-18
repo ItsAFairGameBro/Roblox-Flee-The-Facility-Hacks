@@ -585,7 +585,7 @@ end
 local function getgenv()
 	return _G
 end
-local function isInGame(theirChar)
+local function isInGame(theirChar,noDefactoAllowed)
 	--[[local a=Vector3.new(410.495, 59.4767, -197.00)
 	local b=Vector3.new(-54.505, 59.4767, -547.007)
 	return (point.X >= a.X and point.X <= b.X) and (point.Z >= a.Z and point.Z <= b.Z)--]]
@@ -610,9 +610,11 @@ local function isInGame(theirChar)
 	--	and textLabel.Bar.Size.X.Scale>=.001
 	--	and textLabel.Bar.Visible then
 	if TSM.Health.Value>0
-		or (theirChar.PrimaryPart and 
+		or (not noDefactoAllowed and theirChar.PrimaryPart and 
 			(theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
-			< (theirChar:GetPivot().Position-workspace.LobbyMusicBox.Position).Magnitude) then
+			< (theirChar:GetPivot().Position-workspace.LobbyMusicBox.Position).Magnitude
+			and (theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
+			< (theirChar:GetPivot().Position-workspace.BeastCaveMusicBox.Position).Magnitude) then
 		return true,"Runner"
 	end
 	--print("runner ", theirChar.Name, "true")
@@ -5263,7 +5265,7 @@ AvailableHacks ={
 				function canRun(fullLoop)
 					local Check1 = enHacks.BotRunner=="Hack" and char~=nil and human~=nil and human.Health>0 and camera.CameraSubject==human;
 					local Check2 = savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart;
-					local Check3 = select(2,isInGame(char))=="Runner" and not isCleared;--(not fullLoop or select(2,isInGame(char))=="Runner") and not isCleared;
+					local Check3 = select(2,isInGame(char,true))=="Runner" and not isCleared;--(not fullLoop or select(2,isInGame(char,true))=="Runner") and not isCleared;
 					return Check1 and Check2 and Check3;
 				end
 				AvailableHacks.Bot[15].CanRun=canRun;
@@ -5372,7 +5374,7 @@ AvailableHacks ={
 							end
 							local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
 							RunS.RenderStepped:Wait()
-							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) and isInGame(char)
+							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) and isInGame(char,true) and isInGame(char)
 								and (not exitDoor:FindFirstChild("ExitDoorTrigger") 
 									or (exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12 and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 10))) do
 								if human.FloorMaterial~=Enum.Material.Air then
@@ -5396,7 +5398,7 @@ AvailableHacks ={
 				local function canRun(fullLoop)
 					local plrs = {}
 					for num, theirPlr in ipairs(PS:GetPlayers()) do
-						if theirPlr and theirPlr.Character and select(2,isInGame(theirPlr.Character))=="Runner" then
+						if theirPlr and theirPlr.Character and select(2,isInGame(theirPlr.Character,true))=="Runner" then
 							table.insert(plrs,theirPlr)
 						end
 					end
@@ -5410,7 +5412,7 @@ AvailableHacks ={
 					--end
 
 					local Ret1 = (enHacks.BotRunner=="Freeze" and char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart and Beast and Beast.PrimaryPart)
-					local Ret2 = ((select(2,isInGame(char))=="Runner") and not isCleared)
+					local Ret2 = ((select(2,isInGame(char,true))=="Runner") and not isCleared)
 					local Ret3 = Beast and myBots[Beast.Name:lower()]
 					if not Ret3 and Beast and warningPrint then
 						createCommandLine("Freeze Disabled: Unrecognized Player\n\tSet ")

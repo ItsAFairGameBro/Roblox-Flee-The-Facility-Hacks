@@ -901,7 +901,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 				local triggerType = trigger_gettype(triggerParent)
 				assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
 				local enabled = name=="Override" or trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
-				if currentEvent and currentEvent.Parent.Parent==triggerParent then
+				if currentEvent and currentEvent.Parent and currentEvent.Parent.Parent==triggerParent then
 					beforeEn = trigger.CanTouch--checks if it was enabled previously
 					afterEn = enabled
 				end

@@ -585,7 +585,7 @@ end
 local function getgenv()
 	return _G
 end
-local function isInLobby(theirChar)
+local function isInGame(theirChar)
 	--[[local a=Vector3.new(410.495, 59.4767, -197.00)
 	local b=Vector3.new(-54.505, 59.4767, -547.007)
 	return (point.X >= a.X and point.X <= b.X) and (point.Z >= a.Z and point.Z <= b.Z)--]]
@@ -2090,7 +2090,7 @@ AvailableHacks ={
 					while (NameTag~=nil and NameTag.Parent~=nil and NameTag.Parent.Parent~=nil and DistanceTag~=nil and not isCleared) do
 						local dist=math.round((camera.CFrame.p-(CenterObject.Position+NameTag.StudsOffset)).Magnitude)
 						DistanceTag.Text=(dist.."m")
-						if isInLobby(NameTag.Parent.Parent)==isInLobby(camera.CameraSubject.Parent) then
+						if isInGame(NameTag.Parent.Parent)==isInGame(camera.CameraSubject.Parent) then
 							NameTag.PlayerToHideFrom=nil
 						else
 							NameTag.PlayerToHideFrom=plr
@@ -2209,7 +2209,7 @@ AvailableHacks ={
 						--if enHacks.ESP_Highlight then
 						--key=#objectFuncts[theirChar]+1
 						while enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not isCleared do--table.insert(objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
-							if (Head.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({isInLobby(theirChar)})[1])==({isInLobby(camera.CameraSubject.Parent)})[1] then
+							if (Head.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({isInGame(theirChar)})[1])==({isInGame(camera.CameraSubject.Parent)})[1] then
 								--local didHit,instance=true,theirChar.PrimaryPart
 								local didHit,instance=raycast(camera.CFrame.p, Head.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001)
 								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,(Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
@@ -2299,7 +2299,7 @@ AvailableHacks ={
 				local function ESP_PC_Task_Spawn()
 					while not isCleared and Computer~=nil and Computer.Parent~=nil do
 						while enHacks.ESP_PCHighlight and not isCleared do
-							if (((primPart.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance) and isInLobby(camera.CameraSubject.Parent)) then
+							if (((primPart.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance) and isInGame(camera.CameraSubject.Parent)) then
 								local didHit = false
 								local instance = primPart
 								if (Map~=nil and Screen~=nil) then    
@@ -2853,7 +2853,7 @@ AvailableHacks ={
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				local isInGame=isInLobby(camera.CameraSubject.Parent)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay2")
 				for num,tag in ipairs(hackDisplayList) do
 					tag.Enabled=newValue and camera.CameraType==Enum.CameraType.Custom and isInGame
@@ -2894,7 +2894,7 @@ AvailableHacks ={
 					return
 				end
 				local newTag=ToggleTag:Clone()
-				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
+				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
 				newTag.Adornee=doorTrigger
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -2982,7 +2982,7 @@ AvailableHacks ={
 			["Default"]=false,
 			["Event"]=nil,
 			["SetEnabled"]=function(tag)
-				local isInGame=isInLobby(camera.CameraSubject.Parent)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local newValue = enHacks.RemotelyHackComputers
 				
 				local canBeActive = newValue == true or (tag.Name=="Pod" and newValue=="Pods") or (tag.Name=="PC" and newValue=="PCs")
@@ -2992,7 +2992,7 @@ AvailableHacks ={
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				local isInGame=isInLobby(camera.CameraSubject.Parent)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay3")
 				for num,tag in ipairs(hackDisplayList) do
 					AvailableHacks.Blatant[20].SetEnabled(tag)
@@ -3030,7 +3030,7 @@ AvailableHacks ={
 				end
 				
 				local newTag=ToggleTag:Clone()
-				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
+				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "PC"
 				newTag.Parent=HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
@@ -3075,7 +3075,7 @@ AvailableHacks ={
 				local isBeast = myTSM:WaitForChild("IsBeast")
 
 				local newTag=ToggleTag:Clone()
-				local isInGame=isInLobby(workspace.Camera.CameraSubject.Parent)
+				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "Pod"
 				newTag.Parent=HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
@@ -5263,7 +5263,7 @@ AvailableHacks ={
 				function canRun(fullLoop)
 					local Check1 = enHacks.BotRunner=="Hack" and char~=nil and human~=nil and human.Health>0 and camera.CameraSubject==human;
 					local Check2 = savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart;
-					local Check3 = select(2,isInLobby(char))=="Runner" and not isCleared;--(not fullLoop or select(2,isInLobby(char))=="Runner") and not isCleared;
+					local Check3 = select(2,isInGame(char))=="Runner" and not isCleared;--(not fullLoop or select(2,isInGame(char))=="Runner") and not isCleared;
 					return Check1 and Check2 and Check3;
 				end
 				AvailableHacks.Bot[15].CanRun=canRun;
@@ -5367,10 +5367,12 @@ AvailableHacks ={
 							local exitDoor = closestExitArea.Parent
 							if exitDoor:FindFirstChild("ExitDoorTrigger") and (exitDoor.ExitDoorTrigger.ActionSign.Value == 12 or exitDoor.ExitDoorTrigger.ActionSign.Value == 10)
 								and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then
+								trigger_setTriggers("BotRunner",{Exit=false})
 								AvailableHacks.Blatant[15].DoorFuncts[exitDoor]()
 							end
 							local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
-							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) 
+							RunS.RenderStepped:Wait()
+							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) and isInGame(char)
 								and (not exitDoor:FindFirstChild("ExitDoorTrigger") 
 									or (exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12 and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 10))) do
 								if human.FloorMaterial~=Enum.Material.Air then
@@ -5394,7 +5396,7 @@ AvailableHacks ={
 				local function canRun(fullLoop)
 					local plrs = {}
 					for num, theirPlr in ipairs(PS:GetPlayers()) do
-						if theirPlr and theirPlr.Character and select(2,isInLobby(theirPlr.Character))=="Runner" then
+						if theirPlr and theirPlr.Character and select(2,isInGame(theirPlr.Character))=="Runner" then
 							table.insert(plrs,theirPlr)
 						end
 					end
@@ -5408,7 +5410,7 @@ AvailableHacks ={
 					--end
 
 					local Ret1 = (enHacks.BotRunner=="Freeze" and char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart and Beast and Beast.PrimaryPart)
-					local Ret2 = ((select(2,isInLobby(char))=="Runner") and not isCleared)
+					local Ret2 = ((select(2,isInGame(char))=="Runner") and not isCleared)
 					local Ret3 = Beast and myBots[Beast.Name:lower()]
 					if not Ret3 and Beast and warningPrint then
 						createCommandLine("Freeze Disabled: Unrecognized Player\n\tSet ")
@@ -5490,6 +5492,7 @@ AvailableHacks ={
 			end,
 			["ActivateFunction"]=function()
 				--print("Bot Function Activated")
+				trigger_setTriggers("BotRunner",true)
 				local saveValue = enHacks.BotRunner
 				human:SetAttribute("OverrideSpeed",nil)
 				local currentPath=AvailableHacks.Bot[15].CurrentPath
@@ -5510,7 +5513,7 @@ AvailableHacks ={
 					if isCleared or enHacks.BotRunner ~= saveValue then 
 						return false 
 					end
-					local inGame,role = isInLobby(char)
+					local inGame,role = isInGame(char)
 					--print(role,enHacks.BotRunner,Beast,myTSM.Health.Value)
 					if role=="Runner" and (saveValue~="Freeze" or (Beast and Beast.PrimaryPart)) then
 						task.wait(.5)
@@ -5998,10 +6001,10 @@ AvailableHacks ={
 				local mapTarget
 
 				local function canRun()
-					local isInLobby = isInLobby(char)
+					local isInGame = isInGame(char)
 					local Check1 = char~=nil and workspace:IsAncestorOf(char) and human~=nil and human.Health>0
 					local Check2 = enHacks["AutoVote/Known"] and mapTarget and mapTarget.Board.SurfaceGui.Enabled
-					local Check3 = not isInLobby and ((SaveNum)==(AvailableHacks.Bot[23].CurrentNum)) and not isCleared
+					local Check3 = not isInGame and ((SaveNum)==(AvailableHacks.Bot[23].CurrentNum)) and not isCleared
 					return Check1 and Check2 and Check3
 				end
 				local function calculteMapTarget()
@@ -6070,7 +6073,7 @@ AvailableHacks ={
 					end
 				end--]]
 				local function RSUpdateGameStatusFunction()
-					if (not AvailableHacks.Bot[23].IsRunning and not ({isInLobby(char)})[1]) then
+					if (not AvailableHacks.Bot[23].IsRunning and not ({isInGame(char)})[1]) then
 						AvailableHacks.Bot[23].ActivateFunction() 
 					else
 						--print(AvailableHacks.Bot[23].IsRunning)

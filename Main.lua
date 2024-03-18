@@ -3875,7 +3875,8 @@ AvailableHacks ={
 			["MusicValue"] = nil,
 			["MusicValue2"] = nil,
 			["MusicValue3"] = nil,
-			["ActivateFunction"]=function(newValue)
+			["ActivateFunction"]=function()
+				local newValue = enHacks.Util_MuteMusic
 				local function applyToSound(musicSound,needs)
 					if musicSound then
 						local shouldBe = newValue == needs or newValue == "Both"
@@ -3902,7 +3903,7 @@ AvailableHacks ={
 				local hammerHandle = theirHammer:WaitForChild("Handle")
 				AvailableHacks.Utility[9].MusicValue2 = hammerHandle:WaitForChild("SoundHeartBeat")
 				AvailableHacks.Utility[9].MusicValue3 = hammerHandle:WaitForChild("SoundChaseMusic")
-				AvailableHacks.Utility[9].ActivateFunction(enHacks.Util_MuteMusic)
+				AvailableHacks.Utility[9].ActivateFunction()
 			end,
 			
 			["MyStartUp"] = function()
@@ -3913,7 +3914,8 @@ AvailableHacks ={
 					musicSound = plr:WaitForChild("PlayerScripts"):WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
 				end
 				AvailableHacks.Utility[9].MusicValue = musicSound
-				AvailableHacks.Utility[9].ActivateFunction(enHacks.Util_MuteMusic)
+				setChangedAttribute(musicSound,"IsPlaying",AvailableHacks.Utility[9].ActivateFunction)
+				AvailableHacks.Utility[9].ActivateFunction()
 			end,
 		},
 		[15]={
@@ -5419,7 +5421,7 @@ AvailableHacks ={
 								keyNeeded = key
 							end
 						end
-						if (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
+						if (myRunerPlrKey==1 and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
 							task.wait(1/2)
 							if not canRun(true) then
 								return

@@ -6395,7 +6395,7 @@ end;
 if gameName=="FleeTrade" then
 	for crateName, crateData in pairs(requireModule(RS:WaitForChild("ShopCrates"))) do
 		if not crateData.CostRobux then
-			AvailableHacks.Utility[143].Options[crateName]={
+			AvailableHacks.Bot[143].Options[crateName]={
 				["Title"]=crateData.Name.. " ("..comma_value(crateData.Price)..")",
 				["TextColor"]=Color3.fromRGB(255),-- ComputeNameColor(crateData.Name),
 			}
@@ -6404,7 +6404,7 @@ if gameName=="FleeTrade" then
 	local HasBundles = false
 	for bundleName, bundleData in pairs(requireModule(RS:WaitForChild("ShopBundles"))) do
 		if not bundleData.CostRobux then
-			AvailableHacks.Utility[146].Options[bundleName]={
+			AvailableHacks.Bot[146].Options[bundleName]={
 				["Title"]=bundleData.Name.. " ("..comma_value(bundleData.Price)..")",
 				["TextColor"]=Color3.fromRGB(255),--ComputeNameColor(bundleData.Name),
 			}
@@ -6412,8 +6412,8 @@ if gameName=="FleeTrade" then
 		end
 	end
 	if not HasBundles then
-		AvailableHacks.Utility[146]=nil
-		AvailableHacks.Utility[147]=nil
+		AvailableHacks.Bot[146]=nil
+		AvailableHacks.Bot[147]=nil
 	end
 end
 

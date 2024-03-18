@@ -5332,7 +5332,7 @@ AvailableHacks ={
 								while canRun() and closestTrigger and closestTrigger.Parent and TSM.ActionEvent.Value~=nil and closestTrigger.ActionSign.Value==20 and TSM.CurrentAnimation.Value~="Typing" and not (screen.Color.G*255<128 and screen.Color.G*255>126) do
 									local distTraveled=(lastHackedPosition-closestTrigger.Position).Magnitude
 									local timeElapsed=os.clock()-computerHackStartTime
-									local minHackTimeBetweenPCs = (0.15+math.max(distTraveled/minSpeedBetweenPCs,absMinTimeBetweenPCs))
+									local minHackTimeBetweenPCs = (0.15+math.max(distTraveled/minSpeedBetweenPCs,lastHackedPC==closestTrigger.Parent and 0 or absMinTimeBetweenPCs))
 									if lastHackedPC~=closestTrigger.Parent and timeElapsed<minHackTimeBetweenPCs then
 										timeElapsed = timeElapsed + (task.wait(minHackTimeBetweenPCs-timeElapsed))
 									else
@@ -5349,7 +5349,7 @@ AvailableHacks ={
 									while canRun() and TSM.CurrentAnimation.Value=="Typing" do
 										task.wait(1/3)
 										computerHackStartTime=os.clock() 
-										lastHackedPC,lastHackedPosition=closestTrigger.Parent,closestTrigger.Position
+										lastHackedPosition=closestTrigger.Position
 									end
 								end
 									
@@ -7209,7 +7209,7 @@ end
 --MENU FUNCTS
 if gameName=="FleeMain" then
 	local lastPC_time
-	local lastPC
+	local lastHackedPC
 	local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
 	local lastAnimationName
 	local function getPC(obj)
@@ -7222,17 +7222,17 @@ if gameName=="FleeMain" then
 	end
 	local function updateAnimation()
 		if currentAnimation.Value=="Typing" then
-			lastPC = getPC(myTSM.ActionEvent.Value)
-			if not lastPC then
+			lastHackedPC = getPC(myTSM.ActionEvent.Value)
+			if lastHackedPC then
 				if not myTSM.ActionEvent.Value then
 					warn("PC Not Found: ActionEvent.Value nil")
 				else
 					warn("PC Not Found:",myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
-		elseif lastPC and lastAnimationName=="Typing" then
+		elseif lastHackedPC and lastAnimationName=="Typing" then
 			lastPC_time = os.clock()
-			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastPC}})
+			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
 			task.delay(absMinTimeBetweenPCs,function()
 				if (os.clock() - lastPC_time) >= absMinTimeBetweenPCs then
 					trigger_setTriggers("LastPC",{Computer=true})

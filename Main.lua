@@ -5102,7 +5102,7 @@ AvailableHacks ={
 					local setVector3 = updatedTarget+newVector3(0,getHumanoidHeight(char))
 					local setCFrame = CFrame.new(setVector3)
 					if (typeof(target)=="Instance") then
-						setCFrame = CFrame.new(setVector3,Vector3.new(target.Position.X,setVector3.Y,target.Position.Z))
+						setCFrame = target.CFrame--CFrame.new(char.Position,Vector3.new(setVector3.X,setVector3.Y,setVector3.Z))
 					end
 					teleportMyself(setCFrame)
 					return true

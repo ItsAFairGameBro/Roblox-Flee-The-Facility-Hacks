@@ -797,7 +797,7 @@ local function stopCurrentAction()
 end
 
 --SAVE/LOAD MODULE
-local loadedEnData
+local loadedEnData = {}
 local function loadSaveData()
 	local path = getID.."/enHacks/"..gameName..".txt"
 	if isfile(path) then

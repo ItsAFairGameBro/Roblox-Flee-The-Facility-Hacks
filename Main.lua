@@ -6669,8 +6669,8 @@ if isCleared then
 	return "After Waiting Cleared (Code 103)"
 end
 getgenv()["ActiveScript"..getID][saveIndex] = true
-local startTime = os.clock()--DEL
-print(("Starting Instance %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--local startTime = os.clock()--DEL
+--print(("Starting Instance %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 local numOfFriends = (0) 
 
@@ -6691,7 +6691,7 @@ local mainAccountDetected = (success and ((numOfFriends)>=(15)) and not isStudio
 if mainAccountDetected then
 	plr:Kick("Anti Main Hack: Main Account Detected!");
 end;
-print(("Friend Check Finished %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--print(("Friend Check Finished %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 local function resetEventFunction()
 	if AvailableHacks.Commands[24] then
@@ -6708,7 +6708,7 @@ ResetEvent.Parent = RS;
 GuiCreationFunction();
 GuiCreationFunction = nil;
 
-print(("Gui Creation Finished %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--print(("Gui Creation Finished %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 --JUMP CONTROL
 jumpChangedEvent = Instance.new("BindableEvent")
@@ -6846,7 +6846,7 @@ local initilizationTypes = ({
 })
 loadSaveData()
 
-print(("Hacks Starting %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--print(("Hacks Starting %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 local hacks2LoopThru = (AvailableHacks or {})
 for categoryName, differentHacks in pairs(hacks2LoopThru) do
@@ -6922,7 +6922,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 	end
 end
 
-print(("Hacks Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--print(("Hacks Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 --COMMAND BAR CONTROL
 
@@ -7138,7 +7138,7 @@ local function updateCurrentMap(newMap)
 	end
 end
 
-print(("Functions Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--print(("Functions Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 if gameName == "FleeMain" then
 	local MapChangedValue = RS:WaitForChild("CurrentMap")
@@ -7163,13 +7163,13 @@ local function intermediatePlayerRemovingFunction(theirPlr)
 end
 table.insert(functs,(PS.PlayerRemoving:Connect(intermediatePlayerRemovingFunction)))
 
-print(("Map Functs Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--print(("Map Functs Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 for num,theirPlr in ipairs(PS:GetPlayers()) do
 	task.spawn(PlayerAdded,theirPlr)
 end
 
-print(("Players Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--print(("Players Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 --MENU FUNCTS
 if gameName=="FleeMain" then
@@ -7292,7 +7292,7 @@ if gameName=="FleeMain" then
 	end;
 end;
 
-print(("Flee Specific Functs Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
+--print(("Game Specific Functs Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 DraggableMain=DraggableObject.new(Main)
 DraggableMain:Enable()

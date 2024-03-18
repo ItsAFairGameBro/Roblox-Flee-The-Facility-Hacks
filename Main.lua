@@ -3846,7 +3846,7 @@ AvailableHacks ={
 				end)
 			end,
 		},
-		[10]={
+		[9]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto Mute Music",
 			["Desc"]="Activate To Force Stop Music",
@@ -3856,7 +3856,7 @@ AvailableHacks ={
 			["Universes"]={"Flee"},
 			["MusicValue"] = nil,
 			["ActivateFunction"]=function(newValue)
-				local musicSound = AvailableHacks.Utility[10].MusicValue
+				local musicSound = AvailableHacks.Utility[9].MusicValue
 				if musicSound then
 					if newValue and musicSound.IsPlaying then
 						musicSound:Stop()
@@ -3874,8 +3874,8 @@ AvailableHacks ={
 				elseif gameName=="FleeTrade" then
 					musicSound = plr:WaitForChild("PlayerScripts"):WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
 				end
-				AvailableHacks.Utility[10].MusicValue = musicSound
-				AvailableHacks.Utility[10].ActivateFunction(enHacks.Util_MuteMusic)
+				AvailableHacks.Utility[9].MusicValue = musicSound
+				AvailableHacks.Utility[9].ActivateFunction(enHacks.Util_MuteMusic)
 			end,
 		},
 		[15]={

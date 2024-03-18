@@ -6969,7 +6969,9 @@ local function PlayerAdded(theirPlr)
 	local PlayerAddedConnection = theirPlr.CharacterRemoving:Connect(characterRemovingFunction);
 	table.insert(playerEvents[theirPlr.UserId], PlayerAddedConnection);
 	if myBots[theirPlr.Name:lower()] and botModeEnabled then
+		print("Listening For",theirPlr.Name)
 		table.insert(playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
+			print(theirPlr.Name,"Messaged:!",message)
 			if message == "/re" then
 				AvailableHacks.Basic[99].ActivateFunction()
 			elseif message == "/reset" then

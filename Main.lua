@@ -5302,7 +5302,6 @@ AvailableHacks ={
 				end
 				AvailableHacks.Blatant[2].Crawl(UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2))
 				while canRun(true) do
-					print("Outside Main Loop")
 					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
 					while #CS:GetTagged("Computer")==0 do
 						print("[Bot Runner]: Waiting For Computers!")
@@ -5373,8 +5372,7 @@ AvailableHacks ={
 						--	char.PrimaryPart.CFrame*newVector3(0,0,-15)))
 					else--escape time :D
 						local closestExitArea,dist=findClosestObj(getExitDoors(),(char.PrimaryPart and char.PrimaryPart.Position or newVector3()),3000,1)
-						print("Closest Exit Area",closestExitArea)
-						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..saveIndex) and not TSM.Escaped.Value do
+						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..saveIndex) do
 							local exitDoor = closestExitArea.Parent
 							if exitDoor:FindFirstChild("ExitDoorTrigger") and (exitDoor.ExitDoorTrigger.ActionSign.Value == 12 or exitDoor.ExitDoorTrigger.ActionSign.Value == 10)
 								and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then

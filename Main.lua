@@ -3065,6 +3065,10 @@ AvailableHacks ={
 			end,
 			["CapsuleAdded"]=function(Capsule)
 				local CapsulePrimaryPart = Capsule.PrimaryPart
+				local PodTriggerPart = Capsule:WaitForChild("PodTrigger",30)
+				if not PodTriggerPart then
+					return
+				end
 				local CapturedTorso = Capsule:WaitForChild("PodTrigger"):WaitForChild("CapturedTorso")
 				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
 				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)

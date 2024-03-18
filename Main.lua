@@ -3741,7 +3741,7 @@ AvailableHacks ={
 						local MainChatFrame = StringWaitForChild(PlayerGui,"Chat.Frame")
 						local ChatMainMod = getscriptfunction(ChatMain)
 						if ChatMainMod then
-							ChatMainMod.VisibilityStateChanged:Connect(function(isVisible)
+							ChatMainMod.VisibilityStateChanged.Event:Connect(function(isVisible)
 								if isVisible then
 									MainChatFrame.Visible = true
 								end

@@ -538,6 +538,7 @@ local function GuiCreationFunction()
 	CommandBarLine.TextSize = 14
 	CommandBarLine.TextStrokeTransparency = 0
 	CommandBarLine.TextXAlignment = Enum.TextXAlignment.Left
+	CommandBarLine.RichText = true
 	CommandBarLine.TextWrapped = true
 
 end
@@ -775,6 +776,14 @@ local function createCommandLine(message,printType)
 		table.remove(CommandInstances,1);
 	end;
 end;
+local function clearCommandLines()
+	for num, textLabel in ipairs(Console:GetChildren()) do
+		if textLabel:IsA("TextLabel") then
+			textLabel:Destroy()
+		end
+	end
+end
+--End Command Control
 
 local function stopCurrentAction()
 	for s = 2, 1, -1 do
@@ -4014,8 +4023,11 @@ AvailableHacks ={
 				AvailableHacks.Basic[1].UpdateSpeed()
 			end,
 			["MyStartUp"]=function(theirPlr,theirChar)
+				RunS.RenderStepped:Wait()
 				AvailableHacks.Basic[1].Funct=human:GetAttributeChangedSignal("OverrideSpeed"):Connect(AvailableHacks.Basic[1].UpdateSpeed)
-				AvailableHacks.Basic[1].ActivateFunction(enHacks.WalkSpeed)
+				if enHacks.WalkSpeed ~= defaultCharacterWalkSpeed then
+					AvailableHacks.Basic[1].ActivateFunction(enHacks.WalkSpeed)
+				end
 			end,
 			["MyPlayerAdded"]=function()
 				if gameUniverse~="Flee" then
@@ -6179,6 +6191,51 @@ AvailableHacks ={
 		},
 	},
 	["Commands"]={
+		[2]={
+			["Type"]="ExTextButton",
+			["Title"]="Clear Consoles",
+			["Desc"]="Activate To Clear Consoles",
+			["Shortcut"]="ClearConsole",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[(true)]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=newColor3(255, 0, 4),
+				},
+			},
+			["Universes"]={"Global"},
+			["ActivateFunction"]=function(newValue)
+				rconsoleclear()
+				clearCommandLines()
+			end,
+		},
+		[3]={
+			["Type"]="ExTextButton",
+			["Title"]="Get Console Logs",
+			["Desc"]="Activate To See Console Logs",
+			["Shortcut"]="ClearConsole",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[(true)]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=newColor3(255, 0, 4),
+				},
+			},
+			["Universes"]={"Global"},
+			["MessageTypeColors"]={
+				[Enum.MessageType.MessageOutput] = '<font color="rgb(255,255,255)">',
+				[Enum.MessageType.MessageInfo] = '<font color="rgb(255,255,255)">',
+				[Enum.MessageType.MessageWarning] = '<font color="rgb(255,0,255)">',
+				[Enum.MessageType.MessageError] = '<font color="rgb(255,0,0)">'
+			},
+			["ActivateFunction"]=function(newValue)
+				for num, logItem in ipairs(game:GetService("LogService"):GetLogHistory()) do
+					createCommandLine(AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
+				end
+			end,
+		},
 		[24]={
 			["Type"]="ExTextButton",
 			["Title"]="Reset",

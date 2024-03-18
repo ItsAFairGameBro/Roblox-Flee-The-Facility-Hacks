@@ -5375,7 +5375,7 @@ AvailableHacks ={
 									or (exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12 and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 10))) do
 								if human.FloorMaterial~=Enum.Material.Air then
 									human:ChangeState(Enum.HumanoidStateType.Jumping)
-									teleportMyself(char:GetPivot() * CFrame.new(0,0,-12))
+									teleportMyself(char:GetPivot() * CFrame.new(0,0,-2))
 								end
 								task.wait(1/6)
 							end

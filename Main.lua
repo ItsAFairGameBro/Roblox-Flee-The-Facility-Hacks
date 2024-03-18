@@ -5269,9 +5269,8 @@ AvailableHacks ={
 				local canRun;
 				function canRun(fullLoop)
 					local Check1 = enHacks.BotRunner=="Hack" and char~=nil and human~=nil and human.Health>0 and camera.CameraSubject==human;
-					local Check2 = savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart;
+					local Check2 = savedDeb==AvailableHacks.Bot[15].CurrentNum and char.PrimaryPart;
 					local Check3 = select(2,isInGame(char,true))=="Runner" and not isCleared;--(not fullLoop or select(2,isInGame(char,true))=="Runner") and not isCleared;
-					print("Checks",Check1,Check2,Check3,TSM.Escaped.Value)
 					return Check1 and Check2 and Check3;
 				end
 				AvailableHacks.Bot[15].CanRun=canRun;
@@ -5421,7 +5420,7 @@ AvailableHacks ={
 					--error("CanRunBro")
 					--end
 
-					local Ret1 = (enHacks.BotRunner=="Freeze" and char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart and Beast and Beast.PrimaryPart)
+					local Ret1 = (enHacks.BotRunner=="Freeze" and char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==AvailableHacks.Bot[15].CurrentNum and char.PrimaryPart and Beast and Beast.PrimaryPart)
 					local Ret2 = ((select(2,isInGame(char,true))=="Runner") and not isCleared)
 					local Ret3 = Beast and myBots[Beast.Name:lower()]
 					if not Ret3 and Beast and warningPrint then

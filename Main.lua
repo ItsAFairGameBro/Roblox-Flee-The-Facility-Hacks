@@ -3742,6 +3742,7 @@ AvailableHacks ={
 						local ChatMainMod = getscriptfunction(ChatMain)
 						if ChatMainMod then
 							ChatMainMod.VisibilityStateChanged.Event:Connect(function(isVisible)
+								print("VisibilityStateChanged Fired!",isVisible)
 								if isVisible then
 									MainChatFrame.Visible = true
 								end

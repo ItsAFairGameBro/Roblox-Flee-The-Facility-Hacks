@@ -5375,7 +5375,13 @@ AvailableHacks ={
 					end
 					while (canRun(true) and (Beast and Beast.PrimaryPart) and ((Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<8 or TSM.Ragdoll.Value))  do
 						print(myRunerPlrKey, plr:GetAttribute("HasCaptured"), plr:GetAttribute("HasRescued"))
-						if (myRunerPlrKey==1 and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
+						local keyNeeded = 0
+						for key, theirPlr in ipairs(runnerPlrs) do
+							if not theirPlr:GetAttribute("HasCaptured") then
+								keyNeeded = key
+							end
+						end
+						if (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
 							task.wait(1/2)
 							if not canRun(true) then
 								return

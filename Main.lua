@@ -5539,8 +5539,12 @@ AvailableHacks ={
 				if enHacks.BotRunner ~= saveValue then
 					return false
 				end
-				AvailableHacks.Bot[15].CurrentNum = AvailableHacks.Bot[15].CurrentNum + 1
-				local savedValue=AvailableHacks.Bot[15].CurrentNum
+				local savedValue=AvailableHacks.Bot[15].CurrentNum + 1
+				AvailableHacks.Bot[15].CurrentNum = savedValue
+				RunS.RenderStepped:Wait()
+				if enHacks.BotRunner ~= saveValue then
+					return false
+				end
 				AvailableHacks.Bot[15]["RUNNER"..saveValue](TSM,currentPath,savedValue)
 			end,
 			["MyStartUp"]=function(myPlr,myChar)

@@ -3853,7 +3853,7 @@ AvailableHacks ={
 			["Shortcut"]="Util_MuteMusic",
 			["Default"]=true,
 			["DontActivate"]=true,
-			["Universes"]={"FleeMain","FleeTrade"},
+			["Universes"]={"Flee"},
 			["MusicValue"] = nil,
 			["ActivateFunction"]=function(newValue)
 				local musicSound = AvailableHacks.Utility[10].MusicValue
@@ -3863,6 +3863,8 @@ AvailableHacks ={
 					elseif not newValue and not musicSound.IsPlaying then
 						musicSound:Resume()
 					end
+				else
+					warn("MusicSound Not Found Yet! Could be because of loading!")
 				end
 			end,
 			["MyStartUp"] = function()

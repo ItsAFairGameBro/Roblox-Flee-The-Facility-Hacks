@@ -6189,6 +6189,31 @@ AvailableHacks ={
 
 			}
 		},
+		[170]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Mute Music",
+			["Desc"]="Activate To Force Stop Music",
+			["Shortcut"]="Util_MuteMusic",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Universes"]={"Global"},
+			["MusicValue"] = nil,
+			["ActivateFunction"]=function(newValue)
+				local musicSound = AvailableHacks.Utility[170].MusicValue
+				if musicSound then
+					if newValue and musicSound.IsPlaying then
+						musicSound:Stop()
+					elseif not newValue and not musicSound.IsPlaying then
+						musicSound:Resume()
+					end
+				end
+			end,
+			["MyStartUp"] = function()
+				local musicSound = (char:WaitForChild("BackgroundMusicLocalScript")):WaitForChild("Sound")
+				AvailableHacks.Utility[170].MusicValue = musicSound
+				AvailableHacks.Utility[170].ActivateFunction(enHacks.Util_MuteMusic)
+			end,
+		},
 	},
 	["Commands"]={
 		[2]={
@@ -6201,7 +6226,7 @@ AvailableHacks ={
 			["Options"]={
 				[(true)]={
 					["Title"]="ACTIVATE",
-					["TextColor"]=newColor3(255, 0, 4),
+					["TextColor"]=newColor3(255, 255, 255),
 				},
 			},
 			["Universes"]={"Global"},
@@ -6220,7 +6245,7 @@ AvailableHacks ={
 			["Options"]={
 				[(true)]={
 					["Title"]="ACTIVATE",
-					["TextColor"]=newColor3(255, 0, 4),
+					["TextColor"]=newColor3(0, 170, 170),
 				},
 			},
 			["Universes"]={"Global"},

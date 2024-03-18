@@ -5421,7 +5421,8 @@ AvailableHacks ={
 								keyNeeded = key
 							end
 						end
-						if (myRunerPlrKey==1 and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
+						
+						if (myRunerPlrKey==1 and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") or #runnerPlrs==1 then
 							task.wait(1/2)
 							if not canRun(true) then
 								return

@@ -5578,31 +5578,35 @@ AvailableHacks ={
 				AvailableHacks.Bot[15].CurrentPath=newPath
 				AvailableHacks.Bot[15].ActivateFunction(enHacks.BotRunner)
 			end,
+			["OthersPlayerAdded"]=function(theirPlr)
+				local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
+				local function CaptureChanged()
+					if not TSM.Captured.Value and human and theirPlr==plr then
+						human:ChangeState(Enum.HumanoidStateType.Landed)
+					end
+					plr:SetAttribute("HasCaptured",true)
+				end
+				table.insert(functs,TSM.Captured.Changed:Connect(CaptureChanged))
+
+			end,
 			["MyPlayerAdded"]=function()
-				local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				local function EscapeChanged()
-					if not TSM.Escaped.Value and enHacks.BotRunner then
+					if not myTSM.Escaped.Value and enHacks.BotRunner then
 						AvailableHacks.Bot[15].ActivateFunction(true)
 					end
 				end
 				local function HealthChanged()
 					--print("Health Changed",TSM.Health.Value,TSM.Escaped.Value,AvailableHacks.Bot[15].IsRunning)
-					if TSM.Health.Value>0 and not TSM.Escaped.Value and enHacks.BotRunner and not AvailableHacks.Bot[15].IsRunning then
+					if myTSM.Health.Value>0 and not myTSM.Escaped.Value and enHacks.BotRunner and not AvailableHacks.Bot[15].IsRunning then
 						--print("Activation Started")
 
 						AvailableHacks.Bot[15].ActivateFunction(true)
 						--warn("Activation Failed")
 					end
 				end
-				local function CaptureChanged()
-					if not TSM.Captured.Value and human then
-						human:ChangeState(Enum.HumanoidStateType.Landed)
-					end
-					plr:SetAttribute("HasCaptured",true)
-				end
-				table.insert(functs,TSM.Escaped.Changed:Connect(EscapeChanged))
-				table.insert(functs,TSM.Health.Changed:Connect(HealthChanged))
-				table.insert(functs,TSM.Captured.Changed:Connect(CaptureChanged))
+				table.insert(functs,myTSM.Escaped.Changed:Connect(EscapeChanged))
+				table.insert(functs,myTSM.Health.Changed:Connect(HealthChanged))
+				AvailableHacks.Bot[15].OthersPlayerAdded(plr)
 			end,
 			["DoorAdded"]=function(door)
 				local doorTrigger=door.Name~="ExitDoor" and door:WaitForChild("DoorTrigger") or door:WaitForChild("ExitDoorTrigger",1e5)

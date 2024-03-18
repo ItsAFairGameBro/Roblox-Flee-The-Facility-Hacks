@@ -2016,7 +2016,7 @@ end
 if gameName=="FleeTrade" then
 	for crateName, crateData in pairs(requireModule(RS:WaitForChild("ShopCrates"))) do
 		if not crateData.CostRobux then
-			AvailableHacks.Bot[143].Options[crateName]={
+			AvailableHacks.Utility[143].Options[crateName]={
 				["Title"]=crateData.Name.. " ("..comma_value(crateData.Price)..")",
 				["TextColor"]=Color3.fromRGB(255),-- ComputeNameColor(crateData.Name),
 			}
@@ -2025,7 +2025,7 @@ if gameName=="FleeTrade" then
 	local HasBundles = false
 	for bundleName, bundleData in pairs(requireModule(RS:WaitForChild("ShopBundles"))) do
 		if not bundleData.CostRobux then
-			AvailableHacks.Bot[146].Options[bundleName]={
+			AvailableHacks.Utility[146].Options[bundleName]={
 				["Title"]=bundleData.Name.. " ("..comma_value(bundleData.Price)..")",
 				["TextColor"]=Color3.fromRGB(255),--ComputeNameColor(bundleData.Name),
 			}
@@ -2033,8 +2033,8 @@ if gameName=="FleeTrade" then
 		end
 	end
 	if not HasBundles then
-		AvailableHacks.Bot[146]=nil
-		AvailableHacks.Bot[147]=nil
+		AvailableHacks.Utility[146]=nil
+		AvailableHacks.Utility[147]=nil
 	end
 end
 
@@ -6196,7 +6196,7 @@ AvailableHacks ={
 			["Shortcut"]="Util_MuteMusic",
 			["Default"]=true,
 			["DontActivate"]=true,
-			["Universes"]={"Global"},
+			["Universes"]={"Flee"},
 			["MusicValue"] = nil,
 			["ActivateFunction"]=function(newValue)
 				local musicSound = AvailableHacks.Utility[170].MusicValue
@@ -6341,7 +6341,7 @@ AvailableHacks ={
 					["TextColor"]=newColor3(255,255,255),
 				},
 			},
-			["Universe"]={"Flee"},
+			["Universes"]={"Flee"},
 			["ActivateFunction"]=function(newValue)
 				local allStats={
 					["XP"]={

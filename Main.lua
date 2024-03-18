@@ -7162,7 +7162,7 @@ table.insert(functs,(PS.PlayerRemoving:Connect(intermediatePlayerRemovingFunctio
 print(("Map Functs Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
 for num,theirPlr in ipairs(PS:GetPlayers()) do
-	PlayerAdded(theirPlr)
+	task.spawn(PlayerAdded,theirPlr)
 end
 
 print(("Players Loaded %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL

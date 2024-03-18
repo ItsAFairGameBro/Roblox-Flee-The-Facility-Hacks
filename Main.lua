@@ -3114,6 +3114,9 @@ AvailableHacks ={
 				AvailableHacks.Blatant[20].Event.Parent = workspace
 			end,
 			["MyBeastAdded"]=function()
+				repeat
+					RunS.RenderStepped:Wait()
+				until AvailableHacks.Blatant[20].Event
 				objectFuncts[AvailableHacks.Blatant[20].Event]={Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
 					AvailableHacks.Blatant[20].Event:Fire()
 				end)}
@@ -3239,6 +3242,10 @@ AvailableHacks ={
 						end
 					end
 					--print("Capturing survivor!")
+					if not capsule then
+						warn("Capsule Not Found For",theirPlr,theirChar)
+						return
+					end
 					local Trigger = capsule:WaitForChild("PodTrigger",5)
 					for s=1,3,1 do
 						local isOpened = (Trigger.ActionSign.Value==11)
@@ -5307,6 +5314,7 @@ AvailableHacks ={
 			end,
 			["RUNNERFreeze"]=function(TSM,currentPath,savedDeb)
 				local runnerPlrs={}
+				local warningPrint = true
 				local myRunerPlrKey
 				local function canRun(fullLoop)
 					local plrs = {}
@@ -5327,9 +5335,10 @@ AvailableHacks ={
 					local Ret1 = (enHacks.BotRunner=="Freeze" and char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart and Beast and Beast.PrimaryPart)
 					local Ret2 = ((select(2,isInLobby(char))=="Runner") and not isCleared)
 					local Ret3 = Beast and myBots[Beast.Name:lower()]
-					if not Ret3 and Beast then
+					if not Ret3 and Beast and warningPrint then
 						createCommandLine("Freeze Disabled: Unrecognized Player\n\tSet ")
 						print("Freeze Disabled: Unrecognized Player")
+						warningPrint = false
 					end
 					return (Ret1 and Ret2 and Ret3)
 					--and not TSM.DisableInteraction.Value
@@ -5910,25 +5919,6 @@ AvailableHacks ={
 					local sortedPlayers = sortPlayersByXPThenCredits()
 					local topPlr = sortedPlayers[1]
 					local topPlrStatsMod = topPlr:FindFirstChild("SavedPlayerStatsModule")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 					if topPlrStatsMod then
 						local newRandom = Random.new(getTotalXP(topPlrStatsMod.Level.Value,topPlrStatsMod.Xp.Value)*topPlrStatsMod.Credits.Value)

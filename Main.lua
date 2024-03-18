@@ -3874,7 +3874,7 @@ AvailableHacks ={
 				applyToSound(AvailableHacks.Utility[9].MusicValue2)
 				applyToSound(AvailableHacks.Utility[9].MusicValue3)
 
-				local musicButton = waitForChildTimout(PlayerGui,"MenusScreenGui.MainMenuWindow.Body.InfoFrame.MuteBGMusicButton")
+				local musicButton = StringWaitForChild(PlayerGui,"MenusScreenGui.MainMenuWindow.Body.InfoFrame.MuteBGMusicButton")
 				musicButton.Image = lobbyMusicSound and lobbyMusicSound.IsPlaying and "rbxassetid://2973636435" or "rbxassetid://2973636234"
 			end,
 			["BeastAdded"]=function(theirPlr,theirChar)
@@ -3884,6 +3884,7 @@ AvailableHacks ={
 				end
 				AvailableHacks.Utility[9].MusicValue2 = theirHammer:WaitForChild("SoundHeartBeat")
 				AvailableHacks.Utility[9].MusicValue3 = theirHammer:WaitForChild("SoundChaseMusic")
+				AvailableHacks.Utility[9].ActivateFunction(enHacks.Util_MuteMusic)
 			end,
 			
 			["MyStartUp"] = function()

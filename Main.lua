@@ -2012,31 +2012,6 @@ end
 --Settings:
 
 
---BOT TRADE SYS--
-if gameName=="FleeTrade" then
-	for crateName, crateData in pairs(requireModule(RS:WaitForChild("ShopCrates"))) do
-		if not crateData.CostRobux then
-			AvailableHacks.Utility[143].Options[crateName]={
-				["Title"]=crateData.Name.. " ("..comma_value(crateData.Price)..")",
-				["TextColor"]=Color3.fromRGB(255),-- ComputeNameColor(crateData.Name),
-			}
-		end
-	end
-	local HasBundles = false
-	for bundleName, bundleData in pairs(requireModule(RS:WaitForChild("ShopBundles"))) do
-		if not bundleData.CostRobux then
-			AvailableHacks.Utility[146].Options[bundleName]={
-				["Title"]=bundleData.Name.. " ("..comma_value(bundleData.Price)..")",
-				["TextColor"]=Color3.fromRGB(255),--ComputeNameColor(bundleData.Name),
-			}
-			HasBundles = true
-		end
-	end
-	if not HasBundles then
-		AvailableHacks.Utility[146]=nil
-		AvailableHacks.Utility[147]=nil
-	end
-end
 
 
 
@@ -6416,6 +6391,31 @@ local function defaultFunction(functName,args)
 		end;
 	end;
 end;
+--BOT TRADE SYS--
+if gameName=="FleeTrade" then
+	for crateName, crateData in pairs(requireModule(RS:WaitForChild("ShopCrates"))) do
+		if not crateData.CostRobux then
+			AvailableHacks.Utility[143].Options[crateName]={
+				["Title"]=crateData.Name.. " ("..comma_value(crateData.Price)..")",
+				["TextColor"]=Color3.fromRGB(255),-- ComputeNameColor(crateData.Name),
+			}
+		end
+	end
+	local HasBundles = false
+	for bundleName, bundleData in pairs(requireModule(RS:WaitForChild("ShopBundles"))) do
+		if not bundleData.CostRobux then
+			AvailableHacks.Utility[146].Options[bundleName]={
+				["Title"]=bundleData.Name.. " ("..comma_value(bundleData.Price)..")",
+				["TextColor"]=Color3.fromRGB(255),--ComputeNameColor(bundleData.Name),
+			}
+			HasBundles = true
+		end
+	end
+	if not HasBundles then
+		AvailableHacks.Utility[146]=nil
+		AvailableHacks.Utility[147]=nil
+	end
+end
 
 
 --Multi Script Check:

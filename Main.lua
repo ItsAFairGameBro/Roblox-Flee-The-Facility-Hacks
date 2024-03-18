@@ -5373,7 +5373,8 @@ AvailableHacks ={
 					if not inRange and not myTSM.Captured.Value then
 						local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
-					while (canRun(true) and (Beast and Beast.PrimaryPart) and ((Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<8 or TSM.Ragdoll.Value)) do
+					while (canRun(true) and (Beast and Beast.PrimaryPart) and ((Beast:GetPivot().Position-char:GetPivot().Position).Magnitude<8 or TSM.Ragdoll.Value))  do
+						print(myRunerPlrKey, plr:GetAttribute("HasCaptured"), plr:GetAttribute("HasRescued"))
 						if (myRunerPlrKey==1 and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
 							task.wait(1/2)
 							if not canRun(true) then

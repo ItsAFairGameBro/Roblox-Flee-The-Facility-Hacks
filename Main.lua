@@ -5271,7 +5271,7 @@ AvailableHacks ={
 					local Check1 = enHacks.BotRunner=="Hack" and char~=nil and human~=nil and human.Health>0 and camera.CameraSubject==human;
 					local Check2 = savedDeb==AvailableHacks.Bot[15].CurrentNum and not TSM.Escaped.Value and char.PrimaryPart;
 					local Check3 = select(2,isInGame(char,true))=="Runner" and not isCleared;--(not fullLoop or select(2,isInGame(char,true))=="Runner") and not isCleared;
-					print("Checks",Check1,Check2,Check3)
+					print("Checks",Check1,Check2,Check3,savedDeb,AvailableHacks.Bot[15].CurrentNum)
 					return Check1 and Check2 and Check3;
 				end
 				AvailableHacks.Bot[15].CanRun=canRun;

@@ -3882,8 +3882,9 @@ AvailableHacks ={
 				if not theirHammer then
 					return warn("No Hammer Beast")
 				end
-				AvailableHacks.Utility[9].MusicValue2 = theirHammer:WaitForChild("SoundHeartBeat")
-				AvailableHacks.Utility[9].MusicValue3 = theirHammer:WaitForChild("SoundChaseMusic")
+				local hammerHandle = theirHammer:WaitForChild("Handle")
+				AvailableHacks.Utility[9].MusicValue2 = hammerHandle:WaitForChild("SoundHeartBeat")
+				AvailableHacks.Utility[9].MusicValue3 = hammerHandle:WaitForChild("SoundChaseMusic")
 				AvailableHacks.Utility[9].ActivateFunction(enHacks.Util_MuteMusic)
 			end,
 			

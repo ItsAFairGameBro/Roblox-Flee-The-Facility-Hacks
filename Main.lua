@@ -3839,6 +3839,36 @@ AvailableHacks ={
 				end)
 			end,
 		},
+		[10]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Mute Music",
+			["Desc"]="Activate To Force Stop Music",
+			["Shortcut"]="Util_MuteMusic",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Universes"]={"Flee"},
+			["MusicValue"] = nil,
+			["ActivateFunction"]=function(newValue)
+				local musicSound = AvailableHacks.Utility[10].MusicValue
+				if musicSound then
+					if newValue and musicSound.IsPlaying then
+						musicSound:Stop()
+					elseif not newValue and not musicSound.IsPlaying then
+						musicSound:Resume()
+					end
+				end
+			end,
+			["MyStartUp"] = function()
+				local musicSound
+				if gameName=="FleeMain" then
+					musicSound = char:WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
+				elseif gameName=="FleeTrade" then
+					musicSound = plr:WaitForChild("PlayerScripts"):WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
+				end
+				AvailableHacks.Utility[10].MusicValue = musicSound
+				AvailableHacks.Utility[10].ActivateFunction(enHacks.Util_MuteMusic)
+			end,
+		},
 		[15]={
 			["Type"]="ExTextBox",
 			["Title"]="Insta Trade Amount",
@@ -6164,36 +6194,6 @@ AvailableHacks ={
 			["Options"] = {
 
 			}
-		},
-		[170]={
-			["Type"]="ExTextButton",
-			["Title"]="Auto Mute Music",
-			["Desc"]="Activate To Force Stop Music",
-			["Shortcut"]="Util_MuteMusic",
-			["Default"]=true,
-			["DontActivate"]=true,
-			["Universes"]={"Flee"},
-			["MusicValue"] = nil,
-			["ActivateFunction"]=function(newValue)
-				local musicSound = AvailableHacks.Utility[170].MusicValue
-				if musicSound then
-					if newValue and musicSound.IsPlaying then
-						musicSound:Stop()
-					elseif not newValue and not musicSound.IsPlaying then
-						musicSound:Resume()
-					end
-				end
-			end,
-			["MyStartUp"] = function()
-				local musicSound
-				if gameName=="FleeMain" then
-					musicSound = char:WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
-				elseif gameName=="FleeTrade" then
-					musicSound = plr:WaitForChild("PlayerScripts"):WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
-				end
-				AvailableHacks.Utility[170].MusicValue = musicSound
-				AvailableHacks.Utility[170].ActivateFunction(enHacks.Util_MuteMusic)
-			end,
 		},
 	},
 	["Commands"]={

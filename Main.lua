@@ -3855,18 +3855,37 @@ AvailableHacks ={
 			["DontActivate"]=true,
 			["Universes"]={"Flee"},
 			["MusicValue"] = nil,
+			["MusicValue2"] = nil,
+			["MusicValue3"] = nil,
 			["ActivateFunction"]=function(newValue)
-				local musicSound = AvailableHacks.Utility[9].MusicValue
-				if musicSound then
-					if newValue and musicSound.IsPlaying then
-						musicSound:Stop()
-					elseif not newValue and not musicSound.IsPlaying then
-						musicSound:Resume()
+				local function applyToSound(musicSound)
+					if musicSound then
+						if newValue and musicSound.IsPlaying then
+							musicSound:Stop()
+						elseif not newValue and not musicSound.IsPlaying then
+							musicSound:Resume()
+						end
+					else
+						warn("MusicSound Not Found Yet! Could be because of loading:",musicSound)
 					end
-				else
-					warn("MusicSound Not Found Yet! Could be because of loading!")
 				end
+				local lobbyMusicSound = AvailableHacks.Utility[9].MusicValue
+				applyToSound(AvailableHacks.Utility[9].MusicValue)
+				applyToSound(AvailableHacks.Utility[9].MusicValue2)
+				applyToSound(AvailableHacks.Utility[9].MusicValue3)
+
+				local musicButton = waitForChildTimout(PlayerGui,"MenusScreenGui.MainMenuWindow.Body.InfoFrame.MuteBGMusicButton")
+				musicButton.Image = lobbyMusicSound and lobbyMusicSound.IsPlaying and "rbxassetid://2973636435" or "rbxassetid://2973636234"
 			end,
+			["BeastAdded"]=function(theirPlr,theirChar)
+				local theirHammer = theirChar:WaitForChild("Hammer",30)
+				if not theirHammer then
+					return warn("No Hammer Beast")
+				end
+				AvailableHacks.Utility[9].MusicValue2 = theirHammer:WaitForChild("SoundHeartBeat")
+				AvailableHacks.Utility[9].MusicValue3 = theirHammer:WaitForChild("SoundChaseMusic")
+			end,
+			
 			["MyStartUp"] = function()
 				local musicSound
 				if gameName=="FleeMain" then
@@ -5380,7 +5399,6 @@ AvailableHacks ={
 								keyNeeded = key
 							end
 						end
-						print("Key/MYKey",keyNeeded,myRunerPlrKey, plr:GetAttribute("HasCaptured")==true, plr:GetAttribute("HasRescued")==true)
 						if (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") then
 							task.wait(1/2)
 							if not canRun(true) then
@@ -5584,7 +5602,7 @@ AvailableHacks ={
 					if not TSM.Captured.Value and human and theirPlr==plr then
 						human:ChangeState(Enum.HumanoidStateType.Landed)
 					end
-					plr:SetAttribute("HasCaptured",true)
+					theirPlr:SetAttribute("HasCaptured",true)
 				end
 				table.insert(functs,TSM.Captured.Changed:Connect(CaptureChanged))
 
@@ -6905,6 +6923,7 @@ local function BeastAdded(theirPlr,theirChar)
 	};
 	local function2Input = theirPlr==plr and "MyBeastAdded" or "OthersBeastAdded";
 	defaultFunction(function2Input,inputArray);
+	defaultFunction("BeastAdded",inputArray);
 	table.insert(functs,Hammer.AncestryChanged:Connect(function(newParent)
 		Beast=nil
 		local inputArray = {theirPlr,theirChar}

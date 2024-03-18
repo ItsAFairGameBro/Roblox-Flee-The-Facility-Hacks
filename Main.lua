@@ -3556,6 +3556,7 @@ AvailableHacks ={
 				local saveState=enHacks.AutoBeastRope
 				local beast=Beast--the current Beast
 				local Hammer=beast:WaitForChild("Hammer",2)
+				local Handle=Hammer:WaitForChild("Handle",5)
 				local CarriedTorso = beast:WaitForChild("CarriedTorso",2)
 				while (beast~=nil and beast.Parent~=nil and Hammer~=nil and enHacks.AutoBeastRope==saveState and CarriedTorso and (enHacks.AutoBeastRope=="All" or (enHacks.AutoBeastRope=="Me" and beast==char))) do
 					for num,theirPlr in ipairs(PS:GetChildren()) do
@@ -3563,7 +3564,7 @@ AvailableHacks ={
 							local theirChar=theirPlr.Character
 							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
 							if TSM~=nil and not TSM.Captured.Value and TSM.Ragdoll.Value then
-								local Dist=(Hammer.Handle.Position-theirChar.PrimaryPart.Position).magnitude
+								local Dist=(Handle.Position-theirChar.PrimaryPart.Position).magnitude
 								if Dist<14 then
 									Hammer.HammerEvent:FireServer("HammerTieUp",theirChar.Torso,theirChar.Torso.Position)
 								end
@@ -5303,6 +5304,7 @@ AvailableHacks ={
 				while canRun(true) do
 					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
 					while #CS:GetTagged("Computer")==0 do
+						print("[Bot Runner]: Waiting For Computers!")
 						human:Move(newVector3())
 						CS:GetInstanceAddedSignal("Computer"):Wait()
 						task.wait()
@@ -5311,6 +5313,7 @@ AvailableHacks ={
 						end)
 					end
 					while RS.CurrentMap.Value==nil do
+						print("[Bot Runner]: Waiting For Map!")
 						RS.CurrentMap.Changed:Wait()
 					end
 					--print(#CS:GetTagged("Computer"),string.sub(RS.GameStatus.Value,1,2),string.sub(RS.GameStatus.Value,1,2)=="15")
@@ -7218,7 +7221,6 @@ end
 --MENU FUNCTS
 if gameName=="FleeMain" then
 	local lastPC_time
-	local lastHackedPC
 	local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
 	local lastAnimationName
 	local function getPC(obj)
@@ -7232,7 +7234,7 @@ if gameName=="FleeMain" then
 	local function updateAnimation()
 		if currentAnimation.Value=="Typing" then
 			lastHackedPC = getPC(myTSM.ActionEvent.Value)
-			if lastHackedPC then
+			if not lastHackedPC then
 				if not myTSM.ActionEvent.Value then
 					warn("PC Not Found: ActionEvent.Value nil")
 				else

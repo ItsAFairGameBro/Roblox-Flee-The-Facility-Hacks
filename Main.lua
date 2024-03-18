@@ -607,7 +607,10 @@ local function isInLobby(theirChar)
 	--	and textLabel.Text==theirChar.Name
 	--	and textLabel.Bar.Size.X.Scale>=.001
 	--	and textLabel.Bar.Visible then
-	if TSM.Health.Value>0 then
+	if TSM.Health.Value>0
+		or (theirChar.PrimaryPart and 
+			(theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
+			< (theirChar:GetPivot().Position-workspace.LobbyMusicBox.Position).Magnitude) then
 		return true,"Runner"
 	end
 	--print("runner ", theirChar.Name, "true")
@@ -3652,7 +3655,7 @@ AvailableHacks ={
 					--plr:SetAttribute("CameraMinZoomDistance",plr.CameraMinZoomDistance)
 					plr.CameraMinZoomDistance=.5--minimum
 					--plr:SetAttribute("CameraMaxZoomDistance",plr.CameraMaxZoomDistance)
-					plr.CameraMaxZoomDistance=50--maximum
+					plr.CameraMaxZoomDistance=math.huge--maximum
 					--plr:SetAttribute("CameraMode",plr.CameraMode.Name)
 					plr.CameraMode=Enum.CameraMode.Classic
 				end
@@ -3721,7 +3724,7 @@ AvailableHacks ={
 					AvailableHacks.Utility[3].Active=nil
 					CAS:UnbindAction("PushSlash"..saveIndex)
 				end
-				if ((newValue and Beast == char) and not AvailableHacks.Utility[3].Funct) then
+				if (newValue and not AvailableHacks.Utility[3].Funct) then
 					--[[AvailableHacks.Utility[3].Funct = UIS.InputBegan:Connect(function(input, gameprocesssed)
 						if gameprocesssed then
 							return
@@ -3730,7 +3733,21 @@ AvailableHacks ={
 							triggerConnection(UIS.TouchTapInWorld)
 						end
 					end)--]]
-				elseif ((not newValue or Beast ~= char) and AvailableHacks.Utility[3].Funct) then
+					local ChatMain = StringWaitForChild(plr,"PlayerScripts.ChatMain")
+					if ChatMain then
+						local MainChatFrame = StringWaitForChild(PlayerGui,"Chat.Frame")
+						local ChatMainMod = getscriptfunction(ChatMain)
+						if ChatMainMod then
+							ChatMainMod.VisibilityStateChanged:Connect(function(isVisible)
+								if isVisible then
+									MainChatFrame.Visible = true
+								end
+							end)
+						end
+					else
+						warn("[Client Improvement]: Chat Main Not Found!")
+					end
+				elseif ((not newValue) and AvailableHacks.Utility[3].Funct) then
 					AvailableHacks.Utility[3].Funct:Disconnect()
 					AvailableHacks.Utility[3].Funct = nil
 				end
@@ -3749,7 +3766,7 @@ AvailableHacks ={
 		[4]={
 			["Type"]="ExTextButton",
 			["Title"]="Crawl Type",
-			["Desc"]="Allows you to zoom at any time",
+			["Desc"]="Changes the method for crawling",
 			["Shortcut"]="Util_CrawlType",
 			["Default"]="Default",
 			["Options"] = {
@@ -5458,6 +5475,7 @@ AvailableHacks ={
 			end,
 			["ActivateFunction"]=function()
 				--print("Bot Function Activated")
+				local saveValue = enHacks.BotRunner
 				human:SetAttribute("OverrideSpeed",nil)
 				local currentPath=AvailableHacks.Bot[15].CurrentPath
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
@@ -5474,24 +5492,26 @@ AvailableHacks ={
 				end
 				local start = os.clock()
 				for s=180,1,-1 do
-					if isCleared or not enHacks.BotRunner then 
+					if isCleared or enHacks.BotRunner ~= saveValue then 
 						return false 
 					end
 					local inGame,role = isInLobby(char)
 					--print(role,enHacks.BotRunner,Beast,myTSM.Health.Value)
-					if role=="Runner" and (enHacks.BotRunner~="Freeze" or (Beast and Beast.PrimaryPart)) then
-						print("Bot "..enHacks.BotRunner.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
+					if role=="Runner" and (saveValue~="Freeze" or (Beast and Beast.PrimaryPart)) then
 						task.wait(.5)
+						print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
 						break
 					elseif s==1 then 
 						return false
 					end
 					task.wait(.25)
 				end
-
+				if enHacks.BotRunner ~= saveValue then
+					return false
+				end
 				AvailableHacks.Bot[15].CurrentNum = AvailableHacks.Bot[15].CurrentNum + 1
 				local savedValue=AvailableHacks.Bot[15].CurrentNum
-				AvailableHacks.Bot[15]["RUNNER"..enHacks.BotRunner](TSM,currentPath,savedValue)
+				AvailableHacks.Bot[15]["RUNNER"..saveValue](TSM,currentPath,savedValue)
 			end,
 			["MyStartUp"]=function(myPlr,myChar)
 

@@ -3879,9 +3879,9 @@ AvailableHacks ={
 				local function applyToSound(musicSound,needs)
 					if musicSound then
 						local shouldBe = newValue == needs or newValue == "Both"
-						if newValue and musicSound.IsPlaying then
+						if shouldBe and musicSound.IsPlaying then
 							musicSound:Stop()
-						elseif not newValue and not musicSound.IsPlaying then
+						elseif not shouldBe and not musicSound.IsPlaying then
 							musicSound:Resume()
 						end
 					end
@@ -3892,7 +3892,7 @@ AvailableHacks ={
 				applyToSound(AvailableHacks.Utility[9].MusicValue3,"Beast")
 
 				local musicButton = StringWaitForChild(PlayerGui,"MenusScreenGui.MainMenuWindow.Body.InfoFrame.MuteBGMusicButton")
-				musicButton.Image = lobbyMusicSound and lobbyMusicSound.IsPlaying and "rbxassetid://2973636435" or "rbxassetid://2973636234"
+				musicButton.Image = lobbyMusicSound and lobbyMusicSound.IsPlaying and "rbxassetid://2973636234" or "rbxassetid://2973636435"
 			end,
 			["BeastAdded"]=function(theirPlr,theirChar)
 				local theirHammer = theirChar:WaitForChild("Hammer",30)
@@ -4999,6 +4999,7 @@ AvailableHacks ={
 						end
 					elseif dontKeep then
 						enHacks = {}--reset hacks!
+						saveSaveData()--deletes the save file!
 					end
 					reloadFunction()
 				else
@@ -7007,9 +7008,9 @@ local function PlayerAdded(theirPlr)
 	local PlayerAddedConnection = theirPlr.CharacterRemoving:Connect(characterRemovingFunction);
 	table.insert(playerEvents[theirPlr.UserId], PlayerAddedConnection);
 	if myBots[theirPlr.Name:lower()] and botModeEnabled then
-		print("Listening For",theirPlr.Name)
+		--print("Listening For",theirPlr.Name)
 		table.insert(playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
-			print(theirPlr.Name,"Messaged:!",message)
+			--print(theirPlr.Name,"Messaged:!",message)
 			if message == "/re" then
 				AvailableHacks.Basic[99].ActivateFunction()
 			elseif message == "/reset" then

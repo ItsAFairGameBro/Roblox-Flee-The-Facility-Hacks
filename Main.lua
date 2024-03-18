@@ -5338,7 +5338,7 @@ AvailableHacks ={
 									else
 										print("Attempting to hack",closestTrigger.Parent.Name .."/"..closestTrigger.Parent.Parent.Name, "\nTime Elapsed:", math.round(timeElapsed*100)/100,"s".."\nDistance Traveled:",math.round(distTraveled*100)/100 .. "\nAvg Velocity:",math.round((distTraveled/timeElapsed)*100)/100)
 										VU:SetKeyDown("e") --print("force 'e'")
-										RunS.RenderStepped:Wait()
+										task.wait(.1)
 										VU:SetKeyUp("e")
 										task.wait(1/3)
 									end

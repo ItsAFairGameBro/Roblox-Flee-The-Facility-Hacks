@@ -797,6 +797,7 @@ local function stopCurrentAction()
 end
 
 --SAVE/LOAD MODULE
+local loadedEnData
 local function loadSaveData()
 	local path = getID.."/enHacks/"..gameName..".txt"
 	if isfile(path) then
@@ -804,7 +805,7 @@ local function loadSaveData()
 		if success then
 			local success2, result2 = pcall(HS.JSONDecode,HS,result)
 			if success2 then
-				enHacks = result2
+				loadedEnData = result2
 			else
 				warn("Load Error (JSONDecode):", result2)
 			end
@@ -6184,7 +6185,12 @@ AvailableHacks ={
 				end
 			end,
 			["MyStartUp"] = function()
-				local musicSound = (char:WaitForChild("BackgroundMusicLocalScript")):WaitForChild("Sound")
+				local musicSound
+				if gameName=="FleeMain" then
+					musicSound = char:WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
+				elseif gameName=="FleeTrade" then
+					musicSound = plr:WaitForChild("PlayerScripts"):WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
+				end
 				AvailableHacks.Utility[170].MusicValue = musicSound
 				AvailableHacks.Utility[170].ActivateFunction(enHacks.Util_MuteMusic)
 			end,
@@ -6399,6 +6405,9 @@ if gameName=="FleeTrade" then
 				["Title"]=crateData.Name.. " ("..comma_value(crateData.Price)..")",
 				["TextColor"]=Color3.fromRGB(255),-- ComputeNameColor(crateData.Name),
 			}
+			if not AvailableHacks.Bot[143].Default then
+				AvailableHacks.Bot[143].Default = crateName
+			end
 		end
 	end
 	local HasBundles = false
@@ -6408,6 +6417,10 @@ if gameName=="FleeTrade" then
 				["Title"]=bundleData.Name.. " ("..comma_value(bundleData.Price)..")",
 				["TextColor"]=Color3.fromRGB(255),--ComputeNameColor(bundleData.Name),
 			}
+			AvailableHacks.Bot[146].Default = bundleName
+			if not AvailableHacks.Bot[146].Default then
+				AvailableHacks.Bot[146].Default = bundleName
+			end
 			HasBundles = true
 		end
 	end
@@ -6689,7 +6702,7 @@ local refreshTypes = ({
 		local selectedKey = (enHacks[hackInfo.Shortcut]);
 		local selectedOption = hackInfo.Options[selectedKey];
 		--print(hackInfo.Shortcut, selectedKey, selectedOption);
-		assert(selectedOption, hackInfo.Title.." doesn't have a Title!")
+		assert(selectedOption, hackInfo.Title.." doesn't have options with default value!")
 
 		hackFrame.Toggle.Text = selectedOption.Title;
 		hackFrame.Toggle.TextColor3 = selectedOption.TextColor;
@@ -6788,7 +6801,6 @@ local initilizationTypes = ({
 	end,
 })
 loadSaveData()
-print(enHacks)
 
 print(("Hacks Starting %i (%.2f)"):format(saveIndex,os.clock()-startTime))--DEL
 
@@ -6836,7 +6848,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 				overrideDefault = getgenv().enHacks[hack.Shortcut]
 			end
 			if overrideDefault==nil then
-				overrideDefault = enHacks[hack.Shortcut]
+				overrideDefault = loadedEnData[hack.Shortcut]
 			end
 			if overrideDefault~=nil and ((hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
 				(hack.Type=="ExTextBox" and (overrideDefault < hack.MinBound or overrideDefault > hack.MaxBound))) then

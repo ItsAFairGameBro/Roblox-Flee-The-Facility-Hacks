@@ -3884,8 +3884,6 @@ AvailableHacks ={
 						elseif not newValue and not musicSound.IsPlaying then
 							musicSound:Resume()
 						end
-					else
-						warn("MusicSound Not Found Yet! Could be because of loading:",musicSound)
 					end
 				end
 				local lobbyMusicSound = AvailableHacks.Utility[9].MusicValue
@@ -3899,7 +3897,7 @@ AvailableHacks ={
 			["BeastAdded"]=function(theirPlr,theirChar)
 				local theirHammer = theirChar:WaitForChild("Hammer",30)
 				if not theirHammer then
-					return warn("No Hammer Beast")
+					return
 				end
 				local hammerHandle = theirHammer:WaitForChild("Handle")
 				AvailableHacks.Utility[9].MusicValue2 = hammerHandle:WaitForChild("SoundHeartBeat")
@@ -6894,7 +6892,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			end
 			if overrideDefault~=nil and ((hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
 				(hack.Type=="ExTextBox" and (overrideDefault < hack.MinBound or overrideDefault > hack.MaxBound))) then
-				warn("Invalid Option For "..hack.Title..": "..overrideDefault..". Reverting To Original...")
+				warn("Invalid Option For "..tostring(hack.Title)..": "..tostring(overrideDefault)..". Reverting To Original...")
 				overrideDefault = nil
 			end
 			if overrideDefault~=nil then

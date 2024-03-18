@@ -891,22 +891,25 @@ local function trigger_setTriggers(name,setTriggerParams)
 	local currentEvent = myTSM:WaitForChild("ActionEvent").Value
 	local beforeEn,afterEn
 	for num,trigger in ipairs(CS:GetTagged("Trigger")) do
-		local triggerParent = trigger.Parent
-		if triggerParent and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
-			local triggerType = trigger_gettype(triggerParent)
-			assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
-			local enabled = name=="Override" or trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
-			if currentEvent and currentEvent.Parent.Parent==triggerParent then
-				beforeEn = trigger.CanTouch--checks if it was enabled previously
-				afterEn = enabled
+		if trigger and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
+			local triggerParent = trigger.Parent
+			if triggerParent then
+				local triggerType = trigger_gettype(triggerParent)
+				assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
+				local enabled = name=="Override" or trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
+				if currentEvent and currentEvent.Parent.Parent==triggerParent then
+					beforeEn = trigger.CanTouch--checks if it was enabled previously
+					afterEn = enabled
+				end
+				if enabled and trigger:GetAttribute("OrgSize")~=nil then
+					trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
+				elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
+					trigger:SetAttribute("OrgSize",trigger.Size)
+					trigger.Size=newVector3(.0001,.0001,.0001)
+				end
+				trigger.CanTouch=enabled
+
 			end
-			if enabled and trigger:GetAttribute("OrgSize")~=nil then
-				trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
-			elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
-				trigger:SetAttribute("OrgSize",trigger.Size)
-				trigger.Size=newVector3(.0001,.0001,.0001)
-			end
-			trigger.CanTouch=enabled
 		end
 	end
 	if currentEvent then
@@ -1684,7 +1687,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		local v138 = {}
 		v138[1] = v23
 		local v144 = v23
-		if not v23.Parent then return end
+		if not v23.Parent or not v23:FindFirstChild("Head") then return end
 		local v145 = v144.Head
 		local v146 = v145.CFrame
 		local v147 = v146.p
@@ -3733,7 +3736,7 @@ AvailableHacks ={
 							triggerConnection(UIS.TouchTapInWorld)
 						end
 					end)--]]
-					local ChatMain = StringWaitForChild(plr,"PlayerScripts.ChatMain")
+					local ChatMain = StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain")
 					if ChatMain then
 						local MainChatFrame = StringWaitForChild(PlayerGui,"Chat.Frame")
 						local ChatMainMod = getscriptfunction(ChatMain)

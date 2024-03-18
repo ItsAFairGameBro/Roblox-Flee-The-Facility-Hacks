@@ -10,6 +10,8 @@ local UIS=game:GetService("UserInputService")
 local RunS=game:GetService("RunService")
 local VU=game:GetService('VirtualUser')
 local SP=game:GetService("StarterPlayer")
+local SG=game:GetService("StarterGui")
+local GS=game:GetService("GuiService")
 local PathfindingService = game:GetService("PathfindingService")
 
 
@@ -3727,7 +3729,7 @@ AvailableHacks ={
 					AvailableHacks.Utility[3].Active=nil
 					CAS:UnbindAction("PushSlash"..saveIndex)
 				end
-				if (newValue and not AvailableHacks.Utility[3].Funct) then
+				--if (newValue and not AvailableHacks.Utility[3].Funct) then
 					--[[AvailableHacks.Utility[3].Funct = UIS.InputBegan:Connect(function(input, gameprocesssed)
 						if gameprocesssed then
 							return
@@ -3736,7 +3738,7 @@ AvailableHacks ={
 							triggerConnection(UIS.TouchTapInWorld)
 						end
 					end)--]]
-					local ChatMain = StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain")
+					--[[local ChatMain = StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain")
 					if ChatMain then
 						local MainChatFrame = StringWaitForChild(PlayerGui,"Chat.Frame")
 						local ChatMainMod = getscriptfunction(ChatMain)
@@ -3754,7 +3756,7 @@ AvailableHacks ={
 				elseif ((not newValue) and AvailableHacks.Utility[3].Funct) then
 					AvailableHacks.Utility[3].Funct:Disconnect()
 					AvailableHacks.Utility[3].Funct = nil
-				end
+				end--]]
 			end,
 			["MyBeastAdded"]=function()
 				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
@@ -3765,6 +3767,14 @@ AvailableHacks ={
 			["MyStartUp"]=function()
 				RunS.RenderStepped:Wait()--Delay it
 				AvailableHacks.Utility[3].ActivateFunction(enHacks.Util_Fix)
+				task.wait(2)
+				for s = 300, 1, -1 do
+					if not SG:GetCore("ChatActive") then
+						SG:SetCore("ChatActive",true)
+						print("[client improvement]: Fix Enabled")
+					end
+					RunS.RenderStepped:Wait()
+				end
 			end,
 		}),
 		[4]={
@@ -5089,9 +5099,10 @@ AvailableHacks ={
 				AvailableHacks.Bot[15].CurrentTarget = target
 
 				if isTeleportingAllowed then
-					local setCFrame = CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char)))
+					local setVector3 = updatedTarget+newVector3(0,getHumanoidHeight(char))
+					local setCFrame = CFrame.new(setVector3)
 					if (typeof(target)=="Instance") then
-						setCFrame = CFrame.new(updatedTarget+newVector3(0,getHumanoidHeight(char)),Vector3.new(target.Position.X,setCFrame.Y,target.Position.Z))
+						setCFrame = CFrame.new(setVector3,Vector3.new(target.Position.X,setVector3.Y,target.Position.Z))
 					end
 					teleportMyself(setCFrame)
 					return true

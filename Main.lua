@@ -1480,7 +1480,7 @@ function Path:Run(target)
 	if (not (target and (typeof(target) == "Vector3" or target:IsA("BasePart")))) then
 		output(error, "Pathfinding target must be a valid Vector3 or BasePart.")
 	end
-	if not AvailableHacks.Blatant[2].IsCrawling then
+	if not AvailableHacks.Beast[2].IsCrawling then
 		isActionProgress = ((plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("ActionProgress").Value%1)~=0)
 	end
 
@@ -2481,188 +2481,7 @@ AvailableHacks ={
 				AvailableHacks.Blatant[1].ActivateFunction(enHacks.WalkSpeed)
 			end,
 		},--]]
-		[2]={
-			["Type"]="ExTextButton",
-			["Title"]="Crawl as Beast",
-			["Desc"]="Very obvious",
-			["Shortcut"]="OverrideCrawl",
-			["LoadedAnim"]=nil,
-			["Default"]=false,
-			["DontActivate"]=true,
-			["ActivateFunction"]=function(newValue)
-				--AvailableHacks.Blatant[2].SetScriptActive()
-				if not newValue then
-					AvailableHacks.Blatant[2].Crawl(false)
-				end
-			end,
-			["MyStartUp"]=function()
-				if AvailableHacks.Blatant[2].LoadedAnim~=nil then
-					AvailableHacks.Blatant[2].LoadedAnim:Destroy()
-				end
-				AvailableHacks.Blatant[2].IsCrawling=false
-				local CrawlScript=char:WaitForChild("CrawlScript") 
-				if CrawlScript==nil then
-					return
-				end
-				for num,animTrack in pairs(char.Humanoid.Animator:GetPlayingAnimationTracks()) do
-					if animTrack.Animation.AnimationId=="rbxassetid://961932719" then
-						animTrack:Stop(0)
-						animTrack:Destroy()
-						human.HipHeight=0
-					end
-				end
-				CrawlScript.Disabled=true
-				local animTrack=human:WaitForChild("Animator"):LoadAnimation(CrawlScript:WaitForChild("AnimCrawl"))
-				AvailableHacks.Blatant[2].LoadedAnim=animTrack
-				local function keyAction(actionName, inputState, inputObject)
-					local shouldHold = enHacks.Util_CrawlType=="Default" and Enum.UserInputType.Keyboard == inputObject.UserInputType or enHacks.Util_CrawlType=="Hold"
-					if shouldHold then
-						if inputState==Enum.UserInputState.Begin then
-							AvailableHacks.Blatant[2].Crawl(true)
-						elseif inputState==Enum.UserInputState.End then
-							AvailableHacks.Blatant[2].Crawl(false)
-						end
-					elseif inputState == Enum.UserInputState.Begin then
-						local inverse = not AvailableHacks.Blatant[2].IsCrawling;
-						AvailableHacks.Blatant[2].Crawl(inverse);
-					end
-				end
-				local button = getDictLength(CAS:GetBoundActionInfo("Crawl"))>0 and CAS:GetButton("Crawl")
-				local setPosition = plr:GetAttribute("CrawlPosition") or UDim2_new(1, -220, 1, -90)
-				if button then
-					setPosition = button.Position
-					plr:SetAttribute("CrawlPosition",setPosition)
-				end
-				CAS:UnbindAction("Crawl")
-				CAS:BindActionAtPriority("Crawl"..saveIndex, keyAction, true, 100, Enum.KeyCode.LeftShift, Enum.KeyCode.ButtonL2)
-				RunS.RenderStepped:Wait()
-				CAS:SetTitle("Crawl"..saveIndex, "C")
-				CAS:SetPosition("Crawl"..saveIndex,setPosition);
-
-				local function HumanRunningFunction(speed)
-					if speed > 0.5 then
-						animTrack:AdjustSpeed(2)
-					else
-						animTrack:AdjustSpeed(0)
-					end
-				end
-				table.insert(functs,(human.Running:Connect(HumanRunningFunction)))
-				local inputToCrawlFunction_INPUT = UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2)
-				AvailableHacks.Blatant[2].Crawl(inputToCrawlFunction_INPUT)
-			end,
-			["MyPlayerAdded"]=function()
-				local function crawlFunction()
-					AvailableHacks.Blatant[(2)].Crawl()
-				end
-				
-				table.insert(functs, myTSM:WaitForChild("DisableCrawl").Changed:Connect(function()
-					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
-					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
-					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
-					CAS:UnbindAction("Crawl")
-				end))
-			end,
-			["IsCrawling"]=false,
-			["Crawl"]=function(set)
-				local TSM = plr:WaitForChild("TempPlayerStatsModule");
-				local animTrack = AvailableHacks.Blatant[2].LoadedAnim;
-				local shouldReturn = not animTrack or not human or human.Health <= 0;
-				if shouldReturn then
-					return;
-				end
-				local argument = set and (enHacks.OverrideCrawl or not TSM.DisableCrawl.Value);
-				if argument then
-					local hipHeight = -2;
-					human.HipHeight = hipHeight;
-					local arg1 = 0.1;
-					local arg2 = 1.0;
-					local arg3 = 0.0;
-					animTrack:Play(arg1, arg2, arg3);
-					human.WalkSpeed = 8;
-					AvailableHacks.Blatant[2].IsCrawling = true;
-				else
-					human.HipHeight = 0;
-					animTrack:Stop();
-					human.WalkSpeed = (((human.WalkSpeed==8) and 16) or human.WalkSpeed);
-					AvailableHacks.Blatant[2].IsCrawling=false;
-				end
-				TSM.IsCrawling.Value = AvailableHacks.Blatant[2].IsCrawling;
-			end,
-		},
-		[3]={
-			["Type"]="ExTextButton",
-			["Title"]="Auto Remove Rope",
-			["Desc"]="Automatically Beast's Removes Rope When Runner",
-			["Shortcut"]="AutoRemoveRope",
-			["Options"]={
-				[false]={
-					["Title"]="NOBODY",
-					["TextColor"]=newColor3(255),
-				},
-				["Me"]={
-					["Title"]="ME",
-					["TextColor"]=newColor3(0,0,255),
-				},
-				["Everyone"]={
-					["Title"]="EVERYONE",
-					["TextColor"]=newColor3(255, 255, 0),
-				},
-			},
-			["Default"]=false,
-			["ChangedFunction"]=function(newSet)
-				--print("begun")
-				if Beast==nil then
-					return
-				end
-				local CarriedTorso=Beast:FindFirstChild("CarriedTorso")
-				if CarriedTorso==nil then
-					return
-				end
-				while newSet~=nil and CarriedTorso.Value~=newSet do
-					--print("waiting")
-					task.wait(1/3)
-				end
-				local Hammer=Beast:WaitForChild("Hammer")
-				if Hammer==nil or not enHacks.AutoRemoveRope then
-					return
-				end
-				if not char:IsAncestorOf(CarriedTorso.Value) and enHacks.AutoRemoveRope=="Me" then
-					--print("cancelled ", char:GetFullName())
-					return
-				end
-				for s=2,1,-1 do
-					if CarriedTorso.Value==nil then
-						break
-					end
-					--print("activated")
-					Hammer.HammerEvent:FireServer("HammerClick", true)
-					wait(.05)
-				end
-				--print("finished")
-			end,
-			["ActivateFunction"]=function()
-				if workspace:IsAncestorOf(Beast) and Beast~=char then
-					setChangedAttribute(Beast:WaitForChild("CarriedTorso",30),"Value",false)--deletes the last function!
-					AvailableHacks.Blatant[3].OthersBeastAdded(
-						PS:GetPlayerFromCharacter(Beast),Beast)
-				end
-				--AvailableHacks.Blatant[3].ChangedFunction()
-			end,
-			["OthersBeastAdded"]=function(theirPlr,theirChar)
-				local CarriedTorso=theirChar:WaitForChild("CarriedTorso",30)
-				if CarriedTorso==nil then
-					return
-				end
-				wait(.5)
-				setChangedAttribute(CarriedTorso,"Value",enHacks.AutoRemoveRope and (function(newRopee)
-					AvailableHacks.Blatant[3].ChangedFunction(newRopee)
-				end) or false)
-				AvailableHacks.Blatant[3].ChangedFunction()
-			end,
-			--["MyBeastAdded"]=function(...)
-			--	AvailableHacks.Blatant[3].OthersBeastAdded(...)
-			--end
-		},
+		
 		--[[[4]={
 			["Type"]="ExTextButton",
 			["Title"]="Prevent Ragdoll",
@@ -2681,76 +2500,6 @@ AvailableHacks ={
 				end
 			end,
 		},--]]
-		[7]={
-			["Type"]="ExTextButton",
-			["Title"]="Auto Add Rope",
-			["Desc"]="Automatically adds rope when player is hit",
-			["Shortcut"]="AutoAddRope",
-			["Options"]={
-				[false]={
-					["Title"]="NOBODY",
-					["TextColor"]=newColor3(255),
-				},
-				["Me"]={
-					["Title"]="ME",
-					["TextColor"]=newColor3(0,0,255),
-				},
-				["Everyone"]={
-					["Title"]="EVERYONE",
-					["TextColor"]=newColor3(255, 255, 0),
-				},
-			},
-			["Default"]=false,
-			["RopeSurvivor"]=function(TSM,theirPlr,override)
-				if (enHacks.AutoAddRope~="Everyone" and (enHacks.AutoAddRope~="Me" or Beast~=char)) and not override then
-					return
-				end
-				if (not Beast or not TSM.Ragdoll.Value) then
-					return
-				end
-				local CarriedTorso=Beast:FindFirstChild("CarriedTorso")
-				if CarriedTorso==nil or CarriedTorso.Value then
-					return
-				end
-				Beast.Hammer.HammerEvent:FireServer("HammerTieUp",theirPlr.Character.Torso,theirPlr.Character.Torso.NeckAttachment.WorldPosition)
-			end,
-			["ChangedFunction"]=function(TSM,theirPlr,loop)
-				if (not TSM.Ragdoll.Value or not Beast) then
-					return
-				end
-				local CarriedTorso=Beast:FindFirstChild("CarriedTorso")
-				while (Beast and CarriedTorso.Value and TSM.Ragdoll.Value and loop and not isCleared) do
-					CarriedTorso.Changed:Wait()
-				end
-				AvailableHacks.Blatant[7].RopeSurvivor(TSM,theirPlr)
-				--deletes the last function!
-			end,
-			["ActivateFunction"]=function(newVal)
-				if newVal then
-					--for num, theirPlr in ipairs(PS:GetPlayers()) do
-					--	AvailableHacks.Blatant[7].ChangedFunction(theirPlr:WaitForChild("TempPlayerStatsModule"),theirPlr)
-					--end
-					for num,theirPlr in ipairs(PS:GetPlayers()) do
-						AvailableHacks.Blatant[7].PlayerAdded(theirPlr)
-					end
-				end
-			end,
-			["PlayerAdded"]=function(theirPlr)
-				local TSM = theirPlr:WaitForChild("TempPlayerStatsModule")
-				local funct = function()
-					AvailableHacks.Blatant[7].ChangedFunction(TSM,theirPlr,true)
-				end
-				local myInput = (enHacks.AutoAddRope and funct)
-				setChangedAttribute(TSM:WaitForChild("Ragdoll",30),"Value", myInput)
-				AvailableHacks.Blatant[7].ChangedFunction(TSM,theirPlr,false)
-			end,
-			["MyPlayerAdded"]=function(myPlr)
-				AvailableHacks.Blatant[7].PlayerAdded(myPlr)
-			end,
-			["OthersPlayerAdded"]=function(theirPlr)
-				AvailableHacks.Blatant[7].PlayerAdded(theirPlr)
-			end,
-		},
 		[10]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto Close",
@@ -3108,9 +2857,9 @@ AvailableHacks ={
 				local function setToggleFunction()
 					if isBeast.Value then
 						local theirChar = Beast.CarriedTorso.Value.Parent
-						AvailableHacks.Blatant[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar)
+						AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar)
 					else
-						AvailableHacks.Blatant[80].RescueSurvivor(Capsule,true)
+						AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
 					end
 				end
 				local function setVisible()
@@ -3143,461 +2892,6 @@ AvailableHacks ={
 				objectFuncts[AvailableHacks.Blatant[20].Event]={Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
 					AvailableHacks.Blatant[20].Event:Fire()
 				end)}
-			end,
-		},
-		[71]={
-			["Type"]="ExTextButton",
-			["Title"]="Panic When Hit",
-			["Desc"]="Instantly fly around while hit",
-			["Shortcut"]="Panic",
-			["Default"]=false,
-			["Triggered"]=function()
-				local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				if not enHacks.Panic or char:FindFirstChild("Head")==nil or not TSM.Ragdoll.Value then
-					return
-				end
-				local newVel=Instance.new("BodyVelocity",char.Head)
-				newVel.MaxForce = (newVector3(3000,3000,3000)*2.25)
-				newVel.P = 3e3
-				CS:AddTag(newVel,"RemoveOnDestroy")
-				local function RagdollPanicThreadFunction()
-					while (enHacks.Panic and TSM.Ragdoll.Value and not TSM.Captured.Value and not isCleared) do
-						newVel.Velocity = (Random.new():NextUnitVector()*5e2)
-						task.wait(.065)
-					end
-					newVel.Velocity=newVector3(0,0,0)
-					DS:AddItem(newVel,.1)
-				end
-				task.spawn(RagdollPanicThreadFunction)
-
-			end,
-			["SetChanged"]=function(shouldntTrigger)
-				local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				local function theFunction()
-					AvailableHacks.Blatant[71].Triggered()
-				end
-				local theArg = ((enHacks.Panic and (theFunction)) or false)
-				setChangedAttribute(TSM:WaitForChild("Ragdoll"),"Value",theArg)
-				if shouldntTrigger~=true then
-					AvailableHacks.Blatant[71].Triggered()
-				end
-			end,
-			["ActivateFunction"]=function(newValue)
-				AvailableHacks.Blatant[71].SetChanged()
-			end,
-			["MyPlayerAdded"]=function()
-				AvailableHacks.Blatant[71].SetChanged(true)
-			end,
-			["MyStartUp"]=function()
-				AvailableHacks.Blatant[71].Triggered()
-			end,
-		},
-		[76] = (
-			{
-				["Type"]="ExTextButton",
-				["Title"]="Respawn Before Hit",
-				["Desc"]="Despawns and respawns character before hit",
-				["Shortcut"]="RespawnBeforeHit",
-				["Default"]=false,
-				["OthersBeastAdded"] = function(myBeastPlr,myBeast)
-					local TSM=plr:WaitForChild("TempPlayerStatsModule")
-					while (myBeast~=nil and workspace:IsAncestorOf(myBeast) and myBeast.PrimaryPart and not isCleared and myBeast==Beast and char~=myBeast) do
-						if (not TSM.Ragdoll.Value and enHacks.RespawnBeforeHit and not TSM.Captured.Value) then
-							local whieList = {"Whitelist",Map,myBeast}
-							local didHit,instance=raycast(char.PrimaryPart.Position,myBeast:GetPivot().Position,whieList,18,nil,true)
-							if (didHit and myBeast:IsAncestorOf(instance) and not TSM.Ragdoll.Value and not TSM.Captured.Value) then
-								AvailableHacks.Commands[24].ActivateFunction(true)
-
-
-
-
-								local newChar = plr.CharacterAdded:Wait()
-								repeat
-									RunS.RenderStepped:Wait()
-								until newChar.PrimaryPart
-							end
-						elseif not enHacks.RespawnBeforeHit then
-							hackChanged.Event:Wait()
-						end
-						RunS.RenderStepped:Wait()
-					end
-				end,
-			}
-		),
-		[60] = 
-			{
-				["Type"] = "ExTextButton",
-				["Title"] = "Auto Capture",
-				["Desc"] = "Instantly capture other survivors",
-				["Shortcut"] = "AutoCapture",
-				["Default"] = botModeEnabled,
-				["ActivateFunction"] = (function(newValue)
-
-					local TSM = plr:WaitForChild("TempPlayerStatsModule");
-					local TSM_IsBeast = TSM:WaitForChild("IsBeast");
-
-					local function BlatantChangedFunction()
-						AvailableHacks.Blatant[60].ChangedFunction();
-					end
-					local inputChangedAttribute_INPUT = (newValue and BlatantChangedFunction);
-					setChangedAttribute(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
-					AvailableHacks.Blatant[60].ChangedFunction();
-				end),
-				["CaptureSurvivor"] = function(theirPlr,theirChar,override)
-					local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
-					if not TSM:WaitForChild("IsBeast") or not Beast then
-						return
-					end
-					if Beast.CarriedTorso.Value==nil then
-						return
-					end
-					if not enHacks.AutoCapture and not override then
-						return
-					end
-					--if enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
-					local capsule,closestDist=nil,10000
-					for num,cap in pairs(CS:GetTagged("Capsule")) do
-						if cap.PrimaryPart~=nil then
-							local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
-							if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
-								capsule,closestDist=cap,dist
-							end
-						end
-					end
-					--print("Capturing survivor!")
-					if not capsule then
-						warn("Capsule Not Found For",theirPlr,theirChar)
-						return
-					end
-					local Trigger = capsule:WaitForChild("PodTrigger",5)
-					for s=1,3,1 do
-						local isOpened = (Trigger.ActionSign.Value==11)
-						if Trigger and Trigger.CapturedTorso.Value~=nil or not enHacks.AutoCapture then 
-							break --we got ourselves a trapped survivor!
-						elseif s~=1 then
-							wait(.15)
-						end
-						if Trigger:FindFirstChild("Event") then
-							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-							if isOpened then
-								game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
-							end
-						end
-					end
-				end,
-				["ChangedFunction"]=function()
-					local TSM=plr:WaitForChild("TempPlayerStatsModule")
-					if not TSM:WaitForChild("IsBeast").Value then
-						return
-					end
-					local CarriedTorso=char:WaitForChild("CarriedTorso",20)
-					if CarriedTorso~=nil then
-						local function captureSurvivorFunction()
-							AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
-						end
-						local input = enHacks.AutoCapture and captureSurvivorFunction
-						setChangedAttribute(CarriedTorso,"Value",input)
-						AvailableHacks.Blatant[60].CaptureSurvivor(plr,char)
-					else
-						warn("rope not found!!!! hackssss bro!", char:GetFullName())
-					end
-				end,
-
-
-				--["MyStartUp"]=function()
-				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				setChangedAttribute(
-					TSM:WaitForChild("IsBeast"),
-					"Value",enHacks.AutoCapture and function()
-						AvailableHacks.Blatant[60].ChangedFunction()
-					end or false)--]]
-				--AvailableHacks.Blatant[60].ChangedFunction()
-				--end,
-
-
-				["MyBeastAdded"]=function(theirPlr,theirChar)
-					AvailableHacks.Blatant[60].ChangedFunction(theirPlr,theirChar)
-				end,
-				--["OthersBeastAdded"]=function(theirPlr,theirChar)
-				--	AvailableHacks.Blatant[60].ChangedFunction(theirPlr,theirChar)
-				--end,
-			},
-		[80]={
-			["Type"]="ExTextButton",
-			["Title"]="Auto Rescue",
-			["Desc"]="Instantly rescue when NOT beast",
-			["Shortcut"]="AutoRescue",
-			["Default"]=false,
-			["ActivateFunction"]=function(newValue)
-				for num, capsule in pairs(CS:GetTagged("Capsule")) do
-					if capsule:FindFirstChild("PodTrigger")~=nil then
-						setChangedAttribute(
-							capsule.PodTrigger:FindFirstChild("CapturedTorso"),
-							"Value",newValue and function()
-								AvailableHacks.Blatant[80].RescueSurvivor(capsule)
-							end or false)
-						AvailableHacks.Blatant[80].RescueSurvivor(capsule)
-					end
-				end
-			end,
-			["RescueSurvivor"]=function(capsule,override)
-				if capsule.PodTrigger.CapturedTorso.Value==nil then return end
-				if not enHacks.AutoRescue and not override then return end
-				if char:FindFirstChild("Hammer")~=nil then return end
-				local Trigger=capsule.PodTrigger
-				for s=5,1,-1 do
-					if capsule.PodTrigger.CapturedTorso.Value==nil then
-						return true
-					elseif not workspace:IsAncestorOf(Trigger) then 
-						break
-					end
-					local isOpened=Trigger.ActionSign.Value==11
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-					if isOpened then
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
-					end
-					wait(.075)
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", false)
-					wait(.075)
-				end
-			end,
-			["CapsuleAdded"]=function(capsule)
-				if capsule:FindFirstChild("PodTrigger")~=nil then
-					wait(.5)
-					setChangedAttribute(
-						capsule.PodTrigger:FindFirstChild("CapturedTorso"),
-						"Value",enHacks.AutoRescue and (function()
-							AvailableHacks.Blatant[80].RescueSurvivor(capsule)
-						end) or false)
-				end
-			end,
-		},
-		[86]=
-			({
-				["Type"]="ExTextButton",
-				["Title"]="Auto Beast Troll",
-				["Desc"]="Trolls beast automatically",
-				["Shortcut"]="AutoTroll",
-				["IsRunning"]=false,
-				["Default"]=false,
-				["CleanUp"]=(function()
-					AvailableHacks.Blatant[86].IsRunning=false
-				end),
-				["ActivateFunction"]=(function(enabled)
-					if enabled then
-						AvailableHacks.Blatant[86].OthersBeastAdded()
-					end
-				end),
-				["OthersBeastAdded"]=(function()
-					if AvailableHacks.Blatant[86].IsRunning then
-						return
-					end
-					if Beast==char then
-						return
-					end
-					AvailableHacks.Blatant[86].IsRunning=true
-					while AvailableHacks.Blatant[86].IsRunning and Beast~=nil and workspace:IsAncestorOf(Beast) and enHacks.AutoTroll do
-						local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),Beast.PrimaryPart.Position,20,1.5)
-						if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
-							and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
-							--print("closed door")
-							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", false)
-							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-							--task.wait()
-							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-							--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
-							--task.wait()
-							--AvailableHacks.Blatant[10].CloseDoor(Trigger)
-							local wasClosed = Trigger.ActionSign.Value ~= 11 
-							AvailableHacks.Blatant[15].DoorFuncts[Trigger.Parent]()
-							if wasClosed then
-								task.wait(2/3)
-								RS.RemoteEvent:FireServer("Input", "Trigger", false)
-							else
-								RunS.RenderStepped:Wait()
-							end
-						else
-							RunS.RenderStepped:Wait()
-						end
-					end
-					AvailableHacks.Blatant[86].IsRunning=false
-				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				local myChar=char
-				while myChar~=nil and workspace:IsAncestorOf(myChar) 
-					and myChar.PrimaryPart~=nil and plr.Character==myChar and not isCleared do
-					if Beast~=nil and Beast~=char  
-						and enHacks.AutoCamp and TSM.Captured.Value then
-						teleportMyself(CFrame.new(Beast.PrimaryPart.CFrame*newVector3(0,0,-3)))
-						--AvailableHacks.Basic[12].TeleportFunction(Beast.PrimaryPart.CFrame*newVector3(0,0,-3))
-					elseif not enHacks.AutoCamp then
-						hackChanged.Event:Wait()
-					else
-						workspace.DescendantAdded:Wait() wait(1/3)
-					end
-					wait()
-				end--]]
-				end),
-			}),
-		[90]=
-			{
-				["Type"]="ExTextButton",
-				["Title"]="Perma Slow Beast",
-				["Desc"]="Perm Slows Beast when its not u",
-				["Shortcut"]="PermSlowBeast",
-				["Default"]=false,
-				["ActivateFunction"]=function()
-					if Beast~=nil and Beast~=char then
-					AvailableHacks.Blatant[90].OthersBeastAdded(nil,Beast);
-				end;
-				end,
-				["OthersBeastAdded"] = function(nun,beastChar)
-					local Humanoid=beastChar:WaitForChild("Humanoid",(waitForChildTimout))
-					if ((not Humanoid) or ((Humanoid.Health) <=0)) then
-					return
-				end
-
-					local function changeSpeed()
-						local BeastPowers = beastChar:WaitForChild("BeastPowers", (waitForChildTimout));
-						if (not BeastPowers) then
-						return false;
-					end
-						local BeastEvent = BeastPowers:WaitForChild("PowersEvent", (waitForChildTimout)) ;
-						if not BeastEvent then
-						return false;
-					end;
-						if ((not enHacks.PermSlowBeast) or (not (workspace:IsAncestorOf(BeastEvent)))) then
-						return false;
-					end
-						BeastEvent:FireServer("Jumped");
-						return true;
-					end
-					local setChangedAttributeUpdate_INPUT = (enHacks.PermSlowBeast and changeSpeed) ;
-					setChangedAttribute(Humanoid,"WalkSpeed", setChangedAttributeUpdate_INPUT);
-					while (enHacks.PermSlowBeast and (changeSpeed())) do
-					task.wait();
-				end;
-				end,
-				["OthersBeastRemoved"] = function(nun,beastChar)
-					if beastChar==nil then
-					return
-				end
-					local Humanoid = beastChar:WaitForChild("Humanoid", 20)
-					if Humanoid==nil or Humanoid.Health<=0 then
-					return
-				end
-					setChangedAttribute(Humanoid,"WalkSpeed",nil)
-				end,
-			},
-		[66]={
-			["Type"]="ExTextButton",
-			["Title"]="Auto Beast Hit",
-			["Desc"]="Beast AUTO hits when near",
-			["Shortcut"]="AutoBeastHit",
-			["DontActivate"]=false,
-			["Default"]="None",
-			["Options"]={
-				["None"]={
-					["Title"]="NONE",
-					["TextColor"]=newColor3(255)
-				},
-				["Me"]={
-					["Title"]="ME ONLY",
-					["TextColor"]=newColor3(255,255)
-				},
-				["All"]={
-					["Title"]="ALL",
-					["TextColor"]=newColor3(0,255)
-				}
-			},
-			["BeastStartUp"]=function()
-				local saveState=enHacks.AutoBeastHit
-				local beast=Beast--the current Beast
-				local Hammer=beast:WaitForChild("Hammer",2)
-				while beast~=nil and beast.Parent~=nil and Hammer and Hammer.Parent and enHacks.AutoBeastHit==saveState
-					and (enHacks.AutoBeastHit=="All" 
-						or (enHacks.AutoBeastHit=="Me" and beast==char)) do
-					for num,theirPlr in pairs(PS:GetPlayers()) do
-						if theirPlr~=nil and theirPlr.Character~=nil then
-							local theirChar=theirPlr.Character
-							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
-							if TSM~=nil and not TSM.Captured.Value and not TSM.Ragdoll.Value then
-								local Dist=(Hammer.Handle.Position-theirChar.PrimaryPart.Position).magnitude
-								if Dist<10 then
-									Hammer.HammerEvent:FireServer("HammerHit", theirChar.Head)
-
-								end
-							end
-						end
-					end
-					RunS.PreAnimation:Wait()
-				end
-			end,
-			["ActivateFunction"]=function(newValue)
-				if newValue~="None" and Beast then
-					AvailableHacks.Blatant[66].BeastStartUp()
-				end
-			end,
-			["MyPlayerAdded"]=function(plr)
-				AvailableHacks.Blatant[66].OthersBeastAdded=AvailableHacks.Blatant[66].BeastStartUp
-				AvailableHacks.Blatant[66].MyBeastAdded=AvailableHacks.Blatant[66].BeastStartUp
-			end,
-		},
-		[70]={
-			["Type"]="ExTextButton",
-			["Title"]="Insta Rope",
-			["Desc"]="Beast INSTA ropes downed users when near",
-			["Shortcut"]="AutoBeastRope",
-			["DontActivate"]=false,
-			["Default"]="None",
-			["Options"]=({
-				["None"]={
-					["Title"]="NONE",
-					["TextColor"]=(newColor3(255)),
-				},
-				["Me"]={
-					["Title"]="ME ONLY",
-					["TextColor"]=(newColor3(255,255)),
-				},
-				["All"]={
-					["Title"]="ALL",
-					["TextColor"]=(newColor3(0,255)),
-				}
-			}),
-			["BeastStartUp"]=function()
-				local saveState=enHacks.AutoBeastRope
-				local beast=Beast--the current Beast
-				local Hammer=beast:WaitForChild("Hammer",2)
-				local Handle=Hammer:WaitForChild("Handle",5)
-				local CarriedTorso = beast:WaitForChild("CarriedTorso",2)
-				while (beast~=nil and beast.Parent~=nil and Hammer~=nil and enHacks.AutoBeastRope==saveState and CarriedTorso and (enHacks.AutoBeastRope=="All" or (enHacks.AutoBeastRope=="Me" and beast==char))) do
-					for num,theirPlr in ipairs(PS:GetChildren()) do
-						if theirPlr~=nil and theirPlr.Character~=nil then
-							local theirChar=theirPlr.Character
-							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
-							if TSM~=nil and not TSM.Captured.Value and TSM.Ragdoll.Value then
-								local Dist=(Handle.Position-theirChar.PrimaryPart.Position).magnitude
-								if Dist<14 then
-									Hammer.HammerEvent:FireServer("HammerTieUp",theirChar.Torso,theirChar.Torso.Position)
-								end
-							end
-						end
-					end
-					RunS.PreAnimation:Wait()
-					while CarriedTorso and CarriedTorso.Value and CarriedTorso.Value.Parent do
-						CarriedTorso.Changed:Wait()
-					end
-				end
-			end,
-			["ActivateFunction"]=function(newValue)
-				if newValue~="None" and Beast then
-					AvailableHacks.Blatant[70].BeastStartUp()
-				end
-			end,
-			["MyPlayerAdded"]=function(plr)
-				AvailableHacks.Blatant[70].OthersBeastAdded=AvailableHacks.Blatant[70].BeastStartUp
-				AvailableHacks.Blatant[70].MyBeastAdded=AvailableHacks.Blatant[70].BeastStartUp
 			end,
 		},
 
@@ -4856,7 +4150,7 @@ AvailableHacks ={
 						result=({["Position"]=position2})
 					end
 				else
-					result = {["Position"] = target}
+					result = {["Position"] = position2}
 				end
 				--if not isCFrame then
 				local orientation
@@ -4930,20 +4224,25 @@ AvailableHacks ={
 			},
 			["Universes"]={"Global"},
 			["InstanceAdded"]=function(object)
-				CS:AddTag(object,"InviWalls")
-				object.CanCollide = false
-				object.CastShadow = false
-				object.Transparency = enHacks.Basic_InviWalls=="Invisible" and 1 or .85
-				object.Color = Color3.fromRGB(0,0,200)
+				if not object.Parent or object.Parent.Name=="Door" then
+					return
+				end
+				if ((object.Transparency>=.95 and object.CanCollide) or object:HasTag("InviWalls")) and GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y then
+					CS:AddTag(object,"InviWalls")
+					object.CanCollide = false
+					object.CastShadow = false
+					object.Transparency = enHacks.Basic_InviWalls=="Invisible" and 1 or .85
+					object.Color = Color3.fromRGB(0,0,200)
+				end
 			end,
 			["ApplyInvi"]=function(instance)
 				--local start = os.clock()
 				local saveEn = enHacks.Basic_InviWalls
 				for num, object in ipairs(instance:GetDescendants()) do
-					if object:IsA("BasePart") and ((object.Transparency>=.95 and object.CanCollide) or object:HasTag("InviWalls")) then
+					if object:IsA("BasePart") then
 						AvailableHacks.Basic[20].InstanceAdded(object)
 					end
-					if num%70==0 then
+					if num%250==0 then
 						RunS.RenderStepped:Wait()
 					end
 					if saveEn ~= enHacks.Basic_InviWalls then
@@ -5082,6 +4381,719 @@ AvailableHacks ={
 				clear(true)
 			end,
 		},
+	},
+	["Beast"]={
+		[2]={
+			["Type"]="ExTextButton",
+			["Title"]="Crawl as Beast",
+			["Desc"]="Very obvious",
+			["Shortcut"]="OverrideCrawl",
+			["LoadedAnim"]=nil,
+			["Default"]=false,
+			["DontActivate"]=true,
+			["ActivateFunction"]=function(newValue)
+				--AvailableHacks.Beast[2].SetScriptActive()
+				if not newValue then
+					AvailableHacks.Beast[2].Crawl(false)
+				end
+			end,
+			["MyStartUp"]=function()
+				if AvailableHacks.Beast[2].LoadedAnim~=nil then
+					AvailableHacks.Beast[2].LoadedAnim:Destroy()
+				end
+				AvailableHacks.Beast[2].IsCrawling=false
+				local CrawlScript=char:WaitForChild("CrawlScript") 
+				if CrawlScript==nil then
+					return
+				end
+				for num,animTrack in pairs(char.Humanoid.Animator:GetPlayingAnimationTracks()) do
+					if animTrack.Animation.AnimationId=="rbxassetid://961932719" then
+						animTrack:Stop(0)
+						animTrack:Destroy()
+						human.HipHeight=0
+					end
+				end
+				CrawlScript.Disabled=true
+				local animTrack=human:WaitForChild("Animator"):LoadAnimation(CrawlScript:WaitForChild("AnimCrawl"))
+				AvailableHacks.Beast[2].LoadedAnim=animTrack
+				local function keyAction(actionName, inputState, inputObject)
+					local shouldHold = enHacks.Util_CrawlType=="Default" and Enum.UserInputType.Keyboard == inputObject.UserInputType or enHacks.Util_CrawlType=="Hold"
+					if shouldHold then
+						if inputState==Enum.UserInputState.Begin then
+							AvailableHacks.Beast[2].Crawl(true)
+						elseif inputState==Enum.UserInputState.End then
+							AvailableHacks.Beast[2].Crawl(false)
+						end
+					elseif inputState == Enum.UserInputState.Begin then
+						local inverse = not AvailableHacks.Beast[2].IsCrawling;
+						AvailableHacks.Beast[2].Crawl(inverse);
+					end
+				end
+				local button = getDictLength(CAS:GetBoundActionInfo("Crawl"))>0 and CAS:GetButton("Crawl")
+				local setPosition = plr:GetAttribute("CrawlPosition") or UDim2_new(1, -220, 1, -90)
+				if button then
+					setPosition = button.Position
+					plr:SetAttribute("CrawlPosition",setPosition)
+				end
+				CAS:UnbindAction("Crawl")
+				CAS:BindActionAtPriority("Crawl"..saveIndex, keyAction, true, 100, Enum.KeyCode.LeftShift, Enum.KeyCode.ButtonL2)
+				RunS.RenderStepped:Wait()
+				CAS:SetTitle("Crawl"..saveIndex, "C")
+				CAS:SetPosition("Crawl"..saveIndex,setPosition);
+
+				local function HumanRunningFunction(speed)
+					if speed > 0.5 then
+						animTrack:AdjustSpeed(2)
+					else
+						animTrack:AdjustSpeed(0)
+					end
+				end
+				table.insert(functs,(human.Running:Connect(HumanRunningFunction)))
+				local inputToCrawlFunction_INPUT = UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2)
+				AvailableHacks.Beast[2].Crawl(inputToCrawlFunction_INPUT)
+			end,
+			["MyPlayerAdded"]=function()
+				local function crawlFunction()
+					AvailableHacks.Blatant[(2)].Crawl()
+				end
+
+				table.insert(functs, myTSM:WaitForChild("DisableCrawl").Changed:Connect(function()
+					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
+					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
+					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
+					CAS:UnbindAction("Crawl")
+				end))
+			end,
+			["IsCrawling"]=false,
+			["Crawl"]=function(set)
+				local TSM = plr:WaitForChild("TempPlayerStatsModule");
+				local animTrack = AvailableHacks.Beast[2].LoadedAnim;
+				local shouldReturn = not animTrack or not human or human.Health <= 0;
+				if shouldReturn then
+					return;
+				end
+				local argument = set and (enHacks.OverrideCrawl or not TSM.DisableCrawl.Value);
+				if argument then
+					local hipHeight = -2;
+					human.HipHeight = hipHeight;
+					local arg1 = 0.1;
+					local arg2 = 1.0;
+					local arg3 = 0.0;
+					animTrack:Play(arg1, arg2, arg3);
+					human.WalkSpeed = 8;
+					AvailableHacks.Beast[2].IsCrawling = true;
+				else
+					human.HipHeight = 0;
+					animTrack:Stop();
+					human.WalkSpeed = (((human.WalkSpeed==8) and 16) or human.WalkSpeed);
+					AvailableHacks.Beast[2].IsCrawling=false;
+				end
+				TSM.IsCrawling.Value = AvailableHacks.Beast[2].IsCrawling;
+			end,
+		},
+		[60] = 
+			{
+				["Type"] = "ExTextButton",
+				["Title"] = "Auto Capture",
+				["Desc"] = "Instantly capture other survivors",
+				["Shortcut"] = "AutoCapture",
+				["Default"] = botModeEnabled,
+				["ActivateFunction"] = (function(newValue)
+
+					local TSM = plr:WaitForChild("TempPlayerStatsModule");
+					local TSM_IsBeast = TSM:WaitForChild("IsBeast");
+
+					local function BlatantChangedFunction()
+						AvailableHacks.Beast[60].ChangedFunction();
+					end
+					local inputChangedAttribute_INPUT = (newValue and BlatantChangedFunction);
+					setChangedAttribute(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
+					AvailableHacks.Beast[60].ChangedFunction();
+				end),
+				["CaptureSurvivor"] = function(theirPlr,theirChar,override)
+					local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
+					if not TSM:WaitForChild("IsBeast") or not Beast then
+					return
+				end
+					if Beast.CarriedTorso.Value==nil then
+					return
+				end
+					if not enHacks.AutoCapture and not override then
+					return
+				end
+					--if enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
+					local capsule,closestDist=nil,10000
+					for num,cap in pairs(CS:GetTagged("Capsule")) do
+					if cap.PrimaryPart~=nil then
+						local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
+						if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
+							capsule,closestDist=cap,dist
+						end
+					end
+				end
+					--print("Capturing survivor!")
+					if not capsule then
+					warn("Capsule Not Found For",theirPlr,theirChar)
+					return
+				end
+					local Trigger = capsule:WaitForChild("PodTrigger",5)
+					for s=1,3,1 do
+					local isOpened = (Trigger.ActionSign.Value==11)
+					if Trigger and Trigger.CapturedTorso.Value~=nil or not enHacks.AutoCapture then 
+						break --we got ourselves a trapped survivor!
+					elseif s~=1 then
+						wait(.15)
+					end
+					if Trigger:FindFirstChild("Event") then
+						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+						if isOpened then
+							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+						end
+					end
+				end
+				end,
+				["ChangedFunction"]=function()
+					local TSM=plr:WaitForChild("TempPlayerStatsModule")
+					if not TSM:WaitForChild("IsBeast").Value then
+					return
+				end
+					local CarriedTorso=char:WaitForChild("CarriedTorso",20)
+					if CarriedTorso~=nil then
+					local function captureSurvivorFunction()
+						AvailableHacks.Beast[60].CaptureSurvivor(plr,char)
+					end
+					local input = enHacks.AutoCapture and captureSurvivorFunction
+					setChangedAttribute(CarriedTorso,"Value",input)
+					AvailableHacks.Beast[60].CaptureSurvivor(plr,char)
+				else
+					warn("rope not found!!!! hackssss bro!", char:GetFullName())
+				end
+				end,
+
+
+				--["MyStartUp"]=function()
+				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				setChangedAttribute(
+					TSM:WaitForChild("IsBeast"),
+					"Value",enHacks.AutoCapture and function()
+						AvailableHacks.Beast[60].ChangedFunction()
+					end or false)--]]
+				--AvailableHacks.Beast[60].ChangedFunction()
+				--end,
+
+
+				["MyBeastAdded"]=function(theirPlr,theirChar)
+					AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
+				end,
+				--["OthersBeastAdded"]=function(theirPlr,theirChar)
+				--	AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
+				--end,
+			},
+		[66]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Beast Hit",
+			["Desc"]="Beast AUTO hits when near",
+			["Shortcut"]="AutoBeastHit",
+			["DontActivate"]=false,
+			["Default"]="None",
+			["Options"]={
+				["None"]={
+					["Title"]="NONE",
+					["TextColor"]=newColor3(255)
+				},
+				["Me"]={
+					["Title"]="ME ONLY",
+					["TextColor"]=newColor3(255,255)
+				},
+				["All"]={
+					["Title"]="ALL",
+					["TextColor"]=newColor3(0,255)
+				}
+			},
+			["BeastStartUp"]=function()
+				local saveState=enHacks.AutoBeastHit
+				local beast=Beast--the current Beast
+				local Hammer=beast:WaitForChild("Hammer",2)
+				while beast~=nil and beast.Parent~=nil and Hammer and Hammer.Parent and enHacks.AutoBeastHit==saveState
+					and (enHacks.AutoBeastHit=="All" 
+						or (enHacks.AutoBeastHit=="Me" and beast==char)) do
+					for num,theirPlr in pairs(PS:GetPlayers()) do
+						if theirPlr~=nil and theirPlr.Character~=nil then
+							local theirChar=theirPlr.Character
+							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
+							if TSM~=nil and not TSM.Captured.Value and not TSM.Ragdoll.Value then
+								local Dist=(Hammer.Handle.Position-theirChar.PrimaryPart.Position).magnitude
+								if Dist<10 then
+									Hammer.HammerEvent:FireServer("HammerHit", theirChar.Head)
+
+								end
+							end
+						end
+					end
+					RunS.PreAnimation:Wait()
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				if newValue~="None" and Beast then
+					AvailableHacks.Beast[66].BeastStartUp()
+				end
+			end,
+			["MyPlayerAdded"]=function(plr)
+				AvailableHacks.Beast[66].OthersBeastAdded=AvailableHacks.Beast[66].BeastStartUp
+				AvailableHacks.Beast[66].MyBeastAdded=AvailableHacks.Beast[66].BeastStartUp
+			end,
+		},
+		[70]={
+			["Type"]="ExTextButton",
+			["Title"]="Insta Rope",
+			["Desc"]="Beast INSTA ropes downed users when near",
+			["Shortcut"]="AutoBeastRope",
+			["DontActivate"]=false,
+			["Default"]="None",
+			["Options"]=({
+				["None"]={
+					["Title"]="NONE",
+					["TextColor"]=(newColor3(255)),
+				},
+				["Me"]={
+					["Title"]="ME ONLY",
+					["TextColor"]=(newColor3(255,255)),
+				},
+				["All"]={
+					["Title"]="ALL",
+					["TextColor"]=(newColor3(0,255)),
+				}
+			}),
+			["BeastStartUp"]=function()
+				local saveState=enHacks.AutoBeastRope
+				local beast=Beast--the current Beast
+				local Hammer=beast:WaitForChild("Hammer",2)
+				local Handle=Hammer:WaitForChild("Handle",5)
+				local CarriedTorso = beast:WaitForChild("CarriedTorso",2)
+				while (beast~=nil and beast.Parent~=nil and Hammer~=nil and enHacks.AutoBeastRope==saveState and CarriedTorso and (enHacks.AutoBeastRope=="All" or (enHacks.AutoBeastRope=="Me" and beast==char))) do
+					for num,theirPlr in ipairs(PS:GetChildren()) do
+						if theirPlr~=nil and theirPlr.Character~=nil then
+							local theirChar=theirPlr.Character
+							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
+							if TSM~=nil and not TSM.Captured.Value and TSM.Ragdoll.Value then
+								local Dist=(Handle.Position-theirChar.PrimaryPart.Position).magnitude
+								if Dist<14 then
+									Hammer.HammerEvent:FireServer("HammerTieUp",theirChar.Torso,theirChar.Torso.Position)
+								end
+							end
+						end
+					end
+					RunS.PreAnimation:Wait()
+					while CarriedTorso and CarriedTorso.Value and CarriedTorso.Value.Parent do
+						CarriedTorso.Changed:Wait()
+					end
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				if newValue~="None" and Beast then
+					AvailableHacks.Blatant[70].BeastStartUp()
+				end
+			end,
+			["MyPlayerAdded"]=function(plr)
+				AvailableHacks.Blatant[70].OthersBeastAdded=AvailableHacks.Blatant[70].BeastStartUp
+				AvailableHacks.Blatant[70].MyBeastAdded=AvailableHacks.Blatant[70].BeastStartUp
+			end,
+		},
+
+	},
+	["Runner"]={
+		[3]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Remove Rope",
+			["Desc"]="Automatically Beast's Removes Rope When Runner",
+			["Shortcut"]="AutoRemoveRope",
+			["Options"]={
+				[false]={
+					["Title"]="NOBODY",
+					["TextColor"]=newColor3(255),
+				},
+				["Me"]={
+					["Title"]="ME",
+					["TextColor"]=newColor3(0,0,255),
+				},
+				["Everyone"]={
+					["Title"]="EVERYONE",
+					["TextColor"]=newColor3(255, 255, 0),
+				},
+			},
+			["Default"]=false,
+			["ChangedFunction"]=function(newSet)
+				--print("begun")
+				if Beast==nil then
+					return
+				end
+				local CarriedTorso=Beast:FindFirstChild("CarriedTorso")
+				if CarriedTorso==nil then
+					return
+				end
+				while newSet~=nil and CarriedTorso.Value~=newSet do
+					--print("waiting")
+					task.wait(1/3)
+				end
+				local Hammer=Beast:WaitForChild("Hammer")
+				if Hammer==nil or not enHacks.AutoRemoveRope then
+					return
+				end
+				if not char:IsAncestorOf(CarriedTorso.Value) and enHacks.AutoRemoveRope=="Me" then
+					--print("cancelled ", char:GetFullName())
+					return
+				end
+				for s=2,1,-1 do
+					if CarriedTorso.Value==nil then
+						break
+					end
+					--print("activated")
+					Hammer.HammerEvent:FireServer("HammerClick", true)
+					wait(.05)
+				end
+				--print("finished")
+			end,
+			["ActivateFunction"]=function()
+				if workspace:IsAncestorOf(Beast) and Beast~=char then
+					setChangedAttribute(Beast:WaitForChild("CarriedTorso",30),"Value",false)--deletes the last function!
+					AvailableHacks.Runner[3].OthersBeastAdded(
+						PS:GetPlayerFromCharacter(Beast),Beast)
+				end
+				--AvailableHacks.Runner[3].ChangedFunction()
+			end,
+			["OthersBeastAdded"]=function(theirPlr,theirChar)
+				local CarriedTorso=theirChar:WaitForChild("CarriedTorso",30)
+				if CarriedTorso==nil then
+					return
+				end
+				wait(.5)
+				setChangedAttribute(CarriedTorso,"Value",enHacks.AutoRemoveRope and (function(newRopee)
+					AvailableHacks.Runner[3].ChangedFunction(newRopee)
+				end) or false)
+				AvailableHacks.Runner[3].ChangedFunction()
+			end,
+			--["MyBeastAdded"]=function(...)
+			--	AvailableHacks.Runner[3].OthersBeastAdded(...)
+			--end
+		},
+		[7]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Add Rope",
+			["Desc"]="Automatically adds rope when player is hit",
+			["Shortcut"]="AutoAddRope",
+			["Options"]={
+				[false]={
+					["Title"]="NOBODY",
+					["TextColor"]=newColor3(255),
+				},
+				["Me"]={
+					["Title"]="ME",
+					["TextColor"]=newColor3(0,0,255),
+				},
+				["Everyone"]={
+					["Title"]="EVERYONE",
+					["TextColor"]=newColor3(255, 255, 0),
+				},
+			},
+			["Default"]=false,
+			["RopeSurvivor"]=function(TSM,theirPlr,override)
+				if (enHacks.AutoAddRope~="Everyone" and (enHacks.AutoAddRope~="Me" or Beast~=char)) and not override then
+					return
+				end
+				if (not Beast or not TSM.Ragdoll.Value) then
+					return
+				end
+				local CarriedTorso=Beast:FindFirstChild("CarriedTorso")
+				if CarriedTorso==nil or CarriedTorso.Value then
+					return
+				end
+				Beast.Hammer.HammerEvent:FireServer("HammerTieUp",theirPlr.Character.Torso,theirPlr.Character.Torso.NeckAttachment.WorldPosition)
+			end,
+			["ChangedFunction"]=function(TSM,theirPlr,loop)
+				if (not TSM.Ragdoll.Value or not Beast) then
+					return
+				end
+				local CarriedTorso=Beast:FindFirstChild("CarriedTorso")
+				while (Beast and CarriedTorso.Value and TSM.Ragdoll.Value and loop and not isCleared) do
+					CarriedTorso.Changed:Wait()
+				end
+				AvailableHacks.Runner[7].RopeSurvivor(TSM,theirPlr)
+				--deletes the last function!
+			end,
+			["ActivateFunction"]=function(newVal)
+				if newVal then
+					--for num, theirPlr in ipairs(PS:GetPlayers()) do
+					--	AvailableHacks.Runner[7].ChangedFunction(theirPlr:WaitForChild("TempPlayerStatsModule"),theirPlr)
+					--end
+					for num,theirPlr in ipairs(PS:GetPlayers()) do
+						AvailableHacks.Runner[7].PlayerAdded(theirPlr)
+					end
+				end
+			end,
+			["PlayerAdded"]=function(theirPlr)
+				local TSM = theirPlr:WaitForChild("TempPlayerStatsModule")
+				local funct = function()
+					AvailableHacks.Runner[7].ChangedFunction(TSM,theirPlr,true)
+				end
+				local myInput = (enHacks.AutoAddRope and funct)
+				setChangedAttribute(TSM:WaitForChild("Ragdoll",30),"Value", myInput)
+				AvailableHacks.Runner[7].ChangedFunction(TSM,theirPlr,false)
+			end,
+			["MyPlayerAdded"]=function(myPlr)
+				AvailableHacks.Runner[7].PlayerAdded(myPlr)
+			end,
+			["OthersPlayerAdded"]=function(theirPlr)
+				AvailableHacks.Runner[7].PlayerAdded(theirPlr)
+			end,
+		},
+		[71]={
+			["Type"]="ExTextButton",
+			["Title"]="Panic When Hit",
+			["Desc"]="Instantly fly around while hit",
+			["Shortcut"]="Panic",
+			["Default"]=false,
+			["Triggered"]=function()
+				local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				if not enHacks.Panic or char:FindFirstChild("Head")==nil or not TSM.Ragdoll.Value then
+					return
+				end
+				local newVel=Instance.new("BodyVelocity",char.Head)
+				newVel.MaxForce = (newVector3(3000,3000,3000)*2.25)
+				newVel.P = 3e3
+				CS:AddTag(newVel,"RemoveOnDestroy")
+				local function RagdollPanicThreadFunction()
+					while (enHacks.Panic and TSM.Ragdoll.Value and not TSM.Captured.Value and not isCleared) do
+						newVel.Velocity = (Random.new():NextUnitVector()*5e2)
+						task.wait(.065)
+					end
+					newVel.Velocity=newVector3(0,0,0)
+					DS:AddItem(newVel,.1)
+				end
+				task.spawn(RagdollPanicThreadFunction)
+
+			end,
+			["SetChanged"]=function(shouldntTrigger)
+				local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				local function theFunction()
+					AvailableHacks.Runner[71].Triggered()
+				end
+				local theArg = ((enHacks.Panic and (theFunction)) or false)
+				setChangedAttribute(TSM:WaitForChild("Ragdoll"),"Value",theArg)
+				if shouldntTrigger~=true then
+					AvailableHacks.Runner[71].Triggered()
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				AvailableHacks.Runner[71].SetChanged()
+			end,
+			["MyPlayerAdded"]=function()
+				AvailableHacks.Runner[71].SetChanged(true)
+			end,
+			["MyStartUp"]=function()
+				AvailableHacks.Runner[71].Triggered()
+			end,
+		},
+		[76] = (
+			{
+				["Type"]="ExTextButton",
+				["Title"]="Respawn Before Hit",
+				["Desc"]="Despawns and respawns character before hit",
+				["Shortcut"]="RespawnBeforeHit",
+				["Default"]=false,
+				["OthersBeastAdded"] = function(myBeastPlr,myBeast)
+					local TSM=plr:WaitForChild("TempPlayerStatsModule")
+					while (myBeast~=nil and workspace:IsAncestorOf(myBeast) and myBeast.PrimaryPart and not isCleared and myBeast==Beast and char~=myBeast) do
+						if (not TSM.Ragdoll.Value and enHacks.RespawnBeforeHit and not TSM.Captured.Value) then
+							local whieList = {"Whitelist",Map,myBeast}
+							local didHit,instance=raycast(char.PrimaryPart.Position,myBeast:GetPivot().Position,whieList,18,nil,true)
+							if (didHit and myBeast:IsAncestorOf(instance) and not TSM.Ragdoll.Value and not TSM.Captured.Value) then
+								AvailableHacks.Commands[24].ActivateFunction(true)
+
+
+
+
+								local newChar = plr.CharacterAdded:Wait()
+								repeat
+									RunS.RenderStepped:Wait()
+								until newChar.PrimaryPart
+							end
+						elseif not enHacks.RespawnBeforeHit then
+							hackChanged.Event:Wait()
+						end
+						RunS.RenderStepped:Wait()
+					end
+				end,
+			}
+		),
+		[80]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Rescue",
+			["Desc"]="Instantly rescue when NOT beast",
+			["Shortcut"]="AutoRescue",
+			["Default"]=false,
+			["ActivateFunction"]=function(newValue)
+				for num, capsule in pairs(CS:GetTagged("Capsule")) do
+					if capsule:FindFirstChild("PodTrigger")~=nil then
+						setChangedAttribute(
+							capsule.PodTrigger:FindFirstChild("CapturedTorso"),
+							"Value",newValue and function()
+								AvailableHacks.Runner[80].RescueSurvivor(capsule)
+							end or false)
+						AvailableHacks.Runner[80].RescueSurvivor(capsule)
+					end
+				end
+			end,
+			["RescueSurvivor"]=function(capsule,override)
+				if capsule.PodTrigger.CapturedTorso.Value==nil then return end
+				if not enHacks.AutoRescue and not override then return end
+				if char:FindFirstChild("Hammer")~=nil then return end
+				local Trigger=capsule.PodTrigger
+				for s=5,1,-1 do
+					if capsule.PodTrigger.CapturedTorso.Value==nil then
+						return true
+					elseif not workspace:IsAncestorOf(Trigger) then 
+						break
+					end
+					local isOpened=Trigger.ActionSign.Value==11
+					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+					if isOpened then
+						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+					end
+					wait(.075)
+					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", false)
+					wait(.075)
+				end
+			end,
+			["CapsuleAdded"]=function(capsule)
+				if capsule:FindFirstChild("PodTrigger")~=nil then
+					wait(.5)
+					setChangedAttribute(
+						capsule.PodTrigger:FindFirstChild("CapturedTorso"),
+						"Value",enHacks.AutoRescue and (function()
+							AvailableHacks.Runner[80].RescueSurvivor(capsule)
+						end) or false)
+				end
+			end,
+		},
+		[86]=
+			({
+				["Type"]="ExTextButton",
+				["Title"]="Auto Beast Troll",
+				["Desc"]="Trolls beast automatically",
+				["Shortcut"]="AutoTroll",
+				["IsRunning"]=false,
+				["Default"]=false,
+				["CleanUp"]=(function()
+					AvailableHacks.Runner[86].IsRunning=false
+				end),
+				["ActivateFunction"]=(function(enabled)
+					if enabled then
+					AvailableHacks.Runner[86].OthersBeastAdded()
+				end
+				end),
+				["OthersBeastAdded"]=(function()
+					if AvailableHacks.Runner[86].IsRunning then
+					return
+				end
+					if Beast==char then
+					return
+				end
+					AvailableHacks.Runner[86].IsRunning=true
+					while AvailableHacks.Runner[86].IsRunning and Beast~=nil and workspace:IsAncestorOf(Beast) and enHacks.AutoTroll do
+					local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),Beast.PrimaryPart.Position,20,1.5)
+					if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
+						and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
+						--print("closed door")
+						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", false)
+						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+						--task.wait()
+						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
+						--task.wait()
+						--AvailableHacks.Blatant[10].CloseDoor(Trigger)
+						local wasClosed = Trigger.ActionSign.Value ~= 11 
+						AvailableHacks.Blatant[15].DoorFuncts[Trigger.Parent]()
+						if wasClosed then
+							task.wait(2/3)
+							RS.RemoteEvent:FireServer("Input", "Trigger", false)
+						else
+							RunS.RenderStepped:Wait()
+						end
+					else
+						RunS.RenderStepped:Wait()
+					end
+				end
+					AvailableHacks.Runner[86].IsRunning=false
+				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				local myChar=char
+				while myChar~=nil and workspace:IsAncestorOf(myChar) 
+					and myChar.PrimaryPart~=nil and plr.Character==myChar and not isCleared do
+					if Beast~=nil and Beast~=char  
+						and enHacks.AutoCamp and TSM.Captured.Value then
+						teleportMyself(CFrame.new(Beast.PrimaryPart.CFrame*newVector3(0,0,-3)))
+						--AvailableHacks.Basic[12].TeleportFunction(Beast.PrimaryPart.CFrame*newVector3(0,0,-3))
+					elseif not enHacks.AutoCamp then
+						hackChanged.Event:Wait()
+					else
+						workspace.DescendantAdded:Wait() wait(1/3)
+					end
+					wait()
+				end--]]
+				end),
+			}),
+		[90]=
+			{
+				["Type"]="ExTextButton",
+				["Title"]="Perma Slow Beast",
+				["Desc"]="Perm Slows Beast when its not u",
+				["Shortcut"]="PermSlowBeast",
+				["Default"]=false,
+				["ActivateFunction"]=function()
+					if Beast~=nil and Beast~=char then
+					AvailableHacks.Runner[90].OthersBeastAdded(nil,Beast);
+				end;
+				end,
+				["OthersBeastAdded"] = function(nun,beastChar)
+					local Humanoid=beastChar:WaitForChild("Humanoid",(waitForChildTimout))
+					if ((not Humanoid) or ((Humanoid.Health) <=0)) then
+					return
+				end
+
+					local function changeSpeed()
+						local BeastPowers = beastChar:WaitForChild("BeastPowers", (waitForChildTimout));
+						if (not BeastPowers) then
+						return false;
+					end
+						local BeastEvent = BeastPowers:WaitForChild("PowersEvent", (waitForChildTimout)) ;
+						if not BeastEvent then
+						return false;
+					end;
+						if ((not enHacks.PermSlowBeast) or (not (workspace:IsAncestorOf(BeastEvent)))) then
+						return false;
+					end
+						BeastEvent:FireServer("Jumped");
+						return true;
+					end
+					local setChangedAttributeUpdate_INPUT = (enHacks.PermSlowBeast and changeSpeed) ;
+					setChangedAttribute(Humanoid,"WalkSpeed", setChangedAttributeUpdate_INPUT);
+					while (enHacks.PermSlowBeast and (changeSpeed())) do
+					task.wait();
+				end;
+				end,
+				["OthersBeastRemoved"] = function(nun,beastChar)
+					if beastChar==nil then
+					return
+				end
+					local Humanoid = beastChar:WaitForChild("Humanoid", 20)
+					if Humanoid==nil or Humanoid.Health<=0 then
+					return
+				end
+					setChangedAttribute(Humanoid,"WalkSpeed",nil)
+				end,
+			},
+
 	},
 	["Bot"] = {
 		[15] = {
@@ -5245,7 +5257,7 @@ AvailableHacks ={
 					local getTouchingPartsList = Torso:GetTouchingParts()
 					for num,part in ipairs(getTouchingPartsList) do
 						if part.Name=="VentPartWalkThru" then
-							AvailableHacks.Blatant[2].Crawl(true)
+							AvailableHacks.Beast[2].Crawl(true)
 							task.wait(.4)
 							local startCrawlTime=os.clock()
 							while ((table.find(Torso:GetTouchingParts(),part)~=nil) and (os.clock()-startCrawlTime < 2)) do --((part.Position-Torso.Position)/newVector3(0,math.huge,0)).magnitude<.5
@@ -5318,7 +5330,7 @@ AvailableHacks ={
 					end
 					return exitAreas
 				end
-				AvailableHacks.Blatant[2].Crawl(UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2))
+				AvailableHacks.Beast[2].Crawl(UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2))
 				while canRun(true) do
 					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
 					while #CS:GetTagged("Computer")==0 do
@@ -5327,7 +5339,7 @@ AvailableHacks ={
 						CS:GetInstanceAddedSignal("Computer"):Wait()
 						task.wait()
 						task.spawn(function()
-							AvailableHacks.Blatant[2].Crawl(AvailableHacks.Blatant[2].IsCrawling) --RS.IsGameActive.Changed:Wait() --wait(1)
+							AvailableHacks.Beast[2].Crawl(AvailableHacks.Beast[2].IsCrawling) --RS.IsGameActive.Changed:Wait() --wait(1)
 						end)
 					end
 					while RS.CurrentMap.Value==nil do
@@ -5462,7 +5474,7 @@ AvailableHacks ={
 									end
 								end
 							end
-							if AvailableHacks.Blatant[80].RescueSurvivor(targetCapsule,true) then
+							if AvailableHacks.Runner[80].RescueSurvivor(targetCapsule,true) then
 								return plr:SetAttribute("HasRescued",true)
 							end
 						end
@@ -5503,10 +5515,10 @@ AvailableHacks ={
 							if TSM.Ragdoll.Value and Beast and Beast.Parent then
 								teleportMyself(Beast:GetPivot()*CFrame.new(0,0,2))
 								RunS.RenderStepped:Wait()
-								AvailableHacks.Blatant[7].RopeSurvivor(TSM,plr,true)
+								AvailableHacks.Runner[7].RopeSurvivor(TSM,plr,true)
 								task.wait(1/2)
 								--if Beast.CarriedTorso.Value and Beast.CarriedTorso.Value.Parent==char then
-								--	AvailableHacks.Blatant[60].CaptureSurvivor(plr,char,true)
+								--	AvailableHacks.Beast[60].CaptureSurvivor(plr,char,true)
 								--end
 							end
 						end
@@ -6652,8 +6664,8 @@ clear = function(isManualClear)
 	AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
 	human:SetAttribute("OverrideSpeed",nil)
 	if AvailableHacks.Blatant then
-		AvailableHacks.Blatant[2].IsCrawling=false;--disable crawl
-		AvailableHacks.Blatant[2].Crawl(false);--disable crawl
+		AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
+		AvailableHacks.Beast[2].Crawl(false);--disable crawl
 	end
 	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
 	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do
@@ -6710,7 +6722,7 @@ getgenv()["ActiveScript"..getID] = getgenv()["ActiveScript"..getID] or {}
 if previousCopy then
 	local changedEvent=Instance.new("BindableEvent")
 	local startTime=os.clock()
-	local maxWaitTime=1
+	local maxWaitTime=3
 	local function maxWaitTimeReturnFunction()
 		if not changedEvent then
 			return

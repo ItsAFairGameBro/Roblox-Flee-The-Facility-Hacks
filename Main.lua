@@ -4224,6 +4224,7 @@ AvailableHacks ={
 				},
 			},
 			["Universes"]={"Global"},
+			["FirstClean"]=false,
 			["InstanceAdded"]=function(object)
 				if not object.Parent or object.Parent.Name=="Door" then
 					return
@@ -4253,6 +4254,13 @@ AvailableHacks ={
 				--print(("search completed after %.2f"):format(os.clock()-start))
 			end,
 			["MapAdded"]=function(newMap)
+				if not AvailableHacks.Basic[20].FirstClean then
+					AvailableHacks.Basic[20].FirstClean=true
+					AvailableHacks.Basic[20].ActivateFunction(false)
+					if enHacks.Basic_InviWalls then
+						AvailableHacks.Basic[20].ActivateFunction(enHacks.Basic_InviWalls)
+					end
+				end
 				if not RS:WaitForChild("IsGameActive").Value then
 					RS.IsGameActive.Changed:Wait()
 				end
@@ -4272,13 +4280,6 @@ AvailableHacks ={
 					end
 				end
 			end,
-			--[[["MyStartUp"]=function()
-				local isChecking=plr:WaitForChild("IsCheckingLoadData")
-				if not isChecking.Value then
-					plr:WaitForChild("PlayerGui")
-					:WaitForChild("ScreenGui"):WaitForChild("MenusTabFrame").Visible=true
-				end
-			end,--]]
 		},
 
 		[40]={
@@ -4758,8 +4759,7 @@ AvailableHacks ={
 			["ActivateFunction"]=function()
 				if workspace:IsAncestorOf(Beast) and Beast~=char then
 					setChangedAttribute(Beast:WaitForChild("CarriedTorso",30),"Value",false)--deletes the last function!
-					AvailableHacks.Runner[3].OthersBeastAdded(
-						PS:GetPlayerFromCharacter(Beast),Beast)
+					AvailableHacks.Runner[3].OthersBeastAdded(PS:GetPlayerFromCharacter(Beast),Beast)
 				end
 				--AvailableHacks.Runner[3].ChangedFunction()
 			end,
@@ -4768,7 +4768,6 @@ AvailableHacks ={
 				if CarriedTorso==nil then
 					return
 				end
-				wait(.5)
 				setChangedAttribute(CarriedTorso,"Value",enHacks.AutoRemoveRope and (function(newRopee)
 					AvailableHacks.Runner[3].ChangedFunction(newRopee)
 				end) or false)

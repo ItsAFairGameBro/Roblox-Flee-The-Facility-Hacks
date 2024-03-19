@@ -4260,8 +4260,12 @@ AvailableHacks ={
 				end
 				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor)
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y or isDoor) then
-					object:SetAttribute("OrgTrans",object.Transparency)
-					object:SetAttribute("OrgColor",object.Color)
+					if not object:GetAttribute("OrgColor") then
+						object:SetAttribute("OrgColor",object.Color)
+					end
+					if not object:GetAttribute("OrgTrans") then
+						object:SetAttribute("OrgTrans",object.Transparency)
+					end
 					CS:AddTag(object,"InviWalls")
 					object.CanCollide = false
 					object.CastShadow = false

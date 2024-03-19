@@ -4239,7 +4239,7 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["FirstClean"]=false,
 			["InstanceAdded"]=function(object)
-				local isDoor = object.Parent.Name=="Door"
+				local isDoor = object.Parent.Name=="Door" or object.Parent.Name=="DoorL" or object.Parent.Name=="DoorR"
 				if not object.Parent or --TODO HERE
 					(isDoor and not enHacks.Blatant_WalkThruDoors) then
 					return

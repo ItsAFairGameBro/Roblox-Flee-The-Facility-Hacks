@@ -4257,7 +4257,7 @@ AvailableHacks ={
 				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) then
 					return "Door"
 				else
-					local worldSize = GetAbsoluteWorldSize(object.Size)
+					local worldSize = GetAbsoluteWorldSize(object)
 					if ((worldSize.X >= 6 and worldSize.Z <= 6) or (worldSize.X <= 6 and worldSize.Z >= 6)) and worldSize.Y < 3
 						and (object:GetAttribute("OrgTrans") or object.Transparency) < .1 then
 						return "Wall"

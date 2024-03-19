@@ -4583,8 +4583,10 @@ AvailableHacks ={
 					local Trigger = capsule:WaitForChild("PodTrigger",5)
 					for s=1,3,1 do
 					local isOpened = (Trigger.ActionSign.Value==11)
-					if Trigger and Trigger.CapturedTorso.Value~=nil or not enHacks.AutoCapture then 
+					if (Trigger and Trigger.CapturedTorso.Value~=nil) then 
 						break --we got ourselves a trapped survivor!
+					elseif not enHacks.AutoCapture and not override then
+						break
 					elseif s~=1 then
 						wait(.15)
 					end

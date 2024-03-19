@@ -4255,7 +4255,6 @@ AvailableHacks ={
 				local doorNames = {"Door","DoorL","DoorR"}
 				
 				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) then
-					print("Find Door")
 					return "Door"
 				else
 					local worldSize = GetAbsoluteWorldSize(object)
@@ -4285,6 +4284,9 @@ AvailableHacks ={
 					return AvailableHacks.Basic[20].InstanceRemoved(object)	
 				end
 				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor) or (enHacks.Blatant_WalkThruWalls and isWall)
+				if isDoor then
+					print("Door",shouldBeInvi)
+				end
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=GetAbsoluteWorldSize(object).Y or isDoor or isWall) then
 					if not object:GetAttribute("OrgColor") then
 						object:SetAttribute("OrgColor",object.Color)

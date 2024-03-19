@@ -1932,7 +1932,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 end
 
 --USER COLOR COMPUTATION
---[[local ChatColors = {
+local ChatColors = {
 	newColor3(0.768628, 0.156863, 0.109804),
 	newColor3(0.0509804, 0.411765, 0.67451),
 	newColor3(0.152941, 0.27451, 0.176471),
@@ -1962,8 +1962,12 @@ local function ComputeNameColor(username)
 
 	local index = (totalValue % #ChatColors) + 1 -- Makes a number from 1 to 8 depending on totalValue, because there are 8 colors
 	return ChatColors[index]
-end--]]
+end
 
+local function GetAbsoluteWorldSize(object)
+	local worldsize = object.CFrame:VectorToWorldSpace(object.Size)
+	return Vector3.new(math.abs(worldsize.X),math.abs(worldsize.Y),math.abs(worldsize.Z))
+end
 --Important Variables:
 plr=PS.LocalPlayer
 char=plr.Character or plr.CharacterAdded:Wait()
@@ -2902,13 +2906,22 @@ AvailableHacks ={
 			["Type"]="ExTextButton",
 			["Title"]="Walk Through Doors",
 			["Desc"]="Walk Through All Doors and Exits, even if they're closed!",
-			["Shortcut"]="Blatant_WalkThruDoors",
+			["Shortcut"]="Blatant_WalkThruDoors\nRequires Basic/InviWalls",
 			["Default"]=true,
 			["ActivateFunction"]=function(newValue)
 				AvailableHacks.Basic[20].ActivateFunction(enHacks.Basic_InviWalls)
 			end,
 		},
-
+		[26]={
+			["Type"]="ExTextButton",
+			["Title"]="Walk Through Walls",
+			["Desc"]="Walk Through All Walls!\nRequires Basic/InviWalls",
+			["Shortcut"]="Blatant_WalkThruWalls",
+			["Default"]=true,
+			["ActivateFunction"]=function(newValue)
+				AvailableHacks.Basic[20].ActivateFunction(enHacks.Basic_InviWalls)
+			end,
+		},
 	},
 	["Utility"]={
 		[1]={
@@ -3663,7 +3676,7 @@ AvailableHacks ={
 					i = i + 1
 					if i==1250 then
 						i=0
-						task.wait()
+						RunS.RenderStepped:Wait()
 					end
 				end
 
@@ -4240,7 +4253,8 @@ AvailableHacks ={
 			["FirstClean"]=false,
 			["GetStructure"]=function(object)
 				local doorNames = {"Door","DoorL","DoorR"}
-				return ((table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name)) and "Door")
+				return ((table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name)) and "Door") or 
+					(GetAbsoluteWorldSize(object).Y >= 6 and (object:GetAttribute("OrgTrans") or object.Transparency) < .1 and "Wall")
 			end,
 			["InstanceRemoved"]=function(object)
 				local structure = AvailableHacks.Basic[20].GetStructure(object)
@@ -4254,13 +4268,13 @@ AvailableHacks ={
 			end,
 			["InstanceAdded"]=function(object)
 				local structure = AvailableHacks.Basic[20].GetStructure(object)
-				local isDoor = structure=="Door"
+				local isDoor,isWall = structure=="Door",structure=="Wall"
 				if not object.Parent then
 					return
-				elseif (isDoor and not enHacks.Blatant_WalkThruDoors) then
+				elseif (isDoor and not enHacks.Blatant_WalkThruDoors) or (isWall and not enHacks.Blatant_WalkThruWalls) then
 					return AvailableHacks.Basic[20].InstanceRemoved(object)	
 				end
-				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor)
+				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor) or (enHacks.Blatant_WalkThruWalls and isWall)
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y or isDoor) then
 					if not object:GetAttribute("OrgColor") then
 						object:SetAttribute("OrgColor",object.Color)
@@ -6579,7 +6593,7 @@ if gameName=="FleeTrade" then
 		if not crateData.CostRobux then
 			AvailableHacks.Bot[143].Options[crateName]={
 				["Title"]=crateData.Name.. " ("..comma_value(crateData.Price)..")",
-				["TextColor"]=Color3.fromRGB(255),-- ComputeNameColor(crateData.Name),
+				["TextColor"]=ComputeNameColor(crateData.Name),
 			}
 			if not AvailableHacks.Bot[143].Default then
 				AvailableHacks.Bot[143].Default = crateName
@@ -6591,7 +6605,7 @@ if gameName=="FleeTrade" then
 		if not bundleData.CostRobux then
 			AvailableHacks.Bot[146].Options[bundleName]={
 				["Title"]=bundleData.Name.. " ("..comma_value(bundleData.Price)..")",
-				["TextColor"]=Color3.fromRGB(255),--ComputeNameColor(bundleData.Name),
+				["TextColor"]=ComputeNameColor(bundleData.Name),
 			}
 			AvailableHacks.Bot[146].Default = bundleName
 			if not AvailableHacks.Bot[146].Default then

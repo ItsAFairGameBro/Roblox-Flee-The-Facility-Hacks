@@ -4255,6 +4255,7 @@ AvailableHacks ={
 				local doorNames = {"Door","DoorL","DoorR"}
 				
 				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) then
+					print("Find Door")
 					return "Door"
 				else
 					local worldSize = GetAbsoluteWorldSize(object)

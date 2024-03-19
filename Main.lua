@@ -4239,7 +4239,8 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["FirstClean"]=false,
 			["GetStructure"]=function(object)
-				return ((object.Parent.Parent.Name=="SingleDoor" or object.Parent.Parent.Name=="DoubleDoor" or object.Parent.Name=="ExitDoor") and "Door")
+				local doorNames = {"SingleDoor","DoubleDoor","ExitDoor"}
+				return ((table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name)) and "Door")
 			end,
 			["InstanceRemoved"]=function(object)
 				local structure = AvailableHacks.Basic[20].GetStructure(object)

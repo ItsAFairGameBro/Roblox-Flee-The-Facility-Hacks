@@ -4253,8 +4253,16 @@ AvailableHacks ={
 			["FirstClean"]=false,
 			["GetStructure"]=function(object)
 				local doorNames = {"Door","DoorL","DoorR"}
-				return ((table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name)) and "Door") or 
-					(GetAbsoluteWorldSize(object).Y >= 6 and (object:GetAttribute("OrgTrans") or object.Transparency) < .1 and "Wall")
+				
+				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) then
+					return "Door"
+				else
+					local worldSize = GetAbsoluteWorldSize(object.Size)
+					if ((worldSize.X >= 6 and worldSize.Z <= 6) or (worldSize.X <= 6 and worldSize.Z >= 6)) and worldSize.Y < 3
+						and (object:GetAttribute("OrgTrans") or object.Transparency) < .1 then
+						return "Wall"
+					end
+				end					
 			end,
 			["InstanceRemoved"]=function(object)
 				local structure = AvailableHacks.Basic[20].GetStructure(object)

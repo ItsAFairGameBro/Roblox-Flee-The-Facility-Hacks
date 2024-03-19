@@ -4239,7 +4239,7 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["FirstClean"]=false,
 			["GetStructure"]=function(object)
-				local doorNames = {"SingleDoor","DoubleDoor","ExitDoor"}
+				local doorNames = {"Door","DoorL","DoorR"}
 				return ((table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name)) and "Door")
 			end,
 			["InstanceRemoved"]=function(object)

@@ -4258,7 +4258,7 @@ AvailableHacks ={
 					return "Door"
 				else
 					local worldSize = GetAbsoluteWorldSize(object)
-					if ((worldSize.X >= 6 and worldSize.Z <= 6) or (worldSize.X <= 6 and worldSize.Z >= 6)) and worldSize.Y < 3
+					if ((worldSize.X >= 6 and worldSize.Z <= 6) or (worldSize.X <= 6 and worldSize.Z >= 6)) and worldSize.Y >= 2
 						and (object:GetAttribute("OrgTrans") or object.Transparency) < .1 then
 						return "Wall"
 					end

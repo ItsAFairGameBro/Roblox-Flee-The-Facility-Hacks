@@ -4258,7 +4258,7 @@ AvailableHacks ={
 					return "Door"
 				else
 					local worldSize = GetAbsoluteWorldSize(object)
-					if ((worldSize.X >= 6 and worldSize.Z <= 6) or (worldSize.X <= 6 and worldSize.Z >= 6)) and worldSize.Y >= 2
+					if (((worldSize.X >= 6 and worldSize.Z <= 6) or (worldSize.X <= 6 and worldSize.Z >= 6)) or worldSize.Y > 5) and worldSize.Y >= 2
 						and (object:GetAttribute("OrgTrans") or object.Transparency) < .1 then
 						return "Wall"
 					end
@@ -4283,7 +4283,7 @@ AvailableHacks ={
 					return AvailableHacks.Basic[20].InstanceRemoved(object)	
 				end
 				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor) or (enHacks.Blatant_WalkThruWalls and isWall)
-				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y or isDoor) then
+				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=GetAbsoluteWorldSize(object).Y or isDoor or isWall) then
 					if not object:GetAttribute("OrgColor") then
 						object:SetAttribute("OrgColor",object.Color)
 					end

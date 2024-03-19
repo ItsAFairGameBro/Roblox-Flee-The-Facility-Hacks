@@ -98,7 +98,7 @@ end
 local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
 local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
 local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
-local absMinTimeBetweenPCs=6 --abs min time to hack, overrides minspeed
+local absMinTimeBetweenPCs=7 --abs min time to hack, overrides minspeed
 local botBeastBreakMin=13.5 --in minutes
 local waitForChildTimout = 20
 local max_tpStackSize = 1
@@ -3016,6 +3016,7 @@ AvailableHacks ={
 			end,
 			--CHECKED UNDER REMOTE DOORS HACK!
 			["ComputerAdded"]=function(Computer)
+				local Screen = Computer:WaitForChild("Screen")
 				local ComputerBase = Computer.PrimaryPart
 				local BestTrigger
 				local bestAngle = 3
@@ -3044,7 +3045,6 @@ AvailableHacks ={
 					return
 				end
 				local ToggleButton = newTag.Toggle
-				ToggleButton.BackgroundColor3 = Color3.fromRGB(0,0,170)
 				ToggleButton.Text = "Teleport"
 				local function setToggleFunction()
 					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
@@ -3060,8 +3060,17 @@ AvailableHacks ={
 						teleportMyself(BestTrigger:GetPivot())
 					end
 				end
+				local function hackedTeleportFunction()
+					if ((Screen.Color.G*255)<128) and ((Screen.Color.G*255)>126) then--check if its green, meaning no hack hecked pcs!
+						ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+					else
+						ToggleButton.BackgroundColor3 = Color3.fromRGB(0,0,170)
+					end
+				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
 				AvailableHacks.Blatant[20].SetEnabled(newTag)
+				setChangedAttribute(Screen, "Color", hackedTeleportFunction)
+				hackedTeleportFunction()
 			end,
 			["CapsuleAdded"]=function(Capsule)
 				local CapsulePrimaryPart = Capsule.PrimaryPart
@@ -3930,7 +3939,7 @@ AvailableHacks ={
 					end
 				end
 				local lobbyMusicSound = AvailableHacks.Utility[9].MusicValue
-				applyToSound(AvailableHacks.Utility[9].MusicValue,"Lobby")
+				applyToSound(lobbyMusicSound,"Lobby")
 				applyToSound(AvailableHacks.Utility[9].MusicValue2,"Beast")
 				applyToSound(AvailableHacks.Utility[9].MusicValue3,"Beast")
 
@@ -4840,9 +4849,14 @@ AvailableHacks ={
 				local position1=(char:FindFirstChild("Torso") or char:FindFirstChild("UpperTorso")).Position
 				local position2=target+ newVector3(0,getHumanoidHeight(char)+(gameUniverse=="Flee" and 1.85 or 0),0)
 				position2=isCFrame and position2.Position or position2
-				local result,hitPart=raycast(position1,position2,{"Blacklist",char},(position1-position2).magnitude,1,true)
-				if not result then
-					result=({["Position"]=position2})
+				local result,hitPart
+				if GlobalSettings.discreteTeleportsOnly then
+					result,hitPart = raycast(position1,position2,{"Blacklist",char},(position1-position2).magnitude,1,true)
+					if not result then
+						result=({["Position"]=position2})
+					end
+				else
+					result = {["Position"] = target}
 				end
 				--if not isCFrame then
 				local orientation

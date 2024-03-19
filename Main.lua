@@ -4239,7 +4239,7 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["FirstClean"]=false,
 			["GetStructure"]=function(object)
-				return ((object.Parent.Name=="Door" or object.Parent.Name=="DoorL" or object.Parent.Name=="DoorR") and "Door")
+				return ((object.Parent.Parent.Name=="SingleDoor" or object.Parent.Parent.Name=="DoubleDoor" or object.Parent.Name=="ExitDoor") and "Door")
 			end,
 			["InstanceRemoved"]=function(object)
 				local structure = AvailableHacks.Basic[20].GetStructure(object)
@@ -4266,6 +4266,9 @@ AvailableHacks ={
 					end
 					if not object:GetAttribute("OrgTrans") then
 						object:SetAttribute("OrgTrans",object.Transparency)
+					end
+					if not object:GetAttribute("WeirdCanCollide") then
+						object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					end
 					CS:AddTag(object,"InviWalls")
 					object.CanCollide = false

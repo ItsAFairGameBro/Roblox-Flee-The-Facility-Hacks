@@ -2905,8 +2905,8 @@ AvailableHacks ={
 		[25]={
 			["Type"]="ExTextButton",
 			["Title"]="Walk Through Doors",
-			["Desc"]="Walk Through All Doors and Exits, even if they're closed!",
-			["Shortcut"]="Blatant_WalkThruDoors\nRequires Basic/InviWalls",
+			["Desc"]="Walk Through All Doors and Exits, even if they're closed!\nRequires Basic/InviWalls",
+			["Shortcut"]="Blatant_WalkThruDoors",
 			["Default"]=true,
 			["ActivateFunction"]=function(newValue)
 				AvailableHacks.Basic[20].ActivateFunction(enHacks.Basic_InviWalls)
@@ -4284,9 +4284,6 @@ AvailableHacks ={
 					return AvailableHacks.Basic[20].InstanceRemoved(object)	
 				end
 				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor) or (enHacks.Blatant_WalkThruWalls and isWall)
-				if isDoor then
-					print("Door",shouldBeInvi)
-				end
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=GetAbsoluteWorldSize(object).Y or isDoor or isWall) then
 					if not object:GetAttribute("OrgColor") then
 						object:SetAttribute("OrgColor",object.Color)

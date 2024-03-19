@@ -3338,7 +3338,11 @@ AvailableHacks ={
 				if char:FindFirstChild("Hammer")~=nil then return end
 				local Trigger=capsule.PodTrigger
 				for s=5,1,-1 do
-					if capsule.PodTrigger.CapturedTorso.Value==nil or not workspace:IsAncestorOf(Trigger) then break end
+					if capsule.PodTrigger.CapturedTorso.Value==nil then
+						return true
+					elseif not workspace:IsAncestorOf(Trigger) then 
+						break
+					end
 					local isOpened=Trigger.ActionSign.Value==11
 					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
 					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)

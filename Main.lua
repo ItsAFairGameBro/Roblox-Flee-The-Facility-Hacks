@@ -4276,6 +4276,9 @@ AvailableHacks ={
 				end
 			end,
 			["InstanceAdded"]=function(object)
+				if not object:IsA("BasePart") then 
+					return
+				end
 				local structure = AvailableHacks.Basic[20].GetStructure(object)
 				local isDoor,isWall = structure=="Door",structure=="Wall"
 				if not object.Parent then
@@ -4311,9 +4314,7 @@ AvailableHacks ={
 				--local start = os.clock()
 				local saveEn = enHacks.Basic_InviWalls
 				for num, object in ipairs(instance:GetDescendants()) do
-					if object:IsA("BasePart") then
-						AvailableHacks.Basic[20].InstanceAdded(object)
-					end
+					AvailableHacks.Basic[20].InstanceAdded(object)
 					if num%250==0 then
 						RunS.RenderStepped:Wait()
 					end
@@ -4331,8 +4332,10 @@ AvailableHacks ={
 						AvailableHacks.Basic[20].ActivateFunction(enHacks.Basic_InviWalls)
 					end
 				end
-				if not RS:WaitForChild("IsGameActive").Value then
-					RS.IsGameActive.Changed:Wait()
+				local GameStatus = RS:WaitForChild("GameStatus")
+				while GameStatus.Value:find("LOADING:") do
+					GameStatus.Changed:Wait()
+					task.wait(1/2)--wait a bit!
 				end
 				if not enHacks.Basic_InviWalls or not newMap.Parent then
 					return
@@ -4340,6 +4343,10 @@ AvailableHacks ={
 				AvailableHacks.Basic[20].ApplyInvi(newMap)
 			end,
 			["ActivateFunction"]=function(newValue)
+				local BasePlate = workspace:FindFirstChild("MapBaseplate")
+				if BasePlate then
+					BasePlate.CanCollide = newValue
+				end
 				if newValue then
 					AvailableHacks.Basic[20].ApplyInvi(workspace)
 				else

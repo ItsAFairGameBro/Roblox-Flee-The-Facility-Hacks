@@ -4692,12 +4692,12 @@ AvailableHacks ={
 			end,
 			["ActivateFunction"]=function(newValue)
 				if newValue~="None" and Beast then
-					AvailableHacks.Blatant[70].BeastStartUp()
+					AvailableHacks.Beast[70].BeastStartUp()
 				end
 			end,
 			["MyPlayerAdded"]=function(plr)
-				AvailableHacks.Blatant[70].OthersBeastAdded=AvailableHacks.Blatant[70].BeastStartUp
-				AvailableHacks.Blatant[70].MyBeastAdded=AvailableHacks.Blatant[70].BeastStartUp
+				AvailableHacks.Beast[70].OthersBeastAdded=AvailableHacks.Beast[70].BeastStartUp
+				AvailableHacks.Beast[70].MyBeastAdded=AvailableHacks.Beast[70].BeastStartUp
 			end,
 		},
 

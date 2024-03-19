@@ -4246,11 +4246,22 @@ AvailableHacks ={
 				end
 				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor)
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y or isDoor) then
+					if isDoor then
+						setChangedAttribute(object,"CanCollide",false)
+					end
+					object:SetAttribute("OrgTrans",object.Transparency)
+					object:SetAttribute("OrgColor",object.Color)
 					CS:AddTag(object,"InviWalls")
 					object.CanCollide = false
 					object.CastShadow = false
 					object.Transparency = enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					object.Color = Color3.fromRGB(0,0,200)
+					if isDoor then
+						setChangedAttribute(object,"CanCollide",function()
+							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
+							AvailableHacks.Basic[20].InstanceAdded(object)
+						end)
+					end
 				end
 			end,
 			["ApplyInvi"]=function(instance)
@@ -4291,8 +4302,9 @@ AvailableHacks ={
 				else
 					for num, object in ipairs(CS:GetTagged("InviWalls")) do
 						object:RemoveTag(object,"InviWalls")
-						object.CanCollide = true
-						object.Transparency = 1
+						object.CanCollide = not object:GetAttribute("WeirdCanCollide")
+						object.Color = object:GetAttribute("OrgColor") or Color3.fromRGB(0,0,255)
+						object.Transparency = object:GetAttribute("OrgTrans") or 1
 					end
 				end
 			end,

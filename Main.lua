@@ -36,6 +36,7 @@ local lastRunningEnv = getfenv()
 local reloadFunction = lastRunningEnv.ReloadFunction
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
+GlobalSettings.MinimumHeight = GlobalSettings.MinimumHeight or 1.5
 
 local getID="HackGUI1"
 local emojiDesc = {

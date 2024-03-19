@@ -2988,7 +2988,7 @@ AvailableHacks ={
 					--plr:SetAttribute("CameraMinZoomDistance",plr.CameraMinZoomDistance)
 					plr.CameraMinZoomDistance=.5--minimum
 					--plr:SetAttribute("CameraMaxZoomDistance",plr.CameraMaxZoomDistance)
-					plr.CameraMaxZoomDistance=math.huge--maximum
+					plr.CameraMaxZoomDistance=1e3--maximum
 					--plr:SetAttribute("CameraMode",plr.CameraMode.Name)
 					plr.CameraMode=Enum.CameraMode.Classic
 				end
@@ -5742,7 +5742,6 @@ AvailableHacks ={
 					theirPlr:SetAttribute("HasCaptured",true)
 				end
 				table.insert(functs,TSM.Captured.Changed:Connect(CaptureChanged))
-				print("[BotRunner] Connected For",theirPlr,"Activated!")
 			end,
 			["MyPlayerAdded"]=function()
 				local function EscapeChanged()

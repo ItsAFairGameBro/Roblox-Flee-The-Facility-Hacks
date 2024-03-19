@@ -4254,9 +4254,10 @@ AvailableHacks ={
 			["InstanceAdded"]=function(object)
 				local structure = AvailableHacks.Basic[20].GetStructure(object)
 				local isDoor = structure=="Door"
-				if not object.Parent or --TODO HERE
-					(isDoor and not enHacks.Blatant_WalkThruDoors) then
+				if not object.Parent then
 					return
+				elseif (isDoor and not enHacks.Blatant_WalkThruDoors) then
+					return AvailableHacks.Basic[20].InstanceRemoved(object)	
 				end
 				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor)
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y or isDoor) then
@@ -4277,8 +4278,6 @@ AvailableHacks ={
 							AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
 					end
-				elseif isDoor then
-					AvailableHacks.Basic[20].InstanceRemoved(object)				
 				end
 			end,
 			["ApplyInvi"]=function(instance)

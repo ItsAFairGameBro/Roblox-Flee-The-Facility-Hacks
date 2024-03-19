@@ -1755,7 +1755,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 			if v184 then
 				v181 = "tie up player's: "
 				v182 = v181 .. v184.Name
-				print(v182)
+				--print(v182)
 				return 
 			end
 		end
@@ -1920,11 +1920,10 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 		v300 = v48
 		v300:Stop()
 		ClearFreezePodBillboardIcons()
-		--v24.CameraMode = Enum.CameraMode.Classic
+		v24.CameraMode = Enum.CameraMode.Classic
 	end))
 	if (enHacks.Util_CanZoom==false) then
-		print("Zooming Locked!")
-		--v24.CameraMode = Enum.CameraMode.LockFirstPerson
+		v24.CameraMode = Enum.CameraMode.LockFirstPerson
 	end
 	v19:WaitForChild("SoundHeartBeat").Volume = 0
 	v19:WaitForChild("SoundChaseMusic").Volume = 0
@@ -2660,7 +2659,7 @@ AvailableHacks ={
 				end
 				local function setToggleFunction()
 					if actionSign.Value==0 then
-						for s=5,1,-1 do
+						for s=3,1,-1 do
 							if actionSign.Value~=0 then
 								break
 							end
@@ -2670,10 +2669,14 @@ AvailableHacks ={
 					if actionSign.Value==0 then
 						return
 					end
+					local doorTriggerEvent = doorTrigger:FindFirstChild("Event")
+					if not doorTriggerEvent then
+						return
+					end
 					local isOpened,currentEvent=getState(),TSM.ActionEvent.Value
 					trigger_setTriggers("RemoteDoorControl",false)
 					for s=5,1,-1 do
-						if isOpened~=getState() or actionSign.Value==0 then
+						if isOpened~=getState() or actionSign.Value==0 or not doorTriggerEvent or not doorTriggerEvent.Parent then
 							break
 						end
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
@@ -2895,6 +2898,16 @@ AvailableHacks ={
 				end)}
 			end,
 		},
+		[25]={
+			["Type"]="ExTextButton",
+			["Title"]="Walk Through Doors",
+			["Desc"]="Walk Through All Doors and Exits, even if they're closed!",
+			["Shortcut"]="Blatant_WalkThruDoors",
+			["Default"]=true,
+			["ActivateFunction"]=function(newValue)
+				AvailableHacks.Basic[20].ActivateFunction(enHacks.Basic_InviWalls)
+			end,
+		},
 
 	},
 	["Utility"]={
@@ -3085,8 +3098,8 @@ AvailableHacks ={
 				task.wait(2)
 				for s = 300, 1, -1 do
 					if not SG:GetCore("ChatActive") then
-						SG:SetCore("ChatActive",true)
-						print("[client improvement]: Fix Enabled")
+						pcall(SG.SetCore,SG,"ChatActive",true)
+						task.spawn(error,"[client improvement]: Fix Enabled")
 					end
 					RunS.RenderStepped:Wait()
 				end
@@ -3181,7 +3194,7 @@ AvailableHacks ={
 				LocalClubScript.Disabled = newValue
 				if newValue then
 					task.delay(0,LocalClubScriptFunction,LocalClubScript)
-				end--TODO HERE
+				end
 			end,
 			["MyPlayerAdded"] = function()
 				if not enHacks.Util_Hammer then
@@ -4226,10 +4239,13 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["FirstClean"]=false,
 			["InstanceAdded"]=function(object)
-				if not object.Parent or object.Parent.Name=="Door" then
+				local isDoor = object.Parent.Name=="Door"
+				if not object.Parent or --TODO HERE
+					(isDoor and not enHacks.Blatant_WalkThruDoors) then
 					return
 				end
-				if ((object.Transparency>=.95 and object.CanCollide) or object:HasTag("InviWalls")) and GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y then
+				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor)
+				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y or isDoor) then
 					CS:AddTag(object,"InviWalls")
 					object.CanCollide = false
 					object.CastShadow = false
@@ -5833,7 +5849,6 @@ AvailableHacks ={
 					theirPlr:SetAttribute("HasRescued",nil)
 					theirPlr:SetAttribute("HasCaptured",nil)
 				end
-				print("Cleared Map and Has Captured!")
 			end,
 			["MapAdded"]=function()
 				task.wait(1.3333)

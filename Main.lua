@@ -5375,13 +5375,13 @@ AvailableHacks ={
 						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..saveIndex) do
 							local exitDoor = closestExitArea.Parent
 							if exitDoor:FindFirstChild("ExitDoorTrigger") and (exitDoor.ExitDoorTrigger.ActionSign.Value == 12 or exitDoor.ExitDoorTrigger.ActionSign.Value == 10)
-								and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] then
+								and AvailableHacks.Blatant[15].DoorFuncts[exitDoor] and isInGame(char,true) and isInGame(char) then
 								trigger_setTriggers("BotRunner",{Exit=false})
 								AvailableHacks.Blatant[15].DoorFuncts[exitDoor]()
 							end
 							local didReach=AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
 							RunS.RenderStepped:Wait()
-							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and (not TSM.Escaped.Value) and isInGame(char,true) and isInGame(char)
+							while ((table.find(workspace:GetPartsInPart(char.HumanoidRootPart),closestExitArea)) and isInGame(char,true) and isInGame(char)
 								and (not exitDoor:FindFirstChild("ExitDoorTrigger") 
 									or (exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12 and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 10))) do
 								if human.FloorMaterial~=Enum.Material.Air then
@@ -5465,7 +5465,7 @@ AvailableHacks ={
 							end
 						end
 						
-						if (myRunerPlrKey==1 and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") or #runnerPlrs==1 then
+						if (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") or #runnerPlrs==1 then
 							task.wait(1/2)
 							if not canRun(true) then
 								return
@@ -5679,7 +5679,7 @@ AvailableHacks ={
 					theirPlr:SetAttribute("HasCaptured",true)
 				end
 				table.insert(functs,TSM.Captured.Changed:Connect(CaptureChanged))
-
+				print("[BotRunner] Connected For",theirPlr,"Activated!")
 			end,
 			["MyPlayerAdded"]=function()
 				local function EscapeChanged()
@@ -5798,6 +5798,7 @@ AvailableHacks ={
 					theirPlr:SetAttribute("HasRescued",nil)
 					theirPlr:SetAttribute("HasCaptured",nil)
 				end
+				print("Cleared Map and Has Captured!")
 			end,
 			["MapAdded"]=function()
 				task.wait(1.3333)

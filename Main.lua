@@ -2861,7 +2861,7 @@ AvailableHacks ={
 				local function setToggleFunction()
 					if isBeast.Value then
 						local theirChar = Beast.CarriedTorso.Value.Parent
-						AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar)
+						AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
 					else
 						AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
 					end
@@ -4238,17 +4238,28 @@ AvailableHacks ={
 			},
 			["Universes"]={"Global"},
 			["FirstClean"]=false,
+			["GetStructure"]=function(object)
+				return ((object.Parent.Name=="Door" or object.Parent.Name=="DoorL" or object.Parent.Name=="DoorR") and "Door")
+			end,
+			["InstanceRemoved"]=function(object)
+				local structure = AvailableHacks.Basic[20].GetStructure(object)
+				object:RemoveTag(object,"InviWalls")
+				object.CanCollide = not object:GetAttribute("WeirdCanCollide")
+				object.Color = object:GetAttribute("OrgColor") or Color3.fromRGB(0,0,255)
+				object.Transparency = object:GetAttribute("OrgTrans") or 1
+				if structure == "Door" then
+					setChangedAttribute(object,"CanCollide",false)
+				end
+			end,
 			["InstanceAdded"]=function(object)
-				local isDoor = object.Parent.Name=="Door" or object.Parent.Name=="DoorL" or object.Parent.Name=="DoorR"
+				local structure = AvailableHacks.Basic[20].GetStructure(object)
+				local isDoor = structure=="Door"
 				if not object.Parent or --TODO HERE
 					(isDoor and not enHacks.Blatant_WalkThruDoors) then
 					return
 				end
 				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor)
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=object.Size.Y/object.CFrame.UpVector.Y or isDoor) then
-					if isDoor then
-						setChangedAttribute(object,"CanCollide",false)
-					end
 					object:SetAttribute("OrgTrans",object.Transparency)
 					object:SetAttribute("OrgColor",object.Color)
 					CS:AddTag(object,"InviWalls")
@@ -4262,6 +4273,8 @@ AvailableHacks ={
 							AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
 					end
+				elseif isDoor then
+					AvailableHacks.Basic[20].InstanceRemoved(object)				
 				end
 			end,
 			["ApplyInvi"]=function(instance)
@@ -4301,10 +4314,7 @@ AvailableHacks ={
 					AvailableHacks.Basic[20].ApplyInvi(workspace)
 				else
 					for num, object in ipairs(CS:GetTagged("InviWalls")) do
-						object:RemoveTag(object,"InviWalls")
-						object.CanCollide = not object:GetAttribute("WeirdCanCollide")
-						object.Color = object:GetAttribute("OrgColor") or Color3.fromRGB(0,0,255)
-						object.Transparency = object:GetAttribute("OrgTrans") or 1
+						AvailableHacks.Basic[20].InstanceRemoved(object)
 					end
 				end
 			end,

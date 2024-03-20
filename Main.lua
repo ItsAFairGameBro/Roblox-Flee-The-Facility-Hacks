@@ -4284,7 +4284,7 @@ AvailableHacks ={
 				end
 			end,
 			["InstanceAdded"]=function(object)
-				if not object:IsA("BasePart") then 
+				if not object:IsA("BasePart") or not object.Parent or not object.Parent.Parent then 
 					return
 				end
 				local structure = AvailableHacks.Basic[20].GetStructure(object)
@@ -4889,7 +4889,7 @@ AvailableHacks ={
 							return
 						else
 							if actionValue.Parent and not table.find(char.Torso:GetTouchingParts(),actionValue.Parent) then
-								stopCurrentAction(true)
+								task.spawn(stopCurrentAction,true)
 							end
 						end
 					end
@@ -6637,10 +6637,11 @@ AvailableHacks ={
 							if not canRun() then return end
 							RemoteEvent:FireServer("Input","Action",true)
 							task.wait(.3)
+							if not canRun() then return end
 							if lastHackedPC ~= lastPCSave then
 								print("PC Hack Change Detected")
 							end
-							if lastHackedPC == pc then
+							if lastHackedPC == pc or s == 5 then
 								print("PC Hack Successful!")
 								myTSM.CurrentAnimation.Value = ""
 								hackedPCS+=1
@@ -7525,10 +7526,12 @@ if gameName=="FleeMain" then
 		elseif lastHackedPC and lastAnimationName=="Typing" then
 			lastPC_time = os.clock() print("Triggers Disabled")
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
-			task.delay(absMinTimeBetweenPCs,function()
-				if (os.clock() - lastPC_time) >= absMinTimeBetweenPCs then
+			local timeNeeded = (0.15+math.max((70)/minSpeedBetweenPCs,absMinTimeBetweenPCs))
+
+			task.delay(timeNeeded,function()
+				if (os.clock() - lastPC_time) >= timeNeeded then
 					trigger_setTriggers("LastPC",{Computer=true})
-					print("Triggers Enabled")
+					print("Triggers Enabled After",timeNeeded)
 				end
 			end)
 		end

@@ -4871,13 +4871,16 @@ AvailableHacks ={
 			["Default"]=true,
 			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
+				
 				local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
 				local function currentAnimationUpdate()
 					if currentAnimation.Value == "Typing" then
 						print("Disabled All Triggers")
+						RemoteEvent.Parent = nil
 						trigger_setTriggers("Typing",false)
 					else
 						print("Enabled All Triggers")
+						RemoteEvent.Parent = RS
 						trigger_setTriggers("Typing",true)
 					end
 				end

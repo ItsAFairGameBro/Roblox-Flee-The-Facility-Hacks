@@ -885,7 +885,7 @@ end
 
 function stopCurrentAction(override)
 	if not override and myTSM.ActionEvent.Value and myTSM.ActionEvent.Value.Parent and 
-		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent)] or -1) > 0 then
+		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)] or -1) > 0 then
 		return print("Not Stopped!")
 	end
 	for s = 2, 1, -1 do
@@ -5067,13 +5067,17 @@ AvailableHacks ={
 			["Default"]=false,
 			["ActivateFunction"]=function(newValue)
 				for num, capsule in pairs(CS:GetTagged("Capsule")) do
-					if capsule:FindFirstChild("PodTrigger")~=nil then
-						setChangedAttribute(
-							capsule.PodTrigger:FindFirstChild("CapturedTorso"),
-							"Value",newValue and function()
-								AvailableHacks.Runner[80].RescueSurvivor(capsule)
-							end or false)
-						AvailableHacks.Runner[80].RescueSurvivor(capsule)
+					local PodTrigger = capsule:FindFirstChild("PodTrigger")
+					if PodTrigger then
+						local CapturedTorso = PodTrigger:FindFirstChild("CapturedTorso")
+						if CapturedTorso and PodTrigger.Parent then
+							setChangedAttribute(
+								CapturedTorso,
+								"Value",newValue and function()
+									AvailableHacks.Runner[80].RescueSurvivor(capsule)
+								end or false)
+							AvailableHacks.Runner[80].RescueSurvivor(capsule)
+						end
 					end
 				end
 			end,

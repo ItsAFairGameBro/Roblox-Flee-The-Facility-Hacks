@@ -888,7 +888,7 @@ function stopCurrentAction(override)
 		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)] or -1) > 0 then
 		return print("Not Stopped!")
 	end
-	print("Stop Action",override,myTSM.ActionEvent.Value,myTSM.ActionEvent.Value.Parent and trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent))
+	print("Stop Action",override,myTSM.ActionEvent.Value,myTSM.ActionEvent.Value.Parent and trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent) and trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)])
 	for s = 2, 1, -1 do
 		RemoteEvent:FireServer("Input", "Action", false)
 		RemoteEvent:FireServer("Input", "Trigger", false)

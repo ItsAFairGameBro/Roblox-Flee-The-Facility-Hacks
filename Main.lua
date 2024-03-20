@@ -6617,7 +6617,7 @@ AvailableHacks ={
 					if #goodTriggers>0 then
 						local selectedTriggerKey = 1
 						local trigger = goodTriggers[selectedTriggerKey]
-						teleportMyself(trigger:GetPivot()+Vector3.new(0,-trigger.Size.Y/2+getHumanoidHeight(human)))
+						teleportMyself(trigger:GetPivot()+Vector3.new(0,-trigger.Size.Y/2+getHumanoidHeight(char)))
 						task.wait(.5)
 						if not canRun() then return end
 						print("LastPC",trigger_enabledNames["LastPC"])

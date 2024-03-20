@@ -7491,8 +7491,8 @@ if gameName=="FleeMain" then
 		end
 		return getPC(obj.Parent)
 	end
-	local function updateAnimation()
-		if currentAnimation.Value=="Typing" then
+	local function updateAnimation(newValue)
+		if newValue=="Typing" then
 			lastHackedPC = getPC(myTSM.ActionEvent.Value)
 			if not lastHackedPC then
 				if not myTSM.ActionEvent.Value then
@@ -7510,7 +7510,7 @@ if gameName=="FleeMain" then
 				end
 			end)
 		end
-		lastAnimationName = currentAnimation.Value
+		lastAnimationName = newValue
 	end
 	setChangedAttribute(currentAnimation,"Value",updateAnimation)
 	updateAnimation()

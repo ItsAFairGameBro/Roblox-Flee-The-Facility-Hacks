@@ -4869,6 +4869,7 @@ AvailableHacks ={
 			["Desc"]='Remotely Hack PCs',
 			["Shortcut"]="Blatant_RemoteHackPCs",
 			["Default"]=true,
+			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
 				local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
 				local function currentAnimationUpdate()
@@ -4881,7 +4882,13 @@ AvailableHacks ={
 					end
 				end
 				
-				setChangedAttribute(currentAnimation,"Value",newValue and currentAnimationUpdate)
+				if not AvailableHacks.Runner[4].Funct and newValue then
+					AvailableHacks.Runner[4].Funct = currentAnimation.Changed:Connect(currentAnimationUpdate)
+				elseif AvailableHacks.Runner[4].Funct and not newValue then
+					AvailableHacks.Runner[4].Funct:Disconnect()
+					AvailableHacks.Runner[4].Funct=nil
+				end
+				--setChangedAttribute(currentAnimation,"Value",newValue and currentAnimationUpdate)
 				currentAnimationUpdate()
 			end,
 		},

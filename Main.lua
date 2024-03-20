@@ -6627,7 +6627,7 @@ AvailableHacks ={
 						end
 						task.wait(.75)
 						local lastPC = lastHackedPC
-						for s = 7, 1, -1 do
+						for s = 15, 1, -1 do
 							if not canRun() then return end--or hackedPCS>=1 then return end
 							RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 							task.wait(.16)

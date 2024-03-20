@@ -6603,39 +6603,44 @@ AvailableHacks ={
 				end
 				local savedDeb = AvailableHacks.Commands[30].SaveDeb + 1
 				AvailableHacks.Commands[30].SaveDeb = savedDeb
+				
+				local function canRun()
+					return not isCleared and savedDeb ~= AvailableHacks.Commands[30].SaveDeb
+				end
+				
 				if not newValue then return end
 				print(trigger_enabledNames)
 				trigger_setTriggers("Cmds_HackAllPCs",{["Computer"]=false})
 				for num, pc in ipairs(CS:GetTagged("Computer")) do
-					if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
-						return
-					end
+					if not canRun() then return end
 					local goodTriggers = AvailableHacks.Bot[15].getGoodTriggers(pc)
 					if #goodTriggers>0 then
 						local selectedTriggerKey = 1
 						local trigger = goodTriggers[selectedTriggerKey]
 						teleportMyself(trigger:GetPivot())
 						task.wait()
-						if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
-							return
-						end
-						while trigger_enabledNames["LastPC"] and trigger_enabledNames["LastPC"].Computer > 0 and lastHackedPC ~= pc do
+						if not canRun() then return end
+						while trigger_enabledNames["LastPC"] and trigger_enabledNames["LastPC"].Computer and lastHackedPC ~= pc do
 							--createCommandLine("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
 							--error("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
 							RunS.RenderStepped:Wait()
 						end
+						if not canRun() then return end
 						RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 						task.wait(.1)
+						if not canRun() then return end
 						RemoteEvent:FireServer("Input","Action",true)
 						task.wait(.1)
+						if not canRun() then return end
 						RemoteEvent:FireServer("Input","Action",false)
 
 					end
 
 				end
+				if not canRun() then return end
 				refreshEnHack["Cmds_HackAllPCs"](true)
 				task.wait(3)
-				if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then return end
+				if not canRun() then return end
 				refreshEnHack["Cmds_HackAllPCs"](false)
 			end,
 			["CleanUp"]=function()

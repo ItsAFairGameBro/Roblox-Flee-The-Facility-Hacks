@@ -4271,6 +4271,7 @@ AvailableHacks ={
 				object.CanCollide = not object:GetAttribute("WeirdCanCollide")
 				object.Color = object:GetAttribute("OrgColor") or Color3.fromRGB(0,0,255)
 				object.Transparency = object:GetAttribute("OrgTrans") or 1
+				object.CastShadow = true
 				if structure == "Door" then
 					setChangedAttribute(object,"CanCollide",false)
 				end
@@ -4295,7 +4296,7 @@ AvailableHacks ={
 					if not object:GetAttribute("OrgTrans") then
 						object:SetAttribute("OrgTrans",object.Transparency)
 					end
-					if not object:GetAttribute("WeirdCanCollide") then
+					if object:GetAttribute("WeirdCanCollide")==nil then
 						object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					end
 					CS:AddTag(object,"InviWalls")

@@ -6619,7 +6619,7 @@ AvailableHacks ={
 						teleportMyself(trigger:GetPivot())
 						task.wait(.5)
 						if not canRun() then return end
-						while trigger_enabledNames["LastPC"] and trigger_enabledNames["LastPC"].Computer and lastHackedPC ~= pc do
+						while trigger_enabledNames["LastPC"] and not trigger_enabledNames["LastPC"].Computer and lastHackedPC ~= pc do
 							--createCommandLine("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
 							--error("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
 							print("Waiting")

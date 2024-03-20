@@ -4875,7 +4875,8 @@ AvailableHacks ={
 				local actionEvent = myTSM:WaitForChild("ActionEvent")
 				local function currentAnimationUpdate()
 					local actionValue = actionEvent.Value
-					if actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent)=="Computer" and enHacks.Blatant_RemoteHackPCs then
+					print(actionValue, actionValue.Parent and trigger_gettype(actionValue.Parent))
+					if actionValue and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent)=="Computer" and enHacks.Blatant_RemoteHackPCs then
 						print("Disabled All Triggers")
 						char.Torso.CanTouch = false
 						trigger_setTriggers("Typing",false)

@@ -4720,7 +4720,8 @@ AvailableHacks ={
 				local saveState=enHacks.AutoBeastHit
 				local beast=Beast--the current Beast
 				local Hammer=beast:WaitForChild("Hammer",2)
-				while beast~=nil and beast.Parent~=nil and Hammer and Hammer.Parent and enHacks.AutoBeastHit==saveState
+				local Handle=Hammer and Hammer:WaitForChild("Handle",2)
+				while beast~=nil and beast.Parent~=nil and Hammer and Hammer.Parent and enHacks.AutoBeastHit==saveState and Handle
 					and (enHacks.AutoBeastHit=="All" 
 						or (enHacks.AutoBeastHit=="Me" and beast==char)) do
 					for num,theirPlr in pairs(PS:GetPlayers()) do
@@ -4728,12 +4729,12 @@ AvailableHacks ={
 							local theirChar=theirPlr.Character
 							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
 							if TSM~=nil and not TSM.Captured.Value and not TSM.Ragdoll.Value then
-								local Dist=(Hammer.Handle.Position-theirChar.PrimaryPart.Position).magnitude
+								local Dist=(Handle.Position-theirChar.PrimaryPart.Position).magnitude
 								if Dist<15 then
 									local closestPart, closestDist = nil, 12
 									for num, part in ipairs(theirChar:GetChildren()) do
 										if part:IsA("BasePart") then
-											local testDist = (part.Position-Hammer:GetPivot().Position).Magnitude
+											local testDist = (part.Position-Handle.Position).Magnitude
 											if testDist < closestDist then
 												closestPart, closestDist = part, testDist
 											end

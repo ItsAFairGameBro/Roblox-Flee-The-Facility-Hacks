@@ -4259,7 +4259,7 @@ AvailableHacks ={
 				else
 					local worldSize = GetAbsoluteWorldSize(object)
 					if (((worldSize.X >= 9 and worldSize.Z <=9) or (worldSize.X <= 9 and worldSize.Z >= 9)) or worldSize.Y > 18) 
-						and (worldSize.Y >= 2 or worldSize.X < 7 or worldSize.Z < 7)
+						and (worldSize.Y >= 2 or worldSize.X < 9 or worldSize.Z < 9)
 						and (object:GetAttribute("OrgTrans") or object.Transparency) < .1 then
 						return "Wall"
 					end

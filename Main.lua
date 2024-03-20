@@ -6606,7 +6606,7 @@ AvailableHacks ={
 				AvailableHacks.Commands[30].SaveDeb = savedDeb
 				
 				local function canRun()
-					return not isCleared and savedDeb == AvailableHacks.Commands[30].SaveDeb
+					return not isCleared and savedDeb == AvailableHacks.Commands[30].SaveDeb and refreshEnHack["Cmds_HackAllPCs"]
 				end
 				
 				if not newValue then return end

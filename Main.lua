@@ -6636,6 +6636,7 @@ AvailableHacks ={
 							task.wait(.16)
 							if lastHackedPC == pc then
 								print("PC Hack Successful!")
+								myTSM.CurrentAnimation.Value = ""
 								hackedPCS+=1
 								break
 							elseif s == 1 then

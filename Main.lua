@@ -4881,7 +4881,7 @@ AvailableHacks ={
 							trigger_setTriggers("Typing",false)
 							local changed
 							changed = myTSM.CurrentAnimation.Changed:Connect(function()
-								task.wait(.7)
+								RunS.RenderStepped:Wait()
 								myTSM.CurrentAnimation.Value = ""
 								table.remove(functs,table.find(functs,changed))
 								changed:Disconnect()
@@ -7504,11 +7504,9 @@ if gameName=="FleeMain" then
 			end
 		elseif lastHackedPC and lastAnimationName=="Typing" then
 			lastPC_time = os.clock()
-			print("PC Disabled")
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
 			task.delay(absMinTimeBetweenPCs,function()
 				if (os.clock() - lastPC_time) >= absMinTimeBetweenPCs then
-					print("PC Enabled")
 					trigger_setTriggers("LastPC",{Computer=true})
 				end
 			end)

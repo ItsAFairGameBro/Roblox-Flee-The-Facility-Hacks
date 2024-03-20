@@ -6614,13 +6614,13 @@ AvailableHacks ={
 			["SaveDeb"] = 0;
 			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
-				if AvailableHacks.Runner[30].Funct then
-					AvailableHacks.Runner[30].Funct:Disconnect()
-					AvailableHacks.Runner[30].Funct = nil
-				end
 				if newValue == true then
 					return
 				elseif newValue == false then
+					if AvailableHacks.Runner[30].Funct then
+						AvailableHacks.Runner[30].Funct:Disconnect()
+						AvailableHacks.Runner[30].Funct = nil
+					end
 					trigger_setTriggers("Cmds_HackAllPCs",true)
 				end
 				

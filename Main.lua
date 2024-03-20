@@ -6629,6 +6629,7 @@ AvailableHacks ={
 						local lastPC = lastHackedPC
 						for s = 15, 1, -1 do
 							if not canRun() then return end--or hackedPCS>=1 then return end
+							myTSM.ActionEvent = trigger.Event
 							RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 							task.wait(.3)
 							if not canRun() then return end

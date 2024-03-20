@@ -4732,9 +4732,11 @@ AvailableHacks ={
 								if Dist<15 then
 									local closestPart, closestDist = nil, 12
 									for num, part in ipairs(theirChar:GetChildren()) do
-										local testDist = (part.Position-Hammer:GetPivot().Position).Magnitude
-										if testDist < closestDist then
-											closestPart, closestDist = part, testDist
+										if part:IsA("BasePart") then
+											local testDist = (part.Position-Hammer:GetPivot().Position).Magnitude
+											if testDist < closestDist then
+												closestPart, closestDist = part, testDist
+											end
 										end
 									end
 									if closestPart then

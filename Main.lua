@@ -4729,9 +4729,17 @@ AvailableHacks ={
 							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
 							if TSM~=nil and not TSM.Captured.Value and not TSM.Ragdoll.Value then
 								local Dist=(Hammer.Handle.Position-theirChar.PrimaryPart.Position).magnitude
-								if Dist<10 then
-									Hammer.HammerEvent:FireServer("HammerHit", theirChar.Head)
-
+								if Dist<15 then
+									local closestPart, closestDist = nil, 12
+									for num, part in ipairs(theirChar:GetChildren()) do
+										local testDist = (part.Position-Hammer:GetPivot().Position).Magnitude
+										if testDist < closestDist then
+											closestPart, closestDist = part, testDist
+										end
+									end
+									if closestPart then
+										Hammer.HammerEvent:FireServer("HammerHit", closestPart)
+									end
 								end
 							end
 						end

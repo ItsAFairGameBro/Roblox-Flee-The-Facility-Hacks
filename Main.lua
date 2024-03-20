@@ -4878,8 +4878,6 @@ AvailableHacks ={
 						print("Disabled All Triggers")
 						char.Torso.CanTouch = false
 						trigger_setTriggers("Typing",false)
-						task.wait(.5)
-						char.Torso.CanTouch = true
 						
 					else
 						print("Enabled All Triggers")

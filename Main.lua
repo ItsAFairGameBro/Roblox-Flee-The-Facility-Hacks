@@ -4874,6 +4874,7 @@ AvailableHacks ={
 				
 				local actionEvent = myTSM:WaitForChild("ActionEvent")
 				local function currentAnimationUpdate()
+					print(actionEvent.Parent,actionEvent.Parent and trigger_gettype(actionEvent.Parent))
 					if actionEvent.Parent and actionEvent.Parent.Parent and trigger_gettype(actionEvent.Parent)=="Computer" and enHacks.Blatant_RemoteHackPCs then
 						print("Disabled All Triggers")
 						char.Torso.CanTouch = false

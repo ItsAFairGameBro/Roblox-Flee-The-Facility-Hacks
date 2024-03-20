@@ -4874,6 +4874,7 @@ AvailableHacks ={
 				
 				local actionEvent = myTSM:WaitForChild("ActionEvent")
 				local function currentAnimationUpdate()
+					task.wait(.4)
 					local actionValue = actionEvent.Value
 					if actionValue and actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent.Parent)=="Computer" then
 						if enHacks.Blatant_RemoteHackPCs then
@@ -7511,6 +7512,7 @@ if gameName=="FleeMain" then
 			end)
 		end
 		lastAnimationName = newValue
+		defaultFunction("AnimationChanged",newValue)
 	end
 	setChangedAttribute(currentAnimation,"Value",updateAnimation)
 	updateAnimation()

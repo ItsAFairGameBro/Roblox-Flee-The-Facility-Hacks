@@ -6629,18 +6629,19 @@ AvailableHacks ={
 						task.wait(.75)
 						local lastPC = lastHackedPC
 						for s = 7, 1, -1 do
+							if not canRun() or hackedPCS>=1 then return end
+							--RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
+							task.wait(.3)
+							if not canRun() then return end
+							RemoteEvent:FireServer("Input","Action",true)
+							task.wait(.3)
 							if lastPC == pc then
 								print("PC Hack Successful!")
 								hackedPCS+=1
 								break
-							end
-							if not canRun() or hackedPCS==1 then return end
-							--RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
-							task.wait(.1)
-							if not canRun() then return end
-							RemoteEvent:FireServer("Input","Action",true)
-							if s == 1 then
+							elseif s == 1 then
 								createCommandLine("[Hack All PCs]: PC HACK FAIL TIMEOUT!",true)
+								hackedPCS+=1
 							end
 						end
 						task.wait(.1)

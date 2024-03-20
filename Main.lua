@@ -4878,6 +4878,7 @@ AvailableHacks ={
 					if actionValue and actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent.Parent)=="Computer" and enHacks.Blatant_RemoteHackPCs then
 						print("Disabled All Triggers")
 						char.Torso.CanTouch = false
+						myTSM.CurrentAnimation.Value = ""
 						trigger_setTriggers("Typing",false)
 						
 					else

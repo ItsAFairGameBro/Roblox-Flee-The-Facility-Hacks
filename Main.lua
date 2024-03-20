@@ -6617,9 +6617,9 @@ AvailableHacks ={
 				if newValue == true then
 					return
 				elseif newValue == false then
-					if AvailableHacks.Runner[30].Funct then
-						AvailableHacks.Runner[30].Funct:Disconnect()
-						AvailableHacks.Runner[30].Funct = nil
+					if AvailableHacks.Commands[30].Funct then
+						AvailableHacks.Commands[30].Funct:Disconnect()
+						AvailableHacks.Commands[30].Funct = nil
 					end
 					trigger_setTriggers("Cmds_HackAllPCs",true)
 				end
@@ -6634,7 +6634,7 @@ AvailableHacks ={
 				if not newValue then return end
 				local ActionProgress = myTSM:WaitForChild("ActionProgress")
 				local actionTable = {}
-				AvailableHacks.Runner[30].Funct = ActionProgress.Changed:Connect(function(newValue)
+				AvailableHacks.Commands[30].Funct = ActionProgress.Changed:Connect(function(newValue)
 					if newValue > .97 then
 						print("Stopped Hacking On Purpose!")
 						local event = actionTable[1]

@@ -4297,10 +4297,10 @@ AvailableHacks ={
 				local shouldBeInvi = ((object:GetAttribute("OrgTrans") or object.Transparency)>=.95 and object.CanCollide) 
 					or (enHacks.Blatant_WalkThruDoors and isDoor) or (enHacks.Blatant_WalkThruWalls and isWall)
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=GetAbsoluteWorldSize(object).Y or isDoor or isWall) then
-					if not object:GetAttribute("OrgColor") then
+					if object:GetAttribute("OrgColor")==nil then
 						object:SetAttribute("OrgColor",object.Color)
 					end
-					if not object:GetAttribute("OrgTrans") then
+					if object:GetAttribute("OrgTrans")==nil then
 						object:SetAttribute("OrgTrans",object.Transparency)
 					end
 					if object:GetAttribute("WeirdCanCollide")==nil then
@@ -4873,8 +4873,10 @@ AvailableHacks ={
 				local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
 				local function currentAnimationUpdate()
 					if currentAnimation.Value == "Typing" then
+						print("Disabled All Triggers")
 						trigger_setTriggers("Typing",false)
 					else
+						print("Enabled All Triggers")
 						trigger_setTriggers("Typing",true)
 					end
 				end

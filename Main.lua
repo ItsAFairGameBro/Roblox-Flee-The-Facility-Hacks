@@ -6605,6 +6605,7 @@ AvailableHacks ={
 				local savedDeb = AvailableHacks.Commands[30].SaveDeb + 1
 				AvailableHacks.Commands[30].SaveDeb = savedDeb
 				if not newValue then return end
+				print(trigger_enabledNames)
 				trigger_setTriggers("Cmds_HackAllPCs",{["Computer"]=false})
 				for num, pc in ipairs(CS:GetTagged("Computer")) do
 					if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
@@ -6619,7 +6620,7 @@ AvailableHacks ={
 						if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
 							return
 						end
-						if trigger_enabledNames["LastPC"].Computer > 0 and lastHackedPC ~= pc then
+						if trigger_enabledNames["LastPC"] and trigger_enabledNames["LastPC"].Computer > 0 and lastHackedPC ~= pc then
 							createCommandLine("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
 							error("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
 						end

@@ -6612,12 +6612,18 @@ AvailableHacks ={
 				},
 			},
 			["SaveDeb"] = 0;
+			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
+				if AvailableHacks.Runner[30].Funct then
+					AvailableHacks.Runner[30].Funct:Disconnect()
+					AvailableHacks.Runner[30].Funct = nil
+				end
 				if newValue == true then
 					return
 				elseif newValue == false then
 					trigger_setTriggers("Cmds_HackAllPCs",true)
 				end
+				
 				local savedDeb = AvailableHacks.Commands[30].SaveDeb + 1
 				AvailableHacks.Commands[30].SaveDeb = savedDeb
 				
@@ -6626,6 +6632,16 @@ AvailableHacks ={
 				end
 				
 				if not newValue then return end
+				local ActionProgress = myTSM:WaitForChild("ActionProgress")
+				local actionTable = {}
+				AvailableHacks.Runner[30].Funct = ActionProgress.Changed:Connect(function(newValue)
+					if newValue > .97 then
+						print("Stopped Hacking On Purpose!")
+						local event = actionTable[1]
+						table.remove(actionTable,1)
+						RemoteEvent:FireServer("Input","Trigger",false,event)
+					end
+				end)
 				trigger_setTriggers("Cmds_HackAllPCs",{["Computer"]=false})
 				local hackedPCS = 0
 				for num, pc in ipairs(CS:GetTagged("Computer")) do
@@ -6637,6 +6653,7 @@ AvailableHacks ={
 						teleportMyself(trigger:GetPivot()*CFrame.new(0,0,.1)+Vector3.new(0,-trigger.Size.Y/2+getHumanoidHeight(char)))
 						task.wait(.5)
 						if not canRun() then return end
+						table.insert(actionTable,trigger.Value.Event)
 						print("LastPC2",trigger_enabledNames["LastPC"])
 						while trigger_enabledNames["LastPC"] and not trigger_enabledNames["LastPC"].Computer do
 							

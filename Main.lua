@@ -6605,11 +6605,10 @@ AvailableHacks ={
 				AvailableHacks.Commands[30].SaveDeb = savedDeb
 				
 				local function canRun()
-					return not isCleared and savedDeb ~= AvailableHacks.Commands[30].SaveDeb
+					return not isCleared and savedDeb == AvailableHacks.Commands[30].SaveDeb
 				end
 				
 				if not newValue then return end
-				print(trigger_enabledNames)
 				trigger_setTriggers("Cmds_HackAllPCs",{["Computer"]=false})
 				for num, pc in ipairs(CS:GetTagged("Computer")) do
 					if not canRun() then return end

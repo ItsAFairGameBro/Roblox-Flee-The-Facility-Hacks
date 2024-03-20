@@ -888,6 +888,7 @@ function stopCurrentAction(override)
 		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)] or -1) > 0 then
 		return print("Not Stopped!")
 	end
+	print("Stop Action",override,myTSM.ActionEvent.Value,myTSM.ActionEvent.Value.Parent and trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent))
 	for s = 2, 1, -1 do
 		RemoteEvent:FireServer("Input", "Action", false)
 		RemoteEvent:FireServer("Input", "Trigger", false)
@@ -4877,7 +4878,6 @@ AvailableHacks ={
 					local actionValue = actionEvent.Value
 					if actionValue and actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent.Parent)=="Computer" then
 						if enHacks.Blatant_RemoteHackPCs then
-							print("Disabled All Triggers")
 							char.Torso.CanTouch = false
 							trigger_setTriggers("Typing",false)
 							local changed
@@ -4894,7 +4894,6 @@ AvailableHacks ={
 							end
 						end
 					end
-					print("Enabled All Triggers")
 					trigger_setTriggers("Typing",true)
 					char.Torso.CanTouch = true
 				end

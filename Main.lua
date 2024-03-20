@@ -6611,6 +6611,7 @@ AvailableHacks ={
 				
 				if not newValue then return end
 				trigger_setTriggers("Cmds_HackAllPCs",{["Computer"]=false})
+				local hackedPCS = 0
 				for num, pc in ipairs(CS:GetTagged("Computer")) do
 					if not canRun() then return end
 					local goodTriggers = AvailableHacks.Bot[15].getGoodTriggers(pc)
@@ -6630,9 +6631,10 @@ AvailableHacks ={
 						local lastPC = lastHackedPC
 						for s = 3, 1, -1 do
 							if lastPC == pc then
+								hackedPCS+=1
 								break
 							end
-							if not canRun() or num==2 then return end
+							if not canRun() or hackedPCS==2 then return end
 							RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 							task.wait(.1)
 							if not canRun() then return end

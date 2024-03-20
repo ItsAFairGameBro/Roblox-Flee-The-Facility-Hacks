@@ -793,51 +793,7 @@ local function clearCommandLines()
 end
 --End Command Control
 
-local function stopCurrentAction()
-	for s = 2, 1, -1 do
-		RemoteEvent:FireServer("Input", "Action", false)
-		RemoteEvent:FireServer("Input", "Trigger", false)
-		myTSM:WaitForChild("DisableInteraction").Value = true
-		RunS.RenderStepped:Wait()
-		myTSM:WaitForChild("DisableInteraction").Value = false
-		RunS.RenderStepped:Wait()
-	end
-end
-
---SAVE/LOAD MODULE
-local loadedEnData = {}
-local function loadSaveData()
-	local path = getID.."/enHacks/"..gameName..".txt"
-	if isfile(path) then
-		local success, result = pcall(readfile,path)
-		if success then
-			local success2, result2 = pcall(HS.JSONDecode,HS,result)
-			if success2 then
-				loadedEnData = result2
-			else
-				warn("Load Error (JSONDecode):", result2)
-			end
-		else
-			warn("Load Error (Readfile):", result)
-		end
-	else
-		--no save file found!
-	end
-end
-local function saveSaveData()
-	local success,result = pcall(HS.JSONEncode,HS,enHacks)
-	if not success then
-		warn("Save Error (JSONEncode):",result)
-		return
-	end
-	if not isfolder(getID) then
-		makefolder(getID)
-	end
-	if not isfolder(getID.."/enHacks") then
-		makefolder(getID.."/enHacks")
-	end
-	writefile(getID.."/enHacks/"..gameName..".txt",result)
-end
+local stopCurrentAction
 --SET TRIGGERS uses the following format for setting active triggers that the user can interact with:
 --triggerParams = true/false, toggle ALL triggers.
 --name: identifier
@@ -924,6 +880,57 @@ local function trigger_setTriggers(name,setTriggerParams)
 			task.spawn(stopCurrentAction)
 		end
 	end
+end
+
+
+function stopCurrentAction(override)
+	if not override and myTSM.ActionEvent.Value and myTSM.ActionEvent.Value.Parent and 
+		trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent)] > 0 then
+		return print("Not Stopped!")
+	end
+	for s = 2, 1, -1 do
+		RemoteEvent:FireServer("Input", "Action", false)
+		RemoteEvent:FireServer("Input", "Trigger", false)
+		myTSM:WaitForChild("DisableInteraction").Value = true
+		RunS.RenderStepped:Wait()
+		myTSM:WaitForChild("DisableInteraction").Value = false
+		RunS.RenderStepped:Wait()
+	end
+end
+
+--SAVE/LOAD MODULE
+local loadedEnData = {}
+local function loadSaveData()
+	local path = getID.."/enHacks/"..gameName..".txt"
+	if isfile(path) then
+		local success, result = pcall(readfile,path)
+		if success then
+			local success2, result2 = pcall(HS.JSONDecode,HS,result)
+			if success2 then
+				loadedEnData = result2
+			else
+				warn("Load Error (JSONDecode):", result2)
+			end
+		else
+			warn("Load Error (Readfile):", result)
+		end
+	else
+		--no save file found!
+	end
+end
+local function saveSaveData()
+	local success,result = pcall(HS.JSONEncode,HS,enHacks)
+	if not success then
+		warn("Save Error (JSONEncode):",result)
+		return
+	end
+	if not isfolder(getID) then
+		makefolder(getID)
+	end
+	if not isfolder(getID.."/enHacks") then
+		makefolder(getID.."/enHacks")
+	end
+	writefile(getID.."/enHacks/"..gameName..".txt",result)
 end
 
 local function requireModule(module: ModuleScript): Table
@@ -4856,6 +4863,27 @@ AvailableHacks ={
 			--	AvailableHacks.Runner[3].OthersBeastAdded(...)
 			--end
 		},
+		[4]={
+			["Type"]="ExTextButton",
+			["Title"]="Remote Hack PCs",
+			["Desc"]='Remotely Hack PCs',
+			["Shortcut"]="Blatant_RemoteHackPCs",
+			["Default"]=true,
+			["ActivateFunction"]=function(newValue)
+				local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
+				local function currentAnimationUpdate()
+					if currentAnimation.Value == "Typing" then
+						trigger_setTriggers("Typing",false)
+					else
+						trigger_setTriggers("Typing",true)
+					end
+				end
+				
+				setChangedAttribute(currentAnimation,"Value",currentAnimationUpdate)
+				currentAnimationUpdate()
+			end,
+		},
+
 		[7]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto Add Rope",

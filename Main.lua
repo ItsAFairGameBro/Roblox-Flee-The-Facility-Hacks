@@ -6653,7 +6653,7 @@ AvailableHacks ={
 						teleportMyself(trigger:GetPivot()*CFrame.new(0,0,.1)+Vector3.new(0,-trigger.Size.Y/2+getHumanoidHeight(char)))
 						task.wait(.5)
 						if not canRun() then return end
-						table.insert(actionTable,trigger.Value.Event)
+						table.insert(actionTable,trigger.Event)
 						print("LastPC2",trigger_enabledNames["LastPC"])
 						while trigger_enabledNames["LastPC"] and not trigger_enabledNames["LastPC"].Computer do
 							

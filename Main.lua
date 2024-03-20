@@ -5633,7 +5633,6 @@ AvailableHacks ={
 						i+=1
 						if i==10 then
 							i = 0
-							print("DATA:",keyNeeded,myRunerPlrKey,plr:GetAttribute("HasRescued"))
 						end
 						if (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") or #runnerPlrs==1 then
 							task.wait(1/2)
@@ -6616,18 +6615,19 @@ AvailableHacks ={
 						local selectedTriggerKey = 1
 						local trigger = goodTriggers[selectedTriggerKey]
 						teleportMyself(trigger:GetPivot())
-						task.wait(.5)
+						task.wait()
 						if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
 							return
 						end
-						if trigger_enabledNames["LastPC"] and trigger_enabledNames["LastPC"].Computer > 0 and lastHackedPC ~= pc then
-							createCommandLine("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
-							error("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
+						while trigger_enabledNames["LastPC"] and trigger_enabledNames["LastPC"].Computer > 0 and lastHackedPC ~= pc do
+							--createCommandLine("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
+							--error("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
+							RunS.RenderStepped:Wait()
 						end
 						RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
-						task.wait(.5)
+						task.wait(.1)
 						RemoteEvent:FireServer("Input","Action",true)
-						task.wait(.5)
+						task.wait(.1)
 						RemoteEvent:FireServer("Input","Action",false)
 
 					end
@@ -6636,6 +6636,12 @@ AvailableHacks ={
 				refreshEnHack["Cmds_HackAllPCs"](true)
 				task.wait(3)
 				if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then return end
+				refreshEnHack["Cmds_HackAllPCs"](false)
+			end,
+			["CleanUp"]=function()
+				refreshEnHack["Cmds_HackAllPCs"](false)
+			end,
+			["MyStartUp"]=function()
 				refreshEnHack["Cmds_HackAllPCs"](false)
 			end,
 		},
@@ -7469,7 +7475,7 @@ end
 --MENU FUNCTS
 if gameName=="FleeMain" then
 	local lastPC_time
-	local currentTrigger = myTSM:WaitForChild("ActionEvent") --local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
+	local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
 	local lastAnimationName
 	local function getPC(obj)
 		if obj:HasTag("Computer") then
@@ -7480,10 +7486,7 @@ if gameName=="FleeMain" then
 		return getPC(obj.Parent)
 	end
 	local function updateAnimation()
-		local trigger = currentTrigger.Value
-		local pc = trigger and trigger.Parent and trigger.Parent.Parent
-		local eventType = pc and trigger_gettype(trigger)
-		if eventType == "Computer"  then
+		if currentAnimation.Value=="Typing" then
 			lastHackedPC = getPC(myTSM.ActionEvent.Value)
 			if not lastHackedPC then
 				if not myTSM.ActionEvent.Value then
@@ -7492,7 +7495,7 @@ if gameName=="FleeMain" then
 					warn("PC Not Found:",myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
-		elseif lastHackedPC and eventType=="Computer" then
+		elseif lastHackedPC and lastAnimationName=="Typing" then
 			lastPC_time = os.clock()
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
 			task.delay(absMinTimeBetweenPCs,function()
@@ -7501,9 +7504,9 @@ if gameName=="FleeMain" then
 				end
 			end)
 		end
-		lastAnimationName = eventType
+		lastAnimationName = currentAnimation.Value
 	end
-	setChangedAttribute(currentTrigger,"Value",updateAnimation)
+	setChangedAttribute(currentAnimation,"Value",updateAnimation)
 	updateAnimation()
 	trigger_setTriggers("StartUp",{Computer=false})
 	task.delay(5,trigger_setTriggers,"StartUp",{Computer=true})--careful with computers at the start!

@@ -774,9 +774,9 @@ local function createCommandLine(message,printType)
 		if printType == true then
 			print(message)
 		elseif printType=="warn" then
-			warn(printType)
+			warn(message)
 		elseif printType=="error" then
-
+			pcall(error,'<font color="rgb(255,0,0)">'..debug.traceback("ERROR:")..'</font>')
 		end
 	end
 	while Console.AbsoluteCanvasSize.Y>Console.AbsoluteWindowSize.Y*5 do
@@ -4873,8 +4873,7 @@ AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				
 				local actionEvent = myTSM:WaitForChild("ActionEvent")
-				local function currentAnimationUpdate()
-					local actionValue = actionEvent.Value
+				local function currentAnimationUpdate(actionValue)
 					if actionValue and actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent.Parent)=="Computer" then
 						if enHacks.Blatant_RemoteHackPCs then
 							char.Torso.CanTouch = false
@@ -4889,7 +4888,7 @@ AvailableHacks ={
 							table.insert(functs,changed)
 							return
 						else
-							if not table.find(char.Torso:GetTouchingParts(),actionValue) then
+							if actionValue.Parent and not table.find(char.Torso:GetTouchingParts(),actionValue.Parent) then
 								stopCurrentAction(true)
 							end
 						end
@@ -6629,13 +6628,13 @@ AvailableHacks ={
 						task.wait(.75)
 						local lastPC = lastHackedPC
 						for s = 7, 1, -1 do
-							if not canRun() or hackedPCS>=1 then return end
+							if not canRun() then return end--or hackedPCS>=1 then return end
 							RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 							task.wait(.16)
 							if not canRun() then return end
 							RemoteEvent:FireServer("Input","Action",true)
 							task.wait(.16)
-							if lastPC == pc then
+							if lastHackedPC == pc then
 								print("PC Hack Successful!")
 								hackedPCS+=1
 								break

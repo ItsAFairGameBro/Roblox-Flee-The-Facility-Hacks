@@ -4884,6 +4884,7 @@ AvailableHacks ={
 					else
 						print("Enabled All Triggers")
 						trigger_setTriggers("Typing",true)
+						char.Torso.CanTouch = true
 					end
 				end
 				

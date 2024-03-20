@@ -6617,10 +6617,10 @@ AvailableHacks ={
 					if #goodTriggers>0 then
 						local selectedTriggerKey = 1
 						local trigger = goodTriggers[selectedTriggerKey]
-						teleportMyself(trigger:GetPivot())
+						teleportMyself(trigger:GetPivot()+Vector3.new(0,-trigger.Size.Y/2+getHumanoidHeight(human)))
 						task.wait(.5)
 						if not canRun() then return end
-						print(trigger_enabledNames["LastPC"])
+						print("LastPC",trigger_enabledNames["LastPC"])
 						while trigger_enabledNames["LastPC"] and not trigger_enabledNames["LastPC"].Computer and lastHackedPC ~= pc do
 							--createCommandLine("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
 							--error("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")

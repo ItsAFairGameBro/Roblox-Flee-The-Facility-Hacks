@@ -6619,13 +6619,14 @@ AvailableHacks ={
 						teleportMyself(trigger:GetPivot())
 						task.wait(.5)
 						if not canRun() then return end
+						print(trigger_enabledNames["LastPC"])
 						while trigger_enabledNames["LastPC"] and not trigger_enabledNames["LastPC"].Computer and lastHackedPC ~= pc do
 							--createCommandLine("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
 							--error("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
-							print("Waiting")
+							
 							RunS.RenderStepped:Wait()
 						end
-						if not canRun() then return end
+						if not canRun() or num==2 then return end
 						RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 						task.wait(.1)
 						if not canRun() then return end

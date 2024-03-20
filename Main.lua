@@ -3276,9 +3276,9 @@ AvailableHacks ={
 				local function applyToSound(musicSound,needs)
 					if musicSound then
 						local shouldBe = newValue == needs or newValue == "Both"
-						if shouldBe and not musicSound.IsPlaying then
+						if shouldBe and musicSound.IsPlaying then
 							stopSound(musicSound)
-						elseif not shouldBe and musicSound.IsPlaying then
+						elseif not shouldBe and not musicSound.IsPlaying then
 							startSound(musicSound)
 						end
 					end

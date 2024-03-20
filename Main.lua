@@ -885,7 +885,7 @@ end
 
 function stopCurrentAction(override)
 	if not override and myTSM.ActionEvent.Value and myTSM.ActionEvent.Value.Parent and 
-		trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent)] > 0 then
+		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent)] or -1) > 0 then
 		return print("Not Stopped!")
 	end
 	for s = 2, 1, -1 do
@@ -4881,7 +4881,7 @@ AvailableHacks ={
 					end
 				end
 				
-				setChangedAttribute(currentAnimation,"Value",currentAnimationUpdate)
+				setChangedAttribute(currentAnimation,"Value",newValue and currentAnimationUpdate)
 				currentAnimationUpdate()
 			end,
 		},

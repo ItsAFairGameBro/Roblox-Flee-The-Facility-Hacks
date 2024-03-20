@@ -3256,13 +3256,30 @@ AvailableHacks ={
 			["MusicValue3"] = nil,
 			["ActivateFunction"]=function()
 				local newValue = enHacks.Util_MuteMusic
+				local function stopSound(musicSound)
+					if musicSound:IsDescendantOf(char) then
+						musicSound:Stop()
+					else
+						if not musicSound:GetAttribute("SaveVolume") then
+							musicSound:SetAttribute("SaveVolume",musicSound.Volume)
+						end
+						musicSound.Volume = 0
+					end
+				end
+				local function startSound(musicSound)
+					if musicSound:IsDescendantOf(char) then
+						musicSound:Resume()
+					else
+						musicSound.Volume = musicSound:GetAttribute("SaveVolume") or musicSound.Volume
+					end
+				end
 				local function applyToSound(musicSound,needs)
 					if musicSound then
 						local shouldBe = newValue == needs or newValue == "Both"
-						if shouldBe and musicSound.IsPlaying then
-							musicSound:Stop()
-						elseif not shouldBe and not musicSound.IsPlaying then
-							musicSound:Resume()
+						if shouldBe and not musicSound.IsPlaying then
+							stopSound()
+						elseif not shouldBe and musicSound.IsPlaying then
+							startSound()
 						end
 					end
 				end

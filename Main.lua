@@ -99,7 +99,7 @@ end
 local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
 local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
 local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
-local absMinTimeBetweenPCs=25 --abs min time to hack, overrides minspeed
+local absMinTimeBetweenPCs=30 --abs min time to hack, overrides minspeed
 local botBeastBreakMin=13.5 --in minutes
 local waitForChildTimout = 20
 local max_tpStackSize = 1

@@ -6627,11 +6627,17 @@ AvailableHacks ={
 							
 							RunS.RenderStepped:Wait()
 						end
-						if not canRun() or num==2 then return end
-						RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
-						task.wait(.1)
-						if not canRun() then return end
-						RemoteEvent:FireServer("Input","Action",true)
+						local lastPC = lastHackedPC
+						for s = 3, 1, -1 do
+							if lastPC == pc then
+								break
+							end
+							if not canRun() or num==2 then return end
+							RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
+							task.wait(.1)
+							if not canRun() then return end
+							RemoteEvent:FireServer("Input","Action",true)
+						end
 						task.wait(.1)
 						if not canRun() then return end
 						RemoteEvent:FireServer("Input","Action",false)

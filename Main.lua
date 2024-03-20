@@ -4286,7 +4286,8 @@ AvailableHacks ={
 				elseif (isDoor and not enHacks.Blatant_WalkThruDoors) or (isWall and not enHacks.Blatant_WalkThruWalls) then
 					return AvailableHacks.Basic[20].InstanceRemoved(object)	
 				end
-				local shouldBeInvi = (object.Transparency>=.95 and object.CanCollide) or (enHacks.Blatant_WalkThruDoors and isDoor) or (enHacks.Blatant_WalkThruWalls and isWall)
+				local shouldBeInvi = ((object:GetAttribute("OrgTrans") or object.Transparency)>=.95 and object.CanCollide) 
+					or (enHacks.Blatant_WalkThruDoors and isDoor) or (enHacks.Blatant_WalkThruWalls and isWall)
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=GetAbsoluteWorldSize(object).Y or isDoor or isWall) then
 					if not object:GetAttribute("OrgColor") then
 						object:SetAttribute("OrgColor",object.Color)

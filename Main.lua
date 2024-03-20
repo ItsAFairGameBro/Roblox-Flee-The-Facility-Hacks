@@ -6625,11 +6625,13 @@ AvailableHacks ={
 							
 							RunS.RenderStepped:Wait()
 						end
-						task.wait(.75)
+						myTSM:WaitForChild("ActionEvent").Value = trigger.Event
+						task.wait(.5)
 						local lastPC = lastHackedPC
 						for s = 15, 1, -1 do
 							if not canRun() then return end--or hackedPCS>=1 then return end
 							myTSM:WaitForChild("ActionEvent").Value = trigger.Event
+							task.wait()
 							RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 							task.wait(.3)
 							if not canRun() then return end
@@ -7508,6 +7510,7 @@ if gameName=="FleeMain" then
 	end
 	local function updateAnimation(newValue)
 		if newValue=="Typing" then
+			print("New PC Found!")
 			lastHackedPC = getPC(myTSM.ActionEvent.Value)
 			if not lastHackedPC then
 				if not myTSM.ActionEvent.Value then

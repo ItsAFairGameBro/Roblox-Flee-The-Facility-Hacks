@@ -6630,10 +6630,10 @@ AvailableHacks ={
 						for s = 15, 1, -1 do
 							if not canRun() then return end--or hackedPCS>=1 then return end
 							RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
-							task.wait(.16)
+							task.wait(.3)
 							if not canRun() then return end
 							RemoteEvent:FireServer("Input","Action",true)
-							task.wait(.16)
+							task.wait(.3)
 							if lastHackedPC == pc then
 								print("PC Hack Successful!")
 								myTSM.CurrentAnimation.Value = ""

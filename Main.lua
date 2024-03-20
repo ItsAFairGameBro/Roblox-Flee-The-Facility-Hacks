@@ -6627,7 +6627,7 @@ AvailableHacks ={
 						end
 						myTSM:WaitForChild("ActionEvent").Value = trigger.Event
 						task.wait(.5)
-						local lastPC = lastHackedPC
+						local lastPCSave = lastHackedPC
 						for s = 15, 1, -1 do
 							if not canRun() then return end--or hackedPCS>=1 then return end
 							myTSM:WaitForChild("ActionEvent").Value = trigger.Event
@@ -6637,6 +6637,9 @@ AvailableHacks ={
 							if not canRun() then return end
 							RemoteEvent:FireServer("Input","Action",true)
 							task.wait(.3)
+							if lastHackedPC ~= lastPCSave then
+								print("PC Hack Change Detected")
+							end
 							if lastHackedPC == pc then
 								print("PC Hack Successful!")
 								myTSM.CurrentAnimation.Value = ""
@@ -6645,7 +6648,7 @@ AvailableHacks ={
 							elseif s == 1 then
 								createCommandLine("[Hack All PCs]: PC HACK FAIL TIMEOUT!","warn")
 								hackedPCS+=1
-								return
+								return refreshEnHack["Cmds_HackAllPCs"](false)
 							end
 						end
 						task.wait(.1)

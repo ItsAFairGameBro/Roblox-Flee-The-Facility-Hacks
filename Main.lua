@@ -6599,11 +6599,14 @@ AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				if newValue == true then
 					return
+				elseif newValue == false then
+					trigger_setTriggers("Cmds_HackAllPCs",true)
 				end
 				local savedDeb = AvailableHacks.Commands[30].SaveDeb + 1
 				AvailableHacks.Commands[30].SaveDeb = savedDeb
 				if not newValue then return end
-				for num, pc in ipairs(CS:GetTagged("Computers")) do
+				trigger_setTriggers("Cmds_HackAllPCs",{["Computer"]=false})
+				for num, pc in ipairs(CS:GetTagged("Computer")) do
 					if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
 						return
 					end

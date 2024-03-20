@@ -21,7 +21,7 @@ local gameUniverse=gameName:find("Flee") and "Flee" or "Unknown"
 local newVector3, newColor3 = Vector3.new, Color3.fromRGB
 local isStudio=RunS:IsStudio()
 local enHacks,playerEvents,objectFuncts={},{},{}
-local functs = {}
+local functs,refreshEnHack = {}, {}
 
 local Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
 local myTSM,mySSM
@@ -886,9 +886,8 @@ end
 function stopCurrentAction(override)
 	if not override and myTSM.ActionEvent.Value and myTSM.ActionEvent.Value.Parent and 
 		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)] or -1) > 0 then
-		return print("Not Stopped!")
+		return
 	end
-	print("Stop Action",override,myTSM.ActionEvent.Value,myTSM.ActionEvent.Value.Parent and trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent) and trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)])
 	for s = 2, 1, -1 do
 		RemoteEvent:FireServer("Input", "Action", false)
 		RemoteEvent:FireServer("Input", "Trigger", false)
@@ -6574,6 +6573,65 @@ AvailableHacks ={
 				end
 			end,--]]
 		},
+		[30]={
+			["Type"]="ExTextButton",
+			["Title"]="Hack ALL PCs",
+			["Desc"]="Activate To Hack All Available PCs in the map.\nWhile doing this, you can move around and open/close doors",
+			["Shortcut"]="Cmds_HackAllPCs",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[false]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=newColor3(0,0,0),
+				},
+				["Enabling"]={
+					["Title"]="ENABLING...",
+					["TextColor"]=newColor3(255,255,255),
+				},
+				[true]={
+					["Title"]="IN PROGRESS",
+					["TextColor"]=newColor3(0, 255, 0),
+				},
+			},
+			["SaveDeb"] = 0;
+			["ActivateFunction"]=function(newValue)
+				local savedDeb = AvailableHacks.Commands[30].SaveDeb + 1
+				AvailableHacks.Commands[30].SaveDeb = savedDeb
+				if not newValue then return end
+				refreshEnHack["Cmds_HackAllPCs"]("Enabling")
+				for num, pc in ipairs(CS:GetTagged("Computers")) do
+					if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
+						return
+					end
+					local goodTriggers = AvailableHacks.Bot[15].getGoodTriggers(pc)
+					if #goodTriggers>0 then
+						local selectedTriggerKey = 1
+						local trigger = goodTriggers[selectedTriggerKey]
+						teleportMyself(trigger:GetPivot())
+						task.wait(.5)
+						if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
+							return
+						end
+						if trigger_enabledNames["LastPC"].Computer > 0 and lastHackedPC ~= pc then
+							createCommandLine("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
+							error("[Hack All PCs]: Stopped For Protection: Last PC Hacked!")
+						end
+						RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
+						task.wait(.5)
+						RemoteEvent:FireServer("Input","Action",true)
+						task.wait(.5)
+						RemoteEvent:FireServer("Input","Action",false)
+
+					end
+
+				end
+				refreshEnHack["Cmds_HackAllPCs"](true)
+				task.wait(3)
+				if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then return end
+				refreshEnHack["Cmds_HackAllPCs"](false)
+			end,
+		},
 		[12]={
 			["Type"]="ExTextButton",
 			["Title"]="Count Stats",
@@ -7134,9 +7192,14 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			miniHackFrame.LayoutOrder = num;
 			hack.MiniHackFrame = miniHackFrame
 			task.spawn(refreshTypes[hack.Type], miniHackFrame, hack, true);
-			--pls work!
+
 			local initilizationType_FUNCTION = initilizationTypes[hack.Type];
 			task.spawn(initilizationType_FUNCTION,hack);
+			local update_Function = refreshTypes[hack.Type]
+			refreshEnHack[hack.Shortcut] = function(new)
+				enHacks[hack.Shortcut] = new
+				update_Function(miniHackFrame,hack)
+			end
 		else
 			differentHacks[num]=nil
 		end
@@ -7395,7 +7458,7 @@ end
 --MENU FUNCTS
 if gameName=="FleeMain" then
 	local lastPC_time
-	local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
+	local currentTrigger = myTSM:WaitForChild("ActionEvent") --local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
 	local lastAnimationName
 	local function getPC(obj)
 		if obj:HasTag("Computer") then
@@ -7406,7 +7469,10 @@ if gameName=="FleeMain" then
 		return getPC(obj.Parent)
 	end
 	local function updateAnimation()
-		if currentAnimation.Value=="Typing" then
+		local trigger = currentTrigger.Value
+		local pc = trigger and trigger.Parent and trigger.Parent.Parent
+		local eventType = pc and trigger_gettype(trigger)
+		if eventType == "Computer"  then
 			lastHackedPC = getPC(myTSM.ActionEvent.Value)
 			if not lastHackedPC then
 				if not myTSM.ActionEvent.Value then
@@ -7415,7 +7481,7 @@ if gameName=="FleeMain" then
 					warn("PC Not Found:",myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
-		elseif lastHackedPC and lastAnimationName=="Typing" then
+		elseif lastHackedPC and eventType=="Computer" then
 			lastPC_time = os.clock()
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
 			task.delay(absMinTimeBetweenPCs,function()
@@ -7424,9 +7490,9 @@ if gameName=="FleeMain" then
 				end
 			end)
 		end
-		lastAnimationName = currentAnimation.Value
+		lastAnimationName = eventType
 	end
-	setChangedAttribute(currentAnimation,"Value",updateAnimation)
+	setChangedAttribute(currentTrigger,"Value",updateAnimation)
 	updateAnimation()
 	trigger_setTriggers("StartUp",{Computer=false})
 	task.delay(5,trigger_setTriggers,"StartUp",{Computer=true})--careful with computers at the start!

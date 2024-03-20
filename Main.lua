@@ -6591,15 +6591,18 @@ AvailableHacks ={
 				},
 				[true]={
 					["Title"]="IN PROGRESS",
+					["Locked"]=true,
 					["TextColor"]=newColor3(0, 255, 0),
 				},
 			},
 			["SaveDeb"] = 0;
 			["ActivateFunction"]=function(newValue)
+				if newValue == true then
+					return
+				end
 				local savedDeb = AvailableHacks.Commands[30].SaveDeb + 1
 				AvailableHacks.Commands[30].SaveDeb = savedDeb
 				if not newValue then return end
-				refreshEnHack["Cmds_HackAllPCs"]("Enabling")
 				for num, pc in ipairs(CS:GetTagged("Computers")) do
 					if savedDeb ~= AvailableHacks.Commands[30].SaveDeb then
 						return
@@ -7056,11 +7059,13 @@ local initilizationTypes = ({
 		local function cycle(delta)
 			local totalNum, shortCutNum = 0, 0;
 			for Type,Vals in pairs(hackInfo.Options) do
-				totalNum = totalNum + 1;
-				local condition = Type==enHacks[hackInfo.Shortcut]; 
-				if (condition) then
-					shortCutNum = totalNum;
-				end;
+				if not Vals.Locked then
+					totalNum = totalNum + 1;
+					local condition = Type==enHacks[hackInfo.Shortcut]; 
+					if (condition) then
+						shortCutNum = totalNum;
+					end;
+				end
 			end
 			if delta>0 then
 				if (shortCutNum+delta<=totalNum) then
@@ -7078,10 +7083,12 @@ local initilizationTypes = ({
 			totalNum=0
 			local loopThru = hackInfo.Options
 			for Type,Vals in pairs(loopThru) do
-				totalNum = totalNum + 1
-				if (totalNum==shortCutNum) then
-					enHacks[hackInfo.Shortcut] = Type
-					break
+				if not Vals.Locked then
+					totalNum = totalNum + 1
+					if (totalNum==shortCutNum) then
+						enHacks[hackInfo.Shortcut] = Type
+						break
+					end
 				end
 			end
 			refreshTypes.ExTextButton(hackFrame,hackInfo)

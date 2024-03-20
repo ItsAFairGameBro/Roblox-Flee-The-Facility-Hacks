@@ -6634,7 +6634,7 @@ AvailableHacks ={
 								hackedPCS+=1
 								break
 							end
-							if not canRun() or hackedPCS==2 then return end
+							if not canRun() or hackedPCS==1 then return end
 							--RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 							task.wait(.1)
 							if not canRun() then return end

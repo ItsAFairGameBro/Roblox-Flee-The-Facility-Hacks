@@ -4872,21 +4872,23 @@ AvailableHacks ={
 			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
 				
-				local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
+				local actionEvent = myTSM:WaitForChild("ActionEvent")
 				local function currentAnimationUpdate()
-					if currentAnimation.Value == "Typing" then
+					if actionEvent.Parent and actionEvent.Parent.Parent and trigger_gettype(actionEvent.Parent)=="Computer" and enHacks.Blatant_RemoteHackPCs then
 						print("Disabled All Triggers")
-						RemoteEvent.Parent = nil
+						char.Torso.CanTouch = false
 						trigger_setTriggers("Typing",false)
+						task.wait(.5)
+						char.Torso.CanTouch = true
+						
 					else
 						print("Enabled All Triggers")
-						RemoteEvent.Parent = RS
 						trigger_setTriggers("Typing",true)
 					end
 				end
 				
 				if not AvailableHacks.Runner[4].Funct and newValue then
-					AvailableHacks.Runner[4].Funct = currentAnimation.Changed:Connect(currentAnimationUpdate)
+					AvailableHacks.Runner[4].Funct = actionEvent.Changed:Connect(currentAnimationUpdate)
 				elseif AvailableHacks.Runner[4].Funct and not newValue then
 					AvailableHacks.Runner[4].Funct:Disconnect()
 					AvailableHacks.Runner[4].Funct=nil

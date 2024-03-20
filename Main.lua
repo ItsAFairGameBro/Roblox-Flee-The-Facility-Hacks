@@ -7503,11 +7503,12 @@ if gameName=="FleeMain" then
 				end
 			end
 		elseif lastHackedPC and lastAnimationName=="Typing" then
-			lastPC_time = os.clock()
+			lastPC_time = os.clock() print("Triggers Disabled")
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
 			task.delay(absMinTimeBetweenPCs,function()
 				if (os.clock() - lastPC_time) >= absMinTimeBetweenPCs then
 					trigger_setTriggers("LastPC",{Computer=true})
+					print("Triggers Enabled")
 				end
 			end)
 		end

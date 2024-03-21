@@ -7399,17 +7399,14 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 
 			hack.Options = (hack.Options or (defaultOptionsTable))
 			assert(getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
-			local overrideDefault = (GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut])
+			local overrideDefault
+			if GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]~=nil then
+				overrideDefault = GlobalSettings.enHacks[hack.Shortcut]
+			end
 			if overrideDefault==nil and getgenv().enHacks then
 				overrideDefault = getgenv().enHacks[hack.Shortcut]
-				if hack.Shortcut == "BotRunner" then
-					warn("GET:",overrideDefault)
-				end
 			end
 			if overrideDefault==nil then
-				if hack.Shortcut == "BotRunner" then
-					warn("LOAD:",loadedEnData[hack.Shortcut])
-				end
 				overrideDefault = loadedEnData[hack.Shortcut]
 			end
 			if overrideDefault~=nil and ((hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
@@ -7418,9 +7415,6 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 				overrideDefault = nil
 			end
 			if overrideDefault~=nil then
-				if hack.Shortcut == "BotRunner" then
-					warn("OVERRIDE:",overrideDefault)
-				end
 				enHacks[hack.Shortcut]=overrideDefault;
 			else
 				enHacks[hack.Shortcut]=hack.Default;

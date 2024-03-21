@@ -4855,9 +4855,10 @@ AvailableHacks ={
 				end
 				
 				local Hammer = char:WaitForChild("Hammer",30)
-				if not Hammer then return end
+				local CarriedTorso = Hammer and char:WaitForChild("CarriedTorso",30)
+				if not Hammer or not CarriedTorso then return end
 				local Handle = Hammer:WaitForChild("Handle")
-				local CarriedTorso = char:WaitForChild("CarriedTorso")
+				
 				local function canRun(noReset)
 					local retValue = savedDeb == AvailableHacks.Beast[77].SaveDeb and not isCleared and char == Beast
 						
@@ -4872,7 +4873,6 @@ AvailableHacks ={
 				end
 				refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")
 				trigger_setTriggers("Beast_CaptureAllSurvivors",false)
-				task.wait(.5)
 				while true do
 					if not canRun() then return end
 					for num, theirPlr in ipairs(PS:GetPlayers()) do
@@ -4884,7 +4884,6 @@ AvailableHacks ={
 								--PROCESS SEQUENCE
 								while not theirTSM.Captured.Value and canRunPlr(theirPlr) do
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
-									print("S1")
 									teleportMyself(theirChar:GetPivot() * CFrame.new(0,0,1))
 									while canRun(true) and canRunPlr(theirPlr) 
 										and not theirTSM.Ragdoll.Value do
@@ -4894,8 +4893,7 @@ AvailableHacks ={
 										end
 										RunS.RenderStepped:Wait()
 									end
-									print("S2")
-									task.wait(.5)
+									task.wait(.2)
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
 									while canRun(true) and canRunPlr(theirPlr)
 										and theirTSM.Ragdoll.Value and CarriedTorso.Value == nil do
@@ -4903,13 +4901,12 @@ AvailableHacks ={
 										Hammer.HammerEvent:FireServer("HammerTieUp",theirChar.Torso,theirChar.Torso.Position)
 										RunS.RenderStepped:Wait()
 									end
-									print("S3")
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
 									while canRun(true) and canRunPlr(theirPlr) and theirTSM.Ragdoll.Value and CarriedTorso.Value and CarriedTorso.Value.Parent == theirChar.Parent and not theirTSM.Captured.Value do
 										AvailableHacks.Beast[60].CaptureSurvivor(theirPlr,theirChar,true)
 										RunS.RenderStepped:Wait()
 									end
-									task.wait(.5)
+									task.wait(.2)
 								end
 							end
 						end
@@ -4926,7 +4923,7 @@ AvailableHacks ={
 					if isFinished then
 						break
 					end
-					task.wait(.5)
+					task.wait(.2)
 				end
 				if not canRun() then return end
 				warn("<font color='rgb(255,255,0)'>Finished Capturing!</font>")

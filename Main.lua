@@ -92,10 +92,15 @@ local whitelistedUsers={
 	["kitcat4681"]=true,
 	["goldenbear25"]=true,
 };
-if not botModeEnabled or not myBots[plr.Name:lower()] or GlobalSettings.ForceBotMode then
-	myBots={};
-	botModeEnabled = false;
+if not myBots[plr.Name:lower()] then
+	if not botModeEnabled and not GlobalSettings.ForceBotMode then
+		myBots={};
+		botModeEnabled = false;
+	else
+		botModeEnabled = true;
+	end
 end
+print('BOTMODE',botModeEnabled)
 local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
 local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
 local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
@@ -4293,8 +4298,8 @@ AvailableHacks ={
 				local structure = AvailableHacks.Basic[20].GetStructure(object)
 				object:RemoveTag(object,"InviWalls")
 				object.CanCollide = not object:GetAttribute("WeirdCanCollide")
-				object.Color = object:GetAttribute("OrgColor") or Color3.fromRGB(0,0,255)
-				object.Transparency = object:GetAttribute("OrgTrans") or 1
+				object.Color = object:GetAttribute("OrgColor") or object.Color
+				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency
 				object.CastShadow = true
 				if structure == "Door" then
 					setChangedAttribute(object,"CanCollide",false)

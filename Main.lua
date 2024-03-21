@@ -4868,7 +4868,7 @@ AvailableHacks ={
 				end
 				local function canRunPlr(theirPlr)
 					return theirPlr and theirPlr.Parent and theirPlr.Character 
-						and theirPlr.Character:FindFirstChild("Humanoid") and theirPlr.Chracter.Humanoid.Health>0
+						and theirPlr.Character:FindFirstChild("Humanoid") and theirPlr.Character.Humanoid.Health>0
 				end
 				refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")
 				trigger_setTriggers("Beast_CaptureAllSurvivors",false)

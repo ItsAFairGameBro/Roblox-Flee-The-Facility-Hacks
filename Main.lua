@@ -3069,10 +3069,12 @@ AvailableHacks ={
 				survivorScreen()
 
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
+					local chatMain = requireModule(StringWaitForChild(plr,"ChatScriptOld.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin then
 							RunS.RenderStepped:Wait()
+							chatMain.SetVisible(nil,true)
 							chatBar:CaptureFocus()
 						end
 					end

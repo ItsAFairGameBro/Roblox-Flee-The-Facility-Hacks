@@ -3159,6 +3159,7 @@ AvailableHacks ={
 			["Default"]=true,
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
+				if isCleared then return end
 				local ContextActionGui = PlayerGui:WaitForChild("ContextActionGui")
 				local TouchGui = PlayerGui:WaitForChild("TouchGui");
 				local function updateTouchScreenEnability()
@@ -3235,7 +3236,7 @@ AvailableHacks ={
 			["Title"]="Auto Mute Music",
 			["Desc"]="Activate To Force Stop Lobby and/or Beast Music",
 			["Shortcut"]="Util_MuteMusic",
-			["Default"]=false,
+			["Default"]=botModeEnabled and "Both",
 			["DontActivate"]=true,
 			["Options"]={
 				[false] = ({
@@ -4467,7 +4468,7 @@ AvailableHacks ={
 					for hackID, value in pairs(enHacks) do
 						lastRunningEnv.GlobalSettings.enHacks[hackID] = value
 					end
-					print("LAST",lastRunningEnv)
+					task.wait(1)
 					reloadFunction()
 				else
 					print("Update/Reload Function Not Found!")

@@ -101,7 +101,6 @@ if not myBots[plr.Name:lower()] then
 	end
 end
 local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
-print('BOTMODE',botModeEnabled,MyDefaults.BotFarmRunner)
 local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
 local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
 local absMinTimeBetweenPCs=30 --abs min time to hack, overrides minspeed
@@ -3074,7 +3073,7 @@ AvailableHacks ={
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin then
 							RunS.RenderStepped:Wait()
-							chatMain.SetVisible(nil,true)
+							chatMain.InstantFadeIn()
 							chatBar:CaptureFocus()
 						end
 					end

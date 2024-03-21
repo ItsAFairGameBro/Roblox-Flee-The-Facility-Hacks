@@ -3069,7 +3069,7 @@ AvailableHacks ={
 				survivorScreen()
 
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
-					local chatMain = requireModule(StringWaitForChild(plr,"ChatScript.ChatMain"))
+					local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin then
@@ -7407,21 +7407,12 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			local overrideDefault
 			if GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]~=nil then
 				overrideDefault = GlobalSettings.enHacks[hack.Shortcut]
-				if hack.Shortcut == "BotRunner" then
-					print("GLOBALSETTINGS:",GlobalSettings)
-				end
 
 			end
 			if overrideDefault==nil and getgenv().enHacks then
 				overrideDefault = getgenv().enHacks[hack.Shortcut]
-				if hack.Shortcut == "BotRunner" then
-					warn("GET:",overrideDefault)
-				end
 			end
 			if overrideDefault==nil then
-				if hack.Shortcut == "BotRunner" then
-					warn("LOAD:",loadedEnData[hack.Shortcut])
-				end
 				overrideDefault = loadedEnData[hack.Shortcut]
 			end
 			if overrideDefault~=nil and ((hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
@@ -7430,9 +7421,6 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 				overrideDefault = nil
 			end
 			if overrideDefault~=nil then
-				if hack.Shortcut == "BotRunner" then
-					warn("OVERRIDE:",overrideDefault)
-				end
 				enHacks[hack.Shortcut]=overrideDefault;
 			else
 				enHacks[hack.Shortcut]=hack.Default;
@@ -7552,9 +7540,9 @@ local function PlayerAdded(theirPlr)
 		--print("Listening For",theirPlr.Name)
 		table.insert(playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
 			--print(theirPlr.Name,"Messaged:!",message)
-			if message == "/re" then
+			if message:lower() == "/re" then
 				AvailableHacks.Basic[99].ActivateFunction()
-			elseif message == "/reset" then
+			elseif message:lower() == "/reset" then
 				AvailableHacks.Basic[99].ActivateFunction(true,true)
 			end
 		end))

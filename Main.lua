@@ -3070,6 +3070,7 @@ AvailableHacks ={
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
 					local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
+					print("CHATMAIN",chatMain)
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin then
 							RunS.RenderStepped:Wait()

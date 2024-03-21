@@ -4467,6 +4467,7 @@ AvailableHacks ={
 					for hackID, value in pairs(enHacks) do
 						lastRunningEnv.GlobalSettings.enHacks[hackID] = value
 					end
+					print("LAST",lastRunningEnv)
 					reloadFunction()
 				else
 					print("Update/Reload Function Not Found!")

@@ -4458,13 +4458,14 @@ AvailableHacks ={
 			["ActivateFunction"]=function(newValue,dontKeep)
 				if reloadFunction then
 					if lastRunningEnv.GlobalSettings and not dontKeep then
-						lastRunningEnv.GlobalSettings.enHacks = {}
-						for hackID, value in pairs(enHacks) do
-							lastRunningEnv.GlobalSettings.enHacks[hackID] = value
-						end
+						
 					elseif dontKeep then
 						enHacks = {}--reset hacks!
 						saveSaveData()--deletes the save file!
+					end
+					lastRunningEnv.GlobalSettings.enHacks = {}
+					for hackID, value in pairs(enHacks) do
+						lastRunningEnv.GlobalSettings.enHacks[hackID] = value
 					end
 					reloadFunction()
 				else

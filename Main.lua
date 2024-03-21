@@ -4894,11 +4894,10 @@ AvailableHacks ={
 										and not theirTSM.Ragdoll.Value do
 										
 										if not AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
-											teleportMyself(theirChar:GetPivot() * CFrame.new(0,0,1))
+											teleportMyself(theirChar:GetPivot() * CFrame.new(0,0,1))--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
 										end
 										RunS.RenderStepped:Wait()
 									end
-									task.wait(.2)
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
 									while canRun(true) and canRunPlr(theirPlr)
 										and theirTSM.Ragdoll.Value and CarriedTorso.Value == nil do
@@ -4911,7 +4910,7 @@ AvailableHacks ={
 										AvailableHacks.Beast[60].CaptureSurvivor(theirPlr,theirChar,true)
 										RunS.RenderStepped:Wait()
 									end
-									task.wait(.2)
+									task.wait()
 								end
 							end
 						end
@@ -4927,8 +4926,9 @@ AvailableHacks ={
 					end
 					if isFinished then
 						break
+					else
+						task.wait()
 					end
-					task.wait(.2)
 				end
 				if not canRun() then return end
 				warn("<font color='rgb(255,255,0)'>Finished Capturing!</font>")

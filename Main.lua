@@ -7403,7 +7403,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			if GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]~=nil then
 				overrideDefault = GlobalSettings.enHacks[hack.Shortcut]
 				if hack.Shortcut == "BotRunner" then
-					warn("GLOBALSETTINGS:",GlobalSettings)
+					print("GLOBALSETTINGS:",GlobalSettings)
 				end
 
 			end

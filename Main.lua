@@ -4486,6 +4486,7 @@ AvailableHacks ={
 		},
 	},
 	["Beast"]={
+		
 		[2]={
 			["Type"]="ExTextButton",
 			["Title"]="Crawl as Beast",
@@ -4591,7 +4592,8 @@ AvailableHacks ={
 					human.WalkSpeed = (((human.WalkSpeed==8) and 16) or human.WalkSpeed);
 					AvailableHacks.Beast[2].IsCrawling=false;
 				end
-				TSM.IsCrawling.Value = AvailableHacks.Beast[2].IsCrawling;
+				RemoteEvent:FireServer("Input", "Crawl", AvailableHacks.Beast[2].IsCrawling)
+				--TSM.IsCrawling.Value = AvailableHacks.Beast[2].IsCrawling;
 			end,
 		},
 		[60] = 
@@ -4716,6 +4718,24 @@ AvailableHacks ={
 					["TextColor"]=newColor3(0,255)
 				}
 			},
+			["HitFunction"]=function(Hammer,Handle,theirChar)
+				local Dist=(Handle.Position-theirChar.PrimaryPart.Position).magnitude
+				if Dist<15 then
+					local closestPart, closestDist = nil, 12
+					for num, part in ipairs(theirChar:GetChildren()) do
+						if part:IsA("BasePart") then
+							local testDist = (part.Position-Handle.Position).Magnitude
+							if testDist < closestDist then
+								closestPart, closestDist = part, testDist
+							end
+						end
+					end
+					if closestPart then
+						Hammer.HammerEvent:FireServer("HammerHit", closestPart)
+						return true
+					end
+				end
+			end,
 			["BeastStartUp"]=function()
 				local saveState=enHacks.AutoBeastHit
 				local beast=Beast--the current Beast
@@ -4729,21 +4749,7 @@ AvailableHacks ={
 							local theirChar=theirPlr.Character
 							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
 							if TSM~=nil and not TSM.Captured.Value and not TSM.Ragdoll.Value then
-								local Dist=(Handle.Position-theirChar.PrimaryPart.Position).magnitude
-								if Dist<15 then
-									local closestPart, closestDist = nil, 12
-									for num, part in ipairs(theirChar:GetChildren()) do
-										if part:IsA("BasePart") then
-											local testDist = (part.Position-Handle.Position).Magnitude
-											if testDist < closestDist then
-												closestPart, closestDist = part, testDist
-											end
-										end
-									end
-									if closestPart then
-										Hammer.HammerEvent:FireServer("HammerHit", closestPart)
-									end
-								end
+								AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar)
 							end
 						end
 					end
@@ -4814,6 +4820,120 @@ AvailableHacks ={
 			["MyPlayerAdded"]=function(plr)
 				AvailableHacks.Beast[70].OthersBeastAdded=AvailableHacks.Beast[70].BeastStartUp
 				AvailableHacks.Beast[70].MyBeastAdded=AvailableHacks.Beast[70].BeastStartUp
+			end,
+		},
+		[77]={
+			["Type"]="ExTextButton",
+			["Title"]="Insta Capture All",
+			["Desc"]="Activate To CAPTURE ALL SURVIVORS!",
+			["Shortcut"]="Beast_CaptureAllSurvivors",
+			["Default"]=false,
+			["Options"]={
+				[false]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=newColor3(255,255,255),
+				},
+				["In Progress"]={
+					["Title"]="IN PROGRESS",["Locked"]=true,
+					["TextColor"]=newColor3(255,0,255),
+				},
+				[true]={
+					["Title"]="ENABLED",
+					["TextColor"]=newColor3(0,0,255),
+				},
+			},
+			["SaveDeb"] = 0,
+			["ActivateFunction"]=function(newValue)
+				if newValue=="In Progress" then return end
+				
+				AvailableHacks.Beast[77].SaveDeb+=1
+				local savedDeb = AvailableHacks.Beast[77].SaveDeb
+				
+				if newValue==false or char ~= Beast then
+					trigger_setTriggers("Beast_CaptureAllSurvivors",true)
+					return
+				end
+				
+				local Hammer = char:WaitForChild("Hammer",30)
+				if not Hammer then return end
+				local Handle = Hammer:WaitForChild("Handle")
+				local CarriedTorso = char:WaitForChild("CarriedTorso")
+				local function canRun(noReset)
+					local retValue = savedDeb == AvailableHacks.Beast[77].SaveDeb and not isCleared and char == Beast
+						
+					if not retValue and not noReset then--CLEANUP CHECK!
+						trigger_setTriggers("Beast_CaptureAllSurvivors",true)
+					end
+					return retValue
+				end
+				local function canRunPlr(theirPlr)
+					return theirPlr and theirPlr.Parent and theirPlr.Character 
+						and theirPlr.Character:FindFirstChild("Humanoid") and theirPlr.Chracter.Humanoid.Health>0
+				end
+				refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")
+				trigger_setTriggers("Beast_CaptureAllSurvivors",false)
+				task.wait(.5)
+				while true do
+					if not canRun() then return end
+					for num, theirPlr in ipairs(PS:GetPlayers()) do
+						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule",1)
+						local theirChar = theirPlr.Character
+						if theirChar and theirChar.PrimaryPart and theirTSM then
+							local theirHuman = theirChar:FindFirstChild("Humanoid")
+							if theirHuman and theirHuman.Health > 0 and select(2,isInGame(theirChar,true))=="Runner" then
+								--PROCESS SEQUENCE
+								while not theirTSM.Captured.Value and canRunPlr(theirPlr) do
+									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
+									print("S1")
+									teleportMyself(theirChar:GetPivot() * CFrame.new(0,0,1))
+									while canRun(true) and canRunPlr(theirPlr) 
+										and not theirTSM.Ragdoll.Value do
+										
+										if not AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
+											teleportMyself(theirChar:GetPivot() * CFrame.new(0,0,1))
+										end
+										RunS.RenderStepped:Wait()
+									end
+									print("S2")
+									task.wait(.5)
+									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
+									while canRun(true) and canRunPlr(theirPlr)
+										and theirTSM.Ragdoll.Value and CarriedTorso.Value == nil do
+										
+										Hammer.HammerEvent:FireServer("HammerTieUp",theirChar.Torso,theirChar.Torso.Position)
+										RunS.RenderStepped:Wait()
+									end
+									print("S3")
+									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
+									while canRun(true) and canRunPlr(theirPlr) and theirTSM.Ragdoll.Value and CarriedTorso.Value and CarriedTorso.Value.Parent == theirChar.Parent and not theirTSM.Captured.Value do
+										AvailableHacks.Beast[60].CaptureSurvivor(theirPlr,theirChar,true)
+										RunS.RenderStepped:Wait()
+									end
+									task.wait(.5)
+								end
+							end
+						end
+					end
+					if not canRun() then return end
+					local isFinished = true
+					for num, theirPlr in ipairs(PS:GetPlayers()) do
+						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule",1)
+						if theirTSM and theirTSM.Health.Value > 0 and not theirTSM.Captured.Value then
+							isFinished = false
+							break--performance reasons!
+						end
+					end
+					if isFinished then
+						break
+					end
+					task.wait(.5)
+				end
+				if not canRun() then return end
+				warn("<font color='rgb(255,255,0)'>Finished Capturing!</font>")
+				refreshEnHack["Beast_CaptureAllSurvivors"](true)
+			end,
+			["MyBeastAdded"]=function()
+				AvailableHacks.Beast[77].ActivateFunction(enHacks.Beast_CaptureAllSurvivors)
 			end,
 		},
 
@@ -5111,7 +5231,8 @@ AvailableHacks ={
 				if capsule.PodTrigger.CapturedTorso.Value==nil then return end
 				if not enHacks.AutoRescue and not override then return end
 				if char:FindFirstChild("Hammer")~=nil then return end
-				local Trigger=capsule.PodTrigger
+				local Trigger=capsule:FindFirstChild("PodTrigger")
+				if not Trigger then return end
 				for s=5,1,-1 do
 					if capsule.PodTrigger.CapturedTorso.Value==nil then
 						return true
@@ -5723,7 +5844,7 @@ AvailableHacks ={
 					--print(role,enHacks.BotRunner,Beast,myTSM.Health.Value)
 					if role=="Runner" and (saveValue~="Freeze" or (Beast and Beast.PrimaryPart)) then
 						task.wait(.5)
-						print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
+						--print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
 						break
 					elseif s==1 then 
 						return false
@@ -6528,9 +6649,19 @@ AvailableHacks ={
 				[Enum.MessageType.MessageError] = '<font color="rgb(255,0,0)">'
 			},
 			["ActivateFunction"]=function(newValue)
-				for num, logItem in ipairs(game:GetService("LogService"):GetLogHistory()) do
-					createCommandLine(AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
+				local fullHistory = game:GetService("LogService"):GetLogHistory()
+				local totalLogs = #fullHistory
+				local maximum = 75
+				for num = 1, totalLogs, 1 do
+					if fullHistory - num < 10 then--TODO HERE
+						local logItem = fullHistory[num]
+						createCommandLine(AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
+					end
 				end
+				--for num, logItem in ipairs() do
+					--if  - (100 - (#fullHistory - num) > 0 then
+					--end
+				--end
 			end,
 		},
 		[24]={

@@ -3074,7 +3074,6 @@ AvailableHacks ={
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin then
 							chatMain.ChatBarFocusChanged:fire(true)
-							chatMain.DoTextFadeIn()
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 							chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
 							task.wait(1)

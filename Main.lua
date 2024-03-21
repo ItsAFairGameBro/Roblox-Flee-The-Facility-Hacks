@@ -3081,6 +3081,7 @@ AvailableHacks ={
 							--v1.ChatBarFocusChanged:fire(true)
 							chatMain.FocusChatBar()
 							chatMain.ChatBarFocusChanged:fire(true)
+							chatMain.DoTextFadeIn()
 
 							--chatBar:CaptureFocus()
 						end

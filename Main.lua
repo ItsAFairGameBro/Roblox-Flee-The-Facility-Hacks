@@ -4843,8 +4843,13 @@ AvailableHacks ={
 				},
 			},
 			["SaveDeb"] = 0,
-			["ActivateFunction"]=function(newValue)
-				if newValue=="In Progress" then return end
+			["ActivateFunction"]=function(newValue,isFirstRun)
+				if newValue=="In Progress" then 
+					if isFirstRun then
+						trigger_setTriggers("Beast_CaptureAllSurvivors",true)
+					end
+					return
+				end
 				
 				AvailableHacks.Beast[77].SaveDeb+=1
 				local savedDeb = AvailableHacks.Beast[77].SaveDeb

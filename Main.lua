@@ -3074,8 +3074,8 @@ AvailableHacks ={
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin then
 							RunS.RenderStepped:Wait()
-							chatMain.InstantFadeIn()
-							chatBar:CaptureFocus()
+							chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
+							--chatBar:CaptureFocus()
 						end
 					end
 					AvailableHacks.Utility[3].Active=true

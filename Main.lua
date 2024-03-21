@@ -4839,7 +4839,7 @@ AvailableHacks ={
 				},
 				[true]={
 					["Title"]="ENABLED",
-					["TextColor"]=newColor3(0,0,255),
+					["TextColor"]=newColor3(0,255,0),
 				},
 			},
 			["SaveDeb"] = 0,
@@ -4887,6 +4887,7 @@ AvailableHacks ={
 							local theirHuman = theirChar:FindFirstChild("Humanoid")
 							if theirHuman and theirHuman.Health > 0 and select(2,isInGame(theirChar,true))=="Runner" then
 								--PROCESS SEQUENCE
+								local loopInstance = 1
 								while not theirTSM.Captured.Value and canRunPlr(theirPlr) do
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
 									teleportMyself(theirChar:GetPivot() * CFrame.new(0,0,1))
@@ -4910,7 +4911,11 @@ AvailableHacks ={
 										AvailableHacks.Beast[60].CaptureSurvivor(theirPlr,theirChar,true)
 										RunS.RenderStepped:Wait()
 									end
-									task.wait()
+									if loopInstance > 1 then
+										warn("<font color='rgb(255,255,0)'>[INSTA CAPTURE]: LOOP INSTANCE = "..loopInstance.."!</font>")
+										task.wait()
+									end
+									loopInstance+=1
 								end
 							end
 						end
@@ -7242,11 +7247,12 @@ local refreshTypes = ({
 	ExTextButton = function(hackFrame,hackInfo,isFirstRun)
 		local selectedKey = (enHacks[hackInfo.Shortcut]);
 		local selectedOption = hackInfo.Options[selectedKey];
+		local ToggleButton = hackFrame:WaitForChild("Toggle")
 		--print(hackInfo.Shortcut, selectedKey, selectedOption);
 		assert(selectedOption, hackInfo.Title.." doesn't have options with default value!")
 
-		hackFrame.Toggle.Text = selectedOption.Title;
-		hackFrame.Toggle.TextColor3 = selectedOption.TextColor;
+		ToggleButton.Text = selectedOption.Title;
+		ToggleButton.TextColor3 = selectedOption.TextColor;
 		if hackInfo.ActivateFunction then
 			if not hackInfo.DontActivate then
 				task.spawn(hackInfo.ActivateFunction, enHacks[hackInfo.Shortcut], isFirstRun);

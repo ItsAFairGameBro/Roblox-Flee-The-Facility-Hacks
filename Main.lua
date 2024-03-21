@@ -3082,6 +3082,7 @@ AvailableHacks ={
 							chatMain.FocusChatBar()
 							chatMain.ChatBarFocusChanged:fire(true)
 							chatMain.DoTextFadeIn()
+							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 
 							--chatBar:CaptureFocus()
 						end

@@ -3075,6 +3075,13 @@ AvailableHacks ={
 						if state == Enum.UserInputState.Begin then
 							RunS.RenderStepped:Wait()
 							chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
+							--v553:SetVisible(true)
+							--InstantFadeIn()
+							--v145:CaptureFocus()
+							--v1.ChatBarFocusChanged:fire(true)
+							chatMain.FocusChatBar()
+							chatMain.ChatBarFocusChanged:fire(true)
+
 							--chatBar:CaptureFocus()
 						end
 					end

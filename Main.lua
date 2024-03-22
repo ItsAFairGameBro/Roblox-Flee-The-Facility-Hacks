@@ -4975,12 +4975,12 @@ AvailableHacks ={
 								local loopInstance = 1
 								while not theirTSM.Captured.Value and canRunPlr(theirPlr) do
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
-									teleportMyself(theirChar:GetPivot() * CFrame.new(0,0,1))
+									teleportMyself(char:GetPivot() - char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position)
 									while canRun(true) and canRunPlr(theirPlr) 
 										and not theirTSM.Ragdoll.Value do
 										
 										if not AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
-											teleportMyself(char:GetPivot() - char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position)
+											teleportMyself(char:GetPivot() - char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position + getHumanoidHeight(char))
 											--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
 										end
 										print("Out of range")
@@ -5000,6 +5000,7 @@ AvailableHacks ={
 										print("Capturing")
 										RunS.RenderStepped:Wait()
 									end
+									print("Ragodll",theirTSM.Ragdoll.Value,CarriedTorso.Value,theirTSM.Captured.Value)
 									if loopInstance > 1 then
 										warn("<font color='rgb(255,255,0)'>[INSTA CAPTURE]: LOOP INSTANCE = "..loopInstance.."!</font>")
 										task.wait()

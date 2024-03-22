@@ -2745,8 +2745,8 @@ AvailableHacks ={
 				end
 				AvailableHacks.Blatant[18].Functs = {}
 				
-				if enHacks.Blatant_KeepDoorsOpen or enHacks.Blatant_KeepDoorsClosed then
-					for num, door in ipairs(CS:GetTagged("Door")) do
+				if Map and (enHacks.Blatant_KeepDoorsOpen or enHacks.Blatant_KeepDoorsClosed) then
+					local function doorAdded(door)
 						if AvailableHacks.Blatant[18].SaveDeb ~= saveDeb then
 							return
 						end
@@ -2761,9 +2761,15 @@ AvailableHacks ={
 							table.insert(AvailableHacks.Blatant[18].Functs,actionSign.Changed:Connect(updateFunct))
 						end
 					end
+					table.insert(AvailableHacks.Blatant[18].Functs,CS.TagAdded:Connect(doorAdded)))
+					for num, door in ipairs(Map:GetChildren()) do
+						if door.Name == "SingleDoor" or door.Name=="DoubleDoor" then
+							doorAdded(door)
+						end
+					end
 				end
 			end,
-			["DoorAdded"]=function()
+			["MapAdded"]=function()
 				AvailableHacks.Blatant[18].ActivateFunction()
 			end,
 		},

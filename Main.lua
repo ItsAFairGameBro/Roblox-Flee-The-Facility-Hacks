@@ -2747,7 +2747,12 @@ AvailableHacks ={
 				
 				if Map and (enHacks.Blatant_KeepDoorsOpen or enHacks.Blatant_KeepDoorsClosed) then
 					local function doorAdded(door)
-						if AvailableHacks.Blatant[18].SaveDeb ~= saveDeb then
+						local saveDoorFunct = AvailableHacks.Blatant[15].DoorFuncts[door]
+						while not saveDoorFunct and AvailableHacks.Blatant[18].SaveDeb == saveDeb and not isCleared do
+							RunS.RenderStepped:Wait()
+							saveDoorFunct = AvailableHacks.Blatant[15].DoorFuncts[door]
+						end
+						if AvailableHacks.Blatant[18].SaveDeb ~= saveDeb or isCleared then
 							return
 						end
 						local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
@@ -2756,18 +2761,18 @@ AvailableHacks ={
 								return
 							end
 							if (enHacks.Blatant_KeepDoorsOpen and actionSign.Value == 10) or (enHacks.Blatant_KeepDoorsClosed and actionSign.Value == 11) then
-								AvailableHacks.Blatant[15].DoorFuncts[door]()
+								saveDoorFunct()
 							end
 						end
 						if actionSign then
-							task.spawn(updateFunct)
 							table.insert(AvailableHacks.Blatant[18].Functs,actionSign.Changed:Connect(updateFunct))
+							updateFunct()
 						end
 					end
 					table.insert(AvailableHacks.Blatant[18].Functs,CS:GetInstanceAddedSignal("Door"):Connect(doorAdded))
 					for num, door in ipairs(Map:GetChildren()) do
 						if door.Name == "SingleDoor" or door.Name=="DoubleDoor" then
-							doorAdded(door)
+							task.spawn(doorAdded,door)
 						end
 					end
 				end

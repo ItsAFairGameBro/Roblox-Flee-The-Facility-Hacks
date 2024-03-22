@@ -2744,7 +2744,7 @@ AvailableHacks ={
 				end
 				AvailableHacks.Blatant[18].Functs = {}
 				
-				if enHacks.Blatant_KeepDoorsOpen and enHacks.Blatant_KeepDoorsClosed then
+				if enHacks.Blatant_KeepDoorsOpen or enHacks.Blatant_KeepDoorsClosed then
 					for num, door in ipairs(CS:GetTagged("Door")) do
 						if AvailableHacks.Blatant[18].SaveDeb ~= saveDeb then
 							return

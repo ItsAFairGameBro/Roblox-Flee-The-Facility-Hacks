@@ -2764,7 +2764,7 @@ AvailableHacks ={
 							table.insert(AvailableHacks.Blatant[18].Functs,actionSign.Changed:Connect(updateFunct))
 						end
 					end
-					table.insert(AvailableHacks.Blatant[18].Functs,CS.TagAdded:Connect(doorAdded))
+					table.insert(AvailableHacks.Blatant[18].Functs,CS:GetInstanceAddedSignal("Door"):Connect(doorAdded))
 					for num, door in ipairs(Map:GetChildren()) do
 						if door.Name == "SingleDoor" or door.Name=="DoubleDoor" then
 							doorAdded(door)

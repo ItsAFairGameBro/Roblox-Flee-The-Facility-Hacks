@@ -4980,7 +4980,7 @@ AvailableHacks ={
 										and not theirTSM.Ragdoll.Value do
 										
 										if not AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
-											teleportMyself(char:GetPivot() - char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position + getHumanoidHeight(char))
+											teleportMyself(char:GetPivot() - char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position + Vector3.new(0,getHumanoidHeight(char)))
 											--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
 										end
 										print("Out of range")

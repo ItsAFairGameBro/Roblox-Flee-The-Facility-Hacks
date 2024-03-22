@@ -2733,6 +2733,7 @@ AvailableHacks ={
 			["Desc"]="Keep on for doors always to be opened!",
 			["Shortcut"]="Blatant_KeepDoorsOpen",
 			["Default"]=true,
+			["DontActivate"]=true,
 			["SaveDeb"]=0,
 			["Functs"]={},
 			["ActivateFunction"]=function()
@@ -2762,12 +2763,16 @@ AvailableHacks ={
 					end
 				end
 			end,
+			["MapAdded"]=function()
+				AvailableHacks.Blatant[18].ActivateFunction()
+			end,
 		},
 		[19]={
 			["Type"]="ExTextButton",
 			["Title"]="Keep Doors Closed",
 			["Desc"]="Keep on for doors always to be closed!",
 			["Shortcut"]="Blatant_KeepDoorsClosed",
+			["DontActivate"]=true,
 			["Default"]=true,
 			["ActivateFunction"]=function()
 				AvailableHacks.Blatant[18].ActivateFunction()

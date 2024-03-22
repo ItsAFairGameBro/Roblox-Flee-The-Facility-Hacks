@@ -2684,6 +2684,7 @@ AvailableHacks ={
 					if actionSign.Value==0 then
 						return
 					end
+					local saveActionSign = actionSign.Value
 					local doorTriggerEvent = doorTrigger:FindFirstChild("Event")
 					if not doorTriggerEvent then
 						return
@@ -2691,7 +2692,7 @@ AvailableHacks ={
 					local isOpened,currentEvent=getState(),TSM.ActionEvent.Value
 					trigger_setTriggers("RemoteDoorControl",false)
 					for s=5,1,-1 do
-						if isOpened~=getState() or actionSign.Value==0 or not doorTriggerEvent or not doorTriggerEvent.Parent then
+						if isOpened~=getState() or not doorTriggerEvent or not doorTriggerEvent.Parent or saveActionSign ~= actionSign.Value then
 							break
 						end
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
@@ -2709,7 +2710,7 @@ AvailableHacks ={
 					end
 					task.spawn(TaskSpawnDelayedFunction)
 					--wait()
-					if currentEvent~=nil then
+					if currentEvent~=nil and saveActionSign == actionSign.Value then
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
 						--wait()
 						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)

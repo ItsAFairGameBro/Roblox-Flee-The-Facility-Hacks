@@ -5000,7 +5000,7 @@ AvailableHacks ={
 										print("Capturing")
 										RunS.RenderStepped:Wait()
 									end
-									print("Ragodll",theirTSM.Ragdoll.Value,CarriedTorso.Value,theirTSM.Captured.Value)
+									print("Ragodll",theirTSM.Ragdoll.Value,CarriedTorso.Value,theirTSM.Captured.Value,canRun(true),canRunPlr(theirPlr),CarriedTorso.Value.Parent == theirChar.Parent)
 									if loopInstance > 1 then
 										warn("<font color='rgb(255,255,0)'>[INSTA CAPTURE]: LOOP INSTANCE = "..loopInstance.."!</font>")
 										task.wait()

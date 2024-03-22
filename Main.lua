@@ -4980,20 +4980,24 @@ AvailableHacks ={
 										and not theirTSM.Ragdoll.Value do
 										
 										if not AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
-											teleportMyself(theirChar:GetPivot() * CFrame.new(0,0,1))--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
+											teleportMyself(char:GetPivot() - char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position)
+											--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
 										end
+										print("Out of range")
 										RunS.RenderStepped:Wait()
 									end
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
 									while canRun(true) and canRunPlr(theirPlr)
 										and theirTSM.Ragdoll.Value and CarriedTorso.Value == nil do
 										
+										print("Tie")
 										Hammer.HammerEvent:FireServer("HammerTieUp",theirChar.Torso,theirChar.Torso.Position)
 										RunS.RenderStepped:Wait()
 									end
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
 									while canRun(true) and canRunPlr(theirPlr) and theirTSM.Ragdoll.Value and CarriedTorso.Value and CarriedTorso.Value.Parent == theirChar.Parent and not theirTSM.Captured.Value do
 										AvailableHacks.Beast[60].CaptureSurvivor(theirPlr,theirChar,true)
+										print("Capturing")
 										RunS.RenderStepped:Wait()
 									end
 									if loopInstance > 1 then

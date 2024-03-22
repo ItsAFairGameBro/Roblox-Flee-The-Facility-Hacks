@@ -6765,16 +6765,38 @@ AvailableHacks ={
 			["Options"]={
 				[(true)]={
 					["Title"]="ACTIVATE",
-					["TextColor"]=newColor3(255, 255, 255),
+					["TextColor"]=newColor3(255, 255, 0),
 				},
 			},
 			["ActivateFunction"]=function(newValue)
 				for num, door in ipairs(CS:GetTagged("Door")) do
-					--TODO HERE
 					local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
 					if actionSign and actionSign.Value == 10 then
 						task.spawn(AvailableHacks.Blatant[15].DoorFuncts[door])
-						RunS.RenderStepped:Wait()
+						--RunS.RenderStepped:Wait()
+					end
+				end
+			end,
+		},
+		[29]={
+			["Type"]="ExTextButton",
+			["Title"]="Close ALL Doors",
+			["Desc"]="Activate To Close All Doors In The Map!",
+			["Shortcut"]="ClearConsole",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[(true)]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=newColor3(0, 255, 0),
+				},
+			},
+			["ActivateFunction"]=function(newValue)
+				for num, door in ipairs(CS:GetTagged("Door")) do
+					local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
+					if actionSign and actionSign.Value == 11 then
+						task.spawn(AvailableHacks.Blatant[15].DoorFuncts[door])
+						--RunS.RenderStepped:Wait()
 					end
 				end
 			end,

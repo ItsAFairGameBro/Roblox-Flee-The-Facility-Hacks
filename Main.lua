@@ -2720,7 +2720,6 @@ AvailableHacks ={
 				newTag.Toggle.MouseButton1Up:Connect(setToggleFunction)
 				AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
 				newTag.Enabled=(enHacks.RemotelyOpenDoors and (camera.CameraType==Enum.CameraType.Custom and isInGame))
-				wait(.075)
 				local function actionSignChangedFunct()
 					AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
 				end
@@ -2732,7 +2731,7 @@ AvailableHacks ={
 			["Title"]="Keep Doors Opened",
 			["Desc"]="Keep on for doors always to be opened!",
 			["Shortcut"]="Blatant_KeepDoorsOpen",
-			["Default"]=true,
+			["Default"]=false,
 			["DontActivate"]=true,
 			["SaveDeb"]=0,
 			["Functs"]={},
@@ -2787,7 +2786,7 @@ AvailableHacks ={
 			["Title"]="Keep Doors Closed",
 			["Desc"]="Keep on for doors always to be closed!",
 			["Shortcut"]="Blatant_KeepDoorsClosed",
-			["DontActivate"]=true,
+			["DontActivate"]=false,
 			["Default"]=true,
 			["ActivateFunction"]=function()
 				AvailableHacks.Blatant[18].ActivateFunction()

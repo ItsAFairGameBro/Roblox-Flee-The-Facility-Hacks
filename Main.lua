@@ -2763,7 +2763,7 @@ AvailableHacks ={
 					end
 				end
 			end,
-			["MapAdded"]=function()
+			["DoorAdded"]=function()
 				AvailableHacks.Blatant[18].ActivateFunction()
 			end,
 		},

@@ -6677,12 +6677,10 @@ AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				local fullHistory = game:GetService("LogService"):GetLogHistory()
 				local totalLogs = #fullHistory
-				local maximum = 75
-				for num = 1, totalLogs, 1 do
-					if fullHistory - num < 10 then--TODO HERE
-						local logItem = fullHistory[num]
-						createCommandLine(AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
-					end
+				local maximum = 5 * (Console.AbsoluteWindowSize.Y / CommandBarLine.AbsoluteSize.Y)
+				for num = totalLogs, math.max(1,fullHistory-maximum), -1 do--only loop through the last ones!
+					local logItem = fullHistory[num]
+					createCommandLine(AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
 				end
 				--for num, logItem in ipairs() do
 					--if  - (100 - (#fullHistory - num) > 0 then
@@ -6756,6 +6754,30 @@ AvailableHacks ={
 					:WaitForChild("ScreenGui"):WaitForChild("MenusTabFrame").Visible=true
 				end
 			end,--]]
+		},
+		[28]={
+			["Type"]="ExTextButton",
+			["Title"]="Open ALL Doors",
+			["Desc"]="Activate To Open All Doors In The Map!",
+			["Shortcut"]="ClearConsole",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[(true)]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
+			},
+			["ActivateFunction"]=function(newValue)
+				for num, door in ipairs(CS:GetTagged("Door")) do
+					--TODO HERE
+					local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
+					if actionSign and actionSign.Value == 10 then
+						task.spawn(AvailableHacks.Blatant[15].DoorFuncts[door])
+						RunS.RenderStepped:Wait()
+					end
+				end
+			end,
 		},
 		[30]={
 			["Type"]="ExTextButton",

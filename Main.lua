@@ -2692,7 +2692,7 @@ AvailableHacks ={
 					local isOpened,currentEvent=getState(),TSM.ActionEvent.Value
 					trigger_setTriggers("RemoteDoorControl",false)
 					for s=5,1,-1 do
-						if isOpened~=getState() or not doorTriggerEvent or not doorTriggerEvent.Parent or saveActionSign ~= actionSign.Value then
+						if isOpened~=getState() or not doorTriggerEvent or not doorTriggerEvent.Parent or (saveActionSign ~= actionSign.Value and actionSign.Value ~= 0) then
 							break
 						end
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)

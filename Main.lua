@@ -2710,7 +2710,7 @@ AvailableHacks ={
 					end
 					task.spawn(TaskSpawnDelayedFunction)
 					--wait()
-					if currentEvent~=nil and saveActionSign == actionSign.Value then
+					if currentEvent~=nil then--and saveActionSign == actionSign.Value then
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
 						--wait()
 						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)

@@ -2727,6 +2727,52 @@ AvailableHacks ={
 				setChangedAttribute(actionSign,"Value", (actionSignChangedFunct))
 			end,
 		},
+		[18]={
+			["Type"]="ExTextButton",
+			["Title"]="Keep Doors Opened",
+			["Desc"]="Keep on for doors always to be opened!",
+			["Shortcut"]="Blatant_KeepDoorsOpen",
+			["Default"]=true,
+			["SaveDeb"]=0,
+			["Functs"]={},
+			["ActivateFunction"]=function()
+				AvailableHacks.Blatant[18].SaveDeb += 1
+				local saveDeb = AvailableHacks.Blatant[18].SaveDeb
+
+				for _, funct in ipairs(AvailableHacks.Blatant[18].Functs) do
+					funct:Disconnect()
+				end
+				AvailableHacks.Blatant[18].Functs = {}
+				
+				if enHacks.Blatant_KeepDoorsOpen and enHacks.Blatant_KeepDoorsClosed then
+					for num, door in ipairs(CS:GetTagged("Door")) do
+						if AvailableHacks.Blatant[18].SaveDeb ~= saveDeb then
+							return
+						end
+						local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
+						local function updateFunct()
+							if (enHacks.Blatant_KeepDoorsOpen and actionSign.Value == 10) or (enHacks.Blatant_KeepDoorsClosed and actionSign.Value == 11) then
+								AvailableHacks.Blatant[15].DoorFuncts[door]()
+							end
+						end
+						if actionSign then
+							task.spawn(updateFunct)
+							table.insert(AvailableHacks.Blatant[18].Functs,actionSign.Changed:Connect(updateFunct))
+						end
+					end
+				end
+			end,
+		},
+		[19]={
+			["Type"]="ExTextButton",
+			["Title"]="Keep Doors Closed",
+			["Desc"]="Keep on for doors always to be closed!",
+			["Shortcut"]="Blatant_KeepDoorsClosed",
+			["Default"]=true,
+			["ActivateFunction"]=function()
+				AvailableHacks.Blatant[18].ActivateFunction()
+			end,
+		},
 		[20]={
 			["Type"]="ExTextButton",
 			["Title"]="Remote Computers and Freezing Pods",
@@ -6756,52 +6802,6 @@ AvailableHacks ={
 				end
 			end,--]]
 		},
-		[28]={
-			["Type"]="ExTextButton",
-			["Title"]="Open ALL Doors",
-			["Desc"]="Activate To Open All Doors In The Map!",
-			["Shortcut"]="ClearConsole",
-			["Default"]=true,
-			["DontActivate"]=true,
-			["Options"]={
-				[(true)]={
-					["Title"]="ACTIVATE",
-					["TextColor"]=newColor3(255, 255, 0),
-				},
-			},
-			["ActivateFunction"]=function(newValue)
-				for num, door in ipairs(CS:GetTagged("Door")) do
-					local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
-					if actionSign and actionSign.Value == 10 then
-						task.spawn(AvailableHacks.Blatant[15].DoorFuncts[door])
-						--RunS.RenderStepped:Wait()
-					end
-				end
-			end,
-		},
-		[29]={
-			["Type"]="ExTextButton",
-			["Title"]="Close ALL Doors",
-			["Desc"]="Activate To Close All Doors In The Map!",
-			["Shortcut"]="ClearConsole",
-			["Default"]=true,
-			["DontActivate"]=true,
-			["Options"]={
-				[(true)]={
-					["Title"]="ACTIVATE",
-					["TextColor"]=newColor3(0, 255, 0),
-				},
-			},
-			["ActivateFunction"]=function(newValue)
-				for num, door in ipairs(CS:GetTagged("Door")) do
-					local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
-					if actionSign and actionSign.Value == 11 then
-						task.spawn(AvailableHacks.Blatant[15].DoorFuncts[door])
-						--RunS.RenderStepped:Wait()
-					end
-				end
-			end,
-		},
 		[30]={
 			["Type"]="ExTextButton",
 			["Title"]="Hack ALL PCs",
@@ -7159,9 +7159,13 @@ clear = function(isManualClear)
 	end
 	for category, categoryList in pairs(AvailableHacks) do
 		for index,tbl in pairs(categoryList) do
-			local check = (tbl.Funct and typeof(tbl.Funct))
-			if (check=="RBXScriptConnection") then
-				tbl.Funct:Disconnect()
+			local funcList = tbl.Functs or {}
+			table.insert(funcList,tbl.Funct)
+			for _, funct in ipairs(funcList) do
+				local check = (funct and typeof(funct))
+				if (check=="RBXScriptConnection") then
+					funct:Disconnect()
+				end
 			end
 		end
 	end

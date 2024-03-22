@@ -2757,12 +2757,13 @@ AvailableHacks ={
 						end
 						local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
 						local function updateFunct()
-							if isCleared then
+							if isCleared or actionSign.Value == 0 then
 								return
 							end
 							if (enHacks.Blatant_KeepDoorsOpen and actionSign.Value == 10) or (enHacks.Blatant_KeepDoorsClosed and actionSign.Value == 11) then
 								saveDoorFunct()
 							end
+							task.wait(.5)
 						end
 						if actionSign then
 							table.insert(AvailableHacks.Blatant[18].Functs,actionSign.Changed:Connect(updateFunct))

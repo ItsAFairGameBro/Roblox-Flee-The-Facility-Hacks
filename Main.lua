@@ -3149,7 +3149,6 @@ AvailableHacks ={
 							--chatMain.ChatBarFocusChanged:fire(true)
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
-							chatButton.Image = "rbxassetid://5227476720"--set it to visible!
 							--task.wait(1)
 							if AvailableHacks.Utility[3].Funct then
 								AvailableHacks.Utility[3].Funct:Disconnect()
@@ -3159,6 +3158,7 @@ AvailableHacks ={
 							end)
 							AvailableHacks.Utility[3].Funct=saveConnection
 							RunS.RenderStepped:Wait()
+							chatButton.Image = "rbxassetid://5227476720"--set it to visible!
 							chatBar:CaptureFocus()
 							task.wait(1.5)
 							if AvailableHacks.Utility[3].Funct==saveConnection then

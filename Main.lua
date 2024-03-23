@@ -3132,11 +3132,16 @@ AvailableHacks ={
 				end
 				setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
 				survivorScreen()
+				
+				local chatTextLabel = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
 
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
 					local chatButton = StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
-					local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
+					--local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
+					local action1 = (UIS.MouseEnabled and UIS.TouchEnabled  and "click/tap") 
+						or (UIS.MouseEnabled and "click") or (UIS.TouchEnabled and "tap") or "<idk>"
+					chatTextLabel.Text = "To chat ".. action1 .." here".. (UIS.KeyboardEnabled and " or press "/" key" or "")
 					--print("CHATMAIN",chatMain)
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin and not UIS:GetFocusedTextBox() then
@@ -3165,6 +3170,11 @@ AvailableHacks ={
 					CAS:BindActionAtPriority("PushSlash"..saveIndex,slashPressed,false,10000,Enum.KeyCode.Slash)
 				elseif (not UIS.TouchEnabled or not newValue) and AvailableHacks.Utility[3].Active then
 					AvailableHacks.Utility[3].Active=nil
+					if UIS.TouchEnabled then
+						chatTextLabel.Text = "Tap here to chat"
+					else
+						chatTextLabel.Text = "To chat click here or press "/" key"
+					end
 					CAS:UnbindAction("PushSlash"..saveIndex)
 				end
 				--if (newValue and not AvailableHacks.Utility[3].Funct) then

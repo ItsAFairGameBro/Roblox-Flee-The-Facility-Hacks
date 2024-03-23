@@ -1,6 +1,6 @@
 --SCRIPT GITHUB LINK:
-local gitType = "blob"
-local githubLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/%s/main/Main.lua"
+local gitType = "blob" -- use 'blob' for more recent updates, or 'raw' for more consistency/loading speed
+local githubLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/blob/main/Main.lua"--paste your script here
 
 
 --GLOBAL SETTINGS DATA:
@@ -25,7 +25,7 @@ local requestFunction = IsStudio and requestCaller.InvokeServer or game.HttpGet
 function ReloadFunction()
 	local StartTime = os.clock()
 	GlobalSettings = GlobalSettings; -- refresh so that all caller functions can see this!
-	local URL = githubLink:format(gitType:lower());
+	local URL = githubLink:format(gitType:lower()):gsub("/raw/","/"..gitType:lower().."/"):gsub("/blob/","/"..gitType:lower().."/");
 	local success, response = pcall(requestFunction,requestCaller,URL,false)
 
 	if not success then
@@ -35,24 +35,19 @@ function ReloadFunction()
 	scriptName = scriptName:sub(scriptName:find("/")+1)
 	scriptName = scriptName:sub(1,scriptName:find("/")-1):gsub("-"," ")
 	local success3, codeString
-	if URL:find("blob") then
+	if URL:find("blob")~=nil then
+		local startText = '"blob":{"rawLines":'
+		local endText = ',"stylingDirectives":'
+		local startAddress = response:find(startText) + startText:len()
+		local endAddress = response:find(endText) -- endText:len()
+		response = response:sub(startAddress,endAddress-1)
 		local success2, decodedJSON = pcall(HS.JSONDecode,HS,response)
 
 		if not success2 then
 			return warn(PrintName.." Error Parsing JSON: "..decodedJSON)
-		elseif not decodedJSON.payload then
-			return warn(PrintName.." Location Error: Payload!")
-		elseif not decodedJSON.payload.blob then
-			return warn(PrintName.." Location Error: Blob!")
-		elseif not decodedJSON.payload.blob.rawLines then
-			return warn(PrintName.." Location Error: Raw-Lines!")
-		elseif not decodedJSON.payload.blob.displayName then
-			return warn(PrintName.." Location Error: Display Name!")
 		end
 
-		--scriptName = decodedJSON.payload.blob.displayName
-
-		success3, codeString = pcall(table.concat, decodedJSON.payload.blob.rawLines, "\n")
+		success3, codeString = pcall(table.concat, decodedJSON, "\n")
 
 		if not success3 then
 			return warn(PrintName.." Error Parsing Code: "..codeString)

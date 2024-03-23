@@ -2782,7 +2782,7 @@ AvailableHacks ={
 			["Desc"]="Keep on for doors always to be closed!",
 			["Shortcut"]="Blatant_KeepDoorsClosed",
 			["DontActivate"]=false,
-			["Default"]=true,
+			["Default"]=false,
 			["ActivateFunction"]=function()
 				AvailableHacks.Blatant[18].ActivateFunction()
 			end,

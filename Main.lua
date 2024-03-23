@@ -279,21 +279,16 @@ local function GuiCreationFunction()
 	MyTextBox.TextStrokeTransparency = 0.000;
 	MyTextBox.TextWrapped = true;
 	MyTextBox.ClearTextOnFocus = false;
-	--pls work;
 	MyTextBox.Parent = ExTextBox;
 
 
-	--pls work
-	TextBoxExamples["MainListEx"] = MainListEx;
 	MainListEx.Name = "MainListEx";
-	MainListEx.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-	MainListEx.BackgroundTransparency = (1);
+	MainListEx.BackgroundTransparency = 1;
 	MainListEx.Size = UDim2.new(1, 0, 0, 25);
 	MainListEx.Font = textFont2;
-	--MainListEx.Text = "Render";
-	MainListEx.TextColor3 = Color3.fromRGB(255, 255, 255);
+	MainListEx.TextStrokeColor3 = Color3.fromRGB();
+	MainListEx.TextStrokeTransparency = 0
 	MainListEx.TextScaled = true;
-	MainListEx.TextSize = (14);
 	MainListEx.TextWrapped = true;
 
 	HackGUI.Name = "HackGUI";

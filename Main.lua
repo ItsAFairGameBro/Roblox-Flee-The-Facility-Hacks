@@ -3134,6 +3134,7 @@ AvailableHacks ={
 				survivorScreen()
 
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
+					local chatButton = StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
 					local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					--print("CHATMAIN",chatMain)
@@ -3141,11 +3142,12 @@ AvailableHacks ={
 						if state == Enum.UserInputState.Begin then
 							--chatMain.ChatBarFocusChanged:fire(true)
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+							chatButton.Image = "rbxassetid://5227476413"--set it to visible!
 							--task.wait(1)
 							chatBar:CaptureFocus()
-							RunS.RenderStepped:Wait()
+							task.wait(1.5)--RunS.RenderStepped:Wait()
 							chatBar:ReleaseFocus()
-							RunS.RenderStepped:Wait()
+							task.wait(1.5)--RunS.RenderStepped:Wait()
 							--v553:SetVisible(true)
 							--InstantFadeIn()
 							--v145:CaptureFocus()
@@ -3154,6 +3156,7 @@ AvailableHacks ={
 							--chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
 
 							chatBar:CaptureFocus()
+							print("Trans",chatBar.TextTransparency)
 						end
 					end
 					AvailableHacks.Utility[3].Active=true
@@ -3204,6 +3207,10 @@ AvailableHacks ={
 				for s = 300, 1, -1 do
 					if not SG:GetCore("ChatActive") then
 						pcall(SG.SetCore,SG,"ChatActive",true)
+						pcall(SG.SetCoreGuiEnabled,SG,Enum.CoreGuiType.Chat, false)
+						pcall(function()
+							StringWaitForChild(((game:GetService("Chat")):WaitForChild("ClientChatModules")):WaitForChild("ChatSettings")).ChatOnWithTopBarOff = true
+						end)
 						task.spawn(error,"[client improvement]: Fix Enabled")
 					end
 					RunS.RenderStepped:Wait()

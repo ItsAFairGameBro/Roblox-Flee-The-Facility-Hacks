@@ -3158,7 +3158,7 @@ AvailableHacks ={
 							end)
 							AvailableHacks.Utility[3].Funct=saveConnection
 							RunS.RenderStepped:Wait()
-							chatButton.Image = "rbxassetid://5227476720"--set it to visible!
+							chatButton.Image = "rbxassetid://5227476720"--set the image to visible!
 							chatBar:CaptureFocus()
 							task.wait(1.5)
 							if AvailableHacks.Utility[3].Funct==saveConnection then
@@ -3191,7 +3191,7 @@ AvailableHacks ={
 					if UIS.TouchEnabled then
 						chatTextLabel.Text = "Tap here to chat"
 					else
-						chatTextLabel.Text = "To chat click here or press "/" key"
+						chatTextLabel.Text = 'To chat click here or press "/" key'
 					end
 					CAS:UnbindAction("PushSlash"..saveIndex)
 				end
@@ -7506,6 +7506,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			if not newButton or not newProperty then
 				newButton = MainListEx:Clone()
 				newButton.Text = categoryName
+				newButton.TextColor3 = ComputeNameColor(categoryName)
 				newButton.Name = categoryName
 				newButton.LayoutOrder = (categoryName=="Commands" and 1 or 0)
 				newButton.Parent=myList

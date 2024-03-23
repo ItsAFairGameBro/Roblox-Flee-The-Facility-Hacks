@@ -3141,13 +3141,14 @@ AvailableHacks ={
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin then
 							--chatMain.ChatBarFocusChanged:fire(true)
+							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
-							chatButton.Image = "rbxassetid://5227476413"--set it to visible!
+							chatButton.Image = "rbxassetid://5227476720"--set it to visible!
 							--task.wait(1)
-							chatBar:CaptureFocus()
+							--chatBar:CaptureFocus()
 							--for s = 1, 1, -1 do RunS.RenderStepped:Wait() end
-							chatBar:ReleaseFocus()
-							for s = 5, 1, -1 do RunS.RenderStepped:Wait() end
+							--chatBar:ReleaseFocus()
+							--for s = 5, 1, -1 do RunS.RenderStepped:Wait() end
 							--v553:SetVisible(true)
 							--InstantFadeIn()
 							--v145:CaptureFocus()
@@ -3155,8 +3156,8 @@ AvailableHacks ={
 							--chatMain.FocusChatBar()
 							--chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
 
-							chatBar:CaptureFocus()
-							print("Trans",chatBar.TextTransparency)
+							--chatBar:CaptureFocus()
+							--print("Trans",chatBar.TextTransparency)
 						end
 					end
 					AvailableHacks.Utility[3].Active=true

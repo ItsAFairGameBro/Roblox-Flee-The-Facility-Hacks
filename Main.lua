@@ -1967,7 +1967,7 @@ local function ComputeNameColor(username)
 	end 
 
 	local index = (totalValue % #ChatColors) + 1 -- Makes a number from 1 to 8 depending on totalValue, because there are 8 colors
-	return ChatColors[index]
+	return Color3.new(ChatColors[index].R*255,ChatColors[index].G*255,ChatColors[index].B*255)
 end
 
 local function GetAbsoluteWorldSize(object)

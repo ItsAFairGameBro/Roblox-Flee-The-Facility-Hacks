@@ -2519,10 +2519,10 @@ AvailableHacks ={
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				local ActionEventVal=TSM:WaitForChild("ActionEvent") 
 				local CurrentActionEvent=ActionEventVal.Value
-				game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+				RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
 				task.wait()
-				game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-				game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
+				RemoteEvent:FireServer("Input", "Action", true)
+				RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
 				ActionEventVal.Value=nil
 				while Trigger.ActionSign.Value~=10 do--wait for it to be opened
 					Trigger.ActionSign.Changed:Wait()
@@ -2531,8 +2531,8 @@ AvailableHacks ={
 					if Trigger.ActionSign.Value==11 then
 						break
 					end
-					game.ReplicatedStorage.RemoteEvent:FireServer("Trigger", "Input", true, Trigger.Event)
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+					RemoteEvent:FireServer("Trigger", "Input", true, Trigger.Event)
+					RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
 					ActionEventVal.Value=CurrentActionEvent
 					TSM.OnTrigger.Value=true
 					wait(.05)
@@ -2708,7 +2708,7 @@ AvailableHacks ={
 					if currentEvent~=nil and not isOpened and false then--and saveActionSign == actionSign.Value then
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
 						--wait()
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+						--RemoteEvent:FireServer("Input", "Action", true)
 					end
 				end
 				AvailableHacks.Blatant[15].DoorFuncts[door] = setToggleFunction
@@ -3151,11 +3151,12 @@ AvailableHacks ={
 							local saveConnection = chatBar:GetPropertyChangedSignal("TextTransparency"):Connect(function()
 								chatBar.TextTransparency = 0
 							end)
+							chatBar.TextTransparency = 0
 							AvailableHacks.Utility[3].Funct=saveConnection
 							RunS.RenderStepped:Wait()
 							chatButton.Image = "rbxassetid://5227476720"--set the image to visible!
 							chatBar:CaptureFocus()
-							task.wait(1.5)
+							task.wait(2.5)
 							if AvailableHacks.Utility[3].Funct==saveConnection then
 								saveConnection:Disconnect()
 								AvailableHacks.Utility[3].Funct=nil
@@ -4772,10 +4773,10 @@ AvailableHacks ={
 						wait(.15)
 					end
 					if Trigger:FindFirstChild("Event") then
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+						RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+						RemoteEvent:FireServer("Input", "Action", true)
 						if isOpened then
-							game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+							RemoteEvent:FireServer("Input", "Trigger", false)
 						end
 					end
 				end
@@ -5372,13 +5373,13 @@ AvailableHacks ={
 						break
 					end
 					local isOpened=Trigger.ActionSign.Value==11
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
+					RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+					RemoteEvent:FireServer("Input", "Action", true)
 					if isOpened then
-						game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false)
+						RemoteEvent:FireServer("Input", "Trigger", false)
 					end
 					wait(.075)
-					game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", false)
+					RemoteEvent:FireServer("Input", "Action", false)
 					wait(.075)
 				end
 			end,
@@ -5422,11 +5423,11 @@ AvailableHacks ={
 					if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
 						and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
 						--print("closed door")
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", false)
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+						--RemoteEvent:FireServer("Input", "Action", false)
+						--RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
 						--task.wait()
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Action", true)
-						--game.ReplicatedStorage.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
+						--RemoteEvent:FireServer("Input", "Action", true)
+						--RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
 						--task.wait()
 						--AvailableHacks.Blatant[10].CloseDoor(Trigger)
 						local wasClosed = Trigger.ActionSign.Value ~= 11 
@@ -5922,7 +5923,7 @@ AvailableHacks ={
 								return
 							end
 							if not TSM.Ragdoll.Value and Beast and Beast.Parent then
-								Beast.Hammer.HammerEvent:FireServer("HammerHit", char.Head)
+								StringWaitForChild(Beast,"Hammer.HammerEvent"):FireServer("HammerHit", char.Head)
 								--task.wait(1/4)
 							end
 							if not canRun(true) then

@@ -1939,14 +1939,14 @@ end
 
 --USER COLOR COMPUTATION
 local ChatColors = {
-	newColor3(0.768628, 0.156863, 0.109804),
-	newColor3(0.0509804, 0.411765, 0.67451),
-	newColor3(0.152941, 0.27451, 0.176471),
-	newColor3(0.419608, 0.196078, 0.486275),
-	newColor3(0.854902, 0.521569, 0.254902),
-	newColor3(0.960784, 0.803922, 0.188235),
-	newColor3(0.909804, 0.729412, 0.784314),
-	newColor3(0.843137, 0.772549, 0.603922)
+	Color3.new(253/255, 41/255, 67/255), -- BrickColor.new("Bright red").Color,
+	Color3.new(1/255, 162/255, 255/255), -- BrickColor.new("Bright blue").Color,
+	Color3.new(2/255, 184/255, 87/255), -- BrickColor.new("Earth green").Color,
+	BrickColor.new("Bright violet").Color,
+	BrickColor.new("Bright orange").Color,
+	BrickColor.new("Bright yellow").Color,
+	BrickColor.new("Light reddish violet").Color,
+	BrickColor.new("Brick yellow").Color,
 }
 
 local function ComputeNameColor(username)
@@ -1967,7 +1967,7 @@ local function ComputeNameColor(username)
 	end 
 
 	local index = (totalValue % #ChatColors) + 1 -- Makes a number from 1 to 8 depending on totalValue, because there are 8 colors
-	return Color3.new(ChatColors[index].R*255,ChatColors[index].G*255,ChatColors[index].B*255)
+	return ChatColors[index]
 end
 
 local function GetAbsoluteWorldSize(object)

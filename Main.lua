@@ -775,11 +775,11 @@ local function createCommandLine(message,printType)
 	table.insert(CommandInstances,CommandClone);
 	ConsoleButton.Visible=true;
 	if printType then
-		if printType == true then
+		if printType == print then
 			print(message)
-		elseif printType=="warn" then
+		elseif printType==warn then
 			warn(message)
-		elseif printType=="error" then
+		elseif printType==error then
 			pcall(error,'<font color="rgb(255,0,0)">'..debug.traceback("ERROR:")..'</font>')
 		end
 	end
@@ -3139,7 +3139,7 @@ AvailableHacks ={
 					local chatButton = StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
 					--local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
-					local action1 = (UIS.MouseEnabled and UIS.TouchEnabled  and "click/tap") 
+					local action1 = (UIS.MouseEnabled and UIS.TouchEnabled  and "select") 
 						or (UIS.MouseEnabled and "click") or (UIS.TouchEnabled and "tap") or "<idk>"
 					chatTextLabel.Text = "To chat ".. action1 .." here".. (UIS.KeyboardEnabled and ' or press "/" key' or "")
 					--print("CHATMAIN",chatMain)
@@ -5855,8 +5855,7 @@ AvailableHacks ={
 					local Ret2 = ((select(2,isInGame(char,true))=="Runner") and not isCleared)
 					local Ret3 = Beast and myBots[Beast.Name:lower()]
 					if not Ret3 and Beast and warningPrint then
-						createCommandLine("Freeze Disabled: Unrecognized Player\n\tSet ")
-						print("Freeze Disabled: Unrecognized Player")
+						createCommandLine("Freeze Disabled: Unrecognized Player",print)
 						warningPrint = false
 					end
 					return (Ret1 and Ret2 and Ret3)
@@ -5901,15 +5900,17 @@ AvailableHacks ={
 						i+=1
 						if i==10 then
 							i = 0
+						elseif i>1 then
+							RunS.RenderStepped:Wait()
 						end
 						if (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") or #runnerPlrs==1 then
-							task.wait(1/2)
+							--task.wait(1/2)
 							if not canRun(true) then
 								return
 							end
 							if not TSM.Ragdoll.Value and Beast and Beast.Parent then
 								Beast.Hammer.HammerEvent:FireServer("HammerHit", char.Head)
-								task.wait(1/4)
+								--task.wait(1/4)
 							end
 							if not canRun(true) then
 								return
@@ -5918,7 +5919,7 @@ AvailableHacks ={
 								teleportMyself(Beast:GetPivot()*CFrame.new(0,0,2))
 								RunS.RenderStepped:Wait()
 								AvailableHacks.Runner[7].RopeSurvivor(TSM,plr,true)
-								task.wait(1/2)
+								--task.wait(1/2)
 								--if Beast.CarriedTorso.Value and Beast.CarriedTorso.Value.Parent==char then
 								--	AvailableHacks.Beast[60].CaptureSurvivor(plr,char,true)
 								--end
@@ -5927,7 +5928,7 @@ AvailableHacks ={
 						--if human.FloorMaterial~=Enum.Material.Air then
 						--	human:ChangeState(Enum.HumanoidStateType.Jumping)
 						--end
-						task.wait(1/6)
+						--task.wait(1/6)
 					end
 					RunS.RenderStepped:Wait()
 					while TSM.DisableCrawl.Value do
@@ -6653,8 +6654,7 @@ AvailableHacks ={
 						local ErrorMessage = "Purchase Timeout!! "
 							..alreadyPurchasedCount.."/"..totalCountToBuy..
 							"\n(This usually occurs when you're out of Credits)"
-						warn(ErrorMessage)
-						createCommandLine("<font color='rgb(255,0,0)'>"..ErrorMessage.."</font>")
+						createCommandLine("<font color='rgb(255,0,0)'>"..ErrorMessage.."</font>",warn)
 						AvailableHacks.Bot[150].Funct:Disconnect()
 						AvailableHacks.Bot[150].IsRunning=false
 						return
@@ -6833,9 +6833,8 @@ AvailableHacks ={
 					end;
 					task.delay(30,function()
 						if char==saveChar and botModeEnabled and enHacks.BotRunner and not isCleared then
-							createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>")
+							createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>",error)
 							plr:Kick("Reset Activation Failed")
-							error("Reset Activation Sequence Failed. Auto Kicking Sequence Begun")
 						end
 					end)
 				end
@@ -6940,7 +6939,7 @@ AvailableHacks ={
 								hackedPCS+=1
 								break
 							elseif s == 1 then
-								createCommandLine("[Hack All PCs]: PC HACK FAIL TIMEOUT!","warn")
+								createCommandLine("[Hack All PCs]: PC HACK FAIL TIMEOUT!",warn)
 								hackedPCS+=1
 								return refreshEnHack["Cmds_HackAllPCs"](false)
 							end

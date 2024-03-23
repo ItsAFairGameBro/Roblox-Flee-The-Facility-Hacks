@@ -3145,9 +3145,9 @@ AvailableHacks ={
 							chatButton.Image = "rbxassetid://5227476413"--set it to visible!
 							--task.wait(1)
 							chatBar:CaptureFocus()
-							task.wait(1.5)--RunS.RenderStepped:Wait()
+							task.wait(.25)--RunS.RenderStepped:Wait()
 							chatBar:ReleaseFocus()
-							task.wait(1.5)--RunS.RenderStepped:Wait()
+							task.wait(.25)--RunS.RenderStepped:Wait()
 							--v553:SetVisible(true)
 							--InstantFadeIn()
 							--v145:CaptureFocus()

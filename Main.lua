@@ -3151,11 +3151,21 @@ AvailableHacks ={
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 							chatButton.Image = "rbxassetid://5227476720"--set it to visible!
 							--task.wait(1)
-							AvailableHacks.Utility[3].Funct=chatBar:GetPropertyChangedSignal("TextTransparency"):Connect(function()
+							if AvailableHacks.Utility[3].Funct then
+								AvailableHacks.Utility[3].Funct:Disconnect()
+							end
+							local saveConnection = chatBar:GetPropertyChangedSignal("TextTransparency"):Connect(function()
 								chatBar.TextTransparency = 0
 							end)
+							AvailableHacks.Utility[3].Funct=saveConnection
 							RunS.RenderStepped:Wait()
 							chatBar:CaptureFocus()
+							task.wait(1)
+							if AvailableHacks.Utility[3].Funct==saveConnection then
+								saveConnection:Disconnect()
+								AvailableHacks.Utility[3].Funct=nil
+							end
+							
 							--for s = 1, 1, -1 do RunS.RenderStepped:Wait() end
 							--chatBar:ReleaseFocus()
 							--for s = 5, 1, -1 do RunS.RenderStepped:Wait() end
@@ -7366,7 +7376,15 @@ local refreshTypes = ({
 	ExTextButton = function(hackFrame,hackInfo,isFirstRun)
 		local selectedKey = (enHacks[hackInfo.Shortcut]);
 		local selectedOption = hackInfo.Options[selectedKey];
-		local ToggleButton = hackFrame:WaitForChild("Toggle")
+		local ToggleButton = hackFrame:WaitForChild("Toggle",60)
+		if isCleared then
+			if not ToggleButton then
+				return error("SEEMS GOOD: TOGGLE DOESN'T EXIST FOR "..hackInfo.Title)
+			end
+			return
+		elseif not ToggleButton then
+			return error("WHERE DID TOGGLE GO FOR "..hackInfo.Title)
+		end
 		--print(hackInfo.Shortcut, selectedKey, selectedOption);
 		assert(selectedOption, hackInfo.Title.." doesn't have options with default value!")
 

@@ -375,7 +375,7 @@ local function StartBetterConsole()
 	end
 	local function formatMessage(message,customTime)
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
-		printFunction(message:format(formatMessage:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")))
+		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")))
 	end
 	if isStudio then
 		function checkcaller()
@@ -384,9 +384,10 @@ local function StartBetterConsole()
 	end
 
 	local function onMessageOut(message, messageType,...)
-		formatMessage(MessageTypeColors[messageType] .. "[%s"
+		local inputMessage = MessageTypeColors[messageType] .. "[%s"
 			.. " ".. messageType.Name:sub(8).. (checkcaller() and "" or ("</font><font color='rgb(0,0,200)'> Game</font>"..MessageTypeColors[messageType]))
-			"] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message,...)
+			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message
+		formatMessage(inputMessage,...)
 	end
 	table.insert(functs,LS.MessageOut:Connect(onMessageOut))
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
@@ -7765,6 +7766,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 		if isCleared then
 			return "Load Hacks Cleared (Code 104)"
 		elseif not hack then
+			differentHacks[num] = nil -- clear this so that it isn't referenced again-
 			continue -- skip this lol!
 		end
 		local canPass = categoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,gameUniverse))) or (not hack.Universes and not hack.Places and gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,gameName)));

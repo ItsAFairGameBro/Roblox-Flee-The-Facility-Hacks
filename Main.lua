@@ -3103,6 +3103,7 @@ AvailableHacks ={
 			["Desc"]="Fixes elements",
 			["Shortcut"]="Util_Fix",
 			["Default"]=true,
+			["Funct"]=nil,
 			["DontActivate"] = true,
 			--["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
@@ -3150,6 +3151,9 @@ AvailableHacks ={
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 							chatButton.Image = "rbxassetid://5227476720"--set it to visible!
 							--task.wait(1)
+							AvailableHacks.Utility[3].Funct=chatBar:GetPropertyChangedSignal("TextTransparency"):Connect(function()
+								chatBar.TextTransparency = 0
+							end)
 							RunS.RenderStepped:Wait()
 							chatBar:CaptureFocus()
 							--for s = 1, 1, -1 do RunS.RenderStepped:Wait() end
@@ -3170,6 +3174,8 @@ AvailableHacks ={
 					CAS:BindActionAtPriority("PushSlash"..saveIndex,slashPressed,false,10000,Enum.KeyCode.Slash)
 				elseif (not UIS.TouchEnabled or not newValue) and AvailableHacks.Utility[3].Active then
 					AvailableHacks.Utility[3].Active=nil
+					AvailableHacks.Utility[3].Funct:Disconnect()
+					AvailableHacks.Utility[3].Funct=nil
 					if UIS.TouchEnabled then
 						chatTextLabel.Text = "Tap here to chat"
 					else
@@ -5916,8 +5922,8 @@ AvailableHacks ={
 								return
 							end
 							if TSM.Ragdoll.Value and Beast and Beast.Parent then
-								teleportMyself(Beast:GetPivot()*CFrame.new(0,0,2))
-								RunS.RenderStepped:Wait()
+								--teleportMyself(Beast:GetPivot()*CFrame.new(0,0,2))
+								--RunS.RenderStepped:Wait()
 								AvailableHacks.Runner[7].RopeSurvivor(TSM,plr,true)
 								--task.wait(1/2)
 								--if Beast.CarriedTorso.Value and Beast.CarriedTorso.Value.Parent==char then
@@ -5955,28 +5961,28 @@ AvailableHacks ={
 					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
 					return 
 				end
+				local maxDurationLeft = 45
 				local start = os.clock()
-				for s=180,1,-1 do
+				while true do--for s=180,1,-1 do
 					if isCleared or enHacks.BotRunner ~= saveValue then 
 						return false 
 					end
 					local inGame,role = isInGame(char)
 					--print(role,enHacks.BotRunner,Beast,myTSM.Health.Value)
 					if role=="Runner" and (saveValue~="Freeze" or (Beast and Beast.PrimaryPart)) then
-						task.wait(.5)
 						--print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
 						break
-					elseif s==1 then 
+					elseif maxDurationLeft <= 0 then 
 						return false
 					end
-					task.wait(.25)
+					maxDurationLeft-=RunS.RenderStepped:Wait() --task.wait(.25)
 				end
 				if enHacks.BotRunner ~= saveValue then
 					return false
 				end
 				local savedValue=AvailableHacks.Bot[15].CurrentNum + 1
 				AvailableHacks.Bot[15].CurrentNum = savedValue
-				RunS.RenderStepped:Wait()
+				RunS.RenderStepped:Wait()--maybe wait a frame just in case, yk?
 				if enHacks.BotRunner ~= saveValue then
 					return false
 				end

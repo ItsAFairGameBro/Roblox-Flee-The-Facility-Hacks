@@ -17,15 +17,16 @@ local PathfindingService = game:GetService("PathfindingService")
 
 
 
-local gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") or "Unknown")
-local gameUniverse=gameName:find("Flee") and "Flee" or "Unknown"
-local newVector3, newColor3 = Vector3.new, Color3.fromRGB
-local isStudio=RunS:IsStudio()
-local enHacks,playerEvents,objectFuncts={},{},{}
-local functs,refreshEnHack = {}, {}
+gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") or "Unknown")
+gameUniverse=gameName:find("Flee") and "Flee" or "Unknown"
+newVector3, newColor3 = Vector3.new, Color3.fromRGB
+isStudio=RunS:IsStudio()
+enHacks,playerEvents,objectFuncts={},{},{}
+functs,refreshEnHack = {}, {}
 
-local Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
-local comma_value
+--Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
+--	= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
+--comma_value=nil
 local myTSM,mySSM
 local plr = PS.LocalPlayer
 local human
@@ -375,6 +376,11 @@ local function StartBetterConsole()
 	local function formatMessage(message,customTime)
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(message:format(formatMessage:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")))
+	end
+	if isStudio then
+		function checkcaller()
+			return false
+		end
 	end
 
 	local function onMessageOut(message, messageType,...)
@@ -1162,6 +1168,7 @@ end
 --SAVE/LOAD MODULE
 local loadedEnData = {}
 local function loadSaveData()
+	if isStudio then return end
 	local path = getID.."/enHacks/"..gameName..".txt"
 	if isfile(path) then
 		local success, result = pcall(readfile,path)
@@ -1180,6 +1187,7 @@ local function loadSaveData()
 	end
 end
 local function saveSaveData()
+	if isStudio then return end
 	local success,result = pcall(HS.JSONEncode,HS,enHacks)
 	if not success then
 		warn("Save Error (JSONEncode):",result)
@@ -7019,7 +7027,7 @@ AvailableHacks ={
 			},
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
-				rconsoleclear()
+				LS:ClearOutput() --rconsoleclear()
 				clearCommandLines()
 			end,
 		},
@@ -7497,6 +7505,7 @@ clear = function(isManualClear)
 	CAS:UnbindAction("Crawl"..saveIndex)
 	CAS:UnbindAction("CloseMenu"..saveIndex)
 	CAS:UnbindAction("PushSlash"..saveIndex)
+	CAS:UnbindAction("OpenBetterConsole"..saveIndex)
 
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
 	getgenv()["ActiveScript"..getID][saveIndex] = nil
@@ -7611,9 +7620,9 @@ function jumpAction(actionName, inputState, inputObject)
 	jumpChangedEvent:Fire(isJumpBeingHeld)
 end
 task.spawn(function()
-	local JumpButton = plr.PlayerGui:WaitForChild("TouchGui",math.huge):WaitForChild("TouchControlFrame"):WaitForChild("JumpButton",math.huge);
+	JumpButton = plr.PlayerGui:WaitForChild("TouchGui",math.huge):WaitForChild("TouchControlFrame"):WaitForChild("JumpButton",math.huge);
 	table.insert(functs, JumpButton:GetPropertyChangedSignal("ImageRectOffset"):Connect(function()
-		local org = isJumpBeingHeld
+		org = isJumpBeingHeld
 		if JumpButton.ImageRectOffset.X > 3 then
 			isJumpBeingHeld = true;
 		else
@@ -7631,9 +7640,9 @@ CAS:BindAction("hack_jump"..saveIndex,jumpAction,false, Enum.PlayerActions.Chara
 --GUI CODING
 local refreshTypes = ({
 	ExTextButton = function(hackFrame,hackInfo,isFirstRun)
-		local selectedKey = (enHacks[hackInfo.Shortcut]);
-		local selectedOption = hackInfo.Options[selectedKey];
-		local ToggleButton = hackFrame:WaitForChild("Toggle",60)
+		selectedKey = (enHacks[hackInfo.Shortcut]);
+		selectedOption = hackInfo.Options[selectedKey];
+		ToggleButton = hackFrame:WaitForChild("Toggle",60)
 		if isCleared then
 			if not ToggleButton then
 				return error("SEEMS GOOD: TOGGLE DOESN'T EXIST FOR "..hackInfo.Title)
@@ -7755,6 +7764,8 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 	for num,hack in pairs(differentHacks) do
 		if isCleared then
 			return "Load Hacks Cleared (Code 104)"
+		elseif not hack then
+			continue -- skip this lol!
 		end
 		local canPass = categoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,gameUniverse))) or (not hack.Universes and not hack.Places and gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,gameName)));
 		if canPass then
@@ -8202,7 +8213,7 @@ if gameName=="FleeMain" then
 	end
 	PS.PlayerAdded:Connect(calculateCreditsForPlayer);
 
-	for num,theirPlr in pairs(PS:GetPlayers()) do
+	for _,theirPlr in pairs(PS:GetPlayers()) do
 		calculateCreditsForPlayer(theirPlr);
 	end;
 end;

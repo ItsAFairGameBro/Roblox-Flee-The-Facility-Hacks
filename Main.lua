@@ -3145,7 +3145,7 @@ AvailableHacks ={
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 							chatButton.Image = "rbxassetid://5227476720"--set it to visible!
 							--task.wait(1)
-							--chatBar:CaptureFocus()
+							chatBar:CaptureFocus()
 							--for s = 1, 1, -1 do RunS.RenderStepped:Wait() end
 							--chatBar:ReleaseFocus()
 							--for s = 5, 1, -1 do RunS.RenderStepped:Wait() end

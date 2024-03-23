@@ -3160,7 +3160,7 @@ AvailableHacks ={
 							AvailableHacks.Utility[3].Funct=saveConnection
 							RunS.RenderStepped:Wait()
 							chatBar:CaptureFocus()
-							task.wait(1)
+							task.wait(1.5)
 							if AvailableHacks.Utility[3].Funct==saveConnection then
 								saveConnection:Disconnect()
 								AvailableHacks.Utility[3].Funct=nil
@@ -3184,8 +3184,10 @@ AvailableHacks ={
 					CAS:BindActionAtPriority("PushSlash"..saveIndex,slashPressed,false,10000,Enum.KeyCode.Slash)
 				elseif (not UIS.TouchEnabled or not newValue) and AvailableHacks.Utility[3].Active then
 					AvailableHacks.Utility[3].Active=nil
-					AvailableHacks.Utility[3].Funct:Disconnect()
-					AvailableHacks.Utility[3].Funct=nil
+					if AvailableHacks.Utility[3].Funct then
+						AvailableHacks.Utility[3].Funct:Disconnect()
+						AvailableHacks.Utility[3].Funct=nil
+					end
 					if UIS.TouchEnabled then
 						chatTextLabel.Text = "Tap here to chat"
 					else

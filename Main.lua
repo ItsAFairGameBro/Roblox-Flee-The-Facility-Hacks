@@ -3143,6 +3143,7 @@ AvailableHacks ={
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 							--task.wait(1)
 							chatBar:CaptureFocus()
+							RunS.RenderStepped:Wait()
 							chatBar:ReleaseFocus()
 							RunS.RenderStepped:Wait()
 							--v553:SetVisible(true)
@@ -3150,9 +3151,9 @@ AvailableHacks ={
 							--v145:CaptureFocus()
 							--v1.ChatBarFocusChanged:fire(true)
 							--chatMain.FocusChatBar()
-							chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
+							--chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
 
-							--chatBar:CaptureFocus()
+							chatBar:CaptureFocus()
 						end
 					end
 					AvailableHacks.Utility[3].Active=true

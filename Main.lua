@@ -12,6 +12,7 @@ local VU=game:GetService('VirtualUser')
 local SP=game:GetService("StarterPlayer")
 local SG=game:GetService("StarterGui")
 local GS=game:GetService("GuiService")
+local LS=game:GetService("LogService")
 local PathfindingService = game:GetService("PathfindingService")
 
 
@@ -24,6 +25,7 @@ local enHacks,playerEvents,objectFuncts={},{},{}
 local functs,refreshEnHack = {}, {}
 
 local Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
+local comma_value
 local myTSM,mySSM
 local plr = PS.LocalPlayer
 local human
@@ -131,6 +133,265 @@ local function createToggleButton(Toggle, ExTextButton)
 	Toggle.TextWrapped = true;
 	Toggle.Size = UDim2.new(0.443029076, 0, 1, 0);
 end;
+local function StartBetterConsole()
+	--GUI CREATION FOR BETTER CONSOLE:
+	local BetterConsole = Instance.new("Frame")
+	local SearchConsoleTextBox = Instance.new("TextBox")
+	local FilterConsoleTitle = Instance.new("TextLabel")
+	local FilterCheckBoxes = Instance.new("Frame")
+	local UIGridLayout = Instance.new("UIGridLayout")
+	local BetterConsoleFilterBox = Instance.new("Frame")
+	local InviClicker = Instance.new("TextButton")
+	local CheckboxImage = Instance.new("ImageLabel")
+	local FilterBoxName = Instance.new("TextLabel")
+	local BetterConsoleList = Instance.new("ScrollingFrame")
+	local UIListLayout = Instance.new("UIListLayout")
+	local BetterConsoleTextEx = Instance.new("TextLabel")
+	local BetterConsoleDesc = Instance.new("TextLabel")
+	local BetterConsoleQuitButton = Instance.new("ImageButton")
+	--Properties:
+	BetterConsole.Name = "BetterConsole"
+	BetterConsole.Parent = HackGUI
+	BetterConsole.AnchorPoint = Vector2.new(0.5, 0.5)
+	BetterConsole.BackgroundColor3 = Color3.new(0.203922, 0.203922, 0.203922)
+	BetterConsole.BackgroundTransparency = 0.25
+	BetterConsole.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsole.BorderSizePixel = 0
+	BetterConsole.Position = UDim2.new(0.5, 0, 0.5, 0)
+	BetterConsole.Size = UDim2.new(0.600000024, 0, 0.560000002, 0)
+	BetterConsole.Visible = false
+	BetterConsole.ZIndex = 5000
+
+	SearchConsoleTextBox.Name = "SearchConsoleTextBox"
+	SearchConsoleTextBox.Parent = BetterConsole
+	SearchConsoleTextBox.BackgroundColor3 = Color3.new(0, 0.65098, 1)
+	SearchConsoleTextBox.BorderColor3 = Color3.new(0, 0, 0)
+	SearchConsoleTextBox.BorderSizePixel = 0
+	SearchConsoleTextBox.Position = UDim2.new(0.243000001, 0, 0, 0)
+	SearchConsoleTextBox.Size = UDim2.new(0.320734084, 0, 0.0500000007, 0)
+	SearchConsoleTextBox.ZIndex = 5001
+	SearchConsoleTextBox.Font = textFont
+	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(0, 0, 0)
+	SearchConsoleTextBox.PlaceholderText = "Filter Search Results"
+	SearchConsoleTextBox.Text = ""
+	SearchConsoleTextBox.TextColor3 = Color3.new(0, 0, 0)
+	SearchConsoleTextBox.TextScaled = true
+	SearchConsoleTextBox.TextSize = 14
+	SearchConsoleTextBox.TextStrokeColor3 = Color3.new(1, 1, 1)
+	SearchConsoleTextBox.TextStrokeTransparency = 0
+	SearchConsoleTextBox.TextWrapped = true
+	
+
+	FilterConsoleTitle.Name = "FilterConsoleTitle"
+	FilterConsoleTitle.Parent = BetterConsole
+	FilterConsoleTitle.BackgroundColor3 = Color3.new(1, 1, 1)
+	FilterConsoleTitle.BackgroundTransparency = 1
+	FilterConsoleTitle.BorderColor3 = Color3.new(0, 0, 0)
+	FilterConsoleTitle.BorderSizePixel = 0
+	FilterConsoleTitle.Size = UDim2.new(0.24619709, 0, 0.0500000082, 0)
+	FilterConsoleTitle.ZIndex = 5001
+	FilterConsoleTitle.Font = textFont
+	FilterConsoleTitle.Text = "    BETTER CONSOLE (0)"
+	FilterConsoleTitle.TextColor3 = Color3.new(1, 1, 1)
+	FilterConsoleTitle.TextScaled = true
+	FilterConsoleTitle.TextSize = 14
+	FilterConsoleTitle.TextStrokeTransparency = 0
+	FilterConsoleTitle.TextWrapped = true
+	FilterConsoleTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+	FilterCheckBoxes.Name = "FilterCheckBoxes"
+	FilterCheckBoxes.Parent = BetterConsole
+	FilterCheckBoxes.BackgroundColor3 = Color3.new(1, 1, 1)
+	FilterCheckBoxes.BackgroundTransparency = 1
+	FilterCheckBoxes.BorderColor3 = Color3.new(0, 0, 0)
+	FilterCheckBoxes.BorderSizePixel = 0
+	FilterCheckBoxes.Position = UDim2.new(0.565277815, 0, -7.26609031e-08, 0)
+	FilterCheckBoxes.Size = UDim2.new(0.40223217, 0, 0.0500000007, 0)
+	FilterCheckBoxes.ZIndex = 5002
+
+	UIGridLayout.Parent = FilterCheckBoxes
+	UIGridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIGridLayout.CellPadding = UDim2.new(0, 0, 0, 0)
+	UIGridLayout.CellSize = UDim2.new(0.200000003, 0, 1, 0)
+
+	BetterConsoleFilterBox.Name = "BetterConsoleFilterBox"
+	BetterConsoleFilterBox.Parent = FilterCheckBoxes
+	BetterConsoleFilterBox.BackgroundColor3 = Color3.new(0.219608, 0.219608, 0.219608)
+	BetterConsoleFilterBox.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleFilterBox.BorderSizePixel = 0
+	BetterConsoleFilterBox.Size = UDim2.new(0, 100, 0, 100)
+
+	InviClicker.Name = "InviClicker"
+	InviClicker.Parent = BetterConsoleFilterBox
+	InviClicker.AnchorPoint = Vector2.new(0.5, 0)
+	InviClicker.BackgroundColor3 = Color3.new(1, 1, 1)
+	InviClicker.BackgroundTransparency = 1
+	InviClicker.BorderColor3 = Color3.new(0, 0, 0)
+	InviClicker.BorderSizePixel = 0
+	InviClicker.Position = UDim2.new(0.5, 0, 0, 0)
+	InviClicker.Size = UDim2.new(0.899999976, 0, 1, 0)
+	InviClicker.ZIndex = 5002
+	InviClicker.Font = Enum.Font.SourceSans
+	InviClicker.Text = " "
+	InviClicker.TextColor3 = Color3.new(0, 0, 0)
+	InviClicker.TextSize = 14
+
+	CheckboxImage.Name = "CheckboxImage"
+	CheckboxImage.Parent = BetterConsoleFilterBox
+	CheckboxImage.BackgroundColor3 = Color3.new(1, 1, 1)
+	CheckboxImage.BackgroundTransparency = 1
+	CheckboxImage.BorderColor3 = Color3.new(0, 0, 0)
+	CheckboxImage.BorderSizePixel = 0
+	CheckboxImage.Size = UDim2.new(0.300000012, 0, 1, 0)
+	CheckboxImage.Image = "rbxassetid://4458804262"
+	CheckboxImage.ImageColor3 = Color3.new(0.0509804, 1, 0)
+	CheckboxImage.ScaleType = Enum.ScaleType.Fit
+
+	FilterBoxName.Name = "FilterBoxName"
+	FilterBoxName.Parent = BetterConsoleFilterBox
+	FilterBoxName.AnchorPoint = Vector2.new(1, 0)
+	FilterBoxName.BackgroundColor3 = Color3.new(1, 1, 1)
+	FilterBoxName.BackgroundTransparency = 1
+	FilterBoxName.BorderColor3 = Color3.new(0, 0, 0)
+	FilterBoxName.BorderSizePixel = 0
+	FilterBoxName.Position = UDim2.new(1, 0, 0, 0)
+	FilterBoxName.Size = UDim2.new(0.699999988, 0, 1, 0)
+	FilterBoxName.Font = Enum.Font.SourceSans
+	FilterBoxName.Text = "Errors"
+	FilterBoxName.TextColor3 = Color3.new(1, 1, 1)
+	FilterBoxName.TextScaled = true
+	FilterBoxName.TextSize = 14
+	FilterBoxName.TextStrokeTransparency = 0
+	FilterBoxName.TextWrapped = true
+
+	BetterConsoleList.Name = "BetterConsoleList"
+	BetterConsoleList.Parent = BetterConsole
+	BetterConsoleList.Active = true
+	BetterConsoleList.AnchorPoint = Vector2.new(0, 1)
+	BetterConsoleList.BackgroundColor3 = Color3.new(1, 1, 1)
+	BetterConsoleList.BackgroundTransparency = 1
+	BetterConsoleList.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleList.BorderSizePixel = 0
+	BetterConsoleList.Position = UDim2.new(0, 0, 0.947688878, 0)
+	BetterConsoleList.Size = UDim2.new(1, 0, 0.887688816, 0)
+	BetterConsoleList.CanvasSize = UDim2.new(0, 0, 0, 0)
+	BetterConsoleList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
+
+	UIListLayout.Parent = BetterConsoleList
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+	BetterConsoleTextEx.Name = "BetterConsole"
+	BetterConsoleTextEx.BackgroundColor3 = Color3.new(1, 1, 1)
+	BetterConsoleTextEx.BackgroundTransparency = 1
+	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleTextEx.BorderSizePixel = 0
+	BetterConsoleTextEx.Size = UDim2.new(1, 0, 0, 0)
+	BetterConsoleTextEx.Font = textFont
+	BetterConsoleTextEx.TextColor3 = Color3.new(1, 1, 1)
+	BetterConsoleTextEx.TextSize = 22
+	BetterConsoleTextEx.TextStrokeTransparency = 0
+	BetterConsoleTextEx.TextWrapped = true
+	BetterConsoleTextEx.TextXAlignment = Enum.TextXAlignment.Left
+	BetterConsoleTextEx:AddTag("RemoveOnDestroy")
+
+	BetterConsoleDesc.Name = "BetterConsoleDesc"
+	BetterConsoleDesc.Parent = BetterConsole
+	BetterConsoleDesc.BackgroundColor3 = Color3.new(1, 1, 1)
+	BetterConsoleDesc.BackgroundTransparency = 1
+	BetterConsoleDesc.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleDesc.BorderSizePixel = 0
+	BetterConsoleDesc.Position = UDim2.new(0, 0, 0.946357191, 0)
+	BetterConsoleDesc.Size = UDim2.new(1, 0, 0.0500000007, 0)
+	BetterConsoleDesc.ZIndex = 5001
+	BetterConsoleDesc.Font = textFont
+	BetterConsoleDesc.Text = "Press F9 or the mobile button to open/close"
+	BetterConsoleDesc.TextColor3 = Color3.new(1, 1, 1)
+	BetterConsoleDesc.TextScaled = true
+	BetterConsoleDesc.TextSize = 14
+	BetterConsoleDesc.TextStrokeTransparency = 0
+	BetterConsoleDesc.TextWrapped = true
+
+	BetterConsoleQuitButton.Name = "BetterConsoleQuitButton"
+	BetterConsoleQuitButton.Parent = BetterConsole
+	BetterConsoleQuitButton.AnchorPoint = Vector2.new(1, 0)
+	BetterConsoleQuitButton.BackgroundColor3 = Color3.new(1, 1, 1)
+	BetterConsoleQuitButton.BackgroundTransparency = 1
+	BetterConsoleQuitButton.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleQuitButton.BorderSizePixel = 0
+	BetterConsoleQuitButton.Position = UDim2.new(1.01666307, 0, -0.046195969, 0)
+	BetterConsoleQuitButton.Rotation = 30
+	BetterConsoleQuitButton.Size = UDim2.new(0.0523128882, 0, 0.147147223, 0)
+	BetterConsoleQuitButton.ZIndex = 5001
+	BetterConsoleQuitButton.Image = "rbxassetid://5100480132"
+	BetterConsoleQuitButton.ScaleType = Enum.ScaleType.Fit
+	--CODING FOR BETTER CONSOLE:
+	
+	local allMessages, visibleMessages = 0, 0
+	local isSorted = false
+	local function BetterConsoleFrameToggle(_,inputState)
+		if inputState == Enum.UserInputState.Begin then
+			BetterConsole.Visible = not BetterConsole.Visible
+		end
+	end
+	CAS:BindAction("OpenBetterConsole"..saveIndex,BetterConsoleFrameToggle,true,Enum.KeyCode.F9)
+	CAS:SetImage("OpenBetterConsole"..saveIndex,"rbxassetid://12350781258")
+	CAS:SetTitle("OpenBetterConsole"..saveIndex,"")
+	table.insert(functs,BetterConsoleQuitButton.MouseButton1Up:Connect(function()
+		BetterConsoleFrameToggle("OpenBetterConsole"..saveIndex,Enum.UserInputState.Begin)
+	end))
+	local function BetterConsole_SetMessagesVisibility(MessageLabel)
+		if not MessageLabel then
+			visibleMessages = 0
+		end
+		local currentText = SearchConsoleTextBox.Text
+		local includeALL = currentText=="" or currentText == " "
+		isSorted = not includeALL
+		for num, object in ipairs((MessageLabel and {MessageLabel} or BetterConsoleList:GetChildren())) do
+			if object:IsA("TextLabel") then
+				object.Visible = includeALL or object.Text:find(currentText)
+				visibleMessages += 1
+			end
+		end
+		FilterConsoleTitle.Text = "   BETTER CONSOLE ("..comma_value(includeALL and allMessages or visibleMessages)..")"
+	end
+	table.insert(functs,SearchConsoleTextBox:GetAttributeChangedSignal("Text"):Connect(BetterConsole_SetMessagesVisibility))
+	local MessageTypeColors = {
+		[Enum.MessageType.MessageOutput] = '<font color="rgb(255,255,255)">',
+		[Enum.MessageType.MessageInfo] = '<font color="rgb(255,255,255)">',
+		[Enum.MessageType.MessageWarning] = '<font color="rgb(255,0,255)">',
+		[Enum.MessageType.MessageError] = '<font color="rgb(255,0,0)">'
+	}
+	local function printFunction(message)
+		allMessages += 1
+		local MessageLabel = BetterConsoleTextEx:Clone()
+		MessageLabel.Text = message
+		MessageLabel.LayoutOrder = allMessages
+		MessageLabel.Parent = BetterConsoleList
+		if isSorted then
+			BetterConsole_SetMessagesVisibility(MessageLabel)
+		end
+	end
+	local function formatMessage(message,customTime)
+		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
+		printFunction(message:format(formatMessage:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")))
+	end
+
+	local function onMessageOut(message, messageType,...)
+		formatMessage(MessageTypeColors[messageType] .. "[%s"
+			.. " ".. messageType.Name:sub(8).. (checkcaller() and "" or ("</font><font color='rgb(0,0,200)'> Game</font>"..MessageTypeColors[messageType]))
+			"] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message,...)
+	end
+	table.insert(functs,LS.MessageOut:Connect(onMessageOut))
+	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
+	if logSuccess then
+		for _, logData in ipairs(logResult) do
+			task.spawn(onMessageOut,logData.message,logData.messageType,logData.timestamp)
+		end
+	else
+		onMessageOut("LogService:GetLogHistory has failed: "..tostring(logResult),Enum.MessageType.MessageError)
+	end
+end
 local function GuiCreationFunction()
 	--local Instance.new = Instance["new"];
 	local ExTextButton = Instance.new("Frame");
@@ -542,7 +803,8 @@ local function GuiCreationFunction()
 	CommandBarLine.TextXAlignment = Enum.TextXAlignment.Left
 	CommandBarLine.RichText = true
 	CommandBarLine.TextWrapped = true
-
+	
+	StartBetterConsole()
 end
 
 --BIGGIE FUNCTIONS
@@ -744,7 +1006,7 @@ local function ShuffleArray(tabl)
 		tabl[i],tabl[ran] = tabl[ran],tabl[i]
 	end return tabl
 end
-local function comma_value(amount)
+function comma_value(amount)
 	local k
 	local formatted = amount
 	while true do  
@@ -7109,7 +7371,7 @@ wait()
 local function attributeAddedFunction()
 	if clear==nil then
 		isCleared=true
-		DS:AddItem(script,5)
+		DS:AddItem(script,15)
 		return
 	end
 	if plr:GetAttribute(getID)~=saveIndex then
@@ -7127,9 +7389,6 @@ PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("Pl
 
 --DELETION--
 clear = function(isManualClear)
-	if true then
-		--return--debugging lol
-	end
 	isCleared=true
 	if HackGUI then
 		HackGUI.Enabled=false

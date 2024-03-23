@@ -3134,7 +3134,7 @@ AvailableHacks ={
 				survivorScreen()
 
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
-					--local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
+					local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					--print("CHATMAIN",chatMain)
 					local function slashPressed(name,state)
@@ -3145,13 +3145,12 @@ AvailableHacks ={
 							chatBar:CaptureFocus()
 							chatBar:ReleaseFocus()
 							RunS.RenderStepped:Wait()
-							chatBar:CaptureFocus()
 							--v553:SetVisible(true)
 							--InstantFadeIn()
 							--v145:CaptureFocus()
 							--v1.ChatBarFocusChanged:fire(true)
 							--chatMain.FocusChatBar()
-							--chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
+							chatMain.SpecialKeyPressed(nil,Enum.SpecialKey.ChatHotkey,nil)
 
 							--chatBar:CaptureFocus()
 						end

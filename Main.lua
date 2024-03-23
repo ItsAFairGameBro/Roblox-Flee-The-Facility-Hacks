@@ -3139,12 +3139,13 @@ AvailableHacks ={
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					--print("CHATMAIN",chatMain)
 					local function slashPressed(name,state)
-						if state == Enum.UserInputState.Begin then
+						if state == Enum.UserInputState.Begin and not UIS:GetFocusedTextBox() then
 							--chatMain.ChatBarFocusChanged:fire(true)
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
 							SG:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 							chatButton.Image = "rbxassetid://5227476720"--set it to visible!
 							--task.wait(1)
+							RunS.RenderStepped:Wait()
 							chatBar:CaptureFocus()
 							--for s = 1, 1, -1 do RunS.RenderStepped:Wait() end
 							--chatBar:ReleaseFocus()

@@ -271,7 +271,7 @@ local function GuiCreationFunction()
 	MyTextBox.BackgroundTransparency = 1.000;
 	MyTextBox.Position = UDim2.new(1, 0, 0, 0);
 	MyTextBox.Size = UDim2.new(0.442999989, 0, 1, 0);
-	MyTextBox.Font = textFont2;
+	MyTextBox.Font = textFont;
 	MyTextBox.Text = "0";
 	MyTextBox.TextColor3 = Color3.fromRGB(255, 255, 255);
 	MyTextBox.TextScaled = true;
@@ -285,7 +285,7 @@ local function GuiCreationFunction()
 	MainListEx.Name = "MainListEx";
 	MainListEx.BackgroundTransparency = 1;
 	MainListEx.Size = UDim2.new(1, 0, 0, 25);
-	MainListEx.Font = textFont2;
+	MainListEx.Font = textFont;
 	MainListEx.TextStrokeColor3 = Color3.fromRGB();
 	MainListEx.TextStrokeTransparency = 0
 	MainListEx.TextScaled = true;

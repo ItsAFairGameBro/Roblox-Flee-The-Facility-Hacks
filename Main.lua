@@ -3141,7 +3141,7 @@ AvailableHacks ={
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					local action1 = (UIS.MouseEnabled and UIS.TouchEnabled  and "click/tap") 
 						or (UIS.MouseEnabled and "click") or (UIS.TouchEnabled and "tap") or "<idk>"
-					chatTextLabel.Text = "To chat ".. action1 .." here".. (UIS.KeyboardEnabled and " or press "/" key" or "")
+					chatTextLabel.Text = "To chat ".. action1 .." here".. (UIS.KeyboardEnabled and ' or press "/" key' or "")
 					--print("CHATMAIN",chatMain)
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin and not UIS:GetFocusedTextBox() then

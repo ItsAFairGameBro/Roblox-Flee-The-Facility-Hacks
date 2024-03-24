@@ -5744,7 +5744,7 @@ C.AvailableHacks ={
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						local MoveDirection = C.PlayerControlModule:GetMoveVector()
-						clonedHuman:Move(MoveDirection)
+						clonedHuman:Move(MoveDirection,true)
 						RunS.RenderStepped:Wait()
 					end
 				end)

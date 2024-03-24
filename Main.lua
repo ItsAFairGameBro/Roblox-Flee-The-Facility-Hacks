@@ -354,9 +354,9 @@ local function StartBetterConsole()
 	local MessageTypeSettings = {
 		[Enum.MessageType.MessageOutput.Name] = {Color='<font color="rgb(170,170,170)">',Layout=0,Active=true},
 		[Enum.MessageType.MessageInfo.Name] = {Color='<font color="rgb(255,0,255)">',Layout=1,Active=true},
-		[Enum.MessageType.MessageWarning.Name] = {Color='<font color="rgb(255,0,255)">',Layout=2,Active=true},
+		[Enum.MessageType.MessageWarning.Name] = {Color='<font color="rgb(255,255,0)">',Layout=2,Active=true},
 		[Enum.MessageType.MessageError.Name] = {Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
-		["FromGMEGame"] = {Color="<font color='rgb(0,0,200)'>",Layout=3,Active=true},
+		["FromGMEGame"] = {Color="<font color='rgb(50,50,230)'>",Layout=4,Active=true},
 	}
 	local noMessagesFound = BetterConsoleTextEx:Clone()
 	noMessagesFound.RichText = false
@@ -495,9 +495,9 @@ local function StartBetterConsole()
 
 	local function onMessageOut(message, messageType,...)
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
-		local isFromGame = not checkmycaller(message)
+		local isFromGame = checkmycaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
-			.. " ".. messageType.Name:sub(8).. (isFromGame and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
+			.. " ".. messageType.Name:sub(8).. (not isFromGame and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message
 		formatMessage(inputMessage,messageType,isFromGame,...)
 	end

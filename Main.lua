@@ -283,6 +283,7 @@ local function StartBetterConsole()
 	BetterConsoleList.Size = UDim2.new(1, 0, 0.887688816, 0)
 	BetterConsoleList.CanvasSize = UDim2.new(0, 0, 0, 0)
 	BetterConsoleList.ZIndex = 5001
+	BetterConsoleList.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	BetterConsoleList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 
 	UIListLayout.Parent = BetterConsoleList
@@ -383,11 +384,11 @@ local function StartBetterConsole()
 		FilterConsoleTitle.Text = "   BETTER CONSOLE ("..comma_value(visibleMessages)..")"
 		if visibleMessages==0 then
 			if allMessages > 0 then
-				noMessagesFound.Text = "No Messages Found In This Category!"
-				noMessagesFound.TextColor3 = Color3.fromRGB(225)
+				noMessagesFound.Text = "No Messages Found!"
+				noMessagesFound.TextColor3 = Color3.fromRGB(200,50,50)
 			else
 				noMessagesFound.Text = "No Messages Yet!"
-				noMessagesFound.TextColor3 = Color3.fromRGB(0,0,225)
+				noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
 			end
 			noMessagesFound.Parent = BetterConsoleList
 		end
@@ -466,7 +467,7 @@ local function StartBetterConsole()
 
 	local function onMessageOut(message, messageType,...)
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
-		local inputMessage = " "..myMessageColor .. "[%s"
+		local inputMessage = "  "..myMessageColor .. "[%s"
 			.. " ".. messageType.Name:sub(8).. (checkcaller() and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message
 		formatMessage(inputMessage,messageType,...)

@@ -5371,7 +5371,7 @@ C.AvailableHacks ={
 						local anim = animTable[animName][idx].anim
 
 						-- switch animation		
-						if (anim ~= currentAnimInstance) then
+						if (anim ~= currentAnimInstance) and humanoid.Parent then
 
 							if (currentAnimTrack ~= nil) then
 								currentAnimTrack:Stop(transitionTime)
@@ -5862,19 +5862,18 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-			["MyStartUp"] = function()
+			["MyDeath"] = function()
 				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
 			end,
 			["MyPlayerAdded"] = function()
 				task.wait(1.5)
 				C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				C.AvailableHacks.Basic[30].Funct = plr.CharacterAppearanceLoaded:Connect(function()
-					print("Appearence Loaded!")
 					if C.enHacks["Basic_InvisibleChar"] then
 						C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 					end
 				end)
-
+				
 			end,
 		},
 		[40]={
@@ -9040,6 +9039,10 @@ local function CharacterAdded(theirChar)
 			end
 		end
 	end
+	C.objectFuncts[theirHumanoid] = C.objectFuncts[theirHumanoid] or {}
+	C.objectFuncts[theirHumanoid]["Died"] = theirHumanoid.Died:Connect(function()
+		defaultFunction(isMyChar and "MyDeath" or "OthersDeath")
+	end)
 end
 local function CharacterRemoving(theirPlr,theirChar)
 	if isCleared then 

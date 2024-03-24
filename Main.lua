@@ -320,6 +320,7 @@ local function StartBetterConsole()
 	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
 	BetterConsoleTextEx.BorderSizePixel = 0
 	BetterConsoleTextEx.Size = UDim2.new(1, 0, 0, 0)
+	BetterConsoleTextEx.AutomaticSize = Enum.AutomaticSize.Y
 	BetterConsoleTextEx.ZIndex = 5001
 	BetterConsoleTextEx.Font = Enum.Font.Arial
 	BetterConsoleTextEx.Text = " <font color='rgb(200,50,50)'>[6:29:29 PM, Game]:</font> Random errorr occured!"
@@ -476,7 +477,7 @@ local function StartBetterConsole()
 				end
 			end
 		end
-		--BetterConsoleList.Size = includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
+		BetterConsoleList.Size = includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..currentText..'"'
 		if visibleMessages==0 then
 			if allMessages > 0 then

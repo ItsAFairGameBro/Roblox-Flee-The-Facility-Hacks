@@ -5714,7 +5714,6 @@ C.AvailableHacks ={
 				--C.plr.Character = clonedChar
 				camera.CameraSubject = clonedHuman
 
-				local connections = {}
 				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(function()
 					clonedHuman:Move(human.MoveDirection)
 				end))

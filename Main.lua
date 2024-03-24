@@ -5717,6 +5717,8 @@ C.AvailableHacks ={
 				local orgChar = C.char
 				local saveLoc = orgChar:GetPivot()
 				
+				local animationTracks = human.Animator:GetPlayingAnimationTracks()
+				
 				orgChar.Archivable = true
 				local clonedChar = C.char:Clone()
 				orgChar.Archivable = false
@@ -5844,7 +5846,7 @@ C.AvailableHacks ={
 					end
 				end
 				table.insert(connections, human.Animator.AnimationPlayed:Connect(animTrackAdded))
-				for _, animTrack in ipairs(human.Animator:GetPlayingAnimationTracks()) do
+				for _, animTrack in ipairs(animationTracks) do
 					task.spawn(animTrackAdded,animTrack)
 				end
 				task.spawn(doAnimate,clonedChar,connections)

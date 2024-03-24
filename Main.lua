@@ -176,6 +176,7 @@ local function StartBetterConsole()
 	BetterConsole.BorderSizePixel = 0
 	BetterConsole.Position = UDim2.new(0.5, 0, 0.5, 0)
 	BetterConsole.Size = UDim2.new(0.600000024, 0, 0.560000002, 0)
+	BetterConsole.Visible = false
 	BetterConsole.ZIndex = 5000
 	UIStroke:Clone().Parent=BetterConsole
 	UICorner:Clone().Parent=BetterConsole
@@ -305,6 +306,7 @@ local function StartBetterConsole()
 	BetterConsoleList.Position = UDim2.new(0, 0, 0.958246052, 0)
 	BetterConsoleList.Size = UDim2.new(1, 0, 0.846379399, 0)
 	BetterConsoleList.CanvasSize = UDim2.new(0, 0, 0, 0)
+	BetterConsoleList.ScrollingDirection = Enum.ScrollingDirection.Y
 	BetterConsoleList.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	BetterConsoleList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 
@@ -474,7 +476,7 @@ local function StartBetterConsole()
 				end
 			end
 		end
-		BetterConsoleList.Size = includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
+		--BetterConsoleList.Size = includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..currentText..'"'
 		if visibleMessages==0 then
 			if allMessages > 0 then

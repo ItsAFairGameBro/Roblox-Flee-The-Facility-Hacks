@@ -5864,6 +5864,8 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
 			end,
 			["MyPlayerAdded"] = function()
+				task.wait(1.5)
+				C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				C.AvailableHacks.Basic[30].Funct = plr.CharacterAppearanceLoaded:Connect(function()
 					print("Appearence Loaded!")
 					if C.enHacks["Basic_InvisibleChar"] then

@@ -1074,11 +1074,13 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	end
 	return str
 end
+local oldWarn = warn
+local oldPrint = print
 local function warn(...)
-	warn(recurseLoopPrint({...},"",0))
+	oldWarn(recurseLoopPrint({...},"",0))
 end
 local function print(...)
-	print(recurseLoopPrint({...},"",0))
+	oldPrint(recurseLoopPrint({...},"",0))
 end
 local RemoteEvent
 if gameUniverse=="Flee" then

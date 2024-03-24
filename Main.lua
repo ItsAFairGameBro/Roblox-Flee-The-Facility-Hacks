@@ -455,11 +455,11 @@ local function StartBetterConsole()
 	--if isStudio then
 	--CHECKCALLER is not working correctly, so we'll take over from here
 	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load sound ",
-		"Font family ","Preloaded game image: ",
+		"Font family ","Preloaded game image: ","load size "
 	}
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
-		"ContextActionService could not find the function passed in, doing nothing.","load size 14"
+		"ContextActionService could not find the function passed in, doing nothing."
 	}
 	local function checkmycaller(msg)
 		for _, text in ipairs(BetterConsole_CheckCaller_MsgExact) do
@@ -7505,6 +7505,7 @@ wait()
 local function attributeAddedFunction()
 	if clear==nil then
 		isCleared=true
+		print("Clear Not Found!")
 		DS:AddItem(script,15)
 		return
 	end
@@ -7522,7 +7523,7 @@ table.insert(functs,(plr:GetAttributeChangedSignal(getID):Connect(attributeAdded
 PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
 
 --DELETION--
-clear = function(isManualClear)
+function clear(isManualClear)
 	isCleared=true
 	if HackGUI then
 		HackGUI.Enabled=false

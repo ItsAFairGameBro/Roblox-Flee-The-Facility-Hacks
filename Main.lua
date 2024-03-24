@@ -175,10 +175,10 @@ local function StartBetterConsole()
 	SearchConsoleTextBox.ZIndex = 5001
 	SearchConsoleTextBox.Font = textFont
 	SearchConsoleTextBox.TextStrokeColor3 = Color3.new()
-	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(255, 255, 255)
+	SearchConsoleTextBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
 	SearchConsoleTextBox.PlaceholderText = "Filter Search Results"
 	SearchConsoleTextBox.Text = ""
-	SearchConsoleTextBox.TextColor3 = Color3.new(0, 0, 0)
+	SearchConsoleTextBox.TextColor3 = Color3.fromRGB(255,255,255)
 	SearchConsoleTextBox.TextScaled = true
 	SearchConsoleTextBox.TextSize = 14
 	SearchConsoleTextBox.TextStrokeTransparency = 0
@@ -403,6 +403,7 @@ local function StartBetterConsole()
 		BoxFrame:WaitForChild("FilterBoxName").Text = messageType:sub(8)
 		local R, G, B = table.unpack(messageData.Color:sub(messageData.Color:find("%(")+1,messageData.Color:find("%)")-1):split(","))
 		BoxFrame:WaitForChild("FilterBoxName").TextColor3 = Color3.fromRGB(tonumber(R),tonumber(G),tonumber(B))
+		BoxFrame.LayoutOrder = messageData.Layout
 		local tweenInstance
 		local updImage = BoxFrame:WaitForChild("CheckboxImage")
 		local function update()
@@ -445,6 +446,9 @@ local function StartBetterConsole()
 			if currentText:lower()=="/clear" then
 				AvailableHacks.Commands[2].ActivateFunction(true)
 			end
+			if currentText:lower()=="/" then
+				SearchConsoleTextBox.Text = ""
+			end
 		end
 	end))
 	--if isStudio then
@@ -484,6 +488,7 @@ local function StartBetterConsole()
 		MessageLabel:SetAttribute("Type",messageType.Name)
 		MessageLabel.Text = message
 		MessageLabel.LayoutOrder = allMessages
+		MessageLabel.Name = allMessages
 		MessageLabel.Parent = BetterConsoleList
 		BetterConsole_SetMessagesVisibility(nil,MessageLabel)
 	end

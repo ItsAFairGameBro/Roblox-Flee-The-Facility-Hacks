@@ -7508,7 +7508,6 @@ saveIndex = ((plr:GetAttribute(getID) or 0)+1)
 --if plr:GetAttribute("Cleared"..getID) then plr:SetAttribute("Cleared"..getID,false) end
 local previousCopy = (plr:GetAttribute(getID)~=nil)
 plr:SetAttribute(getID,saveIndex)
-wait()
 local function attributeAddedFunction()
 	print("Attribute Changed Detected",saveIndex)
 	if clear==nil then
@@ -7517,10 +7516,10 @@ local function attributeAddedFunction()
 		DS:AddItem(script,15)
 		return
 	end
-	--if plr:GetAttribute(getID)~=saveIndex then
-	print("Running Clear")
-	clear()
-	--end
+	if plr:GetAttribute(getID)~=saveIndex then
+		print("Running Clear")
+		clear()
+	end
 end
 
 if script==nil or plr:GetAttribute(getID)~=saveIndex then

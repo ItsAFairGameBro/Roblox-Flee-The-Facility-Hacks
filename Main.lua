@@ -456,7 +456,7 @@ local function StartBetterConsole()
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
 		"ContextActionService could not find the function passed in, doing nothing."
 	}
-	local function checkcaller(msg)
+	local function checkmycaller(msg)
 		for _, text in ipairs(BetterConsole_CheckCaller_MsgExact) do
 			if text==msg then
 				return false
@@ -495,7 +495,7 @@ local function StartBetterConsole()
 
 	local function onMessageOut(message, messageType,...)
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
-		local isFromGame = not checkcaller(message)
+		local isFromGame = not checkmycaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
 			.. " ".. messageType.Name:sub(8).. (isFromGame and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message

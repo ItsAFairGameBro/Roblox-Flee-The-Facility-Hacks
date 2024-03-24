@@ -468,7 +468,7 @@ local function StartBetterConsole()
 			end
 		end
 		for _, text in ipairs(BetterConsole_CheckCaller_MsgEnd) do
-			if msg:sub(msg:len()-text:len()) == text then
+			if msg:sub(msg:len()-text:len()+1) == text then
 				return false
 			end
 		end

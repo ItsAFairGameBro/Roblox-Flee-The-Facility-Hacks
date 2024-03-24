@@ -5813,6 +5813,7 @@ C.AvailableHacks ={
 					end
 				end
 				local SavedAnimsTracks = {}
+				local runningSpeed = human.MoveDirection.Magnitude > 1e-3
 				local canRun = false
 				local function animTrackAdded(animTrack)
 					local animation = animTrack.Animation
@@ -5839,7 +5840,7 @@ C.AvailableHacks ={
 						table.insert(connections,animTrack:GetPropertyChangedSignal("Speed"):Connect(update))
 						table.insert(connections,animTrack:GetPropertyChangedSignal("IsPlaying"):Connect(update))
 						table.insert(connections,animTrack.Stopped:Connect(update))
-						myTrack:AdjustSpeed(2)
+						myTrack:AdjustSpeed(runningSpeed>.5 and 2 or 0)
 						update()
 					else
 						myTrack:Play()
@@ -5852,7 +5853,10 @@ C.AvailableHacks ={
 				task.spawn(doAnimate,clonedChar,connections)
 				table.insert(connections, clonedHuman.Running:Connect(function(speed)
 					local myTrack = SavedAnimsTracks["rbxassetid://961932719"]
-					if not myTrack then return end
+					if not myTrack then
+						runningSpeed = speed
+						return
+					end
 					if speed > .5 then
 						myTrack:AdjustSpeed(2)
 					else

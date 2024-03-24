@@ -5730,7 +5730,7 @@ C.AvailableHacks ={
 				
 				local function doCFrameChanged()
 					local newLoc = orgChar:GetPivot()
-					print(newLoc.Position)
+					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude))
 					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude < 50 then
 						return
 					end

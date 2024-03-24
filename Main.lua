@@ -236,12 +236,13 @@ local function StartBetterConsole()
 	UIGridLayout.CellSize = UDim2.new(0.200000003, 0, 1, 0)
 
 	BetterConsoleFilterBox.Name = "BetterConsoleFilterBox"
-	BetterConsoleFilterBox.Parent = FilterCheckBoxes
+	BetterConsoleFilterBox.Parent = nil
 	BetterConsoleFilterBox.BackgroundColor3 = Color3.new(0.219608, 0.219608, 0.219608)
 	BetterConsoleFilterBox.BorderColor3 = Color3.new(0, 0, 0)
 	BetterConsoleFilterBox.BorderSizePixel = 0
 	BetterConsoleFilterBox.Size = UDim2.new(0, 100, 0, 100)
 	BetterConsoleFilterBox.ZIndex = 5003
+	BetterConsoleFilterBox:AddTag("RemoveOnDestroy")
 	UIStroke:Clone().Parent=BetterConsoleFilterBox
 	UICorner:Clone().Parent=BetterConsoleFilterBox
 
@@ -308,7 +309,7 @@ local function StartBetterConsole()
 	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 	BetterConsoleTextEx.Name = "BetterConsole"
-	BetterConsoleTextEx.Parent = BetterConsoleList
+	BetterConsoleTextEx.Parent = nil
 	BetterConsoleTextEx.BackgroundColor3 = Color3.new(1, 1, 1)
 	BetterConsoleTextEx.BackgroundTransparency = 1
 	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
@@ -322,6 +323,7 @@ local function StartBetterConsole()
 	BetterConsoleTextEx.TextStrokeTransparency = 0
 	BetterConsoleTextEx.TextWrapped = true
 	BetterConsoleTextEx.TextXAlignment = Enum.TextXAlignment.Left
+	BetterConsoleTextEx:AddTag("RemoveOnDestroy")
 
 	BetterConsoleDesc.Name = "BetterConsoleDesc"
 	BetterConsoleDesc.Parent = BetterConsole

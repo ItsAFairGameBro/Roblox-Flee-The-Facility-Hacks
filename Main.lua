@@ -165,7 +165,7 @@ local function StartBetterConsole()
 	local UICorner = Instance.new("UICorner")
 
 	UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	UICorner.CornerRadius = Vector2.new(0,40)
+	UICorner.CornerRadius = UDim.new(0,40)
 
 	BetterConsole.Name = "BetterConsole"
 	BetterConsole.Parent = HackGUI
@@ -5861,10 +5861,10 @@ C.AvailableHacks ={
 				local Trigger=capsule:FindFirstChild("PodTrigger")
 				if not Trigger then return end
 				for s=5,1,-1 do
-					if capsule.PodTrigger.CapturedTorso.Value==nil then
-						return true
-					elseif not workspace:IsAncestorOf(Trigger) then 
+					if not workspace:IsAncestorOf(Trigger) then 
 						break
+					elseif Trigger.CapturedTorso.Value==nil then
+						return true
 					end
 					local isOpened=Trigger.ActionSign.Value==11
 					RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)

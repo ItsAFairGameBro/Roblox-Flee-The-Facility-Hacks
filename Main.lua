@@ -7509,6 +7509,7 @@ saveIndex = ((plr:GetAttribute(getID) or 0)+1)
 local previousCopy = (plr:GetAttribute(getID)~=nil)
 plr:SetAttribute(getID,saveIndex)
 local function attributeAddedFunction()
+	RunS.RenderStepped:Wait()
 	local newIndex = plr:GetAttribute(getID)
 	print("Attribute Changed Detected",saveIndex,newIndex)
 	if clear==nil then

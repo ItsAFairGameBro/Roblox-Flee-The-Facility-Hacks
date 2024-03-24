@@ -7513,9 +7513,9 @@ local function attributeAddedFunction()
 		DS:AddItem(script,15)
 		return
 	end
-	if plr:GetAttribute(getID)~=saveIndex then
-		clear()
-	end
+	--if plr:GetAttribute(getID)~=saveIndex then
+	clear()
+	--end
 end
 
 if script==nil or plr:GetAttribute(getID)~=saveIndex then

@@ -4028,6 +4028,7 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Utility[9].MusicValue = musicSound
 				setChangedAttribute(musicSound,"IsPlaying",C.AvailableHacks.Utility[9].ActivateFunction)
+				setChangedAttribute(musicSound,"Volume",C.AvailableHacks.Utility[9].ActivateFunction)
 				C.AvailableHacks.Utility[9].ActivateFunction()
 			end,
 		},

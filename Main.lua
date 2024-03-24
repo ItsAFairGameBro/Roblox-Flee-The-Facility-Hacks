@@ -5752,6 +5752,7 @@ C.AvailableHacks ={
 					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude < 50 then
 						return
 					end
+					warn("CFrame Teleport Update!")
 					teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 					clonedChar:PivotTo(newLoc)
 				end
@@ -5870,15 +5871,11 @@ C.AvailableHacks ={
 						connection:Disconnect()
 						table.remove(C.AvailableHacks.Basic[30].Functs,index)
 					end
-					if not characterSpawn and C.ClonedChar and C.char and C.char.Parent then
+					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.char and C.char.Parent then
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
 						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
-						if C.char and C.char.Parent then
-							if C.ClonedChar then
-								teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
-							end
-							C.char.PrimaryPart.Anchored = false
-						end
+						teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
+						C.char.PrimaryPart.Anchored = false
 						camera.CameraSubject = human
 						human:ChangeState(Enum.HumanoidStateType.Running)
 					end
@@ -8555,7 +8552,7 @@ clear = function(isManualClear)
 		C.AvailableHacks.Utility[8].CleanUp()--beast hammer
 	end
 	if C.AvailableHacks.Basic and C.AvailableHacks.Basic[30]  then
-		C.AvailableHacks.Basic[30].ActivateFunction(false,true);--disable char invisibility
+		C.AvailableHacks.Basic[30].ActivateFunction(false);--disable char invisibility
 	end
 	--[[for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
 		if obj~=nil then

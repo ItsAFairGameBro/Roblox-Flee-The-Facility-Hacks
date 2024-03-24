@@ -4982,10 +4982,9 @@ C.AvailableHacks ={
 						C.enHacks = {}--reset hacks!
 						saveSaveData()--deletes the save file!
 					end
-					lastRunningEnv.GlobalSettings.C.enHacks = {}
-					print("C is ",C)
+					lastRunningEnv.GlobalSettings.enHacks = {}
 					for hackID, value in pairs(C.enHacks) do
-						lastRunningEnv.GlobalSettings.C.enHacks[hackID] = value
+						lastRunningEnv.GlobalSettings.enHacks[hackID] = value
 					end
 					task.wait(1)
 					reloadFunction()

@@ -5817,9 +5817,11 @@ C.AvailableHacks ={
 						C.ClonedChar = nil
 					end
 					camera.CameraSubject = human
-					for _, connection in pairs(C.AvailableHacks.Basic[30].Functs) do
+					for index = #C.AvailableHacks.Basic[30].Functs, 1, -1 do
+						local connection = C.AvailableHacks.Basic[30].Functs
 						connection:Disconnect()
-					end C.AvailableHacks.Basic[30].Functs = {}
+						table.remove(C.AvailableHacks.Basic[30].Functs,index)
+					end
 				end
 			end,
 			["MyStartUp"] = function()

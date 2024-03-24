@@ -5827,6 +5827,7 @@ C.AvailableHacks ={
 							RunS.RenderStepped:Wait()
 						end RunS.RenderStepped:Wait() RunS.RenderStepped:Wait()
 						myTrack.Looped = animTrack.Looped
+						myTrack.TimePosition = animTrack.TimePosition
 						myTrack.Priority = animTrack.Priority
 						SavedAnimsTracks[animation.AnimationId] = myTrack
 
@@ -5867,7 +5868,6 @@ C.AvailableHacks ={
 				if enabled == C.AvailableHacks.Basic[30].Active and not characterSpawn then
 					return
 				end
-				C.AvailableHacks.Basic[30].Active = enabled
 				if enabled then
 					C.AvailableHacks.Basic[30].RunFunction(C.AvailableHacks.Basic[30].Functs)
 				else
@@ -5889,6 +5889,7 @@ C.AvailableHacks ={
 						C.ClonedChar = nil
 					end
 				end
+				C.AvailableHacks.Basic[30].Active = enabled
 			end,
 			["MyDeath"] = function()
 				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
@@ -9408,4 +9409,3 @@ CAS:BindActionAtPriority("CloseMenu"..C.saveIndex,CloseMenu,true,1e5,Enum.KeyCod
 
 
 return "Hack Successfully Executed V1.02!"
-						

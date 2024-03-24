@@ -3968,6 +3968,7 @@ C.AvailableHacks ={
 				},
 			},
 			["Universes"]={"Flee"},
+			["Funct"]=nil,
 			["MusicValue"] = nil,
 			["MusicValue2"] = nil,
 			["MusicValue3"] = nil,
@@ -4020,6 +4021,9 @@ C.AvailableHacks ={
 			end,
 
 			["MyStartUp"] = function()
+				if C.AvailableHacks.Utility[9].Funct then
+					C.AvailableHacks.Utility[9].Funct:Disconnect()
+				end
 				local musicSound
 				if gameName=="FleeMain" then
 					musicSound = C.char:WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
@@ -4027,9 +4031,11 @@ C.AvailableHacks ={
 					musicSound = plr:WaitForChild("PlayerScripts"):WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
 				end
 				C.AvailableHacks.Utility[9].MusicValue = musicSound
+				setChangedAttribute(musicSound,"Playing",C.AvailableHacks.Utility[9].ActivateFunction)
 				setChangedAttribute(musicSound,"IsPlaying",C.AvailableHacks.Utility[9].ActivateFunction)
 				setChangedAttribute(musicSound,"Volume",C.AvailableHacks.Utility[9].ActivateFunction)
 				C.AvailableHacks.Utility[9].ActivateFunction()
+				C.AvailableHacks.Utility[9].Funct = musicSound.Played:Connect(C.AvailableHacks.Utility[9].ActivateFunction)
 			end,
 		},
 		[15]={
@@ -5112,6 +5118,7 @@ C.AvailableHacks ={
 			["Active"] = false,
 			["Universes"]={"Global"},
 			["Functs"]={},
+			["HiddenLocation"] = CFrame.new(-1e4,0,1e4),
 			["RunFunction"]=function(connections)
 				local function doAnimate(Figure,connections2Add)
 					-- humanoidAnimatePlayEmote.lua
@@ -5704,20 +5711,33 @@ C.AvailableHacks ={
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 				orgChar.Archivable = false
-				orgChar:PivotTo(CFrame.new(0,1e4,0))
 				removeAllClasses(clonedChar,"Sound")
 				--for s = 2, 1, -1 do
+				
+
+				teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
+				
+				task.spawn(function()
 					RunS.RenderStepped:Wait()
+					orgChar.PrimaryPart.Anchored = true
+				end)
+
 				--end
-				orgChar.PrimaryPart.Anchored = true
 
 				clonedChar.Parent = workspace
 
 				camera.CameraSubject = clonedHuman
+				
+				local function doCFrameChanged()
+					local newLoc = orgChar:GetPivot()
+					teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
+					clonedChar:PivotTo(newLoc)
+				end
 
-				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(function()
-					clonedHuman:Move(human.MoveDirection)
-				end))
+				table.insert(connections,orgChar.Head:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
+				table.insert(connections,orgChar.Torso:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
+				table.insert(connections,orgChar.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
+				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(doCFrameChanged))
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						if clonedHuman.FloorMaterial ~= Enum.Material.Air then
@@ -5822,12 +5842,13 @@ C.AvailableHacks ={
 							C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 							C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
 						end
+						camera.CameraSubject = human
+						human:ChangeState(Enum.HumanoidStateType.Running)
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()
 						C.ClonedChar = nil
 					end
-					camera.CameraSubject = human
 					for index = #C.AvailableHacks.Basic[30].Functs, 1, -1 do
 						local connection = C.AvailableHacks.Basic[30].Functs[index]
 						connection:Disconnect()

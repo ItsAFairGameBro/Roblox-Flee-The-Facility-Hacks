@@ -5832,7 +5832,7 @@ C.AvailableHacks ={
 
 						local function update()
 							if animTrack.IsPlaying and not myTrack.IsPlaying then
-								myTrack:Play(0, 1, 0)
+								myTrack:Play(0, 1, runningSpeed>.5 and 2 or 0)
 							elseif not animTrack.IsPlaying and myTrack.IsPlaying then
 								myTrack:Stop()
 							end
@@ -5840,7 +5840,6 @@ C.AvailableHacks ={
 						table.insert(connections,animTrack:GetPropertyChangedSignal("Speed"):Connect(update))
 						table.insert(connections,animTrack:GetPropertyChangedSignal("IsPlaying"):Connect(update))
 						table.insert(connections,animTrack.Stopped:Connect(update))
-						myTrack:AdjustSpeed(runningSpeed>.5 and 2 or 0)
 						update()
 					else
 						myTrack:Play()
@@ -9409,3 +9408,4 @@ CAS:BindActionAtPriority("CloseMenu"..C.saveIndex,CloseMenu,true,1e5,Enum.KeyCod
 
 
 return "Hack Successfully Executed V1.02!"
+						

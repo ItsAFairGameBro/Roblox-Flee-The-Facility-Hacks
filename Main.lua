@@ -320,6 +320,7 @@ local function StartBetterConsole()
 	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
 	BetterConsoleTextEx.BorderSizePixel = 0
 	BetterConsoleTextEx.Size = UDim2.new(1, 0, 0, 0)
+	BetterConsoleTextEx.RichText = true
 	BetterConsoleTextEx.AutomaticSize = Enum.AutomaticSize.Y
 	BetterConsoleTextEx.ZIndex = 5001
 	BetterConsoleTextEx.Font = Enum.Font.Arial
@@ -471,13 +472,16 @@ local function StartBetterConsole()
 				local willBeVisible = includeALL or object.Text:lower():find(currentText)
 				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
 					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
+				if willBeVisible then
+					object.Text = includeALL and object:GetAttribute("OrgText") or object:GetAttribute("OrgText"):gsub(currentText,"<b><u>"..currentText.."</b></u>")
+				end
 				object.Visible = willBeVisible
 				if willBeVisible then
 					visibleMessages += 1
 				end
 			end
 		end
-		BetterConsoleList.Size = includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
+		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..currentText..'"'
 		if visibleMessages==0 then
 			if allMessages > 0 then
@@ -536,16 +540,29 @@ local function StartBetterConsole()
 		end
 		BetterConsole_SetMessagesVisibility()
 	end
+	local function BetterConsole_DoCmd(msg)
+		if msg == "/clear" then
+			C.AvailableHacks.Commands[2].ActivateFunction(true)
+		elseif msg=="/top" then
+			BetterConsoleList.CanvasPosition = UDim2.fromOffset(0,0)
+		elseif msg=="/bottom" then
+			BetterConsoleList.CanvasPosition = UDim2.fromOffset(0,1e8)
+		end
+	end
 	table.insert(C.functs,SearchConsoleTextBox.FocusLost:Connect(function(enterPressed)
 		local currentText = SearchConsoleTextBox.Text
 		if enterPressed then
-			if currentText:lower()=="/clear" then
-				C.AvailableHacks.Commands[2].ActivateFunction(true)
-			end
-			if currentText:lower()=="/" then
-				SearchConsoleTextBox.Text = ""
-			end
+			BetterConsole_DoCmd(currentText:lower())
 		end
+	end))
+	table.insert(C.functs,Clear.MouseButton1Up:Connect(function()
+		BetterConsole_DoCmd("/clear")
+	end))
+	table.insert(C.functs,Top.MouseButton1Up:Connect(function()
+		BetterConsole_DoCmd("/top")
+	end))
+	table.insert(C.functs,Bottom.MouseButton1Up:Connect(function()
+		BetterConsole_DoCmd("/bottom")
 	end))
 	--if isStudio then
 	--CHECKCALLER is not working correctly, so we'll take over from here
@@ -582,6 +599,7 @@ local function StartBetterConsole()
 			MessageLabel:SetAttribute("IsGame",true)
 		end
 		MessageLabel:SetAttribute("Type",messageType.Name)
+		MessageLabel:SetAttribute("OrgText",message)
 		MessageLabel.Text = message
 		MessageLabel.LayoutOrder = allMessages
 		MessageLabel.Name = allMessages

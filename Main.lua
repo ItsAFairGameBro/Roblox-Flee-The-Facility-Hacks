@@ -1349,7 +1349,7 @@ local function sortPlayersByXPThenCredits(plrList)
 		local isABot=myBots[a.Name:lower()]
 		local isBBot=myBots[b.Name:lower()]
 		if isABot~=isBBot then
-			return isABot
+			return true
 		end
 		local aLevel = aStats:FindFirstChild("Level")
 		local bLevel = bStats:FindFirstChild("Level")
@@ -1367,7 +1367,10 @@ local function sortPlayersByXPThenCredits(plrList)
 		if aXP.Value~=bXP.Value then
 			return (aXP.Value>bXP.Value)
 		end
-		return (aStats.Credits.Value>bStats.Credits.Value)
+		if (aStats.Credits.Value ~= bStats.Credits.Value) then
+			return (aStats.Credits.Value>bStats.Credits.Value)
+		end
+		return a.Name:lower() > b.Name:lower()
 	end
 
 	table.sort(plrList,tableSortFunction)
@@ -7524,19 +7527,23 @@ table.insert(functs,(plr:GetAttributeChangedSignal(getID):Connect(attributeAdded
 PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
 
 --DELETION--
-function clear(isManualClear)
+clear = function(isManualClear)
 	isCleared=true
+	warn("Clear Started")
 	if HackGUI then
 		HackGUI.Enabled=false
 	end
 	if DraggableMain then DraggableMain:Disable() end
+	warn("Drag Finish")
 	--plr:SetAttribute(getID,nil)
 	if (AvailableHacks.Bot[15] and AvailableHacks.Bot[15].CurrentPath~=nil) then
 		AvailableHacks.Bot[15].CurrentPath:Stop()
 	end
+	warn("Runner Finish")
 	if gameName == "FleeMain" then
-		AvailableHacks.Utility[8].CleanUp()
+		AvailableHacks.Utility[8].CleanUp()--beast hammer
 	end
+	warn("Beast Finish")
 	local searchList = objectFuncts or {}
 	for obj,objectEventsList in pairs(searchList) do
 		local insideSearchList = objectEventsList or {}
@@ -7547,6 +7554,7 @@ function clear(isManualClear)
 			end
 		end
 	end
+	warn("objectFuncts Finish")
 	--[[for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
 		if obj~=nil then
 			for _, tag in ipairs(obj:GetTags()) do
@@ -7556,6 +7564,7 @@ function clear(isManualClear)
 		end;
 	end;--]]
 	DestroyAllTaggedObjects("RemoveOnDestroy")
+	warn("RemoveOnDestroy Finish")
 	for userID,functList in pairs(playerEvents) do
 		for num,funct in pairs(functList or {}) do
 			funct:Disconnect();
@@ -7588,19 +7597,28 @@ function clear(isManualClear)
 	else
 		getgenv().enHacks = table.clone(enHacks)
 	end
+	warn("Flee Stuff Finish")
 	saveSaveData()--save before we delete stuff!
 	for hackName,enabled in pairs(enHacks) do
 		enHacks[hackName]=nil;  --disables all running hacks to stop them!
 	end;--effectively disables all hacks!
+	warn("1 Finish")
 	AvailableHacks.Basic[4].ActivateFunction(false);--disble hacks
+	warn("2 Finish")
 	AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
+	warn("3 Finish")
 	AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
+	warn("4 Finish")
 	human:SetAttribute("OverrideSpeed",nil)
+	
 	if AvailableHacks.Blatant and AvailableHacks.Beast[2] then
 		AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
+		warn("5 Finish")
 		AvailableHacks.Beast[2].Crawl(false);--disable crawl
 	end
+	warn("6 Finish")
 	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
+	warn("7 Finish")
 	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do
 		tagPart:SetAttribute("Trigger_AllowException",nil)
 	end

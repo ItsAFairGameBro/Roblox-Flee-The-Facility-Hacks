@@ -2734,6 +2734,7 @@ AvailableHacks ={
 			["Title"] = "ESP Player Progress",
 			["Desc"] = "See player's progress",
 			["Shortcut"] = "ESP_PlayerProg",
+			["Universes"]={"FleeMain"},
 			["Default"] = false,
 			["ActivateFunction"] = function(newValue)
 
@@ -4540,7 +4541,7 @@ AvailableHacks ={
 				local isR6=human.RigType==Enum.HumanoidRigType.R6
 				local function update(new,saveHeight)
 					local blackListTable = {"Blacklist",char}
-					local directionPosition1 = char.PrimaryPart.Size.Y/2+char["Right Leg"].Size.Y/2+3.03
+					local directionPosition1 = char.PrimaryPart.Size.Y/2+(isR6 and char["Right Leg"] or char["Lower Leg"]).Size.Y/2+3.03
 					local directionPosition2 = getHumanoidHeight(char)
 					local directionPosition
 					if isR6 then
@@ -5606,6 +5607,7 @@ AvailableHacks ={
 					["TextColor"]=newColor3(255, 255, 0),
 				},
 			},
+			["Universes"]={"FleeMain"},
 			["Default"]=false,
 			["RopeSurvivor"]=function(TSM,theirPlr,override)
 				if (enHacks.AutoAddRope~="Everyone" and (enHacks.AutoAddRope~="Me" or Beast~=char)) and not override then
@@ -5942,6 +5944,7 @@ AvailableHacks ={
 			["AvoidParts"]={},
 			["CurrentNum"]=0,
 			["DidAction"]=false,
+			["Universes"]={"FleeMain"},
 			--["CanRun"]=nil,
 			["ChangedEvent"]=(Instance.new("BindableEvent",script)),
 			["WalkPath"]=(function(path,target,checkFunct)
@@ -7708,9 +7711,14 @@ if previousCopy then
 		changedEvent:Fire()
 	end
 	local clearedConnection=(plr:GetAttributeChangedSignal("Cleared"..getID):Connect(clearFunct))
-	while getDictLength(getgenv()["ActiveScript"..getID])>0 do
+	local currentSize = getDictLength(getgenv()["ActiveScript"..getID])
+	while currentSize>0 do
 		changedEvent.Event:Wait()
-		RunS.RenderStepped:Wait()
+		while currentSize == getDictLength(getgenv()["ActiveScript"..getID]) do
+			warn("waiting")
+			RunS.RenderStepped:Wait()
+		end
+		currentSize = getDictLength(getgenv()["ActiveScript"..getID])
 		if isCleared then
 			DS:AddItem(script,1)
 			clearedConnection:Disconnect()
@@ -7720,7 +7728,7 @@ if previousCopy then
 			warn(( "Maximum Wait Time Reached ("..maxWaitTime.."s), Starting Script..." ))
 			break
 		elseif getDictLength(getgenv()["ActiveScript"..getID])>0 then
-			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!",error)
+			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!",print)
 		end
 	end
 	changedEvent:Destroy()

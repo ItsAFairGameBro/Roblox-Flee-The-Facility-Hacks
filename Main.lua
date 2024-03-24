@@ -5710,7 +5710,7 @@ C.AvailableHacks ={
 				clonedChar.Parent = workspace
 
 				--C.plr.Character = clonedChar
-				C.Camera.CameraSubject = clonedHuman
+				camera.CameraSubject = clonedHuman
 
 				local connections = {}
 				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(function()
@@ -5792,13 +5792,13 @@ C.AvailableHacks ={
 					C.AvailableHacks.Basic[30].RunFunction(C.AvailableHacks.Basic[30].Functs)
 				else
 					if not characterSpawn then
-						if char and char.Parent then
+						if C.char and C.char.Parent then
 							if C.ClonedChar then
-								char:PivotTo(C.ClonedChar:GetPivot())
+								C.char:PivotTo(C.ClonedChar:GetPivot())
 							end
-							char.PrimaryPart.Anchored = false
-							char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
-							char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
+							C.char.PrimaryPart.Anchored = false
+							C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
+							C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
 						end
 						--C.plr.Character = orgChar
 					end
@@ -5806,7 +5806,7 @@ C.AvailableHacks ={
 						C.ClonedChar:Destroy()
 						C.ClonedChar = nil
 					end
-					C.Camera.CameraSubject = human
+					camera.CameraSubject = human
 					for _, connection in pairs(C.AvailableHacks.Basic[30].Functs) do
 						connection:Disconnect()
 					end C.AvailableHacks.Basic[30].Functs = {}

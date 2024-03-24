@@ -7508,10 +7508,13 @@ saveIndex = ((plr:GetAttribute(getID) or 0)+1)
 --if plr:GetAttribute("Cleared"..getID) then plr:SetAttribute("Cleared"..getID,false) end
 local previousCopy = (plr:GetAttribute(getID)~=nil)
 plr:SetAttribute(getID,saveIndex)
+local attributeChangedSignal
 local function attributeAddedFunction()
-	task.wait(1)
+	if attributeChangedSignal then
+		attributeChangedSignal:Disconnect()
+		attributeChangedSignal=nil
+	end
 	local newIndex = plr:GetAttribute(getID)
-	print("Attribute Changed Detected",saveIndex,newIndex)
 	if clear==nil then
 		isCleared=true
 		print("Clear Not Found!",saveIndex)
@@ -7519,8 +7522,7 @@ local function attributeAddedFunction()
 		return
 	end
 	--if newIndex~=saveIndex then
-		print("Running Clear")
-		clear()
+	clear()
 	--end
 end
 
@@ -7528,7 +7530,8 @@ if script==nil or plr:GetAttribute(getID)~=saveIndex then
 	setChangedAttribute()
 	return "Saved Index Changed (Code 101)"
 end
-table.insert(functs,(plr:GetAttributeChangedSignal(getID):Connect(attributeAddedFunction)))
+attributeChangedSignal = plr:GetAttributeChangedSignal(getID):Connect(attributeAddedFunction)
+table.insert(functs,attributeChangedSignal)
 
 PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
 
@@ -7707,6 +7710,7 @@ if previousCopy then
 	local clearedConnection=(plr:GetAttributeChangedSignal("Cleared"..getID):Connect(clearFunct))
 	while getDictLength(getgenv()["ActiveScript"..getID])>0 do
 		changedEvent.Event:Wait()
+		RunS.RenderStepped:Wait()
 		if isCleared then
 			DS:AddItem(script,1)
 			clearedConnection:Disconnect()
@@ -7716,7 +7720,7 @@ if previousCopy then
 			warn(( "Maximum Wait Time Reached ("..maxWaitTime.."s), Starting Script..." ))
 			break
 		elseif getDictLength(getgenv()["ActiveScript"..getID])>0 then
-			warn("Dict Length Still Larger Than Zero After One Cycle!")
+			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!",error)
 		end
 	end
 	changedEvent:Destroy()

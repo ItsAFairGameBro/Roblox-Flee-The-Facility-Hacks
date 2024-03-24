@@ -4230,7 +4230,7 @@ C.AvailableHacks ={
 
 				setJump();
 
-				if ((newValue) == (50)) then
+				if ((newValue) == (SP.CharacterJumpPower)) then
 					setChangedAttribute(human,"JumpPower",false);
 				else
 					setChangedAttribute(human,"JumpPower",setJump);
@@ -5731,7 +5731,7 @@ C.AvailableHacks ={
 				local function doCFrameChanged()
 					local newLoc = orgChar:GetPivot()
 					print(newLoc.Position)
-					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation).Magnitude < 50 then
+					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude < 50 then
 						return
 					end
 					teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)

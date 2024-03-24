@@ -356,7 +356,7 @@ local function StartBetterConsole()
 		[Enum.MessageType.MessageInfo.Name] = {Color='<font color="rgb(255,0,255)">',Layout=1,Active=true},
 		[Enum.MessageType.MessageWarning.Name] = {Color='<font color="rgb(255,255,0)">',Layout=2,Active=true},
 		[Enum.MessageType.MessageError.Name] = {Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
-		["FromGMEGame"] = {Color="<font color='rgb(50,50,230)'>",Layout=4,Active=true},
+		["FromGMEGame"] = {Color="<font color='rgb(70,70,170)'>",Layout=4,Active=false},
 	}
 	local noMessagesFound = BetterConsoleTextEx:Clone()
 	noMessagesFound.RichText = false
@@ -1234,7 +1234,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 			previously[name] = setValue
 		end
 	end
-	local currentEvent = myTSM:WaitForChild("ActionEvent").Value
+	local currentEvent = myTSM and myTSM:WaitForChild("ActionEvent").Value
 	local beforeEn,afterEn
 	for num,trigger in ipairs(CS:GetTagged("Trigger")) do
 		if trigger and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
@@ -4992,6 +4992,9 @@ AvailableHacks ={
 				},
 			},
 			["ActivateFunction"]=function(newValue)
+				if isCleared then
+					return warn("Instance "..(saveIndex or "Unknown").." is trying to delete itself but has already been cleared!")
+				end
 				clear(true)
 			end,
 		},

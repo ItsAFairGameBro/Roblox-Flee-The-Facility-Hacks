@@ -28,7 +28,7 @@ local C={enHacks = {},playerEvents={},objectFuncts={},functs={},refreshEnHack={}
 Map=nil,char=nil,Beast=nil,TestPart=nil,ToggleTag=nil,clear=nil,saveIndex=nil,AvailableHacks=nil,ResetEvent=nil,
 CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil}
 --local C.Map,C.char,C.Beast,C.TestPart,C.C.ToggleTag,clear,C.saveIndex,C.AvailableHacks,ResetEvent,C.C.C.CommandBarLine,C.Console,C.ConsoleButton,C.PlayerControlModule
-	--= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
+--= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
 --comma_value=nil
 --local clear,C.saveIndex,C.AvailableHacks
 local myTSM,mySSM
@@ -141,8 +141,9 @@ local function createToggleButton(Toggle, ExTextButton)
 end;
 local function StartBetterConsole()
 	--GUI CREATION FOR BETTER CONSOLE:
-	
+
 	local BetterConsole = Instance.new("Frame")
+	C.BetterConsole = BetterConsole
 	local SearchConsoleTextBox = Instance.new("TextBox")
 	local SearchConsoleResults = Instance.new("TextLabel")
 	local FilterCheckBoxes = Instance.new("Frame")
@@ -190,13 +191,13 @@ local function StartBetterConsole()
 	SearchConsoleTextBox.Size = UDim2.new(0.320734084, 0, 0.0500000007, 0)
 	SearchConsoleTextBox.ZIndex = 5001
 	SearchConsoleTextBox.Font = Enum.Font.Arial
-	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(0, 0, 0)
+	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(1,1,1)
 	SearchConsoleTextBox.PlaceholderText = "Filter Search Results"
 	SearchConsoleTextBox.Text = ""
-	SearchConsoleTextBox.TextColor3 = Color3.new(0, 0, 0)
+	SearchConsoleTextBox.TextColor3 = Color3.new(1,1,1)
 	SearchConsoleTextBox.TextScaled = true
 	SearchConsoleTextBox.TextSize = 14
-	SearchConsoleTextBox.TextStrokeColor3 = Color3.new(1, 1, 1)
+	SearchConsoleTextBox.TextStrokeColor3 = Color3.new(0,0,0)
 	SearchConsoleTextBox.TextStrokeTransparency = 0
 	SearchConsoleTextBox.TextWrapped = true
 	SearchConsoleTextBox.RichText = true
@@ -306,6 +307,8 @@ local function StartBetterConsole()
 	BetterConsoleList.Position = UDim2.new(0, 0, 0.958246052, 0)
 	BetterConsoleList.Size = UDim2.new(1, 0, 0.846379399, 0)
 	BetterConsoleList.CanvasSize = UDim2.new(0, 0, 0, 0)
+	BetterConsoleList.ZIndex = 5001
+	BetterConsoleList.ElasticBehavior = Enum.ElasticBehavior.Always
 	BetterConsoleList.ScrollingDirection = Enum.ScrollingDirection.Y
 	BetterConsoleList.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	BetterConsoleList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
@@ -315,6 +318,7 @@ local function StartBetterConsole()
 
 	BetterConsoleTextEx.Name = "BetterConsole"
 	BetterConsoleTextEx.Parent = nil
+	BetterConsoleTextEx.AutoLocalize = false
 	BetterConsoleTextEx.BackgroundColor3 = Color3.new(1, 1, 1)
 	BetterConsoleTextEx.BackgroundTransparency = 1
 	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
@@ -356,9 +360,9 @@ local function StartBetterConsole()
 	BetterConsoleQuitButton.BackgroundTransparency = 1
 	BetterConsoleQuitButton.BorderColor3 = Color3.new(0, 0, 0)
 	BetterConsoleQuitButton.BorderSizePixel = 0
-	BetterConsoleQuitButton.Position = UDim2.new(1.01666307, 0, -0.046195969, 0)
-	BetterConsoleQuitButton.Rotation = 30
-	BetterConsoleQuitButton.Size = UDim2.new(0.0523128882, 0, 0.147147223, 0)
+	BetterConsoleQuitButton.Position = UDim2.new(1.017, 0, -0.03, 0)
+	BetterConsoleQuitButton.Rotation = 0
+	BetterConsoleQuitButton.Size = UDim2.new(0.052, 0, 0.1, 0)
 	BetterConsoleQuitButton.ZIndex = 5001
 	BetterConsoleQuitButton.Image = "rbxassetid://5100480132"
 	BetterConsoleQuitButton.ScaleType = Enum.ScaleType.Fit
@@ -433,12 +437,20 @@ local function StartBetterConsole()
 	UICorner:Clone().Parent=Top
 
 	--CODING FOR BETTER CONSOLE:
-	
+
 	local allMessages, visibleMessages = 0, 0
 	local isSorted = false
+	local wasMainFrameVisible 
 	local function BetterConsoleFrameToggle(_,inputState)
 		if inputState == Enum.UserInputState.Begin then
-			BetterConsole.Visible = not BetterConsole.Visible
+			local newVisible = not BetterConsole.Visible
+			BetterConsole.Visible = newVisible
+			if newVisible then
+				wasMainFrameVisible = Main.Visible
+				Main.Visible = false
+			elseif wasMainFrameVisible then
+				Main.Visible = true
+			end
 		end
 	end
 	CAS:BindActionAtPriority("OpenBetterConsole"..C.saveIndex,BetterConsoleFrameToggle,true,1e4,Enum.KeyCode.M)
@@ -468,12 +480,41 @@ local function StartBetterConsole()
 		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
 		isSorted = not includeALL
 		for num, object in ipairs((MessageLabel and {MessageLabel} or BetterConsoleList:GetChildren())) do
-			if object:IsA("TextLabel") then
-				local willBeVisible = includeALL or object.Text:lower():find(currentText)
+			if object:IsA("TextLabel") and object ~= noMessagesFound then
+				local theirText=object:GetAttribute("OrgText")
+				local willBeVisible = includeALL or theirText:lower():find(currentText)
 				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
 					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
 				if willBeVisible then
-					object.Text = includeALL and object:GetAttribute("OrgText") or object:GetAttribute("OrgText"):gsub(currentText,"<b><u>"..currentText.."</b></u>")
+					if includeALL then
+						object.Text = theirText 
+
+					else
+						local lastChars = ""
+						local newText = ""
+						local canReplace = true
+						for s = 1, theirText:len(),1 do
+							local char = theirText:sub(s,s)
+							if char=="<" then
+								canReplace = false
+							elseif char == ">" then
+								canReplace = true
+							end
+							local combined = lastChars..char
+							if combined:lower() == currentText:sub(1,combined:len()) and canReplace then
+								lastChars = combined
+								if combined:lower() == currentText then
+									newText..='<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">'..combined.."</stroke>"
+									lastChars=""
+								end
+							else
+								newText..=combined
+								lastChars = ""
+							end
+						end
+						object.Text=newText
+						willBeVisible = newText ~= theirText--make sure we found an ACTUAL occurance!
+					end
 				end
 				object.Visible = willBeVisible
 				if willBeVisible then
@@ -497,6 +538,7 @@ local function StartBetterConsole()
 			noMessagesFound.Parent = HackGUI
 			noMessagesFound.Visible = false
 		end
+		UIListLayout.VerticalAlignment = visibleMessages==0 and Enum.VerticalAlignment.Center or Enum.VerticalAlignment.Top
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
 		local BoxFrame = BetterConsoleFilterBox:Clone()
@@ -509,17 +551,23 @@ local function StartBetterConsole()
 		local function update()
 			if tweenInstance and tweenInstance.PlaybackState == Enum.PlaybackState.Playing then
 				tweenInstance:Cancel()
+				tweenInstance:Destroy()
 			end
 			local active = messageData.Active
-			if active then
-				updImage.Image = "rbxassetid://4458804262"
-				updImage.ImageColor3 = Color3.fromRGB(13,255)
-			else
-				updImage.Image = "rbxassetid://4458801905"
-				updImage.ImageColor3 = Color3.fromRGB(255,13)
-			end
-			local tweenObj = TweenInfo.new()
-			tweenInstance = TS:Create(updImage,tweenObj,{ImageColor3=(active and Color3.fromRGB(13,255) or Color3.fromRGB(255,13))})
+			local tweenObj = TweenInfo.new(.5)
+			local myTweenInstance = TS:Create(updImage,tweenObj,{ImageColor3=(active and Color3.fromRGB(13,255) or Color3.fromRGB(255,13))})
+			tweenInstance = myTweenInstance
+			task.delay(.2,function()
+				if myTweenInstance ~= tweenInstance then
+					return
+				end
+				if active then
+					updImage.Image = "rbxassetid://4458804262"
+				else
+					updImage.Image = "rbxassetid://4458801905"
+				end
+			end)
+			tweenInstance:AddTag("RemoveOnDestroy")
 			tweenInstance:Play()
 		end
 		table.insert(C.functs,BoxFrame:WaitForChild("InviClicker").MouseButton1Up:Connect(function()
@@ -540,13 +588,24 @@ local function StartBetterConsole()
 		end
 		BetterConsole_SetMessagesVisibility()
 	end
-	local function BetterConsole_DoCmd(msg)
+	local BetterConsole_TweenList
+	local function BetterConsole_DoCmd(msg,instant)
 		if msg == "/clear" then
 			C.AvailableHacks.Commands[2].ActivateFunction(true)
-		elseif msg=="/top" then
-			BetterConsoleList.CanvasPosition = UDim2.fromOffset(0,0)
-		elseif msg=="/bottom" then
-			BetterConsoleList.CanvasPosition = UDim2.fromOffset(0,1e8)
+		elseif msg=="/top" or msg=="/bottom" then
+			if BetterConsole_TweenList and BetterConsole_TweenList.PlaybackState == Enum.PlaybackState then
+				BetterConsole_TweenList:Cancel()
+				BetterConsole_TweenList:Destroy()
+			end
+			local targetPosition = msg=="/top" and Vector2.new(0,0) 
+				or Vector2.new(0,math.max(0,BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y+10))
+			if instant then
+				BetterConsoleList.CanvasPosition = targetPosition
+			else
+				local duration = math.clamp(math.abs(targetPosition.Y - BetterConsoleList.CanvasPosition.Y)/1200,.2,1)
+				BetterConsole_TweenList = TS:Create(BetterConsoleList,TweenInfo.new(duration),{["CanvasPosition"] = targetPosition})
+				BetterConsole_TweenList:Play()
+			end
 		end
 	end
 	table.insert(C.functs,SearchConsoleTextBox.FocusLost:Connect(function(enterPressed)
@@ -589,11 +648,12 @@ local function StartBetterConsole()
 				return false
 			end
 		end
-		return true
+		return isStudio or checkcaller()
 	end
 	--end
 	local function printFunction(message,messageType,isFromMe)
 		allMessages += 1
+		local wasAtBottom =  BetterConsoleList.CanvasPosition.Y+40 >= BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y
 		local MessageLabel = BetterConsoleTextEx:Clone()
 		if not isFromMe then
 			MessageLabel:SetAttribute("IsGame",true)
@@ -605,8 +665,11 @@ local function StartBetterConsole()
 		MessageLabel.Name = allMessages
 		MessageLabel.Parent = BetterConsoleList
 		BetterConsole_SetMessagesVisibility(nil,MessageLabel)
+		if wasAtBottom then
+			BetterConsole_DoCmd("/bottom",true)
+		end
 	end
-	
+
 	local function formatMessage(message,messageType,isFromMe,customTime)
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromMe)
@@ -1041,7 +1104,7 @@ local function GuiCreationFunction()
 	C.CommandBarLine.TextXAlignment = Enum.TextXAlignment.Left
 	C.CommandBarLine.RichText = true
 	C.CommandBarLine.TextWrapped = true
-	
+
 	StartBetterConsole()
 end
 
@@ -1082,7 +1145,7 @@ local function StringWaitForChild(instance,str2Parse,duration)
 	end
 	return instance
 end
---[[local function getgenv()
+local function getgenv()
 	return _G
 end--]]
 local function isInGame(theirChar,noDefactoAllowed)
@@ -2169,7 +2232,7 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 				v77.Parent = v23:FindFirstChild("IconBillboardGuis")
 				v77.Adornee = v74:FindFirstChild("PodRoof")
 				v77.Enabled = podTrigger.ActionSign.Value==30
-				
+
 				table.insert(ShowFreezeConnections, podTrigger.ActionSign.Changed:Connect(function()
 					v77.Enabled = podTrigger.ActionSign.Value==30
 				end))
@@ -2916,7 +2979,7 @@ C.AvailableHacks ={
 					end
 					return closestPC
 				end
-				
+
 				local closestPC = lastEvent and lastEvent.Parent and lastEvent.Parent.Parent
 				if not closestPC then
 					closestPC = checkPC()
@@ -3001,7 +3064,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[1].ActivateFunction(C.enHacks.WalkSpeed)
 			end,
 		},--]]
-		
+
 		--[[[4]={
 			["Type"]="ExTextButton",
 			["Title"]="Prevent Ragdoll",
@@ -3248,7 +3311,7 @@ C.AvailableHacks ={
 					funct:Disconnect()
 				end
 				C.AvailableHacks.Blatant[18].Functs = {}
-				
+
 				if C.Map and (C.enHacks.Blatant_KeepDoorsOpen or C.enHacks.Blatant_KeepDoorsClosed) then
 					local function doorAdded(door)
 						local saveDoorFunct = C.AvailableHacks.Blatant[15].DoorFuncts[door]
@@ -3325,7 +3388,7 @@ C.AvailableHacks ={
 			["SetEnabled"]=function(tag)
 				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local newValue = C.enHacks.RemotelyHackComputers
-				
+
 				local canBeActive = newValue == true or (tag.Name=="Pod" and newValue=="Pods") or (tag.Name=="PC" and newValue=="PCs")
 				tag.Enabled=canBeActive and camera.CameraType==Enum.CameraType.Custom and isInGame
 				if tag:FindFirstChild("Toggle") and tag.Name=="Pod" then
@@ -3370,7 +3433,7 @@ C.AvailableHacks ={
 						BestTrigger = trigger
 					end
 				end
-				
+
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "PC"
@@ -3563,8 +3626,8 @@ C.AvailableHacks ={
 				end
 				setChangedAttribute(minigameResult,"Value",updateMiniGameResult)
 				updateMiniGameResult()
-				
-				
+
+
 			end,
 		},
 		[2]={
@@ -3640,7 +3703,7 @@ C.AvailableHacks ={
 					setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
 					survivorScreen()
 				end
-				
+
 				local chatTextLabel = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
 
 				if (UIS.TouchEnabled and newValue) and not C.AvailableHacks.Utility[3].Active then
@@ -3675,7 +3738,7 @@ C.AvailableHacks ={
 								saveConnection:Disconnect()
 								C.AvailableHacks.Utility[3].Funct=nil
 							end
-							
+
 							--for s = 1, 1, -1 do RunS.RenderStepped:Wait() end
 							--chatBar:ReleaseFocus()
 							--for s = 5, 1, -1 do RunS.RenderStepped:Wait() end
@@ -3749,7 +3812,7 @@ C.AvailableHacks ={
 						pcall(SG.SetCore,SG,"ChatActive",true)
 						pcall(SG.SetCoreGuiEnabled,SG,Enum.CoreGuiType.Chat, false)
 						pcall(function()
-							StringWaitForChild(((game:GetService("Chat")):WaitForChild("ClientChatModules")):WaitForChild("ChatSettings")).ChatOnWithTopBarOff = true
+							requireModule(((game:GetService("Chat")):WaitForChild("ClientChatModules")):WaitForChild("ChatSettings")).ChatOnWithTopBarOff = true
 						end)
 						task.spawn(error,"[client improvement]: Fix Enabled")
 					end
@@ -3843,7 +3906,7 @@ C.AvailableHacks ={
 					return warn("LocalClubScript Not Found, Hacks Bro!")
 				end
 				newValue = C.enHacks.Util_Hammer--reset it because we yielded!
-				
+
 				LocalClubScript.Disabled = newValue
 				if newValue then
 					task.delay(0,LocalClubScriptFunction,LocalClubScript)
@@ -3934,7 +3997,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Utility[9].MusicValue3 = hammerHandle:WaitForChild("SoundChaseMusic")
 				C.AvailableHacks.Utility[9].ActivateFunction()
 			end,
-			
+
 			["MyStartUp"] = function()
 				local musicSound
 				if gameName=="FleeMain" then
@@ -4912,7 +4975,7 @@ C.AvailableHacks ={
 			["FirstClean"]=false,
 			["GetStructure"]=function(object)
 				local doorNames = {"Door","DoorL","DoorR"}
-				
+
 				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) then
 					return "Door"
 				else
@@ -5088,7 +5151,7 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue,dontKeep)
 				if reloadFunction then
 					if lastRunningEnv.GlobalSettings and not dontKeep then
-						
+
 					elseif dontKeep then
 						C.enHacks = {}--reset hacks!
 						saveSaveData()--deletes the save file!
@@ -5126,7 +5189,7 @@ C.AvailableHacks ={
 		},
 	},
 	["Beast"]={
-		
+
 		[2]={
 			["Type"]="ExTextButton",
 			["Title"]="Crawl as Beast",
@@ -5490,23 +5553,23 @@ C.AvailableHacks ={
 					end
 					return
 				end
-				
+
 				C.AvailableHacks.Beast[77].SaveDeb+=1
 				local savedDeb = C.AvailableHacks.Beast[77].SaveDeb
-				
+
 				if newValue==false or C.char ~= C.Beast then
 					trigger_setTriggers("Beast_CaptureAllSurvivors",true)
 					return
 				end
-				
+
 				local Hammer = C.char:WaitForChild("Hammer",30)
 				local CarriedTorso = Hammer and C.char:WaitForChild("CarriedTorso",30)
 				if not Hammer or not CarriedTorso then return end
 				local Handle = Hammer:WaitForChild("Handle")
-				
+
 				local function canRun(noReset)
 					local retValue = savedDeb == C.AvailableHacks.Beast[77].SaveDeb and not isCleared and C.char == C.Beast
-						
+
 					if not retValue and not noReset then--CLEANUP CHECK!
 						trigger_setTriggers("Beast_CaptureAllSurvivors",true)
 					end
@@ -5533,7 +5596,7 @@ C.AvailableHacks ={
 									teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position)
 									while canRun(true) and canRunPlr(theirPlr) 
 										and not theirTSM.Ragdoll.Value do
-										
+
 										if not C.AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
 											teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position + Vector3.new(0,getHumanoidHeight(C.char)))
 											--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
@@ -5544,7 +5607,7 @@ C.AvailableHacks ={
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
 									while canRun(true) and canRunPlr(theirPlr)
 										and theirTSM.Ragdoll.Value and CarriedTorso.Value == nil do
-										
+
 										print("Tie")
 										Hammer.HammerEvent:FireServer("HammerTieUp",theirChar.Torso,theirChar.Torso.Position)
 										RunS.RenderStepped:Wait()
@@ -5671,7 +5734,7 @@ C.AvailableHacks ={
 			["Default"]=true,
 			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
-				
+
 				local actionEvent = myTSM:WaitForChild("ActionEvent")
 				local function currentAnimationUpdate(actionValue)
 					if actionValue and actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent.Parent)=="Computer" then
@@ -5696,7 +5759,7 @@ C.AvailableHacks ={
 					trigger_setTriggers("Typing",true)
 					C.char.Torso.CanTouch = true
 				end
-				
+
 				if not C.AvailableHacks.Runner[4].Funct and newValue then
 					C.AvailableHacks.Runner[4].Funct = actionEvent.Changed:Connect(currentAnimationUpdate)
 				elseif C.AvailableHacks.Runner[4].Funct and not newValue then
@@ -6328,7 +6391,7 @@ C.AvailableHacks ={
 										lastHackedPosition=closestTrigger.Position
 									end
 								end
-									
+
 							end
 							if C.char.PrimaryPart~=nil then
 								closestTrigger,dist=findClosestObj(C.AvailableHacks.Bot[15].getGoodTriggers(closestTrigger.Parent),C.char.PrimaryPart.Position,3000,1)
@@ -6560,7 +6623,7 @@ C.AvailableHacks ={
 					end;
 					local from=Torso.Position;
 					local to = nextWayPoint.Position+newVector3(0,getHumanoidHeight(C.char),0);
-					
+
 					local didHit,instance=raycast(from,to,{"Whitelist",table.unpack(CS:GetTagged("DoorAndExit"))},5,0.001,true);
 					local didHit2,instance2=raycast(from,to,{"Whitelist",C.Map},5,0.001,true);
 					if nextWayPoint.Label=="DoorPath" or (didHit and (CS:HasTag(instance.Parent,"DoorAndExit") or CS:HasTag(instance.Parent.Parent,"DoorAndExit") or CS:HasTag(instance.Parent.Parent.Parent,"DoorAndExit"))) then
@@ -7311,8 +7374,8 @@ C.AvailableHacks ={
 					createCommandLine(C.AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
 				end
 				--for num, logItem in ipairs() do
-					--if  - (100 - (#fullHistory - num) > 0 then
-					--end
+				--if  - (100 - (#fullHistory - num) > 0 then
+				--end
 				--end
 			end,
 		},
@@ -7416,14 +7479,14 @@ C.AvailableHacks ={
 					end
 					trigger_setTriggers("Cmds_HackAllPCs",true)
 				end
-				
+
 				local savedDeb = C.AvailableHacks.Commands[30].SaveDeb + 1
 				C.AvailableHacks.Commands[30].SaveDeb = savedDeb
-				
+
 				local function canRun()
 					return not isCleared and savedDeb == C.AvailableHacks.Commands[30].SaveDeb and C.refreshEnHack["Cmds_HackAllPCs"]
 				end
-				
+
 				if not newValue then return end
 				local ActionProgress = myTSM:WaitForChild("ActionProgress")
 				local actionTable = {}
@@ -7449,7 +7512,7 @@ C.AvailableHacks ={
 						table.insert(actionTable,trigger.Event)
 						print("LastPC2",trigger_enabledNames["LastPC"])
 						while trigger_enabledNames["LastPC"] and not trigger_enabledNames["LastPC"].Computer do
-							
+
 							RunS.RenderStepped:Wait()
 						end
 						myTSM:WaitForChild("ActionEvent").Value = trigger.Event
@@ -7719,7 +7782,7 @@ clear = function(isManualClear)
 	C.AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
 	C.AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
 	human:SetAttribute("OverrideSpeed",nil)
-	
+
 	if C.AvailableHacks.Blatant and C.AvailableHacks.Beast[2] and gameUniverse=="Flee" then
 		C.AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
 		warn("5 Finish")
@@ -7759,7 +7822,7 @@ clear = function(isManualClear)
 	CAS:UnbindAction("CloseMenu"..C.saveIndex)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
-	
+
 	local searchList = C.objectFuncts or {}
 	for obj,objectEventsList in pairs(searchList) do
 		local insideSearchList = objectEventsList or {}
@@ -7773,7 +7836,7 @@ clear = function(isManualClear)
 
 
 	getgenv()["ActiveScript"..getID][C.saveIndex] = nil
-	
+
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
 	DS:AddItem(HackGUI,1)
 	DS:AddItem(script,1)
@@ -8225,7 +8288,7 @@ local function PlayerAdded(theirPlr)
 			local isBeastValue = theirTSM:WaitForChild("IsBeast");
 			if isBeastValue then
 				--if isBeastValue.Value then
-					--BeastAdded(theirPlr,theirPlr.Character);
+				--BeastAdded(theirPlr,theirPlr.Character);
 				--end--ONLY DO BEAST ADD IN CHARACER ADDED FUNCT
 				table.insert(C.playerEvents[theirPlr.UserId], isBeastValue.Changed:Connect(function(new)
 					if new then
@@ -8411,8 +8474,8 @@ if gameName=="FleeMain" then
 	updateAnimation()
 	trigger_setTriggers("StartUp",{Computer=false})
 	task.delay(5,trigger_setTriggers,"StartUp",{Computer=true})--careful with computers at the start!
-	
-	
+
+
 	local totalXPEarned = 0;
 	local totalCreditsEarned = 0;
 	local totCreditsOffset = PS:GetAttribute("TotalServerCreditsOffset");
@@ -8500,9 +8563,11 @@ DraggableMain:Enable()
 
 local function CloseMenu(actionName, inputState, inputObject)
 	if inputState==Enum.UserInputState.Begin and (UIS:IsKeyDown(Enum.KeyCode.LeftControl) or inputObject.UserInputType ~= Enum.UserInputType.Keyboard) then
-		Main.Visible=not Main.Visible
-		if Main.Visible then
+		local newMain = not Main.Visible
+		Main.Visible=newMain
+		if newMain then
 			DraggableMain:Enable()
+			C.BetterConsole = false
 		else
 			DraggableMain:Disable()
 		end

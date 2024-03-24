@@ -5813,7 +5813,7 @@ C.AvailableHacks ={
 					end
 				end
 				local SavedAnimsTracks = {}
-				local runningSpeed = human.MoveDirection.Magnitude > 1e-3
+				local runningSpeed = human.MoveDirection.Magnitude > 1e-3 and 3 or 0
 				local canRun = false
 				local function animTrackAdded(animTrack)
 					local animation = animTrack.Animation

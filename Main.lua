@@ -368,7 +368,7 @@ local function StartBetterConsole()
 		if not MessageLabel then
 			visibleMessages = 0
 		end
-		noMessagesFound.Parent = nil
+		noMessagesFound.Parent = script
 		local currentText = SearchConsoleTextBox.Text
 		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
 		isSorted = not includeALL
@@ -435,7 +435,7 @@ local function StartBetterConsole()
 	function BetterConsole_ClearConsoleFunction()
 		allMessages, visibleMessages = 0, 0
 		for num, object in ipairs(BetterConsoleList:GetChildren()) do
-			if object:IsA("TextLabel") then
+			if object:IsA("TextLabel") and object ~= noMessagesFound then
 				object:Destroy()
 			end
 		end
@@ -7503,9 +7503,10 @@ local previousCopy = (plr:GetAttribute(getID)~=nil)
 plr:SetAttribute(getID,saveIndex)
 wait()
 local function attributeAddedFunction()
+	print("Attribute Changed Detected",saveIndex)
 	if clear==nil then
 		isCleared=true
-		print("Clear Not Found!")
+		print("Clear Not Found!",saveIndex)
 		DS:AddItem(script,15)
 		return
 	end

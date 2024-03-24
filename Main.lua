@@ -8551,6 +8551,9 @@ clear = function(isManualClear)
 	if gameName == "FleeMain" then
 		C.AvailableHacks.Utility[8].CleanUp()--beast hammer
 	end
+	if C.AvailableHacks.Basic and C.AvailableHacks.Basic[30]  then
+		C.AvailableHacks.Basic[30].ActivateFunction(false,true);--disable char invisibility
+	end
 	--[[for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
 		if obj~=nil then
 			for _, tag in ipairs(obj:GetTags()) do
@@ -8606,9 +8609,6 @@ clear = function(isManualClear)
 			C.AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
 			C.AvailableHacks.Beast[2].Crawl(false);--disable crawl
 		end
-	end
-	if C.AvailableHacks.Basic and C.AvailableHacks.Basic[30]  then
-		C.AvailableHacks.Basic[30].ActivateFunction(false,true);--disable char invisibility
 	end
 	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
 	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do

@@ -630,7 +630,7 @@ local function StartBetterConsole()
 	--if isStudio then
 	--CHECKCALLER is not working correctly, so we'll take over from here
 	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load sound ",
-		"Font family ","Preloaded game image: ","load size "
+		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:"
 	}
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",

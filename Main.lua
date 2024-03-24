@@ -392,6 +392,10 @@ local function StartBetterConsole()
 				noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
 			end
 			noMessagesFound.Parent = BetterConsoleList
+			noMessagesFound.Visible = true
+		else
+			noMessagesFound.Parent = HackGUI
+			noMessagesFound.Visible = false
 		end
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
@@ -474,7 +478,7 @@ local function StartBetterConsole()
 	local function printFunction(message,messageType,isFromGame)
 		allMessages += 1
 		local MessageLabel = BetterConsoleTextEx:Clone()
-		if not checkcaller() then
+		if isFromGame then
 			MessageLabel:SetAttribute("IsGame",true)
 		end
 		MessageLabel:SetAttribute("Type",messageType.Name)
@@ -491,7 +495,7 @@ local function StartBetterConsole()
 
 	local function onMessageOut(message, messageType,...)
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
-		local isFromGame = checkcaller(message)
+		local isFromGame = not checkcaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
 			.. " ".. messageType.Name:sub(8).. (isFromGame and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message

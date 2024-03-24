@@ -5118,7 +5118,7 @@ C.AvailableHacks ={
 			["Active"] = false,
 			["Universes"]={"Global"},
 			["Functs"]={},
-			["HiddenLocation"] = CFrame.new(-1e4,0,1e4),
+			["HiddenLocation"] = CFrame.new(0,1e4,0),
 			["RunFunction"]=function(connections)
 				local function doAnimate(Figure,connections2Add)
 					-- humanoidAnimatePlayEmote.lua

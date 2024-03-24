@@ -7682,7 +7682,7 @@ clear = function(isManualClear)
 	DS:AddItem(HackGUI,1)
 	DS:AddItem(script,1)
 	clear=nil
-	warn("Clear Finish",tostring(getgenv()["ActiveScript"..getID][saveIndex]))
+	warn("Clear Finish",saveIndex,tostring(getgenv()["ActiveScript"..getID][saveIndex]))
 end
 
 --Anti Main Check:

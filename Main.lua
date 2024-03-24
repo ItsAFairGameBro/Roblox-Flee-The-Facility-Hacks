@@ -198,6 +198,7 @@ local function StartBetterConsole()
 	SearchConsoleTextBox.TextStrokeColor3 = Color3.new(1, 1, 1)
 	SearchConsoleTextBox.TextStrokeTransparency = 0
 	SearchConsoleTextBox.TextWrapped = true
+	SearchConsoleTextBox.RichText = true
 	UIStroke:Clone().Parent=SearchConsoleTextBox
 	UICorner:Clone().Parent=SearchConsoleTextBox
 
@@ -212,6 +213,7 @@ local function StartBetterConsole()
 	SearchConsoleResults.Size = UDim2.new(0.937323153, 0, 0.0528666973, 0)
 	SearchConsoleResults.ZIndex = 5002
 	SearchConsoleResults.Font = Enum.Font.Arial
+	SearchConsoleResults.RichText = true
 	SearchConsoleResults.Text = "<font color='rgb(0,255,0)'>1,402</font> search results for found \"potato\""
 	SearchConsoleResults.TextColor3 = Color3.new(1, 1, 1)
 	SearchConsoleResults.TextScaled = true
@@ -294,7 +296,7 @@ local function StartBetterConsole()
 
 	BetterConsoleList.Name = "BetterConsoleList"
 	BetterConsoleList.Parent = BetterConsole
-	BetterConsoleList.Active = true
+	BetterConsoleList.Active = false
 	BetterConsoleList.AnchorPoint = Vector2.new(0, 1)
 	BetterConsoleList.BackgroundColor3 = Color3.new(1, 1, 1)
 	BetterConsoleList.BackgroundTransparency = 1
@@ -303,6 +305,7 @@ local function StartBetterConsole()
 	BetterConsoleList.Position = UDim2.new(0, 0, 0.958246052, 0)
 	BetterConsoleList.Size = UDim2.new(1, 0, 0.846379399, 0)
 	BetterConsoleList.CanvasSize = UDim2.new(0, 0, 0, 0)
+	BetterConsoleList.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	BetterConsoleList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 
 	UIListLayout.Parent = BetterConsoleList

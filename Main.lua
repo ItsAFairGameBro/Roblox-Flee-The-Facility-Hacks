@@ -1499,10 +1499,10 @@ local function saveSaveData()
 	if not isfolder(getID) then
 		makefolder(getID)
 	end
-	if not isfolder(getID.."/C.enHacks") then
-		makefolder(getID.."/C.enHacks")
+	if not isfolder(getID.."/enHacks") then
+		makefolder(getID.."/enHacks")
 	end
-	writefile(getID.."/C.enHacks/"..gameName..".txt",result)
+	writefile(getID.."/enHacks/"..gameName..".txt",result)
 end
 
 local function requireModule(module: ModuleScript): Table
@@ -7789,7 +7789,6 @@ clear = function(isManualClear)
 
 	if C.AvailableHacks.Blatant and C.AvailableHacks.Beast[2] and gameUniverse=="Flee" then
 		C.AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
-		warn("5 Finish")
 		C.AvailableHacks.Beast[2].Crawl(false);--disable crawl
 	end
 	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!

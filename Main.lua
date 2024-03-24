@@ -2660,11 +2660,12 @@ AvailableHacks ={
 				end
 			end,
 			["CleanUp"]=function()
+				--[[if isCleared then return end
 				for num, computerElement in pairs(HackGUI:GetChildren()) do
 					if string.sub(computerElement.Name,1,13)=="ComputerTable" then
 						DestroyInstance(computerElement)
 					end
-				end
+				end--]]
 			end,
 			["ComputerAdded"]=function(Computer)
 				local primPart,Screen=Computer.PrimaryPart,Computer:FindFirstChild("Screen")
@@ -7371,6 +7372,9 @@ AvailableHacks ={
 				refreshEnHack["Cmds_HackAllPCs"](false)
 			end,
 			["CleanUp"]=function()
+				if isCleared then
+					return
+				end
 				refreshEnHack["Cmds_HackAllPCs"](false)
 			end,
 			["MyStartUp"]=function()
@@ -7623,6 +7627,7 @@ clear = function(isManualClear)
 	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do
 		tagPart:SetAttribute("Trigger_AllowException",nil)
 	end
+	warn("8 Finish")
 	local allTheTages = {"WalkThruDoor","Computer","Trigger","Capsule","DoorAndExit","Door","DoorTrigger","Exit","Trigger_AllowException"}
 	for num,tagName in ipairs(allTheTages) do
 		local loopList = CS:GetTagged(tagName)
@@ -7630,6 +7635,7 @@ clear = function(isManualClear)
 			CS:RemoveTag(tagPart,tagName)
 		end--]]
 	end
+	warn("9 Finish")
 	for category, categoryList in pairs(AvailableHacks) do
 		for index,tbl in pairs(categoryList) do
 			local funcList = tbl.Functs or {}
@@ -7642,17 +7648,20 @@ clear = function(isManualClear)
 			end
 		end
 	end
+	warn("10 Finish")
 	for num,funct in ipairs(functs) do
 		funct:Disconnect()
 		funct=nil
 	end
 	hackChanged:Fire()
 	hackChanged:Destroy()
+	warn("11 Finish")
 	CAS:UnbindAction("hack_jump"..saveIndex)
 	CAS:UnbindAction("Crawl"..saveIndex)
 	CAS:UnbindAction("CloseMenu"..saveIndex)
 	CAS:UnbindAction("PushSlash"..saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..saveIndex)
+	warn("12 Finish")
 
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
 	getgenv()["ActiveScript"..getID][saveIndex] = nil

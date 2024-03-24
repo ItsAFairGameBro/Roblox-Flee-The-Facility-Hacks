@@ -1074,10 +1074,12 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	end
 	return str
 end
-local function myPrint(...)
+local function warn(...)
+	warn(recurseLoopPrint({...},"",0))
+end
+local function print(...)
 	print(recurseLoopPrint({...},"",0))
 end
-local print = myPrint;
 local RemoteEvent
 if gameUniverse=="Flee" then
 	RemoteEvent = RS:WaitForChild("RemoteEvent")

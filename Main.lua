@@ -969,9 +969,9 @@ local function StringWaitForChild(instance,str2Parse,duration)
 	end
 	return instance
 end
-local function getgenv()
+--[[local function getgenv()
 	return _G
-end
+end--]]
 local function isInGame(theirChar,noDefactoAllowed)
 	--[[local a=Vector3.new(410.495, 59.4767, -197.00)
 	local b=Vector3.new(-54.505, 59.4767, -547.007)
@@ -7668,6 +7668,7 @@ clear = function(isManualClear)
 	DS:AddItem(HackGUI,1)
 	DS:AddItem(script,1)
 	clear=nil
+	warn("Clear Finish")
 end
 
 --Anti Main Check:

@@ -361,6 +361,7 @@ local function StartBetterConsole()
 	local noMessagesFound = BetterConsoleTextEx:Clone()
 	noMessagesFound.RichText = false
 	noMessagesFound.TextXAlignment = Enum.TextXAlignment.Center
+	noMessagesFound.Parent = script
 	noMessagesFound:AddTag("RemoveOnDestroy")
 	local function BetterConsole_SetMessagesVisibility(_,MessageLabel)
 		if not MessageLabel then
@@ -368,7 +369,7 @@ local function StartBetterConsole()
 		end
 		noMessagesFound.Parent = nil
 		local currentText = SearchConsoleTextBox.Text
-		local includeALL = currentText=="" or currentText == " "
+		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
 		isSorted = not includeALL
 		for num, object in ipairs((MessageLabel and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if object:IsA("TextLabel") then
@@ -442,12 +443,35 @@ local function StartBetterConsole()
 			end
 		end
 	end))
-	if isStudio then
-		function checkcaller()
-			return false
+	--if isStudio then
+	--CHECKCALLER is not working correctly, so we'll take over from here
+	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load sound ",
+		
+	}
+	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
+	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
+		"ContextActionService could not find the function passed in, doing nothing."
+	}
+	local function checkcaller(msg)
+		for _, text in ipairs(BetterConsole_CheckCaller_MsgExact) do
+			if text==msg then
+				return false
+			end
 		end
+		for _, text in ipairs(BetterConsole_CheckCaller_MsgStart) do
+			if msg:sub(1,text:len()) == text then
+				return false
+			end
+		end
+		for _, text in ipairs(BetterConsole_CheckCaller_MsgEnd) do
+			if msg:sub(msg:len()-text:len()) == text then
+				return false
+			end
+		end
+		return true
 	end
-	local function printFunction(message,messageType)
+	--end
+	local function printFunction(message,messageType,isFromGame)
 		allMessages += 1
 		local MessageLabel = BetterConsoleTextEx:Clone()
 		if not checkcaller() then
@@ -460,17 +484,18 @@ local function StartBetterConsole()
 		BetterConsole_SetMessagesVisibility(nil,MessageLabel)
 	end
 	
-	local function formatMessage(message,messageType,customTime)
+	local function formatMessage(message,messageType,isFromGame,customTime)
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
-		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType)
+		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromGame)
 	end
 
 	local function onMessageOut(message, messageType,...)
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
+		local isFromGame = checkcaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
-			.. " ".. messageType.Name:sub(8).. (checkcaller() and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
+			.. " ".. messageType.Name:sub(8).. (isFromGame and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message
-		formatMessage(inputMessage,messageType,...)
+		formatMessage(inputMessage,messageType,isFromGame,...)
 	end
 	table.insert(functs,LS.MessageOut:Connect(onMessageOut))
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)

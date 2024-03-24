@@ -8896,7 +8896,7 @@ local initilizationTypes = ({
 		end
 		local HackFrameMSBUp = hackFrame.Toggle.MouseButton1Up:Connect(hackFrameToggleButtonFunction)
 		table.insert(C.functs,HackFrameMSBUp)
-		if ((getDictLength(hackInfo.Options))>(2)) then
+		if ((getDictLength(hackInfo.Options))>=(2)) then
 			local function hackFrameReverseToggleButtonFunction()
 				cycle(-1)
 			end

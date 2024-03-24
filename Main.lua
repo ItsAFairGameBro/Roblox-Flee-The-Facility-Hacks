@@ -4983,6 +4983,7 @@ C.AvailableHacks ={
 						saveSaveData()--deletes the save file!
 					end
 					lastRunningEnv.GlobalSettings.C.enHacks = {}
+					print("C is ",C)
 					for hackID, value in pairs(C.enHacks) do
 						lastRunningEnv.GlobalSettings.C.enHacks[hackID] = value
 					end

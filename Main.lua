@@ -5108,6 +5108,7 @@ C.AvailableHacks ={
 			["Shortcut"]="Basic_InvisibleChar",
 			["Default"]=false,
 			["DontActivate"]=true,
+			["Active"] = false,
 			["Universes"]={"Global"},
 			["Functs"]={},
 			["RunFunction"]=function(connections)
@@ -5706,7 +5707,6 @@ C.AvailableHacks ={
 				task.wait(.25)
 				orgChar.PrimaryPart.Anchored = true
 
-				task.wait(.5)
 				clonedChar.Parent = workspace
 
 				--C.plr.Character = clonedChar
@@ -5788,6 +5788,10 @@ C.AvailableHacks ={
 				end))
 			end,
 			["ActivateFunction"] = function(enabled, characterSpawn)
+				if enabled == C.AvailableHacks.Basic[30].Active then
+					return
+				end
+				C.AvailableHacks.Basic[30].Active = enabled
 				if enabled then
 					C.AvailableHacks.Basic[30].RunFunction(C.AvailableHacks.Basic[30].Functs)
 				else
@@ -5800,7 +5804,6 @@ C.AvailableHacks ={
 							C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 							C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
 						end
-						--C.plr.Character = orgChar
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()

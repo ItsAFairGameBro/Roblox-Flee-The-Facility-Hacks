@@ -7514,6 +7514,7 @@ local function attributeAddedFunction()
 		return
 	end
 	--if plr:GetAttribute(getID)~=saveIndex then
+	print("Running Clear")
 	clear()
 	--end
 end

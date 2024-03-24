@@ -7715,7 +7715,7 @@ if previousCopy then
 	while currentSize>0 do
 		changedEvent.Event:Wait()
 		while currentSize == getDictLength(getgenv()["ActiveScript"..getID]) do
-			warn("waiting",getDictLength(getgenv()["ActiveScript"..getID]),currentSize,getDictLength(getgenv()["ActiveScript"..getID]))
+			warn("waiting",getDictLength(getgenv()["ActiveScript"..getID]),currentSize,getgenv()["ActiveScript"..getID])
 			RunS.RenderStepped:Wait()
 		end
 		currentSize = getDictLength(getgenv()["ActiveScript"..getID])

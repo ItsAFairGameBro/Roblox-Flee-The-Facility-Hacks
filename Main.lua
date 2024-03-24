@@ -634,7 +634,7 @@ local function StartBetterConsole()
 	}
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
-		"ContextActionService could not find the function passed in, doing nothing."
+		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done"
 	}
 	local function checkmycaller(msg)
 		for _, text in ipairs(BetterConsole_CheckCaller_MsgExact) do
@@ -673,8 +673,19 @@ local function StartBetterConsole()
 			BetterConsole_DoCmd("/bottom",true)
 		end
 	end
-
+	local escapeCharacters = {
+		["<"] = "&lt;",
+		[">"] = "&gt;",
+		['"'] = "&quot;",
+		["'"] = "&apos;",
+		["&"] = "&amp;"
+	}
 	local function formatMessage(message,messageType,isFromMe,customTime)
+		if not message:find("</") or not message:find(">") then -- Check to see if it is rich text formatted!
+			for toReplace,escapedStr in pairs(escapeCharacters) do
+				message = message:gsub(toReplace,escapedStr)
+			end
+		end
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromMe)
 	end
@@ -1523,7 +1534,7 @@ end
 local function sortPlayersByXPThenCredits(plrList)
 	plrList = plrList or PS:GetPlayers()
 
-	local function tableSortFunction(a,b)
+	function tableSortFunction(a,b)
 		local aStats=a:FindFirstChild("SavedPlayerStatsModule")
 		local bStats=b:FindFirstChild("SavedPlayerStatsModule")
 		local doesExistA, doesExistB = aStats and aStats.Parent, bStats and bStats.Parent
@@ -3319,7 +3330,8 @@ C.AvailableHacks ={
 				if C.Map and (C.enHacks.Blatant_KeepDoorsOpen or C.enHacks.Blatant_KeepDoorsClosed) then
 					local function doorAdded(door)
 						local saveDoorFunct = C.AvailableHacks.Blatant[15].DoorFuncts[door]
-						while not saveDoorFunct and C.AvailableHacks.Blatant[18].SaveDeb == saveDeb and not isCleared do
+						while not saveDoorFunct and C.AvailableHacks.Blatant[18].SaveDeb == saveDeb and C.Map and human and human.Parent and human.Health>0
+							and not isCleared do
 							RunS.RenderStepped:Wait()
 							saveDoorFunct = C.AvailableHacks.Blatant[15].DoorFuncts[door]
 						end
@@ -3516,7 +3528,11 @@ C.AvailableHacks ={
 						local theirChar = C.Beast.CarriedTorso.Value.Parent
 						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
 					else
-						C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
+						if myTSM.Health.Value > 0 then
+							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
+						else
+							print("You aren't a runner, so you can't rescue!")
+						end
 					end
 				end
 				local function setVisible()
@@ -3546,6 +3562,7 @@ C.AvailableHacks ={
 				repeat
 					RunS.RenderStepped:Wait()
 				until C.AvailableHacks.Blatant[20].Event
+				if not C.Beast then return end
 				C.objectFuncts[C.AvailableHacks.Blatant[20].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
 					C.AvailableHacks.Blatant[20].Event:Fire()
 				end)}
@@ -5084,7 +5101,724 @@ C.AvailableHacks ={
 				end
 			end,
 		},
+		[30]={
+			["Type"]="ExTextButton",
+			["Title"]="Invisible Character",
+			["Desc"]="Warning: Not Everything Replicates. Do Not Leave This On For Too Long!",
+			["Shortcut"]="Basic_InvisibleChar",
+			["Default"]=false,
+			["DontActivate"]=true,
+			["Universes"]={"Global"},
+			["Functs"]={},
+			["RunFunction"]=function(connections)
+				local function doAnimate(Figure,connections2Add)
+					-- humanoidAnimatePlayEmote.lua
 
+					local Torso = Figure:WaitForChild("Torso")
+					local RightShoulder = Torso:WaitForChild("Right Shoulder")
+					local LeftShoulder = Torso:WaitForChild("Left Shoulder")
+					local RightHip = Torso:WaitForChild("Right Hip")
+					local LeftHip = Torso:WaitForChild("Left Hip")
+					local Neck = Torso:WaitForChild("Neck")
+					local Humanoid = Figure:WaitForChild("Humanoid")
+					local pose = "Standing"
+
+					local EMOTE_TRANSITION_TIME = 0.1
+
+					local userAnimateScaleRunSuccess, userAnimateScaleRunValue = pcall(function() return UserSettings():IsUserFeatureEnabled("UserAnimateScaleRun") end)
+					local userAnimateScaleRun = userAnimateScaleRunSuccess and userAnimateScaleRunValue
+
+					local function getRigScale()
+						if userAnimateScaleRun then
+							return Figure:GetScale()
+						else
+							return 1
+						end
+					end
+
+					local currentAnim = ""
+					local currentAnimInstance = nil
+					local currentAnimTrack = nil
+					local currentAnimKeyframeHandler = nil
+					local currentAnimSpeed = 1.0
+					local animTable = {}
+					local animNames = { 
+						idle = 	{	
+							{ id = "http://www.roblox.com/asset/?id=180435571", weight = 9 },
+							{ id = "http://www.roblox.com/asset/?id=180435792", weight = 1 }
+						},
+						walk = 	{ 	
+							{ id = "http://www.roblox.com/asset/?id=180426354", weight = 10 } 
+						}, 
+						run = 	{
+							{ id = "run.xml", weight = 10 } 
+						}, 
+						jump = 	{
+							{ id = "http://www.roblox.com/asset/?id=125750702", weight = 10 } 
+						}, 
+						fall = 	{
+							{ id = "http://www.roblox.com/asset/?id=180436148", weight = 10 } 
+						}, 
+						climb = {
+							{ id = "http://www.roblox.com/asset/?id=180436334", weight = 10 } 
+						}, 
+						sit = 	{
+							{ id = "http://www.roblox.com/asset/?id=178130996", weight = 10 } 
+						},	
+						toolnone = {
+							{ id = "http://www.roblox.com/asset/?id=182393478", weight = 10 } 
+						},
+						toolslash = {
+							{ id = "http://www.roblox.com/asset/?id=129967390", weight = 10 } 
+							--				{ id = "slash.xml", weight = 10 } 
+						},
+						toollunge = {
+							{ id = "http://www.roblox.com/asset/?id=129967478", weight = 10 } 
+						},
+						wave = {
+							{ id = "http://www.roblox.com/asset/?id=128777973", weight = 10 } 
+						},
+						point = {
+							{ id = "http://www.roblox.com/asset/?id=128853357", weight = 10 } 
+						},
+						dance1 = {
+							{ id = "http://www.roblox.com/asset/?id=182435998", weight = 10 }, 
+							{ id = "http://www.roblox.com/asset/?id=182491037", weight = 10 }, 
+							{ id = "http://www.roblox.com/asset/?id=182491065", weight = 10 } 
+						},
+						dance2 = {
+							{ id = "http://www.roblox.com/asset/?id=182436842", weight = 10 }, 
+							{ id = "http://www.roblox.com/asset/?id=182491248", weight = 10 }, 
+							{ id = "http://www.roblox.com/asset/?id=182491277", weight = 10 } 
+						},
+						dance3 = {
+							{ id = "http://www.roblox.com/asset/?id=182436935", weight = 10 }, 
+							{ id = "http://www.roblox.com/asset/?id=182491368", weight = 10 }, 
+							{ id = "http://www.roblox.com/asset/?id=182491423", weight = 10 } 
+						},
+						laugh = {
+							{ id = "http://www.roblox.com/asset/?id=129423131", weight = 10 } 
+						},
+						cheer = {
+							{ id = "http://www.roblox.com/asset/?id=129423030", weight = 10 } 
+						},
+					}
+					local dances = {"dance1", "dance2", "dance3"}
+
+					-- Existance in this list signifies that it is an emote, the value indicates if it is a looping emote
+					local emoteNames = { wave = false, point = false, dance1 = true, dance2 = true, dance3 = true, laugh = false, cheer = false}
+
+					local function configureAnimationSet(name, fileList)
+						if (animTable[name] ~= nil) then
+							for _, connection in pairs(animTable[name].connections) do
+								connection:disconnect()
+							end
+						end
+						animTable[name] = {}
+						animTable[name].count = 0
+						animTable[name].totalWeight = 0	
+						animTable[name].connections = {}
+
+						-- check for config values
+						local config = script:FindFirstChild(name)
+						if (config ~= nil) then
+							--		print("Loading anims " .. name)
+							table.insert(animTable[name].connections, config.ChildAdded:connect(function(child) configureAnimationSet(name, fileList) end))
+							table.insert(animTable[name].connections, config.ChildRemoved:connect(function(child) configureAnimationSet(name, fileList) end))
+							local idx = 1
+							for _, childPart in pairs(config:GetChildren()) do
+								if (childPart:IsA("Animation")) then
+									table.insert(animTable[name].connections, childPart.Changed:connect(function(property) configureAnimationSet(name, fileList) end))
+									animTable[name][idx] = {}
+									animTable[name][idx].anim = childPart
+									local weightObject = childPart:FindFirstChild("Weight")
+									if (weightObject == nil) then
+										animTable[name][idx].weight = 1
+									else
+										animTable[name][idx].weight = weightObject.Value
+									end
+									animTable[name].count = animTable[name].count + 1
+									animTable[name].totalWeight = animTable[name].totalWeight + animTable[name][idx].weight
+									--			print(name .. " [" .. idx .. "] " .. animTable[name][idx].anim.AnimationId .. " (" .. animTable[name][idx].weight .. ")")
+									idx = idx + 1
+								end
+							end
+						end
+
+						-- fallback to defaults
+						if (animTable[name].count <= 0) then
+							for idx, anim in pairs(fileList) do
+								animTable[name][idx] = {}
+								animTable[name][idx].anim = Instance.new("Animation")
+								animTable[name][idx].anim.Name = name
+								animTable[name][idx].anim.AnimationId = anim.id
+								animTable[name][idx].weight = anim.weight
+								animTable[name].count = animTable[name].count + 1
+								animTable[name].totalWeight = animTable[name].totalWeight + anim.weight
+								--			print(name .. " [" .. idx .. "] " .. anim.id .. " (" .. anim.weight .. ")")
+							end
+						end
+					end
+
+					-- Setup animation objects
+					local function scriptChildModified(child)
+						local fileList = animNames[child.Name]
+						if (fileList ~= nil) then
+							configureAnimationSet(child.Name, fileList)
+						end	
+					end
+
+					script.ChildAdded:connect(scriptChildModified)
+					script.ChildRemoved:connect(scriptChildModified)
+
+					-- Clear any existing animation tracks
+					-- Fixes issue with characters that are moved in and out of the Workspace accumulating tracks
+					local animator = if Humanoid then Humanoid:FindFirstChildOfClass("Animator") else nil
+					if animator then
+						local animTracks = animator:GetPlayingAnimationTracks()
+						for i,track in ipairs(animTracks) do
+							track:Stop(0)
+							track:Destroy()
+						end
+					end
+
+
+					for name, fileList in pairs(animNames) do 
+						configureAnimationSet(name, fileList)
+					end	
+
+					-- ANIMATION
+
+					-- declarations
+					local toolAnim = "None"
+					local toolAnimTime = 0
+
+					local jumpAnimTime = 0
+					local jumpAnimDuration = 0.3
+
+					local toolTransitionTime = 0.1
+					local fallTransitionTime = 0.3
+					local jumpMaxLimbVelocity = 0.75
+
+					-- functions
+
+					local function stopAllAnimations()
+						local oldAnim = currentAnim
+
+						-- return to idle if finishing an emote
+						if (emoteNames[oldAnim] ~= nil and emoteNames[oldAnim] == false) then
+							oldAnim = "idle"
+						end
+
+						currentAnim = ""
+						currentAnimInstance = nil
+						if (currentAnimKeyframeHandler ~= nil) then
+							currentAnimKeyframeHandler:disconnect()
+						end
+
+						if (currentAnimTrack ~= nil) then
+							currentAnimTrack:Stop()
+							currentAnimTrack:Destroy()
+							currentAnimTrack = nil
+						end
+						return oldAnim
+					end
+
+					local function setAnimationSpeed(speed)
+						if speed ~= currentAnimSpeed then
+							currentAnimSpeed = speed
+							currentAnimTrack:AdjustSpeed(currentAnimSpeed)
+						end
+					end
+
+					local playAnimation
+
+					local function keyFrameReachedFunc(frameName)
+						if (frameName == "End") then
+
+							local repeatAnim = currentAnim
+							-- return to idle if finishing an emote
+							if (emoteNames[repeatAnim] ~= nil and emoteNames[repeatAnim] == false) then
+								repeatAnim = "idle"
+							end
+
+							local animSpeed = currentAnimSpeed
+							playAnimation(repeatAnim, 0.0, Humanoid)
+							setAnimationSpeed(animSpeed)
+						end
+					end
+
+					-- Preload animations
+					function playAnimation(animName, transitionTime, humanoid) 
+
+						local roll = math.random(1, animTable[animName].totalWeight) 
+						local origRoll = roll
+						local idx = 1
+						while (roll > animTable[animName][idx].weight) do
+							roll = roll - animTable[animName][idx].weight
+							idx = idx + 1
+						end
+						--		print(animName .. " " .. idx .. " [" .. origRoll .. "]")
+						local anim = animTable[animName][idx].anim
+
+						-- switch animation		
+						if (anim ~= currentAnimInstance) then
+
+							if (currentAnimTrack ~= nil) then
+								currentAnimTrack:Stop(transitionTime)
+								currentAnimTrack:Destroy()
+							end
+
+							currentAnimSpeed = 1.0
+
+							-- load it to the humanoid; get AnimationTrack
+							currentAnimTrack = humanoid:LoadAnimation(anim)
+							currentAnimTrack.Priority = Enum.AnimationPriority.Core
+
+							-- play the animation
+							currentAnimTrack:Play(transitionTime)
+							currentAnim = animName
+							currentAnimInstance = anim
+
+							-- set up keyframe name triggers
+							if (currentAnimKeyframeHandler ~= nil) then
+								currentAnimKeyframeHandler:disconnect()
+							end
+							currentAnimKeyframeHandler = currentAnimTrack.KeyframeReached:connect(keyFrameReachedFunc)
+
+						end
+
+					end
+
+					-------------------------------------------------------------------------------------------
+					-------------------------------------------------------------------------------------------
+
+					local toolAnimName = ""
+					local toolAnimTrack = nil
+					local toolAnimInstance = nil
+					local currentToolAnimKeyframeHandler = nil
+					local playToolAnimation = nil
+
+					local function toolKeyFrameReachedFunc(frameName)
+						if (frameName == "End") then
+							--		print("Keyframe : ".. frameName)	
+							playToolAnimation(toolAnimName, 0.0, Humanoid)
+						end
+					end
+
+
+					function playToolAnimation(animName, transitionTime, humanoid, priority)	 
+
+						local roll = math.random(1, animTable[animName].totalWeight) 
+						local origRoll = roll
+						local idx = 1
+						while (roll > animTable[animName][idx].weight) do
+							roll = roll - animTable[animName][idx].weight
+							idx = idx + 1
+						end
+						--		print(animName .. " * " .. idx .. " [" .. origRoll .. "]")
+						local anim = animTable[animName][idx].anim
+
+						if (toolAnimInstance ~= anim) then
+
+							if (toolAnimTrack ~= nil) then
+								toolAnimTrack:Stop()
+								toolAnimTrack:Destroy()
+								transitionTime = 0
+							end
+
+							-- load it to the humanoid; get AnimationTrack
+							toolAnimTrack = humanoid:LoadAnimation(anim)
+							if priority then
+								toolAnimTrack.Priority = priority
+							end
+
+							-- play the animation
+							toolAnimTrack:Play(transitionTime)
+							toolAnimName = animName
+							toolAnimInstance = anim
+
+							currentToolAnimKeyframeHandler = toolAnimTrack.KeyframeReached:connect(toolKeyFrameReachedFunc)
+						end
+					end
+
+					local function stopToolAnimations()
+						local oldAnim = toolAnimName
+
+						if (currentToolAnimKeyframeHandler ~= nil) then
+							currentToolAnimKeyframeHandler:disconnect()
+						end
+
+						toolAnimName = ""
+						toolAnimInstance = nil
+						if (toolAnimTrack ~= nil) then
+							toolAnimTrack:Stop()
+							toolAnimTrack:Destroy()
+							toolAnimTrack = nil
+						end
+
+
+						return oldAnim
+					end
+
+					-------------------------------------------------------------------------------------------
+					-------------------------------------------------------------------------------------------
+
+
+					local function onRunning(speed)
+						speed /= getRigScale()
+
+						if speed > 0.01 then
+							playAnimation("walk", 0.1, Humanoid)
+							if currentAnimInstance and currentAnimInstance.AnimationId == "http://www.roblox.com/asset/?id=180426354" then
+								setAnimationSpeed(speed / 14.5)
+							end
+							pose = "Running"
+						else
+							if emoteNames[currentAnim] == nil then
+								playAnimation("idle", 0.1, Humanoid)
+								pose = "Standing"
+							end
+						end
+					end
+
+					local function onDied()
+						pose = "Dead"
+					end
+
+					local function onJumping()
+						playAnimation("jump", 0.1, Humanoid)
+						jumpAnimTime = jumpAnimDuration
+						pose = "Jumping"
+					end
+
+					local function onClimbing(speed)
+						speed /= getRigScale()
+
+						playAnimation("climb", 0.1, Humanoid)
+						setAnimationSpeed(speed / 12.0)
+						pose = "Climbing"
+					end
+
+					local function onGettingUp()
+						pose = "GettingUp"
+					end
+
+					local function onFreeFall()
+						if (jumpAnimTime <= 0) then
+							playAnimation("fall", fallTransitionTime, Humanoid)
+						end
+						pose = "FreeFall"
+					end
+
+					local function onFallingDown()
+						pose = "FallingDown"
+					end
+
+					local function onSeated()
+						pose = "Seated"
+					end
+
+					local function onPlatformStanding()
+						pose = "PlatformStanding"
+					end
+
+					local function onSwimming(speed)
+						if speed > 0 then
+							pose = "Running"
+						else
+							pose = "Standing"
+						end
+					end
+
+					local function getTool()	
+						for _, kid in ipairs(Figure:GetChildren()) do
+							if kid.className == "Tool" then return kid end
+						end
+						return nil
+					end
+
+					local function getToolAnim(tool)
+						for _, c in ipairs(tool:GetChildren()) do
+							if c.Name == "toolanim" and c.className == "StringValue" then
+								return c
+							end
+						end
+						return nil
+					end
+
+					local function animateTool()
+
+						if (toolAnim == "None") then
+							playToolAnimation("toolnone", toolTransitionTime, Humanoid, Enum.AnimationPriority.Idle)
+							return
+						end
+
+						if (toolAnim == "Slash") then
+							playToolAnimation("toolslash", 0, Humanoid, Enum.AnimationPriority.Action)
+							return
+						end
+
+						if (toolAnim == "Lunge") then
+							playToolAnimation("toollunge", 0, Humanoid, Enum.AnimationPriority.Action)
+							return
+						end
+					end
+
+					local function moveSit()
+						RightShoulder.MaxVelocity = 0.15
+						LeftShoulder.MaxVelocity = 0.15
+						RightShoulder:SetDesiredAngle(3.14 /2)
+						LeftShoulder:SetDesiredAngle(-3.14 /2)
+						RightHip:SetDesiredAngle(3.14 /2)
+						LeftHip:SetDesiredAngle(-3.14 /2)
+					end
+
+					local lastTick = 0
+
+					local function move(time)
+						local amplitude = 1
+						local frequency = 1
+						local deltaTime = time - lastTick
+						lastTick = time
+
+						local climbFudge = 0
+						local setAngles = false
+
+						if (jumpAnimTime > 0) then
+							jumpAnimTime = jumpAnimTime - deltaTime
+						end
+
+						if (pose == "FreeFall" and jumpAnimTime <= 0) then
+							playAnimation("fall", fallTransitionTime, Humanoid)
+						elseif (pose == "Seated") then
+							playAnimation("sit", 0.5, Humanoid)
+							return
+						elseif (pose == "Running") then
+							playAnimation("walk", 0.1, Humanoid)
+						elseif (pose == "Dead" or pose == "GettingUp" or pose == "FallingDown" or pose == "Seated" or pose == "PlatformStanding") then
+							--		print("Wha " .. pose)
+							stopAllAnimations()
+							amplitude = 0.1
+							frequency = 1
+							setAngles = true
+						end
+
+						if (setAngles) then
+							local desiredAngle = amplitude * math.sin(time * frequency)
+
+							RightShoulder:SetDesiredAngle(desiredAngle + climbFudge)
+							LeftShoulder:SetDesiredAngle(desiredAngle - climbFudge)
+							RightHip:SetDesiredAngle(-desiredAngle)
+							LeftHip:SetDesiredAngle(-desiredAngle)
+						end
+
+						-- Tool Animation handling
+						local tool = getTool()
+						if tool and tool:FindFirstChild("Handle") then
+
+							local animStringValueObject = getToolAnim(tool)
+
+							if animStringValueObject then
+								toolAnim = animStringValueObject.Value
+								-- message recieved, delete StringValue
+								animStringValueObject.Parent = nil
+								toolAnimTime = time + .3
+							end
+
+							if time > toolAnimTime then
+								toolAnimTime = 0
+								toolAnim = "None"
+							end
+
+							animateTool()		
+						else
+							stopToolAnimations()
+							toolAnim = "None"
+							toolAnimInstance = nil
+							toolAnimTime = 0
+						end
+					end
+
+					-- connect events
+					Humanoid.Died:connect(onDied)
+					Humanoid.Running:connect(onRunning)
+					Humanoid.Jumping:connect(onJumping)
+					Humanoid.Climbing:connect(onClimbing)
+					Humanoid.GettingUp:connect(onGettingUp)
+					Humanoid.FreeFalling:connect(onFreeFall)
+					Humanoid.FallingDown:connect(onFallingDown)
+					Humanoid.Seated:connect(onSeated)
+					Humanoid.PlatformStanding:connect(onPlatformStanding)
+					Humanoid.Swimming:connect(onSwimming)
+
+					---- setup emote chat hook
+					game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
+						local emote = ""
+						if msg == "/e dance" then
+							emote = dances[math.random(1, #dances)]
+						elseif (string.sub(msg, 1, 3) == "/e ") then
+							emote = string.sub(msg, 4)
+						elseif (string.sub(msg, 1, 7) == "/emote ") then
+							emote = string.sub(msg, 8)
+						end
+
+						if (pose == "Standing" and emoteNames[emote] ~= nil) then
+							playAnimation(emote, 0.1, Humanoid)
+						end
+
+					end)
+
+					-- main program
+
+					-- initialize to idle
+					playAnimation("idle", 0.1, Humanoid)
+					pose = "Standing"
+
+					while Figure.Parent ~= nil do
+						local _, time = wait(0.1)
+						move(time)
+					end
+				end
+
+				local function removeAllClasses(instance,class)
+					local foundClass
+					while true do
+						local foundClass = instance:FindFirstChildOfClass(class,true)
+						if foundClass then
+							foundClass:Destroy()
+						else
+							break
+						end
+					end
+				end
+
+				local orgChar = C.char
+				orgChar.Archivable = true
+				local clonedChar = C.char:Clone()
+				C.ClonedChar = clonedChar
+				clonedChar.Name = "InviClone"
+				clonedChar:AddTag("RemoveOnDestroy")
+				local clonedHuman = clonedChar:WaitForChild("Humanoid")
+				orgChar.Archivable = false
+				orgChar:PivotTo(CFrame.new(0,1e4,0))
+				removeAllClasses(clonedChar,"Sound")
+				task.wait(.25)
+				orgChar.PrimaryPart.Anchored = true
+
+				task.wait(.5)
+				clonedChar.Parent = workspace
+
+				--C.plr.Character = clonedChar
+				C.Camera.CameraSubject = clonedHuman
+
+				local connections = {}
+				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(function()
+					clonedHuman:Move(human.MoveDirection)
+				end))
+				table.insert(connections,human:GetPropertyChangedSignal("Jump"):Connect(function()
+					if human.Jump and clonedHuman and clonedHuman.FloorMaterial ~= Enum.Material.Air then
+						clonedHuman:ChangeState(Enum.HumanoidStateType.Jumping)
+					end
+				end))
+				local replicateProperties = {
+					{"Humanoid","HipHeight"},
+					{"Humanoid","WalkSpeed"},
+					{"Humanoid","JumpPower"}
+				}
+				for _, propTable in ipairs(replicateProperties) do
+					local propertyToReplicate = propTable[2]
+					local old = orgChar[propTable[1]]
+					table.insert(connections, old:GetPropertyChangedSignal(propertyToReplicate):Connect(function()
+						clonedChar[propTable[1]][propertyToReplicate] = old[propertyToReplicate]
+					end))
+				end
+
+				for _, basePart in ipairs(clonedChar:GetDescendants()) do
+					if basePart.Name=="Weight" then
+						basePart:Destroy()
+					elseif basePart:IsA("BasePart") and basePart.Name ~= "HumanoidRootPart" then
+						--local local function updLocalTrans()
+						basePart.Transparency = .5
+						--end
+						--updLocalTrans()
+					elseif basePart:IsA("Decal") then
+						basePart.Transparency = .5
+					end
+				end
+				local SavedAnimsTracks = {}
+				local canRun = false
+				table.insert(connections, human.Animator.AnimationPlayed:Connect(function(animTrack)
+					if animTrack.Animation.AnimationId ~= "rbxassetid://961932719" then
+						return
+					end
+					local animation = animTrack.Animation
+					local myTrack = SavedAnimsTracks[animation.AnimationId]
+					if not myTrack then
+						myTrack = clonedHuman.Animator:LoadAnimation(animation)
+						myTrack.Looped = animTrack.Looped
+						myTrack.Priority = animTrack.Priority
+						SavedAnimsTracks[animation.AnimationId] = myTrack
+
+						local function update()
+							if animTrack.IsPlaying and not myTrack.IsPlaying then
+								myTrack:Play()
+							elseif not animTrack.IsPlaying and myTrack.IsPlaying then
+								myTrack:Stop()
+							end
+						end
+						table.insert(connections,animTrack:GetPropertyChangedSignal("Speed"):Connect(update))
+						table.insert(connections,animTrack:GetPropertyChangedSignal("IsPlaying"):Connect(update))
+						table.insert(connections,animTrack.Stopped:Connect(update))
+						myTrack:AdjustSpeed(2)
+						update()
+					else
+						myTrack:Play()
+					end
+				end))
+				task.spawn(doAnimate,clonedChar,connections)
+				table.insert(connections, clonedHuman.Running:Connect(function(speed)
+					local myTrack = SavedAnimsTracks["rbxassetid://961932719"]
+					if not myTrack then return end
+					if speed > .5 then
+						myTrack:AdjustSpeed(2)
+					else
+						myTrack:AdjustSpeed(0)
+					end
+				end))
+			end,
+			["ActivateFunction"] = function(enabled, characterSpawn)
+				if enabled then
+					C.AvailableHacks.Basic[30].RunFunction(C.AvailableHacks.Basic[30].Functs)
+				else
+					if not characterSpawn then
+						if char and char.Parent then
+							if C.ClonedChar then
+								char:PivotTo(C.ClonedChar:GetPivot())
+							end
+							char.PrimaryPart.Anchored = false
+							char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
+							char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
+						end
+						--C.plr.Character = orgChar
+					end
+					if C.ClonedChar then
+						C.ClonedChar:Destroy()
+						C.ClonedChar = nil
+					end
+					C.Camera.CameraSubject = human
+					for _, connection in pairs(C.AvailableHacks.Basic[30].Functs) do
+						connection:Disconnect()
+					end C.AvailableHacks.Basic[30].Functs = {}
+				end
+			end,
+			["MyStartUp"] = function()
+				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
+				if C.enHacks["Basic_InvisibleChar"] then
+					C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
+				end
+			end,
+		},
 		[40]={
 			["Type"] = "ExTextButton",
 			["Title"] = ("Force Allow Reset"),
@@ -5950,7 +6684,7 @@ C.AvailableHacks ={
 				if not capsule or not capsule:FindFirstChild("PodTrigger")
 					or not capsule.PodTrigger.CapturedTorso.Value then return end
 				if not C.enHacks.AutoRescue and not override then return end
-				if C.char:FindFirstChild("Hammer")~=nil then return end
+				if C.char:FindFirstChild("Hammer")~=nil and myTSM.Health.Value > 0 then return end
 				local Trigger=capsule:FindFirstChild("PodTrigger")
 				if not Trigger then return end
 				for s=5,1,-1 do
@@ -7351,8 +8085,8 @@ C.AvailableHacks ={
 		},
 		[3]={
 			["Type"]="ExTextButton",
-			["Title"]="Get C.Console Logs",
-			["Desc"]="Activate To See C.Console Logs",
+			["Title"]="Get Console Logs",
+			["Desc"]="Activate To See Console Logs",
 			["Shortcut"]="ClearConsole",
 			["Default"]=true,
 			["DontActivate"]=true,
@@ -7787,9 +8521,14 @@ clear = function(isManualClear)
 	C.AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
 	human:SetAttribute("OverrideSpeed",nil)
 
-	if C.AvailableHacks.Blatant and C.AvailableHacks.Beast[2] and gameUniverse=="Flee" then
-		C.AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
-		C.AvailableHacks.Beast[2].Crawl(false);--disable crawl
+	if gameUniverse=="Flee" then
+		if C.AvailableHacks.Beast and C.AvailableHacks.Beast[2]  then
+			C.AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
+			C.AvailableHacks.Beast[2].Crawl(false);--disable crawl
+		end
+	end
+	if C.AvailableHacks.Basic and C.AvailableHacks.Basic[30]  then
+		C.AvailableHacks.Basic[30].ActivateFunction(false);--disable crawl
 	end
 	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
 	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do

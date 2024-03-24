@@ -497,7 +497,7 @@ local function StartBetterConsole()
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
 		local isFromMe = checkmycaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
-			.. " ".. messageType.Name:sub(8).. (not isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
+			.. " ".. messageType.Name:sub(8).. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message
 		formatMessage(inputMessage,messageType,isFromMe,...)
 	end

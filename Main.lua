@@ -5823,6 +5823,7 @@ C.AvailableHacks ={
 					local myTrack = SavedAnimsTracks[animation.AnimationId]
 					if not myTrack then
 						myTrack = clonedHuman.Animator:LoadAnimation(animation)
+						task.wait(.5)
 						myTrack.Looped = animTrack.Looped
 						myTrack.Priority = animTrack.Priority
 						SavedAnimsTracks[animation.AnimationId] = myTrack

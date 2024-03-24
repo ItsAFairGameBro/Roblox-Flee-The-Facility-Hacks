@@ -5837,6 +5837,11 @@ C.AvailableHacks ={
 				if enabled then
 					C.AvailableHacks.Basic[30].RunFunction(C.AvailableHacks.Basic[30].Functs)
 				else
+					for index = #C.AvailableHacks.Basic[30].Functs, 1, -1 do
+						local connection = C.AvailableHacks.Basic[30].Functs[index]
+						connection:Disconnect()
+						table.remove(C.AvailableHacks.Basic[30].Functs,index)
+					end
 					if not characterSpawn then
 						if C.char and C.char.Parent then
 							if C.ClonedChar then
@@ -5852,11 +5857,6 @@ C.AvailableHacks ={
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()
 						C.ClonedChar = nil
-					end
-					for index = #C.AvailableHacks.Basic[30].Functs, 1, -1 do
-						local connection = C.AvailableHacks.Basic[30].Functs[index]
-						connection:Disconnect()
-						table.remove(C.AvailableHacks.Basic[30].Functs,index)
 					end
 				end
 			end,

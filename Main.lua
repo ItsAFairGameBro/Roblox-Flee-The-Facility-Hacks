@@ -5815,10 +5815,10 @@ C.AvailableHacks ={
 				local SavedAnimsTracks = {}
 				local canRun = false
 				local function animTrackAdded(animTrack)
-					if animTrack.Animation.AnimationId ~= "rbxassetid://961932719" then
+					local animation = animTrack.Animation
+					if animation.AnimationId ~= "rbxassetid://961932719" then
 						return
 					end
-					local animation = animTrack.Animation
 					local myTrack = SavedAnimsTracks[animation.AnimationId]
 					if not myTrack then
 						myTrack = clonedHuman.Animator:LoadAnimation(animation)
@@ -5826,8 +5826,8 @@ C.AvailableHacks ={
 						myTrack.Priority = animTrack.Priority
 						SavedAnimsTracks[animation.AnimationId] = myTrack
 
-						local function update()
-							if animTrack.IsPlaying and not myTrack.IsPlaying then
+						local function update(didStart)
+							if (didStart=="Start" or animTrack.IsPlaying) and not myTrack.IsPlaying then
 								myTrack:Play()
 							elseif not animTrack.IsPlaying and myTrack.IsPlaying then
 								myTrack:Stop()
@@ -5837,14 +5837,13 @@ C.AvailableHacks ={
 						table.insert(connections,animTrack:GetPropertyChangedSignal("IsPlaying"):Connect(update))
 						table.insert(connections,animTrack.Stopped:Connect(update))
 						myTrack:AdjustSpeed(2)
-						update()
+						update("Start")
 					else
 						myTrack:Play()
 					end
 				end
 				table.insert(connections, human.Animator.AnimationPlayed:Connect(animTrackAdded))
 				for _, animTrack in ipairs(human.Animator:GetPlayingAnimationTracks()) do
-					print('TRACK',animTrack)
 					task.spawn(animTrackAdded,animTrack)
 				end
 				task.spawn(doAnimate,clonedChar,connections)

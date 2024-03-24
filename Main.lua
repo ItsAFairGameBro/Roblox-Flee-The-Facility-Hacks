@@ -5710,6 +5710,7 @@ C.AvailableHacks ={
 				clonedChar:AddTag("RemoveOnDestroy")
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+				clonedHuman:ChangeState(human:GetState())
 				orgChar.Archivable = false
 				removeAllClasses(clonedChar,"Sound")
 				--for s = 2, 1, -1 do
@@ -5745,7 +5746,7 @@ C.AvailableHacks ={
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						local MoveDirection = C.PlayerControlModule:GetMoveVector()
 						clonedHuman:Move(MoveDirection,true)
-						RunS.RenderStepped:Wait()
+						human:GetPropertyChangedSignal("MoveDirection"):Wait()
 					end
 				end)
 				task.spawn(function()

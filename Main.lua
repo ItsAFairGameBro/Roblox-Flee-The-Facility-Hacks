@@ -5872,7 +5872,7 @@ C.AvailableHacks ={
 						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
 						if C.char and C.char.Parent then
 							if C.ClonedChar then
-								C.char:PivotTo(C.ClonedChar:GetPivot())
+								teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 							end
 							C.char.PrimaryPart.Anchored = false
 						end

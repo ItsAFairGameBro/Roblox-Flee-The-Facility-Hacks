@@ -7518,10 +7518,10 @@ local function attributeAddedFunction()
 		DS:AddItem(script,15)
 		return
 	end
-	if newIndex~=saveIndex then
+	--if newIndex~=saveIndex then
 		print("Running Clear")
 		clear()
-	end
+	--end
 end
 
 if script==nil or plr:GetAttribute(getID)~=saveIndex then

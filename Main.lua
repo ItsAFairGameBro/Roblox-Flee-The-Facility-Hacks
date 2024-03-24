@@ -3980,7 +3980,7 @@ AvailableHacks ={
 				human.WalkSpeed=newSpeed
 			end,
 			["ActivateFunction"]=function(newValue)
-				if newValue==defaultCharacterWalkSpeed then
+				if newValue==defaultCharacterWalkSpeed or isCleared then
 					setChangedAttribute(human,"WalkSpeed",false)
 				else
 					setChangedAttribute(human,"WalkSpeed",AvailableHacks.Basic[1].UpdateSpeed)

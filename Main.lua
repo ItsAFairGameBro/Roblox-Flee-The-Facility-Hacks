@@ -5704,7 +5704,9 @@ C.AvailableHacks ={
 				orgChar.Archivable = false
 				orgChar:PivotTo(CFrame.new(0,1e4,0))
 				removeAllClasses(clonedChar,"Sound")
-				task.wait(.25)
+				for s = 3, 1, -1 do
+					RunS.RenderStepped:Wait()
+				end
 				orgChar.PrimaryPart.Anchored = true
 
 				clonedChar.Parent = workspace
@@ -5732,6 +5734,7 @@ C.AvailableHacks ={
 					table.insert(connections, old:GetPropertyChangedSignal(propertyToReplicate):Connect(function()
 						clonedChar[propTable[1]][propertyToReplicate] = old[propertyToReplicate]
 					end))
+					clonedChar[propTable[1]][propertyToReplicate] = old[propertyToReplicate]
 				end
 
 				for _, basePart in ipairs(clonedChar:GetDescendants()) do

@@ -450,11 +450,11 @@ local function StartBetterConsole()
 	--if isStudio then
 	--CHECKCALLER is not working correctly, so we'll take over from here
 	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load sound ",
-		"Font family ",
+		"Font family ","Preloaded game image: ",
 	}
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
-		"ContextActionService could not find the function passed in, doing nothing."
+		"ContextActionService could not find the function passed in, doing nothing.","load size 14"
 	}
 	local function checkmycaller(msg)
 		for _, text in ipairs(BetterConsole_CheckCaller_MsgExact) do
@@ -5746,7 +5746,8 @@ AvailableHacks ={
 				end
 			end,
 			["RescueSurvivor"]=function(capsule,override)
-				if capsule.PodTrigger.CapturedTorso.Value==nil then return end
+				if not capsule or not capsule:FindFirstChild("PodTrigger")
+					or not capsule.PodTrigger.CapturedTorso.Value then return end
 				if not enHacks.AutoRescue and not override then return end
 				if char:FindFirstChild("Hammer")~=nil then return end
 				local Trigger=capsule:FindFirstChild("PodTrigger")
@@ -6275,7 +6276,7 @@ AvailableHacks ={
 									end
 								end
 							end
-							if AvailableHacks.Runner[80].RescueSurvivor(targetCapsule,true) then
+							if targetCapsule and AvailableHacks.Runner[80].RescueSurvivor(targetCapsule,true) then
 								return plr:SetAttribute("HasRescued",true)
 							end
 						end

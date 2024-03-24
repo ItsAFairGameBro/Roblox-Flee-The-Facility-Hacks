@@ -5862,12 +5862,15 @@ C.AvailableHacks ={
 			end,
 			["MyStartUp"] = function()
 				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
-				while not plr:HasAppearanceLoaded() do
-					plr.CharacterAppearanceLoaded:Wait()
-				end
-				if C.enHacks["Basic_InvisibleChar"] then
-					C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
-				end
+			end,
+			["MyPlayerAdded"] = function()
+				C.AvailableHacks.Basic[30].Funct = plr.CharacterAppearanceLoaded:Connect(function()
+					print("Appearence Loaded!")
+					if C.enHacks["Basic_InvisibleChar"] then
+						C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
+					end
+				end)
+
 			end,
 		},
 		[40]={

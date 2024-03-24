@@ -7509,7 +7509,7 @@ saveIndex = ((plr:GetAttribute(getID) or 0)+1)
 local previousCopy = (plr:GetAttribute(getID)~=nil)
 plr:SetAttribute(getID,saveIndex)
 local function attributeAddedFunction()
-	task.wait()
+	task.wait(1)
 	local newIndex = plr:GetAttribute(getID)
 	print("Attribute Changed Detected",saveIndex,newIndex)
 	if clear==nil then

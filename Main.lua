@@ -2740,7 +2740,6 @@ C.AvailableHacks ={
 			["Title"] = "ESP Player Progress",
 			["Desc"] = "See player's progress",
 			["Shortcut"] = "ESP_PlayerProg",
-			["Universes"]={"FleeMain"},
 			["Default"] = false,
 			["ActivateFunction"] = function(newValue)
 
@@ -5617,7 +5616,6 @@ C.AvailableHacks ={
 					["TextColor"]=newColor3(255, 255, 0),
 				},
 			},
-			["Universes"]={"FleeMain"},
 			["Default"]=false,
 			["RopeSurvivor"]=function(TSM,theirPlr,override)
 				if (C.enHacks.AutoAddRope~="Everyone" and (C.enHacks.AutoAddRope~="Me" or C.Beast~=C.char)) and not override then
@@ -5954,7 +5952,6 @@ C.AvailableHacks ={
 			["AvoidParts"]={},
 			["CurrentNum"]=0,
 			["DidAction"]=false,
-			["Universes"]={"FleeMain"},
 			--["CanRun"]=nil,
 			["ChangedEvent"]=(Instance.new("BindableEvent",script)),
 			["WalkPath"]=(function(path,target,checkFunct)

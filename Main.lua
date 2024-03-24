@@ -18,15 +18,15 @@ local PathfindingService = game:GetService("PathfindingService")
 
 
 
-gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") or "Unknown")
-gameUniverse=gameName:find("Flee") and "Flee" or "Unknown"
+local gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") or "Unknown")
+local gameUniverse=gameName:find("Flee") and "Flee" or "Unknown"
 newVector3, newColor3 = Vector3.new, Color3.fromRGB
 isStudio=RunS:IsStudio()
 local enHacks,playerEvents,objectFuncts={},{},{}
 functs,refreshEnHack = {}, {}
 
---Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
---	= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
+local Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
+	--= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
 --comma_value=nil
 local clear,saveIndex,AvailableHacks
 local myTSM,mySSM

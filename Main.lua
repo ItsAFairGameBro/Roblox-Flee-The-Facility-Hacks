@@ -7663,8 +7663,8 @@ clear = function(isManualClear)
 	CAS:UnbindAction("OpenBetterConsole"..saveIndex)
 	warn("12 Finish")
 
-	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
 	getgenv()["ActiveScript"..getID][saveIndex] = nil
+	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
 	DS:AddItem(HackGUI,1)
 	DS:AddItem(script,1)
 	clear=nil

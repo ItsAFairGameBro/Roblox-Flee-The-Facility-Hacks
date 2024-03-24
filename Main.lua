@@ -5119,6 +5119,18 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Functs"]={},
 			["HiddenLocation"] = CFrame.new(0,1e4,0),
+			["ApplyChange"] = function(oldHuman,newHuman)
+				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
+				newHuman:ChangeState(oldHuman:GetState())
+				local clonedHRP, currentHRP = clonedChar:FindFirstChild("HumanoidRootPart"), currentChar:FindFirstChild("HumanoidRootPart")
+				if clonedHRP and currentHRP then
+					clonedHRP.AssemblyLinearVelocity = currentHRP.AssemblyLinearVelocity
+					clonedHRP.AssemblyAngularVelocity = currentHRP.AssemblyAngularVelocity
+				elseif clonedHRP then
+					clonedHRP.AssemblyLinearVelocity = Vector3.new()
+					clonedHRP.AssemblyAngularVelocity = Vector3.new()
+				end
+			end,
 			["RunFunction"]=function(connections)
 				local function doAnimate(Figure,connections2Add)
 					-- humanoidAnimatePlayEmote.lua
@@ -5710,12 +5722,11 @@ C.AvailableHacks ={
 				clonedChar:AddTag("RemoveOnDestroy")
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-				clonedHuman:ChangeState(human:GetState())
 				orgChar.Archivable = false
+				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,human)
 				removeAllClasses(clonedChar,"Sound")
-				--for s = 2, 1, -1 do
 				
-
+				
 				teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 				
 				task.spawn(function()
@@ -5723,15 +5734,13 @@ C.AvailableHacks ={
 					orgChar.PrimaryPart.Anchored = true
 				end)
 
-				--end
-
 				clonedChar.Parent = workspace
 
 				camera.CameraSubject = clonedHuman
 				
 				local function doCFrameChanged()
 					local newLoc = orgChar:GetPivot()
-					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude))
+					--print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude))
 					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude < 50 then
 						return
 					end
@@ -5849,17 +5858,17 @@ C.AvailableHacks ={
 						connection:Disconnect()
 						table.remove(C.AvailableHacks.Basic[30].Functs,index)
 					end
-					if not characterSpawn then
+					if not characterSpawn and C.ClonedChar and C.char and C.char.Parent then
+						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
 						if C.char and C.char.Parent then
 							if C.ClonedChar then
 								C.char:PivotTo(C.ClonedChar:GetPivot())
 							end
 							C.char.PrimaryPart.Anchored = false
-							C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
-							C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
 						end
 						camera.CameraSubject = human
 						human:ChangeState(Enum.HumanoidStateType.Running)
+						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()

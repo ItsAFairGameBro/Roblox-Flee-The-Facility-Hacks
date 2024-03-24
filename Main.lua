@@ -5715,14 +5715,19 @@ C.AvailableHacks ={
 				end
 
 				local orgChar = C.char
+				local saveLoc = orgChar:GetPivot()
+				
 				orgChar.Archivable = true
 				local clonedChar = C.char:Clone()
+				orgChar.Archivable = false
 				C.ClonedChar = clonedChar
 				clonedChar.Name = "InviClone"
 				clonedChar:AddTag("RemoveOnDestroy")
+				
+				
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-				orgChar.Archivable = false
+				clonedChar:PivotTo(saveLoc)
 				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,human)
 				removeAllClasses(clonedChar,"Sound")
 				
@@ -5806,7 +5811,7 @@ C.AvailableHacks ={
 				end
 				local SavedAnimsTracks = {}
 				local canRun = false
-				table.insert(connections, human.Animator.AnimationPlayed:Connect(function(animTrack)
+				local function animTrackAdded(animTrack)
 					if animTrack.Animation.AnimationId ~= "rbxassetid://961932719" then
 						return
 					end
@@ -5833,7 +5838,11 @@ C.AvailableHacks ={
 					else
 						myTrack:Play()
 					end
-				end))
+				end
+				table.insert(connections, human.Animator.AnimationPlayed:Connect(animTrackAdded))
+				for _, animTrack in ipairs(human.Animator:GetPlayingAnimationTracks()) do
+					task.spawn(animTrackAdded,animTrack)
+				end
 				task.spawn(doAnimate,clonedChar,connections)
 				table.insert(connections, clonedHuman.Running:Connect(function(speed)
 					local myTrack = SavedAnimsTracks["rbxassetid://961932719"]
@@ -5860,6 +5869,7 @@ C.AvailableHacks ={
 					end
 					if not characterSpawn and C.ClonedChar and C.char and C.char.Parent then
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
+						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
 						if C.char and C.char.Parent then
 							if C.ClonedChar then
 								C.char:PivotTo(C.ClonedChar:GetPivot())
@@ -5868,7 +5878,6 @@ C.AvailableHacks ={
 						end
 						camera.CameraSubject = human
 						human:ChangeState(Enum.HumanoidStateType.Running)
-						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()

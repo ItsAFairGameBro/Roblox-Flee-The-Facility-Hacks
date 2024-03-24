@@ -5730,11 +5730,16 @@ C.AvailableHacks ={
 				}
 				for _, propTable in ipairs(replicateProperties) do
 					local propertyToReplicate = propTable[2]
-					local old = orgChar[propTable[1]]
-					table.insert(connections, old:GetPropertyChangedSignal(propertyToReplicate):Connect(function()
-						clonedChar[propTable[1]][propertyToReplicate] = old[propertyToReplicate]
-					end))
-					clonedChar[propTable[1]][propertyToReplicate] = old[propertyToReplicate]
+					local oldObject = orgChar:WaitForChild(propTable[1])
+					local newObject = clonedChar:WaitForChild(propTable[1])
+					local function updFunction()
+						if isCleared then
+							warn("[AHH]: Property Running After Shutdown: "..table.concat(propTable,"."))
+						end
+						clonedChar[propTable[1]][propertyToReplicate] = oldObject[propertyToReplicate]
+					end
+					table.insert(connections, oldObject:GetPropertyChangedSignal(propertyToReplicate):Connect(updFunction))
+					updFunction()
 				end
 
 				for _, basePart in ipairs(clonedChar:GetDescendants()) do

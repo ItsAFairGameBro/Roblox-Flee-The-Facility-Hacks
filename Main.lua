@@ -5717,11 +5717,19 @@ C.AvailableHacks ={
 				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(function()
 					clonedHuman:Move(human.MoveDirection)
 				end))
-				table.insert(connections,human:GetPropertyChangedSignal("Jump"):Connect(function()
-					if human.Jump and clonedHuman and clonedHuman.FloorMaterial ~= Enum.Material.Air then
-						clonedHuman:ChangeState(Enum.HumanoidStateType.Jumping)
+				task.spawn(function()
+					while clonedChar and clonedHuman and clonedChar.Parent do
+						if clonedHuman.FloorMaterial ~= Enum.Material.Air then
+							if isJumpBeingHeld then
+								clonedHuman:ChangeState(Enum.HumanoidStateType.Jumping)
+							else
+								jumpChangedEvent.Event:Wait()
+							end
+						else
+							clonedHuman:GetPropertyChangedSignal("FloorMaterial"):Wait()
+						end
 					end
-				end))
+				end)
 				local replicateProperties = {
 					{"Humanoid","HipHeight"},
 					{"Humanoid","WalkSpeed"},

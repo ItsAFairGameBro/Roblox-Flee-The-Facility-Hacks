@@ -22,7 +22,7 @@ gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440
 gameUniverse=gameName:find("Flee") and "Flee" or "Unknown"
 newVector3, newColor3 = Vector3.new, Color3.fromRGB
 isStudio=RunS:IsStudio()
-enHacks,playerEvents,objectFuncts={},{},{}
+local enHacks,playerEvents,objectFuncts={},{},{}
 functs,refreshEnHack = {}, {}
 
 --Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule

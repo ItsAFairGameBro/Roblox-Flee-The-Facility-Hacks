@@ -7598,7 +7598,7 @@ clear = function(isManualClear)
 		C.AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		C.AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
 	else
-		getgenv().C.enHacks = table.clone(C.enHacks)
+		getgenv().enHacks = table.clone(C.enHacks)
 	end
 	saveSaveData()--save before we delete stuff!
 	for hackName,enabled in pairs(C.enHacks) do

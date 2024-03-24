@@ -5734,6 +5734,7 @@ C.AvailableHacks ={
 					local function updFunction()
 						if isCleared then
 							warn("[AHH]: Property Running After Shutdown: "..table.concat(propTable,"."))
+							return
 						end
 						clonedChar[propTable[1]][propertyToReplicate] = oldObject[propertyToReplicate]
 					end
@@ -5818,7 +5819,7 @@ C.AvailableHacks ={
 					end
 					camera.CameraSubject = human
 					for index = #C.AvailableHacks.Basic[30].Functs, 1, -1 do
-						local connection = C.AvailableHacks.Basic[30].Functs
+						local connection = C.AvailableHacks.Basic[30].Functs[index]
 						connection:Disconnect()
 						table.remove(C.AvailableHacks.Basic[30].Functs,index)
 					end

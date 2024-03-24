@@ -5824,7 +5824,7 @@ C.AvailableHacks ={
 						myTrack = clonedHuman.Animator:LoadAnimation(animation)
 						while myTrack.Length == 0 do
 							RunS.RenderStepped:Wait()
-						end
+						end RunS.RenderStepped:Wait() RunS.RenderStepped:Wait()
 						myTrack.Looped = animTrack.Looped
 						myTrack.Priority = animTrack.Priority
 						SavedAnimsTracks[animation.AnimationId] = myTrack

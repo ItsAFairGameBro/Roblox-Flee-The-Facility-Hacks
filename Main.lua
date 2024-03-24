@@ -7605,7 +7605,7 @@ clear = function(isManualClear)
 	warn("4 Finish")
 	human:SetAttribute("OverrideSpeed",nil)
 	
-	if AvailableHacks.Blatant and AvailableHacks.Beast[2] then
+	if AvailableHacks.Blatant and AvailableHacks.Beast[2] and gameUniverse=="Flee" then
 		AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
 		warn("5 Finish")
 		AvailableHacks.Beast[2].Crawl(false);--disable crawl

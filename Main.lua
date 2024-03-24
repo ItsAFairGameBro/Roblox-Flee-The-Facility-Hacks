@@ -592,6 +592,10 @@ local function StartBetterConsole()
 	local function BetterConsole_DoCmd(msg,instant)
 		if msg == "/clear" then
 			C.AvailableHacks.Commands[2].ActivateFunction(true)
+			task.spawn(function()
+				--delay this!
+				SearchConsoleTextBox.Text = ""
+			end)
 		elseif msg=="/top" or msg=="/bottom" then
 			if BetterConsole_TweenList and BetterConsole_TweenList.PlaybackState == Enum.PlaybackState then
 				BetterConsole_TweenList:Cancel()
@@ -8567,7 +8571,7 @@ local function CloseMenu(actionName, inputState, inputObject)
 		Main.Visible=newMain
 		if newMain then
 			DraggableMain:Enable()
-			C.BetterConsole = false
+			C.BetterConsole.Visible = false
 		else
 			DraggableMain:Disable()
 		end

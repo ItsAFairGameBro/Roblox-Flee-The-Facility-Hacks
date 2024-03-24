@@ -12,6 +12,7 @@ local VU=game:GetService('VirtualUser')
 local SP=game:GetService("StarterPlayer")
 local SG=game:GetService("StarterGui")
 local GS=game:GetService("GuiService")
+local TS=game:GetService("TweenService")
 local LS=game:GetService("LogService")
 local PathfindingService = game:GetService("PathfindingService")
 
@@ -120,6 +121,7 @@ local NameTagEx,HackGUI
 
 --INTERFACE/GUI CREATION
 local MainListEx,myList,PropertiesEx,Properties,ServerCreditsGained,Main;
+local BetterConsole_ClearConsoleFunction;
 local TextBoxExamples, CreditsGained,ServerXPGained,XPGained;
 local function createToggleButton(Toggle, ExTextButton)
 	Toggle["AnchorPoint"] = Vector2.new(1, 0);
@@ -172,14 +174,15 @@ local function StartBetterConsole()
 	SearchConsoleTextBox.Size = UDim2.new(0.320734084, 0, 0.0500000007, 0)
 	SearchConsoleTextBox.ZIndex = 5001
 	SearchConsoleTextBox.Font = textFont
-	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(0, 0, 0)
+	SearchConsoleTextBox.TextStrokeColor3 = Color3.new()
+	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(255, 255, 255)
 	SearchConsoleTextBox.PlaceholderText = "Filter Search Results"
 	SearchConsoleTextBox.Text = ""
 	SearchConsoleTextBox.TextColor3 = Color3.new(0, 0, 0)
 	SearchConsoleTextBox.TextScaled = true
 	SearchConsoleTextBox.TextSize = 14
-	SearchConsoleTextBox.TextStrokeColor3 = Color3.new(1, 1, 1)
 	SearchConsoleTextBox.TextStrokeTransparency = 0
+	
 	SearchConsoleTextBox.TextWrapped = true
 	
 
@@ -201,13 +204,13 @@ local function StartBetterConsole()
 	FilterConsoleTitle.TextXAlignment = Enum.TextXAlignment.Left
 
 	FilterCheckBoxes.Name = "FilterCheckBoxes"
-	FilterCheckBoxes.Parent = BetterConsole
 	FilterCheckBoxes.BackgroundColor3 = Color3.new(1, 1, 1)
 	FilterCheckBoxes.BackgroundTransparency = 1
 	FilterCheckBoxes.BorderColor3 = Color3.new(0, 0, 0)
 	FilterCheckBoxes.BorderSizePixel = 0
 	FilterCheckBoxes.Position = UDim2.new(0.565277815, 0, -7.26609031e-08, 0)
 	FilterCheckBoxes.Size = UDim2.new(0.40223217, 0, 0.0500000007, 0)
+	FilterCheckBoxes.Parent = BetterConsole
 	FilterCheckBoxes.ZIndex = 5002
 
 	UIGridLayout.Parent = FilterCheckBoxes
@@ -217,11 +220,12 @@ local function StartBetterConsole()
 	UIGridLayout.CellSize = UDim2.new(0.200000003, 0, 1, 0)
 
 	BetterConsoleFilterBox.Name = "BetterConsoleFilterBox"
-	BetterConsoleFilterBox.Parent = FilterCheckBoxes
+	FilterCheckBoxes:AddTag("RemoveOnDestroy")
 	BetterConsoleFilterBox.BackgroundColor3 = Color3.new(0.219608, 0.219608, 0.219608)
 	BetterConsoleFilterBox.BorderColor3 = Color3.new(0, 0, 0)
 	BetterConsoleFilterBox.BorderSizePixel = 0
 	BetterConsoleFilterBox.Size = UDim2.new(0, 100, 0, 100)
+	BetterConsoleFilterBox.ZIndex = 5001
 
 	InviClicker.Name = "InviClicker"
 	InviClicker.Parent = BetterConsoleFilterBox
@@ -232,7 +236,7 @@ local function StartBetterConsole()
 	InviClicker.BorderSizePixel = 0
 	InviClicker.Position = UDim2.new(0.5, 0, 0, 0)
 	InviClicker.Size = UDim2.new(0.899999976, 0, 1, 0)
-	InviClicker.ZIndex = 5002
+	InviClicker.ZIndex = 5006
 	InviClicker.Font = Enum.Font.SourceSans
 	InviClicker.Text = " "
 	InviClicker.TextColor3 = Color3.new(0, 0, 0)
@@ -248,6 +252,7 @@ local function StartBetterConsole()
 	CheckboxImage.Image = "rbxassetid://4458804262"
 	CheckboxImage.ImageColor3 = Color3.new(0.0509804, 1, 0)
 	CheckboxImage.ScaleType = Enum.ScaleType.Fit
+	CheckboxImage.ZIndex = 5003
 
 	FilterBoxName.Name = "FilterBoxName"
 	FilterBoxName.Parent = BetterConsoleFilterBox
@@ -258,17 +263,17 @@ local function StartBetterConsole()
 	FilterBoxName.BorderSizePixel = 0
 	FilterBoxName.Position = UDim2.new(1, 0, 0, 0)
 	FilterBoxName.Size = UDim2.new(0.699999988, 0, 1, 0)
-	FilterBoxName.Font = Enum.Font.SourceSans
-	FilterBoxName.Text = "Errors"
+	FilterBoxName.Font = textFont
 	FilterBoxName.TextColor3 = Color3.new(1, 1, 1)
 	FilterBoxName.TextScaled = true
 	FilterBoxName.TextSize = 14
 	FilterBoxName.TextStrokeTransparency = 0
 	FilterBoxName.TextWrapped = true
+	FilterBoxName.ZIndex = 5003
 
 	BetterConsoleList.Name = "BetterConsoleList"
 	BetterConsoleList.Parent = BetterConsole
-	BetterConsoleList.Active = true
+	BetterConsoleList.Active = false
 	BetterConsoleList.AnchorPoint = Vector2.new(0, 1)
 	BetterConsoleList.BackgroundColor3 = Color3.new(1, 1, 1)
 	BetterConsoleList.BackgroundTransparency = 1
@@ -277,6 +282,7 @@ local function StartBetterConsole()
 	BetterConsoleList.Position = UDim2.new(0, 0, 0.947688878, 0)
 	BetterConsoleList.Size = UDim2.new(1, 0, 0.887688816, 0)
 	BetterConsoleList.CanvasSize = UDim2.new(0, 0, 0, 0)
+	BetterConsoleList.ZIndex = 5001
 	BetterConsoleList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 
 	UIListLayout.Parent = BetterConsoleList
@@ -288,12 +294,15 @@ local function StartBetterConsole()
 	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
 	BetterConsoleTextEx.BorderSizePixel = 0
 	BetterConsoleTextEx.Size = UDim2.new(1, 0, 0, 0)
+	BetterConsoleTextEx.AutomaticSize = Enum.AutomaticSize.Y
+	BetterConsoleTextEx.RichText = true
 	BetterConsoleTextEx.Font = textFont
 	BetterConsoleTextEx.TextColor3 = Color3.new(1, 1, 1)
 	BetterConsoleTextEx.TextSize = 22
 	BetterConsoleTextEx.TextStrokeTransparency = 0
 	BetterConsoleTextEx.TextWrapped = true
 	BetterConsoleTextEx.TextXAlignment = Enum.TextXAlignment.Left
+	BetterConsoleTextEx.ZIndex = 5002
 	BetterConsoleTextEx:AddTag("RemoveOnDestroy")
 
 	BetterConsoleDesc.Name = "BetterConsoleDesc"
@@ -335,59 +344,132 @@ local function StartBetterConsole()
 			BetterConsole.Visible = not BetterConsole.Visible
 		end
 	end
-	CAS:BindAction("OpenBetterConsole"..saveIndex,BetterConsoleFrameToggle,true,Enum.KeyCode.F9)
+	CAS:BindActionAtPriority("OpenBetterConsole"..saveIndex,BetterConsoleFrameToggle,true,1e4,Enum.KeyCode.M)
 	CAS:SetImage("OpenBetterConsole"..saveIndex,"rbxassetid://12350781258")
 	CAS:SetTitle("OpenBetterConsole"..saveIndex,"")
 	table.insert(functs,BetterConsoleQuitButton.MouseButton1Up:Connect(function()
 		BetterConsoleFrameToggle("OpenBetterConsole"..saveIndex,Enum.UserInputState.Begin)
 	end))
-	local function BetterConsole_SetMessagesVisibility(MessageLabel)
+	local MessageTypeSettings = {
+		[Enum.MessageType.MessageOutput.Name] = {Color='<font color="rgb(170,170,170)">',Layout=0,Active=true},
+		[Enum.MessageType.MessageInfo.Name] = {Color='<font color="rgb(255,0,255)">',Layout=1,Active=true},
+		[Enum.MessageType.MessageWarning.Name] = {Color='<font color="rgb(255,0,255)">',Layout=2,Active=true},
+		[Enum.MessageType.MessageError.Name] = {Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
+		["FromGMEGame"] = {Color="<font color='rgb(0,0,200)'>",Layout=3,Active=true},
+	}
+	local noMessagesFound = BetterConsoleTextEx:Clone()
+	noMessagesFound.RichText = false
+	noMessagesFound.TextXAlignment = Enum.TextXAlignment.Center
+	noMessagesFound:AddTag("RemoveOnDestroy")
+	local function BetterConsole_SetMessagesVisibility(_,MessageLabel)
 		if not MessageLabel then
 			visibleMessages = 0
 		end
+		noMessagesFound.Parent = nil
 		local currentText = SearchConsoleTextBox.Text
 		local includeALL = currentText=="" or currentText == " "
 		isSorted = not includeALL
 		for num, object in ipairs((MessageLabel and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if object:IsA("TextLabel") then
-				object.Visible = includeALL or object.Text:find(currentText)
-				visibleMessages += 1
+				local willBeVisible = includeALL or object.Text:find(currentText)
+				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
+					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
+				object.Visible = willBeVisible
+				if willBeVisible then
+					visibleMessages += 1
+				end
 			end
 		end
-		FilterConsoleTitle.Text = "   BETTER CONSOLE ("..comma_value(includeALL and allMessages or visibleMessages)..")"
-	end
-	table.insert(functs,SearchConsoleTextBox:GetAttributeChangedSignal("Text"):Connect(BetterConsole_SetMessagesVisibility))
-	local MessageTypeColors = {
-		[Enum.MessageType.MessageOutput] = '<font color="rgb(255,255,255)">',
-		[Enum.MessageType.MessageInfo] = '<font color="rgb(255,255,255)">',
-		[Enum.MessageType.MessageWarning] = '<font color="rgb(255,0,255)">',
-		[Enum.MessageType.MessageError] = '<font color="rgb(255,0,0)">'
-	}
-	local function printFunction(message)
-		allMessages += 1
-		local MessageLabel = BetterConsoleTextEx:Clone()
-		MessageLabel.Text = message
-		MessageLabel.LayoutOrder = allMessages
-		MessageLabel.Parent = BetterConsoleList
-		if isSorted then
-			BetterConsole_SetMessagesVisibility(MessageLabel)
+		FilterConsoleTitle.Text = "   BETTER CONSOLE ("..comma_value(visibleMessages)..")"
+		if visibleMessages==0 then
+			if allMessages > 0 then
+				noMessagesFound.Text = "No Messages Found In This Category!"
+				noMessagesFound.TextColor3 = Color3.fromRGB(225)
+			else
+				noMessagesFound.Text = "No Messages Yet!"
+				noMessagesFound.TextColor3 = Color3.fromRGB(0,0,225)
+			end
+			noMessagesFound.Parent = BetterConsoleList
 		end
 	end
-	local function formatMessage(message,customTime)
-		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
-		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")))
+	for messageType, messageData in pairs(MessageTypeSettings) do
+		local BoxFrame = BetterConsoleFilterBox:Clone()
+		BoxFrame:WaitForChild("FilterBoxName").Text = messageType:sub(8)
+		local R, G, B = table.unpack(messageData.Color:sub(messageData.Color:find("%(")+1,messageData.Color:find("%)")-1):split(","))
+		BoxFrame:WaitForChild("FilterBoxName").TextColor3 = Color3.fromRGB(tonumber(R),tonumber(G),tonumber(B))
+		local tweenInstance
+		local updImage = BoxFrame:WaitForChild("CheckboxImage")
+		local function update()
+			if tweenInstance and tweenInstance.PlaybackState == Enum.PlaybackState.Playing then
+				tweenInstance:Cancel()
+			end
+			local active = messageData.Active
+			if active then
+				updImage.Image = "rbxassetid://4458804262"
+				updImage.ImageColor3 = Color3.fromRGB(13,255)
+			else
+				updImage.Image = "rbxassetid://4458801905"
+				updImage.ImageColor3 = Color3.fromRGB(255,13)
+			end
+			local tweenObj = TweenInfo.new()
+			tweenInstance = TS:Create(updImage,tweenObj,{ImageColor3=(active and Color3.fromRGB(13,255) or Color3.fromRGB(255,13))})
+			tweenInstance:Play()
+		end
+		table.insert(functs,BoxFrame:WaitForChild("InviClicker").MouseButton1Up:Connect(function()
+			messageData.Active = not messageData.Active
+			update()
+			BetterConsole_SetMessagesVisibility()
+		end))
+		update()
+		BoxFrame.Parent = FilterCheckBoxes
 	end
+	table.insert(functs,SearchConsoleTextBox:GetPropertyChangedSignal("Text"):Connect(BetterConsole_SetMessagesVisibility))
+	function BetterConsole_ClearConsoleFunction()
+		allMessages, visibleMessages = 0, 0
+		for num, object in ipairs(BetterConsoleList:GetChildren()) do
+			if object:IsA("TextLabel") then
+				object:Destroy()
+			end
+		end
+		BetterConsole_SetMessagesVisibility()
+	end
+	table.insert(functs,SearchConsoleTextBox.FocusLost:Connect(function(enterPressed)
+		local currentText = SearchConsoleTextBox.Text
+		if enterPressed then
+			if currentText:lower()=="/clear" then
+				AvailableHacks.Commands[2].ActivateFunction(true)
+			end
+		end
+	end))
 	if isStudio then
 		function checkcaller()
 			return false
 		end
 	end
+	local function printFunction(message,messageType)
+		allMessages += 1
+		local MessageLabel = BetterConsoleTextEx:Clone()
+		if not checkcaller() then
+			MessageLabel:SetAttribute("IsGame",true)
+		end
+		MessageLabel:SetAttribute("Type",messageType.Name)
+		MessageLabel.Text = message
+		MessageLabel.LayoutOrder = allMessages
+		MessageLabel.Parent = BetterConsoleList
+		BetterConsole_SetMessagesVisibility(nil,MessageLabel)
+	end
+	
+	local function formatMessage(message,messageType,customTime)
+		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
+		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType)
+	end
 
 	local function onMessageOut(message, messageType,...)
-		local inputMessage = MessageTypeColors[messageType] .. "[%s"
-			.. " ".. messageType.Name:sub(8).. (checkcaller() and "" or ("</font><font color='rgb(0,0,200)'> Game</font>"..MessageTypeColors[messageType]))
+		local myMessageColor = MessageTypeSettings[messageType.Name].Color
+		local inputMessage = " "..myMessageColor .. "[%s"
+			.. " ".. messageType.Name:sub(8).. (checkcaller() and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message
-		formatMessage(inputMessage,...)
+		formatMessage(inputMessage,messageType,...)
 	end
 	table.insert(functs,LS.MessageOut:Connect(onMessageOut))
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
@@ -3844,9 +3926,11 @@ AvailableHacks ={
 			["UpdateSpeed"]=function()
 				local crawlSlowDown = 1/2
 				local newSpeed = human:GetAttribute("OverrideSpeed")
-				if isCleared or
+				if (isCleared and myTSM and myTSM:FindFirstChild("NormalWalkSpeed")) or
 					(not newSpeed and gameUniverse=="Flee" and enHacks.WalkSpeed==defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4)) then
 					newSpeed=myTSM.NormalWalkSpeed.Value
+				elseif isCleared then
+					newSpeed=SP.CharacterWalkSpeed
 				else
 					newSpeed=enHacks.WalkSpeed or AvailableHacks.Basic[1].Default
 				end
@@ -7029,6 +7113,7 @@ AvailableHacks ={
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
 				LS:ClearOutput() --rconsoleclear()
+				BetterConsole_ClearConsoleFunction()
 				clearCommandLines()
 			end,
 		},
@@ -7056,7 +7141,7 @@ AvailableHacks ={
 				local fullHistory = game:GetService("LogService"):GetLogHistory()
 				local totalLogs = #fullHistory
 				local maximum = 5 * (Console.AbsoluteWindowSize.Y / CommandBarLine.AbsoluteSize.Y)
-				for num = totalLogs, math.max(1,fullHistory-maximum), -1 do--only loop through the last ones!
+				for num = totalLogs, math.max(1,totalLogs-maximum), -1 do--only loop through the last ones!
 					local logItem = fullHistory[num]
 					createCommandLine(AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
 				end
@@ -7469,7 +7554,7 @@ clear = function(isManualClear)
 	AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
 	AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
 	human:SetAttribute("OverrideSpeed",nil)
-	if AvailableHacks.Blatant then
+	if AvailableHacks.Blatant and AvailableHacks.Beast[2] then
 		AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
 		AvailableHacks.Beast[2].Crawl(false);--disable crawl
 	end

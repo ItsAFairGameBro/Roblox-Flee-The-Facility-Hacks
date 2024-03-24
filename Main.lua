@@ -475,10 +475,10 @@ local function StartBetterConsole()
 		return true
 	end
 	--end
-	local function printFunction(message,messageType,isFromGame)
+	local function printFunction(message,messageType,isFromMe)
 		allMessages += 1
 		local MessageLabel = BetterConsoleTextEx:Clone()
-		if isFromGame then
+		if not isFromMe then
 			MessageLabel:SetAttribute("IsGame",true)
 		end
 		MessageLabel:SetAttribute("Type",messageType.Name)
@@ -488,18 +488,18 @@ local function StartBetterConsole()
 		BetterConsole_SetMessagesVisibility(nil,MessageLabel)
 	end
 	
-	local function formatMessage(message,messageType,isFromGame,customTime)
+	local function formatMessage(message,messageType,isFromMe,customTime)
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
-		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromGame)
+		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromMe)
 	end
 
 	local function onMessageOut(message, messageType,...)
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
-		local isFromGame = checkmycaller(message)
+		local isFromMe = checkmycaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
-			.. " ".. messageType.Name:sub(8).. (not isFromGame and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
+			.. " ".. messageType.Name:sub(8).. (not isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message
-		formatMessage(inputMessage,messageType,isFromGame,...)
+		formatMessage(inputMessage,messageType,isFromMe,...)
 	end
 	table.insert(functs,LS.MessageOut:Connect(onMessageOut))
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)

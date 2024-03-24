@@ -5830,7 +5830,7 @@ C.AvailableHacks ={
 				end))
 			end,
 			["ActivateFunction"] = function(enabled, characterSpawn)
-				if enabled == C.AvailableHacks.Basic[30].Active then
+				if enabled == C.AvailableHacks.Basic[30].Active and not characterSpawn then
 					return
 				end
 				C.AvailableHacks.Basic[30].Active = enabled
@@ -8579,7 +8579,7 @@ clear = function(isManualClear)
 		end
 	end
 	if C.AvailableHacks.Basic and C.AvailableHacks.Basic[30]  then
-		C.AvailableHacks.Basic[30].ActivateFunction(false);--disable crawl
+		C.AvailableHacks.Basic[30].ActivateFunction(false,true);--disable char invisibility
 	end
 	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
 	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do

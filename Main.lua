@@ -5754,8 +5754,7 @@ C.AvailableHacks ={
 					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude < 50 then
 						return
 					end
-					warn("CFrame Teleport Update!")
-					teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
+					orgChar:PivotTo(C.AvailableHacks.Basic[30].HiddenLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 					clonedChar:PivotTo(newLoc)
 				end
 

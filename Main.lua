@@ -5701,6 +5701,7 @@ C.AvailableHacks ={
 				clonedChar.Name = "InviClone"
 				clonedChar:AddTag("RemoveOnDestroy")
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
+				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 				orgChar.Archivable = false
 				orgChar:PivotTo(CFrame.new(0,1e4,0))
 				removeAllClasses(clonedChar,"Sound")
@@ -5711,7 +5712,6 @@ C.AvailableHacks ={
 
 				clonedChar.Parent = workspace
 
-				--C.plr.Character = clonedChar
 				camera.CameraSubject = clonedHuman
 
 				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(function()
@@ -5827,6 +5827,9 @@ C.AvailableHacks ={
 			end,
 			["MyStartUp"] = function()
 				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
+				while not plr:HasAppearanceLoaded() do
+					plr.CharacterAppearanceLoaded:Wait()
+				end
 				if C.enHacks["Basic_InvisibleChar"] then
 					C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				end

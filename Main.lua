@@ -5118,6 +5118,7 @@ C.AvailableHacks ={
 			["Active"] = false,
 			["Universes"]={"Global"},
 			["Functs"]={},
+			["Deb"]=1,
 			["HiddenLocation"] = CFrame.new(0,1e4,0),
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
@@ -5818,7 +5819,7 @@ C.AvailableHacks ={
 				local function animTrackAdded(animTrack)
 					local animation = animTrack.Animation
 					if animation.AnimationId ~= "rbxassetid://961932719" then
-						return print("Invalid In",animation.AnimationId)
+						return
 					end
 					local myTrack = SavedAnimsTracks[animation.AnimationId]
 					if not myTrack then
@@ -5868,6 +5869,7 @@ C.AvailableHacks ={
 				if enabled == C.AvailableHacks.Basic[30].Active and not characterSpawn then
 					return
 				end
+				C.AvailableHacks.Basic[30].Active = enabled
 				if enabled then
 					C.AvailableHacks.Basic[30].RunFunction(C.AvailableHacks.Basic[30].Functs)
 				else
@@ -5889,7 +5891,6 @@ C.AvailableHacks ={
 						C.ClonedChar = nil
 					end
 				end
-				C.AvailableHacks.Basic[30].Active = enabled
 			end,
 			["MyDeath"] = function()
 				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
@@ -8845,7 +8846,15 @@ local refreshTypes = ({
 local initilizationTypes = ({
 	ExTextButton = (function(hackInfo)
 		local hackFrame = hackInfo.MiniHackFrame;
+		local lastClick = os.clock()-10
 		local function cycle(delta)
+			if hackInfo.Deb then
+				local currentTime = os.clock()
+				if currentTime - lastClick < hackInfo.Deb then
+					return
+				end
+				lastClick = currentTime
+			end
 			local totalNum, shortCutNum = 0, 0;
 			for Type,Vals in pairs(hackInfo.Options) do
 				if not Vals.Locked then

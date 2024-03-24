@@ -474,7 +474,7 @@ local function StartBetterConsole()
 				end
 			end
 		end
-		BetterConsoleList.Size = includeALL and UDim2.fromScale(0,.9) or UDim2.fromScale(0,.846)
+		BetterConsoleList.Size = includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..currentText..'"'
 		if visibleMessages==0 then
 			if allMessages > 0 then

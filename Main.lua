@@ -5704,9 +5704,9 @@ C.AvailableHacks ={
 				orgChar.Archivable = false
 				orgChar:PivotTo(CFrame.new(0,1e4,0))
 				removeAllClasses(clonedChar,"Sound")
-				for s = 2, 1, -1 do
+				--for s = 2, 1, -1 do
 					RunS.RenderStepped:Wait()
-				end
+				--end
 				orgChar.PrimaryPart.Anchored = true
 
 				clonedChar.Parent = workspace

@@ -1162,11 +1162,11 @@ local function createCommandLine(message,printType)
 	ConsoleButton.Visible=true;
 	if printType then
 		if printType == print then
-			print(message)
+			printType(message)
 		elseif printType==warn then
-			warn(message)
+			printType(message)
 		elseif printType==error then
-			pcall(error,'<font color="rgb(255,0,0)">'..debug.traceback("ERROR:")..'</font>')
+			pcall(printType,'<font color="rgb(255,0,0)">'..debug.traceback("ERROR:")..'</font>')
 		end
 	end
 	while Console.AbsoluteCanvasSize.Y>Console.AbsoluteWindowSize.Y*5 do
@@ -3498,39 +3498,41 @@ AvailableHacks ={
 			["Default"]=true,
 			["Funct"]=nil,
 			["DontActivate"] = true,
-			--["Universes"]={"Global"},
+			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
-				local ScreenGui = PlayerGui:WaitForChild("ScreenGui");
-				local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
-				local BeastPowerMenuFrame = ScreenGui:WaitForChild("BeastPowerMenuFrame")
-				local SurvivorStartFrame = ScreenGui:WaitForChild("SurvivorStartFrame")
-				local IsCheckingLoadData = plr:WaitForChild("IsCheckingLoadData");
-				local function changedFunct()
-					if enHacks.Util_Fix then
-						MenusTabFrame.Visible=not IsCheckingLoadData.Value;
+				if gameUniverse=="Flee" then
+					local ScreenGui = PlayerGui:WaitForChild("ScreenGui");
+					local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
+					local BeastPowerMenuFrame = ScreenGui:WaitForChild("BeastPowerMenuFrame")
+					local SurvivorStartFrame = ScreenGui:WaitForChild("SurvivorStartFrame")
+					local IsCheckingLoadData = plr:WaitForChild("IsCheckingLoadData");
+					local function changedFunct()
+						if enHacks.Util_Fix then
+							MenusTabFrame.Visible=not IsCheckingLoadData.Value;
+						end
 					end
-				end
-				setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
-				changedFunct()
-				local function beastScreen()
-					if enHacks.Util_Fix then
-						BeastPowerMenuFrame.Visible=false;
+					setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
+					changedFunct()
+					local function beastScreen()
+						if enHacks.Util_Fix then
+							BeastPowerMenuFrame.Visible=false;
+						end
 					end
-				end
-				setChangedAttribute(BeastPowerMenuFrame, "Visible", (newValue and beastScreen or nil));
-				beastScreen()
-				local function survivorScreen()
-					if enHacks.Util_Fix then
-						SurvivorStartFrame.Visible=false;
+					setChangedAttribute(BeastPowerMenuFrame, "Visible", (newValue and beastScreen or nil));
+					beastScreen()
+					local function survivorScreen()
+						if enHacks.Util_Fix then
+							SurvivorStartFrame.Visible=false;
+						end
 					end
+					setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
+					survivorScreen()
 				end
-				setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
-				survivorScreen()
 				
 				local chatTextLabel = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
 
 				if (UIS.TouchEnabled and newValue) and not AvailableHacks.Utility[3].Active then
-					local chatButton = StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
+					local chatButton = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
 					--local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					local action1 = (UIS.MouseEnabled and UIS.TouchEnabled  and "select") 
@@ -3552,7 +3554,9 @@ AvailableHacks ={
 							chatBar.TextTransparency = 0
 							AvailableHacks.Utility[3].Funct=saveConnection
 							RunS.RenderStepped:Wait()
-							chatButton.Image = "rbxassetid://5227476720"--set the image to visible!
+							if chatButton then
+								chatButton.Image = "rbxassetid://5227476720"--set the image to visible!
+							end
 							chatBar:CaptureFocus()
 							task.wait(2.5)
 							if AvailableHacks.Utility[3].Funct==saveConnection then
@@ -7545,21 +7549,17 @@ PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("Pl
 --DELETION--
 clear = function(isManualClear)
 	isCleared=true
-	warn("Clear Started")
 	if HackGUI then
 		HackGUI.Enabled=false
 	end
 	if DraggableMain then DraggableMain:Disable() end
-	warn("Drag Finish")
 	--plr:SetAttribute(getID,nil)
 	if (AvailableHacks.Bot[15] and AvailableHacks.Bot[15].CurrentPath~=nil) then
 		AvailableHacks.Bot[15].CurrentPath:Stop()
 	end
-	warn("Runner Finish")
 	if gameName == "FleeMain" then
 		AvailableHacks.Utility[8].CleanUp()--beast hammer
 	end
-	warn("Beast Finish")
 	--[[for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
 		if obj~=nil then
 			for _, tag in ipairs(obj:GetTags()) do
@@ -7569,7 +7569,6 @@ clear = function(isManualClear)
 		end;
 	end;--]]
 	DestroyAllTaggedObjects("RemoveOnDestroy")
-	warn("RemoveOnDestroy Finish")
 	for userID,functList in pairs(playerEvents) do
 		for num,funct in pairs(functList or {}) do
 			funct:Disconnect();
@@ -7602,18 +7601,13 @@ clear = function(isManualClear)
 	else
 		getgenv().enHacks = table.clone(enHacks)
 	end
-	warn("Flee Stuff Finish")
 	saveSaveData()--save before we delete stuff!
 	for hackName,enabled in pairs(enHacks) do
 		enHacks[hackName]=nil;  --disables all running hacks to stop them!
 	end;--effectively disables all hacks!
-	warn("1 Finish")
 	AvailableHacks.Basic[4].ActivateFunction(false);--disble hacks
-	warn("2 Finish")
 	AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
-	warn("3 Finish")
 	AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
-	warn("4 Finish")
 	human:SetAttribute("OverrideSpeed",nil)
 	
 	if AvailableHacks.Blatant and AvailableHacks.Beast[2] and gameUniverse=="Flee" then
@@ -7621,13 +7615,10 @@ clear = function(isManualClear)
 		warn("5 Finish")
 		AvailableHacks.Beast[2].Crawl(false);--disable crawl
 	end
-	warn("6 Finish")
 	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
-	warn("7 Finish")
 	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do
 		tagPart:SetAttribute("Trigger_AllowException",nil)
 	end
-	warn("8 Finish")
 	local allTheTages = {"WalkThruDoor","Computer","Trigger","Capsule","DoorAndExit","Door","DoorTrigger","Exit","Trigger_AllowException"}
 	for num,tagName in ipairs(allTheTages) do
 		local loopList = CS:GetTagged(tagName)
@@ -7635,7 +7626,6 @@ clear = function(isManualClear)
 			CS:RemoveTag(tagPart,tagName)
 		end--]]
 	end
-	warn("9 Finish")
 	for category, categoryList in pairs(AvailableHacks) do
 		for index,tbl in pairs(categoryList) do
 			local funcList = tbl.Functs or {}
@@ -7648,20 +7638,17 @@ clear = function(isManualClear)
 			end
 		end
 	end
-	warn("10 Finish")
 	for num,funct in ipairs(functs) do
 		funct:Disconnect()
 		funct=nil
 	end
 	hackChanged:Fire()
 	hackChanged:Destroy()
-	warn("11 Finish")
 	CAS:UnbindAction("hack_jump"..saveIndex)
 	CAS:UnbindAction("Crawl"..saveIndex)
 	CAS:UnbindAction("CloseMenu"..saveIndex)
 	CAS:UnbindAction("PushSlash"..saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..saveIndex)
-	warn("12 Finish")
 	
 	local searchList = objectFuncts or {}
 	for obj,objectEventsList in pairs(searchList) do
@@ -7673,7 +7660,6 @@ clear = function(isManualClear)
 			end
 		end
 	end
-	warn("objectFuncts Finish")
 
 
 	getgenv()["ActiveScript"..getID][saveIndex] = nil
@@ -7682,7 +7668,6 @@ clear = function(isManualClear)
 	DS:AddItem(HackGUI,1)
 	DS:AddItem(script,1)
 	clear=nil
-	warn("Clear Finish",saveIndex,tostring(getgenv()["ActiveScript"..getID][saveIndex]))
 end
 
 --Anti Main Check:
@@ -7719,10 +7704,10 @@ if previousCopy then
 	local currentSize = getDictLength(getgenv()["ActiveScript"..getID])
 	while currentSize>0 do
 		changedEvent.Event:Wait()
-		while currentSize == getDictLength(getgenv()["ActiveScript"..getID]) do
+		--[[while currentSize == getDictLength(getgenv()["ActiveScript"..getID]) do
 			warn("waiting",getDictLength(getgenv()["ActiveScript"..getID]),currentSize,getgenv()["ActiveScript"..getID])
 			RunS.RenderStepped:Wait()
-		end
+		end--]]
 		currentSize = getDictLength(getgenv()["ActiveScript"..getID])
 		if isCleared then
 			DS:AddItem(script,1)
@@ -7732,8 +7717,8 @@ if previousCopy then
 		if os.clock()-startTime>=maxWaitTime then
 			warn(( "Maximum Wait Time Reached ("..maxWaitTime.."s), Starting Script..." ))
 			break
-		elseif getDictLength(getgenv()["ActiveScript"..getID])>0 then
-			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!",print)
+		elseif currentSize>0 then
+			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
 		end
 	end
 	changedEvent:Destroy()

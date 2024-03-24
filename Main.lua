@@ -5741,7 +5741,9 @@ C.AvailableHacks ={
 				table.insert(connections,orgChar.Head:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				table.insert(connections,orgChar.Torso:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				table.insert(connections,orgChar.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
-				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(doCFrameChanged))
+				table.insert(connections,human:GetPropertyChangedSignal("MoveDirection"):Connect(function()
+					clonedHuman.MoveDirection = human.MoveDirection
+				end))
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						if clonedHuman.FloorMaterial ~= Enum.Material.Air then

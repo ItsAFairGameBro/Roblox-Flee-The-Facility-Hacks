@@ -28,7 +28,7 @@ functs,refreshEnHack = {}, {}
 --Map,char,Beast,TestPart,ToggleTag,clear,saveIndex,AvailableHacks,ResetEvent,CommandBarLine,Console,ConsoleButton,PlayerControlModule
 --	= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
 --comma_value=nil
-local clear,saveIndex
+local clear,saveIndex,AvailableHacks
 local myTSM,mySSM
 local plr = PS.LocalPlayer
 local human

@@ -6074,7 +6074,7 @@ C.AvailableHacks ={
 				end
 				table.insert(C.functs,(human.Running:Connect(HumanRunningFunction)))
 				local inputToCrawlFunction_INPUT = UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2)
-				C.AvailableHacks.Beast[2].Crawl(inputToCrawlFunction_INPUT)
+				C.AvailableHacks.Beast[2].Crawl(inputToCrawlFunction_INPUT,true)
 			end,
 			["MyPlayerAdded"]=function()
 				local function crawlFunction()
@@ -6089,7 +6089,7 @@ C.AvailableHacks ={
 				end))
 			end,
 			["IsCrawling"]=false,
-			["Crawl"]=function(set)
+			["Crawl"]=function(set,instant)
 				local TSM = plr:WaitForChild("TempPlayerStatsModule");
 				local animTrack = C.AvailableHacks.Beast[2].LoadedAnim;
 				local shouldReturn = not animTrack or not human or human.Health <= 0;
@@ -6100,7 +6100,7 @@ C.AvailableHacks ={
 				if argument then
 					local hipHeight = -2;
 					human.HipHeight = hipHeight;
-					local arg1 = 0.1;
+					local arg1 = instant and 0 or 0.1;
 					local arg2 = 1.0;
 					local arg3 = 0.0;
 					animTrack:Play(arg1, arg2, arg3);

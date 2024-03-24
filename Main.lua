@@ -5722,6 +5722,7 @@ C.AvailableHacks ={
 						if clonedHuman.FloorMaterial ~= Enum.Material.Air then
 							if isJumpBeingHeld then
 								clonedHuman:ChangeState(Enum.HumanoidStateType.Jumping)
+								RunS.RenderStepped:Wait()
 							else
 								jumpChangedEvent.Event:Wait()
 							end

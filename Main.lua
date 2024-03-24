@@ -7372,7 +7372,7 @@ AvailableHacks ={
 				refreshEnHack["Cmds_HackAllPCs"](false)
 			end,
 			["CleanUp"]=function()
-				if isCleared then
+				if isCleared or refreshEnHack["Cmds_HackAllPCs"] then
 					return
 				end
 				refreshEnHack["Cmds_HackAllPCs"](false)
@@ -7549,17 +7549,6 @@ clear = function(isManualClear)
 		AvailableHacks.Utility[8].CleanUp()--beast hammer
 	end
 	warn("Beast Finish")
-	local searchList = objectFuncts or {}
-	for obj,objectEventsList in pairs(searchList) do
-		local insideSearchList = objectEventsList or {}
-		for value,funct in pairs(insideSearchList) do
-			if funct~=nil then
-				funct:Disconnect()
-				funct=nil
-			end
-		end
-	end
-	warn("objectFuncts Finish")
 	--[[for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
 		if obj~=nil then
 			for _, tag in ipairs(obj:GetTags()) do
@@ -7662,6 +7651,19 @@ clear = function(isManualClear)
 	CAS:UnbindAction("PushSlash"..saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..saveIndex)
 	warn("12 Finish")
+	
+	local searchList = objectFuncts or {}
+	for obj,objectEventsList in pairs(searchList) do
+		local insideSearchList = objectEventsList or {}
+		for value,funct in pairs(insideSearchList) do
+			if funct~=nil then
+				funct:Disconnect()
+				funct=nil
+			end
+		end
+	end
+	warn("objectFuncts Finish")
+
 
 	getgenv()["ActiveScript"..getID][saveIndex] = nil
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
@@ -7712,6 +7714,8 @@ if previousCopy then
 		if os.clock()-startTime>=maxWaitTime then
 			warn(( "Maximum Wait Time Reached ("..maxWaitTime.."s), Starting Script..." ))
 			break
+		elseif getDictLength(getgenv()["ActiveScript"..getID])>0 then
+			warn("Dict Length Still Larger Than Zero After One Cycle!")
 		end
 	end
 	changedEvent:Destroy()

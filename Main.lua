@@ -9041,7 +9041,7 @@ local function CharacterAdded(theirChar)
 	end
 	C.objectFuncts[theirHumanoid] = C.objectFuncts[theirHumanoid] or {}
 	C.objectFuncts[theirHumanoid]["Died"] = theirHumanoid.Died:Connect(function()
-		defaultFunction(isMyChar and "MyDeath" or "OthersDeath")
+		defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
 	end)
 end
 local function CharacterRemoving(theirPlr,theirChar)

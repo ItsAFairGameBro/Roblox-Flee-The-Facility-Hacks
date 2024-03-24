@@ -5744,6 +5744,9 @@ C.AvailableHacks ={
 				camera.CameraSubject = clonedHuman
 				
 				local function doCFrameChanged()
+					if not orgChar.Parent then
+						return
+					end
 					local newLoc = orgChar:GetPivot()
 					--print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude))
 					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude < 50 then
@@ -5788,7 +5791,7 @@ C.AvailableHacks ={
 					local newObject = clonedChar:WaitForChild(propTable[1])
 					local function updFunction()
 						if isCleared then
-							warn("[AHH]: Property Running After Shutdown: "..table.concat(propTable,"."))
+							--warn("[AHH]: Property Running After Shutdown: "..table.concat(propTable,"."))
 							return
 						end
 						clonedChar[propTable[1]][propertyToReplicate] = oldObject[propertyToReplicate]

@@ -4457,7 +4457,8 @@ C.AvailableHacks ={
 				}
 				local RunS = game:GetService("RunService")
 
-				local hrp = C.char:WaitForChild("HumanoidRootPart")
+				local hrp = C.char:WaitForChild("HumanoidRootPart",15)
+				if not hrp then return end
 				local animator = human:WaitForChild("Animator")
 
 				while (not C.char.Parent) do
@@ -6545,7 +6546,9 @@ C.AvailableHacks ={
 				
 				task.spawn(function()
 					RunS.RenderStepped:Wait()
-					orgChar.PrimaryPart.Anchored = true
+					if orgChar and orgChar.PrimaryPart then
+						orgChar.PrimaryPart.Anchored = true
+					end
 				end)
 
 				clonedChar.Parent = workspace
@@ -6679,6 +6682,7 @@ C.AvailableHacks ={
 			end,
 			["ActivateFunction"] = function(enabled, characterSpawn)
 				if enabled == C.AvailableHacks.Basic[30].Active and not characterSpawn then
+					print("Cancelled!")
 					return
 				end
 				C.AvailableHacks.Basic[30].Active = enabled

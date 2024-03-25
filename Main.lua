@@ -189,6 +189,7 @@ local function StartBetterConsole()
 	SearchConsoleTextBox.BorderSizePixel = 0
 	SearchConsoleTextBox.Position = UDim2.new(0.0199999996, 0, 0, 0)
 	SearchConsoleTextBox.Size = UDim2.new(0.320734084, 0, 0.0500000007, 0)
+	SearchConsoleTextBox.ShowNativeInput = false
 	SearchConsoleTextBox.ZIndex = 5001
 	SearchConsoleTextBox.Font = Enum.Font.Arial
 	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(1,1,1)

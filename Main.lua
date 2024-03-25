@@ -177,6 +177,13 @@ end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()
 	--GUI CREATION FOR BETTER CONSOLE:
+	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load ",
+		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:","MeshContentProvider failed to process "
+	}
+	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
+	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
+		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done"
+	}
 
 	local BetterConsole = Instance.new("Frame")
 	C.BetterConsole = BetterConsole
@@ -646,13 +653,6 @@ local function StartBetterConsole()
 	end))
 	--if isStudio then
 	--CHECKCALLER is not working correctly, so we'll take over from here
-	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load ",
-		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:"
-	}
-	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
-	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
-		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done"
-	}
 	local function checkmycaller(msg)
 		for _, text in ipairs(BetterConsole_CheckCaller_MsgExact) do
 			if text==msg then
@@ -6724,10 +6724,9 @@ C.AvailableHacks ={
 				end
 				local Start = os.clock()
 				game:GetService("ContentProvider"):PreloadAsync({C.char})
-				print(("Character Appearence Loaded In %.2f!"):format(os.clock()-Start))
-				task.wait(.5)
+				--print(("Character Appearence Loaded In %.2f!"):format(os.clock()-Start))
+				--task.wait(.5)
 				if C.enHacks["Basic_InvisibleChar"] then
-					print("Function Called!")
 					C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				end
 			end,

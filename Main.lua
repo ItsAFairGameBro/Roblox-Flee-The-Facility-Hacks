@@ -646,7 +646,7 @@ local function StartBetterConsole()
 	end))
 	--if isStudio then
 	--CHECKCALLER is not working correctly, so we'll take over from here
-	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load sound ",
+	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load ",
 		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:"
 	}
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
@@ -6628,8 +6628,8 @@ C.AvailableHacks ={
 				for _, basePart in ipairs(clonedChar:GetDescendants()) do
 					if basePart.Name=="Weight" then
 						basePart:Destroy()
-					elseif basePart:IsA("BasePart") and basePart.Name ~= "HumanoidRootPart" --then
-						and basePart.Parent == clonedChar then
+					elseif basePart:IsA("BasePart") and basePart.Name ~= "HumanoidRootPart" then
+						--and basePart.Parent == clonedChar then
 						--local local function updLocalTrans()
 						basePart.Transparency = .7
 						--end
@@ -6721,7 +6721,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
 			end,
 			["MyPlayerAdded"] = function()
-				task.wait(1.5)
+				task.wait(1.5)--TODO HERE
 				C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				C.AvailableHacks.Basic[30].Funct = plr.CharacterAppearanceLoaded:Connect(function()
 					if C.enHacks["Basic_InvisibleChar"] then

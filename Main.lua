@@ -9892,10 +9892,10 @@ local function CharacterAdded(theirChar,firstRun)
 	end
 	TPStack = {}--clears TPStack!
 	isTeleporting = false--if its still teleporting then stap it!
+	local HRP=theirChar:WaitForChild("HumanoidRootPart",1) or theirChar.PrimaryPart
 	task.wait()
 	local theirPlr=PS:GetPlayerFromCharacter(theirChar)
 	local theirHumanoid=theirChar:WaitForChild("Humanoid")
-	local hrp=theirChar:WaitForChild("HumanoidRootPart",1) or theirChar.PrimaryPart
 
 	local isMyChar=theirPlr==plr
 	if isMyChar then
@@ -9904,6 +9904,10 @@ local function CharacterAdded(theirChar,firstRun)
 	end
 	local inputFunctions = ({theirPlr,theirChar,firstRun})
 	defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
+	C.objectFuncts[theirHumanoid] = C.objectFuncts[theirHumanoid] or {}
+	C.objectFuncts[theirHumanoid]["Died"] = theirHumanoid.Died:Connect(function()
+		defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
+	end)
 	if gameUniverse=="Flee" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		if theirTSM then
@@ -9912,11 +9916,15 @@ local function CharacterAdded(theirChar,firstRun)
 				BeastAdded(theirPlr,theirPlr.Character);
 			end
 		end
+		if gameName=="FleeMain" and C.Map and C.Map.Parent
+			and select(2,isInGame(theirChar)) == "Runner" then
+			local SpawnPad = C.Map:WaitForChild("OBSpawnPad")
+			if SpawnPad then
+				teleportMyself(SpawnPad:GetPivot() + Vector3.new(0,getHumanoidHeight(human),0))
+				print("My Teleport Function :P")
+			end
+		end
 	end
-	C.objectFuncts[theirHumanoid] = C.objectFuncts[theirHumanoid] or {}
-	C.objectFuncts[theirHumanoid]["Died"] = theirHumanoid.Died:Connect(function()
-		defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
-	end)
 end
 local function CharacterRemoving(theirPlr,theirChar)
 	if isCleared then 

@@ -1165,8 +1165,10 @@ local function teleportMyself(new)
 	end
 end
 local function StringWaitForChild(instance,str2Parse,duration)
-	for num, stringLeft in ipairs(str2Parse:split(".")) do
-		instance = instance:WaitForChild(stringLeft,duration)
+	if str2Parse ~= "" then -- return the instance if the tree is empty!
+		for num, stringLeft in ipairs(str2Parse:split(".")) do
+			instance = instance:WaitForChild(stringLeft,duration)
+		end
 	end
 	return instance
 end
@@ -6562,11 +6564,18 @@ C.AvailableHacks ={
 					orgChar:PivotTo(C.AvailableHacks.Basic[30].HiddenLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 					clonedChar:PivotTo(newLoc)
 				end
-
-				table.insert(connections,orgChar.Head:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
-				table.insert(connections,(clonedHuman.RigType == Enum.HumanoidRigType.R6 and orgChar.Torso or orgChar.UpperTorso)
+				
+				local Head = orgChar:FindFirstChild("Head")
+				local CenterPart = orgChar:FindFirstChild(clonedHuman.RigType == Enum.HumanoidRigType.R6 and "Torso" or "UpperTorso")
+				local HRP = orgChar:FindFirstChild("HumanoidRootPart")
+				if not Head or not CenterPart then
+					return
+				end
+				
+				table.insert(connections,Head:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
+				table.insert(connections,(CenterPart)
 					:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
-				table.insert(connections,orgChar.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
+				table.insert(connections,HRP:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						local MoveDirection = C.PlayerControlModule:GetMoveVector()
@@ -6702,6 +6711,7 @@ C.AvailableHacks ={
 				local Start = os.clock()
 				game:GetService("ContentProvider"):PreloadAsync({C.char})
 				print(("Character Appearence Loaded In %.2f!"):format(os.clock()-Start))
+				task.wait(.5)
 				if C.enHacks["Basic_InvisibleChar"] then
 					print("Function Called!")
 					C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])

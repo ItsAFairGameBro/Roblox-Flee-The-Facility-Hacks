@@ -682,16 +682,16 @@ local function StartBetterConsole()
 		["&"] = "&amp;"
 	}
 	local function formatMessage(message,messageType,isFromMe,customTime)
-		if not message:find("&lt;/") or not message:find("&gt;") then -- Check to see if it is rich text formatted!
-			for toReplace,escapedStr in pairs(escapeCharacters) do
-				message = message:gsub(toReplace,escapedStr)
-			end
-		end
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromMe)
 	end
 
 	local function onMessageOut(message, messageType,...)
+		if not message:find("&lt;/") or not message:find("&gt;") then -- Check to see if it is rich text formatted!
+			for toReplace,escapedStr in pairs(escapeCharacters) do
+				message = message:gsub(toReplace,escapedStr)
+			end
+		end
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
 		local isFromMe = checkmycaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"

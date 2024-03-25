@@ -687,7 +687,7 @@ local function StartBetterConsole()
 	end
 
 	local function onMessageOut(message, messageType,...)
-		if not message:find("&lt;/") or not message:find("&gt;") then -- Check to see if it is rich text formatted!
+		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
 			for toReplace,escapedStr in pairs(escapeCharacters) do
 				message = message:gsub(toReplace,escapedStr)
 			end

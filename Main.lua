@@ -3725,7 +3725,7 @@ C.AvailableHacks ={
 					survivorScreen()
 				end
 
-				local chatTextLabel = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
+				local chatTextLabel = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
 
 				if (UIS.TouchEnabled and newValue) and not C.AvailableHacks.Utility[3].Active then
 					local chatButton = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
@@ -3733,7 +3733,9 @@ C.AvailableHacks ={
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					local action1 = (UIS.MouseEnabled and UIS.TouchEnabled  and "select") 
 						or (UIS.MouseEnabled and "click") or (UIS.TouchEnabled and "tap") or "<idk>"
-					chatTextLabel.Text = "To chat ".. action1 .." here".. (UIS.KeyboardEnabled and ' or press "/" key' or "")
+					if chatTextLabel then
+						chatTextLabel.Text = "To chat ".. action1 .." here".. (UIS.KeyboardEnabled and ' or press "/" key' or "")
+					end
 					--print("CHATMAIN",chatMain)
 					local function slashPressed(name,state)
 						if state == Enum.UserInputState.Begin and not UIS:GetFocusedTextBox() then
@@ -5816,7 +5818,7 @@ C.AvailableHacks ={
 				local SavedAnimsTracks = {}
 				local runningSpeed = human.MoveDirection.Magnitude > 1e-3 and 3 or 0
 				local canRun = false
-				local function animTrackAdded(animTrack)
+				local function animTrackAdded(animTrack,instant)
 					local animation = animTrack.Animation
 					if animation.AnimationId ~= "rbxassetid://961932719" then
 						return
@@ -5834,7 +5836,7 @@ C.AvailableHacks ={
 
 						local function update()
 							if animTrack.IsPlaying and not myTrack.IsPlaying then
-								myTrack:Play(0, 1, runningSpeed>.5 and 2 or 0)
+								myTrack:Play(instant and 0 or 0.1, 1, runningSpeed>.5 and 2 or 0)
 							elseif not animTrack.IsPlaying and myTrack.IsPlaying then
 								myTrack:Stop()
 							end
@@ -5849,7 +5851,7 @@ C.AvailableHacks ={
 				end
 				table.insert(connections, human.Animator.AnimationPlayed:Connect(animTrackAdded))
 				for _, animTrack in ipairs(human.Animator:GetPlayingAnimationTracks()) do
-					task.spawn(animTrackAdded,animTrack)
+					task.spawn(animTrackAdded,animTrack,true)--the "true" is for it to be instant!
 				end
 				task.spawn(doAnimate,clonedChar,connections)
 				table.insert(connections, clonedHuman.Running:Connect(function(speed)

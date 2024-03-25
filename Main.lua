@@ -4321,7 +4321,7 @@ C.AvailableHacks ={
 			["ToggleFunct"]=nil,
 			["MovementFuncts"]={},
 			["FlyScript"]=function()
-				local speed = 2
+				local speed = 4
 				local allowedID={
 					["rbxassetid://1416947241"]=true,
 					["rbxassetid://939025537"]=true,
@@ -4426,6 +4426,7 @@ C.AvailableHacks ={
 				table.insert(C.AvailableHacks.Basic[4].MovementFuncts,animator.AnimationPlayed:Connect(animatorPlayedFunction))
 			end,
 			["NoclipScript"] = (function()
+				local speed = 4
 				local i = 0
 
 				local function setCollisionGroupRecursive(object,flying)
@@ -4447,7 +4448,6 @@ C.AvailableHacks ={
 					end
 				end
 
-				local speed = 2
 				local allowedID={
 					["rbxassetid://1416947241"]=true,
 					["rbxassetid://939025537"]=true,
@@ -5151,6 +5151,7 @@ C.AvailableHacks ={
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				newHuman:ChangeState(oldHuman:GetState())
+				oldHuman:ChangeState(Enum.HumanoidStateType.Physics)
 				local clonedHRP, currentHRP = clonedChar:FindFirstChild("HumanoidRootPart"), currentChar:FindFirstChild("HumanoidRootPart")
 				if clonedHRP and currentHRP then
 					clonedHRP.AssemblyLinearVelocity = currentHRP.AssemblyLinearVelocity

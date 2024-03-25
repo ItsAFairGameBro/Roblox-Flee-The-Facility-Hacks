@@ -6699,9 +6699,11 @@ C.AvailableHacks ={
 				if firstRun then
 					C.AvailableHacks.Basic[30].ActivateFunction(false,true)
 				end
+				local Start = os.clock()
 				game:GetService("ContentProvider"):PreloadAsync({C.char})
-				print("Character Appearence Loaded!")
+				print(("Character Appearence Loaded In %.2f!"):format(os.clock()-Start))
 				if C.enHacks["Basic_InvisibleChar"] then
+					print("Function Called!")
 					C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				end
 			end,

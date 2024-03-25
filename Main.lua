@@ -3727,7 +3727,7 @@ C.AvailableHacks ={
 
 				local chatTextLabel = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
 
-				if (UIS.TouchEnabled and newValue) and not C.AvailableHacks.Utility[3].Active then
+				if (UIS.TouchEnabled and newValue) and not C.AvailableHacks.Utility[3].Active and gameUniverse=="Flee" then
 					local chatButton = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
 					--local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")

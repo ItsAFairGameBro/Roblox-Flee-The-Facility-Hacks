@@ -5156,7 +5156,7 @@ C.AvailableHacks ={
 				local function doAnimate(Figure,connections2Add)
 					-- humanoidAnimatePlayEmote.lua
 
-					local Torso = Figure:WaitForChild("Torso")
+					local Torso = Enum.HumanoidRigType.R15 and Figure:WaitForChild("UpperTorso") or Figure:WaitForChild("Torso")
 					local RightShoulder = Torso:WaitForChild("Right Shoulder")
 					local LeftShoulder = Torso:WaitForChild("Left Shoulder")
 					local RightHip = Torso:WaitForChild("Right Hip")

@@ -5054,7 +5054,8 @@ C.AvailableHacks ={
 				end
 				local shouldBeInvi = ((object:GetAttribute("OrgTrans") or object.Transparency)>=.95 and object.CanCollide) 
 					or (C.enHacks.Blatant_WalkThruDoors and isDoor) or (C.enHacks.Blatant_WalkThruWalls and isWall)
-				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=GetAbsoluteWorldSize(object).Y or isDoor or isWall) then
+				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=GetAbsoluteWorldSize(object).Y or isDoor or isWall)
+					and not object.Parent:FindFirstChild("Humanoid") then
 					if object:GetAttribute("OrgColor")==nil then
 						object:SetAttribute("OrgColor",object.Color)
 					end

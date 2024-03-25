@@ -140,11 +140,11 @@ local function createToggleButton(Toggle, ExTextButton)
 	Toggle.Size = UDim2.new(0.443029076, 0, 1, 0);
 end;
 C.RichTextEscapeCharacters = {
-	["<"] = "&lt;",
-	[">"] = "&gt;",
-	['"'] = "&quot;",
-	["'"] = "&apos;",
-	["&"] = "&amp;"
+	{"&","&amp;"},
+	{"<","&lt;"},
+	{">","&gt;"},
+	{'"',"&quot;"},
+	{"'","&apos"},
 }
 function C.BetterGSub(orgString,searchString,replacement,settings)
 	local lastChars = ""
@@ -225,7 +225,7 @@ local function StartBetterConsole()
 	SearchConsoleTextBox.BorderSizePixel = 0
 	SearchConsoleTextBox.Position = UDim2.new(0.0199999996, 0, 0, 0)
 	SearchConsoleTextBox.Size = UDim2.new(0.320734084, 0, 0.0500000007, 0)
-	SearchConsoleTextBox.ShowNativeInput = false
+	SearchConsoleTextBox.ShowNativeInput = true
 	SearchConsoleTextBox.ZIndex = 5001
 	SearchConsoleTextBox.Font = Enum.Font.Arial
 	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(1,1,1)
@@ -697,8 +697,8 @@ local function StartBetterConsole()
 
 	local function onMessageOut(message, messageType,...)
 		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
-			for toReplace,escapedStr in pairs(C.RichTextEscapeCharacters) do
-				message = C.BetterGSub(message,toReplace,escapedStr) --message:gsub(toReplace,escapedStr)
+			for _,escapeData in ipairs(C.RichTextEscapeCharacters) do
+				message = C.BetterGSub(message,table.unpack(escapeData)) --message:gsub(toReplace,escapedStr)
 			end
 		end
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color

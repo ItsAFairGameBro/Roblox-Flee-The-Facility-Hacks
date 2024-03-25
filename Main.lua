@@ -6709,7 +6709,7 @@ C.AvailableHacks ={
 				end
 			end,
 			["MyStartUp"] = function(_,_,firstRun)
-				if firstRun then
+				if not firstRun then
 					C.AvailableHacks.Basic[30].ActivateFunction(false,true)
 				end
 				local Start = os.clock()

@@ -682,7 +682,7 @@ local function StartBetterConsole()
 		["&"] = "&amp;"
 	}
 	local function formatMessage(message,messageType,isFromMe,customTime)
-		if not message:find("</") or not message:find(">") then -- Check to see if it is rich text formatted!
+		if not message:find("&lt;/") or not message:find("&gt;") then -- Check to see if it is rich text formatted!
 			for toReplace,escapedStr in pairs(escapeCharacters) do
 				message = message:gsub(toReplace,escapedStr)
 			end
@@ -3828,6 +3828,9 @@ C.AvailableHacks ={
 				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
 			end,
 			["MyStartUp"]=function()
+				if gameUniverse ~= "Flee" then
+					return
+				end
 				RunS.RenderStepped:Wait()--Delay it
 				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
 				task.wait(2)

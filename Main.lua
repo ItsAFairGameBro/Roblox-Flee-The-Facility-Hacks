@@ -9503,8 +9503,8 @@ clear = function(isManualClear)
 	getgenv()["ActiveScript"..getID][C.saveIndex] = nil
 
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
-	DS:AddItem(HackGUI,1)
-	DS:AddItem(script,1)
+	HackGUI:Destroy()DS:AddItem(HackGUI,1)
+	if isStudio then DS:AddItem(script,1) end
 	clear=nil
 end
 

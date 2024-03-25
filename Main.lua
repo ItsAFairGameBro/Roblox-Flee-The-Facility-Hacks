@@ -5778,7 +5778,8 @@ C.AvailableHacks ={
 				end
 
 				table.insert(connections,orgChar.Head:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
-				table.insert(connections,orgChar.Torso:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
+				table.insert(connections,(clonedHuman.RigType == Enum.HumanoidRigType.R6 and orgChar.Torso or orgChar.UpperTorso)
+					:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				table.insert(connections,orgChar.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do

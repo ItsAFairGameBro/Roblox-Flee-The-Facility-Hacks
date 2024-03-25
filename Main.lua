@@ -6695,10 +6695,17 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-			["MyDeath"] = function()
-				C.AvailableHacks.Basic[30].ActivateFunction(false,true)
+			["MyStartUp"] = function(_,_,firstRun)
+				if firstRun then
+					C.AvailableHacks.Basic[30].ActivateFunction(false,true)
+				end
+				game:GetService("ContentProvider"):PreloadAsync({C.char})
+				print("Character Appearence Loaded!")
+				if C.enHacks["Basic_InvisibleChar"] then
+					C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
+				end
 			end,
-			["MyPlayerAdded"] = function()
+			--[[["MyPlayerAdded"] = function()
 				task.wait(1.5)--TODO HERE
 				C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				C.AvailableHacks.Basic[30].Funct = plr.CharacterAppearanceLoaded:Connect(function()
@@ -6708,7 +6715,7 @@ C.AvailableHacks ={
 					end
 				end)
 				
-			end,
+			end,--]]
 		},
 		[40]={
 			["Type"] = "ExTextButton",
@@ -9854,7 +9861,7 @@ local function BeastAdded(theirPlr,theirChar)
 		defaultFunction((theirPlr==plr and "MyBeastRemoved" or "OthersBeastRemoved"),(inputArray))
 	end))
 end
-local function CharacterAdded(theirChar)
+local function CharacterAdded(theirChar,firstRun)
 	if isCleared then
 		return
 	end
@@ -9870,7 +9877,7 @@ local function CharacterAdded(theirChar)
 		C.char=theirChar
 		human=theirHumanoid
 	end
-	local inputFunctions = ({theirPlr,theirChar})
+	local inputFunctions = ({theirPlr,theirChar,firstRun})
 	defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
 	if gameUniverse=="Flee" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
@@ -9898,7 +9905,7 @@ local function PlayerAdded(theirPlr)
 	local isMe = (plr==theirPlr)
 	C.playerEvents[theirPlr.UserId] = {}
 	if theirPlr.Character~=nil then
-		CharacterAdded(theirPlr.Character)
+		CharacterAdded(theirPlr.Character,true)
 	end
 	local myPlayerAddedInputArray = {theirPlr}
 	local characterFunctionName = "OthersPlayerAdded";

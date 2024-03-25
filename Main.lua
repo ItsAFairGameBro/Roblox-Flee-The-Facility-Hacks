@@ -5151,7 +5151,7 @@ C.AvailableHacks ={
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				newHuman:ChangeState(oldHuman:GetState())
-				oldHuman:ChangeState(Enum.HumanoidStateType.Physics)
+				oldHuman:ChangeState(Enum.HumanoidStateType.Landed)
 				local clonedHRP, currentHRP = clonedChar:FindFirstChild("HumanoidRootPart"), currentChar:FindFirstChild("HumanoidRootPart")
 				if clonedHRP and currentHRP then
 					clonedHRP.AssemblyLinearVelocity = currentHRP.AssemblyLinearVelocity

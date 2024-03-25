@@ -5696,8 +5696,8 @@ C.AvailableHacks ={
 					Humanoid.PlatformStanding:connect(onPlatformStanding)
 					Humanoid.Swimming:connect(onSwimming)
 
-					---- setup emote chat hook
-					game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
+					---- setup emote chat hooktable.insert(connections,
+					table.insert(connections,game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
 						local emote = ""
 						if msg == "/e dance" then
 							emote = dances[math.random(1, #dances)]
@@ -5711,7 +5711,7 @@ C.AvailableHacks ={
 							playAnimation(emote, 0.1, Humanoid)
 						end
 
-					end)
+					end))
 
 					-- main program
 
@@ -6483,7 +6483,7 @@ C.AvailableHacks ={
 					Humanoid.Swimming:connect(onSwimming)
 
 					-- setup emote chat hook
-					game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
+					table.insert(connections,game:GetService("Players").LocalPlayer.Chatted:connect(function(msg)
 						local emote = ""
 						if (string.sub(msg, 1, 3) == "/e ") then
 							emote = string.sub(msg, 4)
@@ -6494,30 +6494,7 @@ C.AvailableHacks ={
 						if (pose == "Standing" and emoteNames[emote] ~= nil) then
 							playAnimation(emote, EMOTE_TRANSITION_TIME, Humanoid)
 						end
-					end)
-
-					-- emote bindable hook
-					script:WaitForChild("PlayEmote").OnInvoke = function(emote)
-						-- Only play emotes when idling
-						if pose ~= "Standing" then
-							return
-						end
-
-						if emoteNames[emote] ~= nil then
-							-- Default emotes
-							playAnimation(emote, EMOTE_TRANSITION_TIME, Humanoid)
-
-							return true, currentAnimTrack
-						elseif typeof(emote) == "Instance" and emote:IsA("Animation") then
-							-- Non-default emotes
-							playEmote(emote, EMOTE_TRANSITION_TIME, Humanoid)
-
-							return true, currentAnimTrack
-						end
-
-						-- Return false to indicate that the emote could not be played
-						return false
-					end
+					end))
 
 					if Character.Parent ~= nil then
 						-- initialize to idle
@@ -6725,6 +6702,7 @@ C.AvailableHacks ={
 				task.wait(1.5)--TODO HERE
 				C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				C.AvailableHacks.Basic[30].Funct = plr.CharacterAppearanceLoaded:Connect(function()
+					print("Character Appearence Loaded!")
 					if C.enHacks["Basic_InvisibleChar"] then
 						C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 					end

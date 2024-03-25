@@ -4321,7 +4321,7 @@ C.AvailableHacks ={
 			["ToggleFunct"]=nil,
 			["MovementFuncts"]={},
 			["FlyScript"]=function()
-				local speed = 6
+				local speed = 2
 				local allowedID={
 					["rbxassetid://1416947241"]=true,
 					["rbxassetid://939025537"]=true,
@@ -4447,7 +4447,7 @@ C.AvailableHacks ={
 					end
 				end
 
-				local speed = 6
+				local speed = 2
 				local allowedID={
 					["rbxassetid://1416947241"]=true,
 					["rbxassetid://939025537"]=true,
@@ -4523,6 +4523,15 @@ C.AvailableHacks ={
 						local right = MoveDirection.X;
 						local up = MoveDirection.Y;
 						local forward = -MoveDirection.Z;
+						if (UIS:IsKeyDown(Enum.KeyCode.Space)) then
+							up += 1
+						end
+						if (UIS:IsKeyDown(Enum.KeyCode.E)) then
+							up += 1
+						end
+						if (UIS:IsKeyDown(Enum.KeyCode.Q)) then
+							up -= 1
+						end
 						local direction = cf.RightVector * right + cf.LookVector * forward + cf.UpVector * up; 
 
 						if (direction:Dot(direction) > 0) then

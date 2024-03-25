@@ -139,6 +139,42 @@ local function createToggleButton(Toggle, ExTextButton)
 	Toggle.TextWrapped = true;
 	Toggle.Size = UDim2.new(0.443029076, 0, 1, 0);
 end;
+C.RichTextEscapeCharacters = {
+	["<"] = "&lt;",
+	[">"] = "&gt;",
+	['"'] = "&quot;",
+	["'"] = "&apos;",
+	["&"] = "&amp;"
+}
+function C.BetterGSub(orgString,searchString,replacement,settings)
+	local lastChars = ""
+	local newText = ""
+	local canReplace = true
+	for s = 1, orgString:len(),1 do
+		local char = orgString:sub(s,s)
+		if settings and settings.IgnoreRichText then
+			if char=="<" then
+				canReplace = false
+			elseif char == ">" then
+				canReplace = true
+			end
+		end
+		local combined = lastChars..char
+		local combinedComparator = (settings and settings.IgnoreCase and combined:lower() or combined)
+		if combinedComparator == searchString:sub(1,combined:len()) and canReplace then
+			lastChars = combined
+			if combinedComparator == searchString then
+				newText..=replacement:format(combined)
+				lastChars=""
+			end
+		else
+			newText..=combined
+			lastChars = ""
+		end
+	end
+	return newText
+end
+--print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()
 	--GUI CREATION FOR BETTER CONSOLE:
 
@@ -492,27 +528,7 @@ local function StartBetterConsole()
 
 					else
 						local lastChars = ""
-						local newText = ""
-						local canReplace = true
-						for s = 1, theirText:len(),1 do
-							local char = theirText:sub(s,s)
-							if char=="<" then
-								canReplace = false
-							elseif char == ">" then
-								canReplace = true
-							end
-							local combined = lastChars..char
-							if combined:lower() == currentText:sub(1,combined:len()) and canReplace then
-								lastChars = combined
-								if combined:lower() == currentText then
-									newText..='<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">'..combined.."</stroke>"
-									lastChars=""
-								end
-							else
-								newText..=combined
-								lastChars = ""
-							end
-						end
+						local newText = C.BetterGSub(theirText,currentText,'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">%s</stroke>',{IgnoreRichText = true, IgnoreCase = true})
 						object.Text=newText
 						willBeVisible = newText ~= theirText--make sure we found an ACTUAL occurance!
 					end
@@ -674,13 +690,6 @@ local function StartBetterConsole()
 			BetterConsole_DoCmd("/bottom",true)
 		end
 	end
-	local escapeCharacters = {
-		["<"] = "&lt;",
-		[">"] = "&gt;",
-		['"'] = "&quot;",
-		["'"] = "&apos;",
-		["&"] = "&amp;"
-	}
 	local function formatMessage(message,messageType,isFromMe,customTime)
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromMe)
@@ -688,8 +697,8 @@ local function StartBetterConsole()
 
 	local function onMessageOut(message, messageType,...)
 		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
-			for toReplace,escapedStr in pairs(escapeCharacters) do
-				message = message:gsub(toReplace,escapedStr)
+			for toReplace,escapedStr in pairs(C.RichTextEscapeCharacters) do
+				message = C.BetterGSub(message,toReplace,escapedStr) --message:gsub(toReplace,escapedStr)
 			end
 		end
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
@@ -5138,6 +5147,11 @@ C.AvailableHacks ={
 					clonedHRP.AssemblyAngularVelocity = Vector3.new()
 				end
 			end,
+			["ReplicateProperties"]={
+				{"Humanoid","HipHeight"},
+				{"Humanoid","WalkSpeed"},
+				{"Humanoid","JumpPower"}
+			},
 			["RunFunction"]=function(connections)
 				local function doAnimate(Figure,connections2Add)
 					-- humanoidAnimatePlayEmote.lua
@@ -5787,21 +5801,16 @@ C.AvailableHacks ={
 						end
 					end
 				end)
-				local replicateProperties = {
-					{"Humanoid","HipHeight"},
-					{"Humanoid","WalkSpeed"},
-					{"Humanoid","JumpPower"}
-				}
-				for _, propTable in ipairs(replicateProperties) do
+				for _, propTable in ipairs(C.AvailableHacks.Basic[30].ReplicateProperties) do
 					local propertyToReplicate = propTable[2]
-					local oldObject = orgChar:WaitForChild(propTable[1])
-					local newObject = clonedChar:WaitForChild(propTable[1])
+					local oldObject = StringWaitForChild(orgChar,propTable[1])
+					local newObject = StringWaitForChild(clonedChar,propTable[1])
 					local function updFunction()
 						if isCleared then
 							--warn("[AHH]: Property Running After Shutdown: "..table.concat(propTable,"."))
 							return
 						end
-						clonedChar[propTable[1]][propertyToReplicate] = oldObject[propertyToReplicate]
+						newObject[propertyToReplicate] = oldObject[propertyToReplicate]
 					end
 					table.insert(connections, oldObject:GetPropertyChangedSignal(propertyToReplicate):Connect(updFunction))
 					updFunction()
@@ -5810,13 +5819,14 @@ C.AvailableHacks ={
 				for _, basePart in ipairs(clonedChar:GetDescendants()) do
 					if basePart.Name=="Weight" then
 						basePart:Destroy()
-					elseif basePart:IsA("BasePart") and basePart.Name ~= "HumanoidRootPart" then
+					elseif basePart:IsA("BasePart") and basePart.Name ~= "HumanoidRootPart" --then
+						and basePart.Parent == clonedChar then
 						--local local function updLocalTrans()
-						basePart.Transparency = .5
+						basePart.Transparency = .7
 						--end
 						--updLocalTrans()
 					elseif basePart:IsA("Decal") then
-						basePart.Transparency = .5
+						basePart.Transparency = .7
 					end
 				end
 				local SavedAnimsTracks = {}

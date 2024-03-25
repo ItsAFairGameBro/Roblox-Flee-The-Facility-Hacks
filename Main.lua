@@ -144,7 +144,7 @@ C.RichTextEscapeCharacters = {
 	{"<","&lt;"},
 	{">","&gt;"},
 	{'"',"&quot;"},
-	{"'","&apos"},
+	{"'","&apos;"},
 }
 function C.BetterGSub(orgString,searchString,replacement,settings)
 	local lastChars = ""

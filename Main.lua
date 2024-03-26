@@ -8905,7 +8905,9 @@ C.AvailableHacks ={
 				print("Vote!:",selectedVote.Name)
 
 				if selectedVote.Pad then
-					C.FireSignal(selectedVote.Pad,selectedVote.Pad.Touched,nil,C.char:FindFirstChildWhichIsA("BasePart"))
+					teleportMyself(CFrame.new(selectedVote.Pad.Position+Vector3.new(0,getHumanoidHeight(C.char)),
+						Vector3.new(selectedVote.Board.Position.X,C.char.Position.Y,selectedVote.Board.Position.Z)))
+					--C.FireSignal(selectedVote.Pad,selectedVote.Pad.TouchInterest,nil,C.char:FindFirstChildWhichIsA("BasePart"))
 				end
 			end,
 			["MyStartUp"]=function()

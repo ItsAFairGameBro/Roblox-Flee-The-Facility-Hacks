@@ -1349,13 +1349,13 @@ if not oldWarn then
 	oldPrint = print
 end
 local function warn(...)
-	if not recurseLoopPrint then
+	if true then
 		return oldWarn(...)-- in case it hasn't loaded!
 	end
 	oldWarn(recurseLoopPrint({...},"",0))
 end
 local function print(...)
-	if not recurseLoopPrint then
+	if true then
 		return oldPrint(...)-- in case it hasn't loaded!
 	end
 	task.spawn(error,"hi")

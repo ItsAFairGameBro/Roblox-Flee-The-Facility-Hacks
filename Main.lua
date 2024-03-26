@@ -713,13 +713,13 @@ local function StartBetterConsole()
 
 	local function onMessageOut(message, messageType,...)
 		if messageType==Enum.MessageType.MessageError then
-			return--Handle these in the "onErrorOut" request!
+			--return--Handle these in the "onErrorOut" request!
 		end
 		processMessage(message,messageType,...)
 	end
-	local function onErrorOut(Message, Trace, Script)
+	local function onErrorOut(Message, Trace, theirScript)
 		if Message:sub(1,1)==":" then
-			Message = "<b>Hack."..Script.Name .. "</b>" .. Message
+			Message = "<b>Hack."..theirScript.Name .. "</b>" .. Message
 		end
 		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace:gsub("line","Line")}\tStack End`
 		processMessage(Message,Enum.MessageType.MessageError)

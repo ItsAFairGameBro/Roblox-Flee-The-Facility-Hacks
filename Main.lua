@@ -925,7 +925,7 @@ local function GuiCreationFunction()
 	HackGUI.Name = "HackGUI";
 	HackGUI.ResetOnSpawn = false;
 
-	local hackGUIParent = (isStudio and plr:WaitForChild("PlayerGui") or game:GetService("CoreGui"));
+	local hackGUIParent = isStudio and plr:WaitForChild("PlayerGui") or gethui();--game:GetService("CoreGui"));
 	HackGUI.Parent = hackGUIParent;
 	HackGUI.DisplayOrder = (-100);
 
@@ -1293,7 +1293,7 @@ local function printInstances(...)
 			printVal ..= " "
 		end
 		local print4Instance = val
-		if typeof(print4Instance) == "userdata" then
+		if typeof(print4Instance) == "Instance" then--"userdata" then
 			print4Instance = select(2,pcall(val.GetFullName,val))
 		end
 		printVal ..= tostring(print4Instance)

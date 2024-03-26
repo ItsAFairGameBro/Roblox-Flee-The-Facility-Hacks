@@ -8871,26 +8871,15 @@ C.AvailableHacks ={
 			["Desc"]="Votes for maps synchronously",
 			["Shortcut"]="AutoVote/Random",
 			["Default"]=botModeEnabled,
-			["CurrentNum"]=0,
 			["DontActivate"]=true,
-			["CurrentPath"]=nil,
-			["IsRunning"]=false,
-			["CleanUp"]=function()
-				C.AvailableHacks.Bot[28].CurrentNum = C.AvailableHacks.Bot[28].CurrentNum + 1
-				C.AvailableHacks.Bot[28].IsRunning = false
-			end,
 			["ActivateFunction"]=function()
-				C.AvailableHacks.Bot[28].CurrentNum = C.AvailableHacks.Bot[28].CurrentNum + 1
-				local SaveNum=C.AvailableHacks.Bot[28].CurrentNum
 				local newPath=C.AvailableHacks.Bot[28].CurrentPath
-				if newPath==nil or SaveNum~=C.AvailableHacks.Bot[28].CurrentNum then 
+				if newPath==nil then 
 					return 
 				end
 				if not C.enHacks["AutoVote/Random"] then
-					C.AvailableHacks.Bot[28].IsRunning=false
 					return
 				end
-				C.AvailableHacks.Bot[28].IsRunning=true
 				local votableMaps={}
 				for num,board in pairs(workspace.MapVotingBoard:GetChildren()) do
 					if string.sub(board.Name,1,8)=="MapBoard" then

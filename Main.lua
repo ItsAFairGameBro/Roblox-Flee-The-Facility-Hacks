@@ -7084,7 +7084,7 @@ C.AvailableHacks ={
 				--print("Capturing survivor!")
 				if not capsule then
 					warn("Capsule Not Found For",theirPlr,theirChar)
-					return
+					return false, "Capsule Not Found"
 				end
 				local Trigger = capsule:WaitForChild("PodTrigger",5)
 				for s=1,3,1 do
@@ -7104,6 +7104,7 @@ C.AvailableHacks ={
 						end
 					end
 				end
+				return true
 			end,
 			["ChangedFunction"]=function()
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
@@ -7117,8 +7118,21 @@ C.AvailableHacks ={
 					end
 					local function captureSurvivorFunction()
 						local saveTorso = CarriedTorso.Value
-						while #CS:GetTagged("Capsule")==0 and canRun(saveTorso) do
+						while canRun(saveTorso) do
+							local hasValid = false
+							for _, capsule in ipairs(CS:GetTagged("Capsule")) do
+								if capsule and capsule.Parent and capsule.Parent.Parent then
+									hasValid = true
+									break
+								else
+									warn("Invalid Capsule At",capsule)
+								end
+							end
+							if hasValid then
+								break
+							end
 							CS:GetInstanceAddedSignal("Capsule"):Wait()
+							task.wait(.75)
 						end
 						if not canRun(saveTorso) then
 							return
@@ -8905,7 +8919,7 @@ C.AvailableHacks ={
 				local selectedVote = mapsToVoteFor[Random.new(os.time()):NextInteger(1,#mapsToVoteFor)]
 				
 				if selectedVote.Pad then
-					teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,getHumanoidHeight(C.char)),
+					teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,getHumanoidHeight(C.char)+selectedVote.Pad.Size.Y/2),
 						Vector3.new(selectedVote.Board:GetPivot().X,C.char:GetPivot().Y,selectedVote.Board:GetPivot().Z)))
 					--C.FireSignal(selectedVote.Pad,selectedVote.Pad.TouchInterest,nil,C.char:FindFirstChildWhichIsA("BasePart"))
 				end

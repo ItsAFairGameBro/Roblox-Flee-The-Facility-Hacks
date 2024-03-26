@@ -526,7 +526,7 @@ local function StartBetterConsole()
 		[Enum.MessageType.MessageInfo.Name] = {Text="Info",Color='<font color="rgb(255,0,255)">',Layout=1,Active=true},
 		[Enum.MessageType.MessageWarning.Name] = {Text="Warn",Color='<font color="rgb(255,255,0)">',Layout=2,Active=true},
 		[Enum.MessageType.MessageError.Name] = {Text="Error",Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
-		["FromGMEGame"] = {Color="<font color='rgb(70,70,170)'>",Layout=4,Active=false},
+		["FromGMEGame"] = {Text="Game",Color="<font color='rgb(70,70,170)'>",Layout=4,Active=false},
 	}
 	local noMessagesFound = BetterConsoleTextEx:Clone()
 	noMessagesFound.RichText = false
@@ -585,7 +585,7 @@ local function StartBetterConsole()
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
 		local BoxFrame = BetterConsoleFilterBox:Clone()
-		BoxFrame:WaitForChild("FilterBoxName").Text = messageType:sub(8)
+		BoxFrame:WaitForChild("FilterBoxName").Text = messageData.Text--messageType:sub(8)
 		local R, G, B = table.unpack(messageData.Color:sub(messageData.Color:find("%(")+1,messageData.Color:find("%)")-1):split(","))
 		BoxFrame:WaitForChild("FilterBoxName").TextColor3 = Color3.fromRGB(tonumber(R),tonumber(G),tonumber(B))
 		BoxFrame.LayoutOrder = messageData.Layout
@@ -8217,7 +8217,7 @@ C.AvailableHacks ={
 						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
 					local i = 0
-					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<8)) do
+					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<6)) do
 						-- or TSM.Ragdoll.Value))  do
 						local keyNeeded = 0
 						for key, theirPlr in ipairs(runnerPlrs) do

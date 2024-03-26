@@ -1358,6 +1358,7 @@ local function print(...)
 	if not recurseLoopPrint then
 		return oldPrint(...)-- in case it hasn't loaded!
 	end
+	task.spawn(error,"hi")
 	oldPrint(recurseLoopPrint({...},"",0))
 end
 if not isStudio then

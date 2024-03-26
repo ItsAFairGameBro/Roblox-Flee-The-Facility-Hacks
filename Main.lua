@@ -8912,13 +8912,13 @@ C.AvailableHacks ={
 				for num,map in pairs(votableMaps) do
 					table.insert(mapsToVoteFor,map)
 				end
-				--local function sortByNameFunction(a,b)
-				--	return a.Name:lower()>b.Name:lower()
-				--end
+				local function sortByNameFunction(a,b)
+					return a.Name:lower()>b.Name:lower()
+				end
 				--table.sort(mapsToVoteFor,sortByNameFunction)
-				local selectedVote = mapsToVoteFor[Random.new(os.time()):NextInteger(1,#mapsToVoteFor)]
+				local selectedVote = mapsToVoteFor[Random.new(math.floor(os.time())):NextInteger(1,#mapsToVoteFor)]
 				
-				if selectedVote.Pad then
+				if selectedVote and selectedVote.Pad then
 					teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,getHumanoidHeight(C.char)+selectedVote.Pad.Size.Y/2),
 						Vector3.new(selectedVote.Board:GetPivot().X,C.char:GetPivot().Y,selectedVote.Board:GetPivot().Z)))
 					--C.FireSignal(selectedVote.Pad,selectedVote.Pad.TouchInterest,nil,C.char:FindFirstChildWhichIsA("BasePart"))

@@ -522,10 +522,10 @@ local function StartBetterConsole()
 		BetterConsoleFrameToggle("OpenBetterConsole"..C.saveIndex,Enum.UserInputState.Begin)
 	end))
 	local MessageTypeSettings = {
-		[Enum.MessageType.MessageOutput.Name] = {Color='<font color="rgb(170,170,170)">',Layout=0,Active=true},
-		[Enum.MessageType.MessageInfo.Name] = {Color='<font color="rgb(255,0,255)">',Layout=1,Active=true},
-		[Enum.MessageType.MessageWarning.Name] = {Color='<font color="rgb(255,255,0)">',Layout=2,Active=true},
-		[Enum.MessageType.MessageError.Name] = {Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
+		[Enum.MessageType.MessageOutput.Name] = {Text="Outs",Color='<font color="rgb(170,170,170)">',Layout=0,Active=true},
+		[Enum.MessageType.MessageInfo.Name] = {Text="Info",Color='<font color="rgb(255,0,255)">',Layout=1,Active=true},
+		[Enum.MessageType.MessageWarning.Name] = {Text="Warn",Color='<font color="rgb(255,255,0)">',Layout=2,Active=true},
+		[Enum.MessageType.MessageError.Name] = {Text="Error",Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
 		["FromGMEGame"] = {Color="<font color='rgb(70,70,170)'>",Layout=4,Active=false},
 	}
 	local noMessagesFound = BetterConsoleTextEx:Clone()
@@ -718,11 +718,11 @@ local function StartBetterConsole()
 		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
 			message = C.ApplyRichTextEscapeCharacters(message,true)
 		end
-		local myMessageColor = MessageTypeSettings[messageType.Name].Color
+		local myMessageData = MessageTypeSettings[messageType.Name]
 		local isFromMe = checkmycaller(message)
-		local beforeMessage = myMessageColor .. "[%s"
+		local beforeMessage = myMessageData.Color .. "[%s"
 		local inputMessage = 
-			" ".. messageType.Name:sub(8).. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
+			" ".. myMessageData.Text .. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "<b>Hack.Unk</b>" or "") .. message
 		formatMessage(beforeMessage,inputMessage,messageType,isFromMe,...)
 	end
@@ -1329,6 +1329,8 @@ end
 local function print(...)
 	oldPrint(recurseLoopPrint({...},"",0))
 end
+getrenv().warn = warn
+getrenv().print = warn
 local RemoteEvent
 if gameUniverse=="Flee" then
 	RemoteEvent = RS:WaitForChild("RemoteEvent")
@@ -9463,6 +9465,8 @@ clear = function(isManualClear)
 		end;
 	end;
 	if isManualClear then
+		getrenv().warn = oldWarn
+		getrenv().print = oldPrint
 		local LocalPlayerScript = C.char:WaitForChild("LocalPlayerScript")
 		if LocalPlayerScript then
 			LocalPlayerScript.Disabled = true

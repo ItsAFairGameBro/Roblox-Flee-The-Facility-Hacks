@@ -719,7 +719,6 @@ local function StartBetterConsole()
 	local function onErrorOut(Message, Trace, Script)
 		if Message:sub(1,1)==":" then
 			Message = "<font color='rgb(50,50,200)'>Hack."..Script.Name .. "</font>" .. Message
-			print("Error Message Added :D")
 		end
 		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace}\n\tStack End`
 		processMessage(Message,Enum.MessageType.MessageError)

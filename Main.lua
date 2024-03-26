@@ -9554,11 +9554,13 @@ if previousCopy then
 		if not changedEvent then
 			return
 		end
+		print("Timeout Occured!")
 		changedEvent:Fire()
 	end
 	task.delay(maxWaitTime,maxWaitTimeReturnFunction)
 	changedEvent:AddTag("RemoveOnDestroy")
 	local function clearFunct()
+		print("Clear Detected, Firing!")
 		changedEvent:Fire()
 	end
 	local clearedConnection=(plr:GetAttributeChangedSignal("Cleared"..getID):Connect(clearFunct))

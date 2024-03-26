@@ -8147,7 +8147,8 @@ C.AvailableHacks ={
 						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
 					local i = 0
-					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<8 or TSM.Ragdoll.Value))  do
+					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<8)) do
+						-- or TSM.Ragdoll.Value))  do
 						local keyNeeded = 0
 						for key, theirPlr in ipairs(runnerPlrs) do
 							if not theirPlr:GetAttribute("HasCaptured") then

@@ -706,19 +706,19 @@ local function StartBetterConsole()
 		local isFromMe = checkmycaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
 			.. " ".. messageType.Name:sub(8).. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
-			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Unknown" or "") .. message
+			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Hack.Unk" or "") .. message
 		formatMessage(inputMessage,messageType,isFromMe,...)
 	end
 
 	local function onMessageOut(message, messageType,...)
 		if messageType==Enum.MessageType.MessageError then
-			return--Handle these in the "onErrorOut" request!
+			--return--Handle these in the "onErrorOut" request!
 		end
 		processMessage(message,messageType,...)
 	end
 	local function onErrorOut(Message, Trace, Script)
 		if Message:sub(1,1)==":" then
-			Message = "<font color='rgb(50,50,200)'>"..Script.Name .. "</font>" .. Message
+			Message = "<font color='rgb(50,50,200)'>Hack."..Script.Name .. "</font>" .. Message
 			print("Error Message Added :D")
 		end
 		Message = Message .. "\n"..Trace
@@ -729,7 +729,7 @@ local function StartBetterConsole()
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
 	if logSuccess then
 		for _, logData in ipairs(logResult) do
-			task.spawn(onMessageOut,logData.message,logData.messageType,logData.timestamp)
+			task.spawn(processMessage,logData.message,logData.messageType,logData.timestamp)
 		end
 	else
 		onMessageOut("LogService:GetLogHistory has failed: "..tostring(logResult),Enum.MessageType.MessageError)

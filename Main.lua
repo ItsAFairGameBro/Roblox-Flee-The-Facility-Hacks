@@ -1349,9 +1349,15 @@ if not oldWarn then
 	oldPrint = print
 end
 local function warn(...)
+	if not recurseLoopPrint then
+		return oldWarn(...)-- in case it hasn't loaded!
+	end
 	oldWarn(recurseLoopPrint({...},"",0))
 end
 local function print(...)
+	if not recurseLoopPrint then
+		return oldPrint(...)-- in case it hasn't loaded!
+	end
 	oldPrint(recurseLoopPrint({...},"",0))
 end
 if not isStudio then
@@ -8661,7 +8667,7 @@ C.AvailableHacks ={
 							createSolidPart(cframe,size,nil,"SolidCollidable",box)
 						end
 					end
-				elseif C.Map.Name=="The Library by Drainhp" then
+				elseif C.Map.Name=="The Library by Drainhp" and false then -- THIS IS DEFECTIVE AT FINDING WINDOWS!
 					for num,windowModel in ipairs((C.Map:WaitForChild("Misc"):WaitForChild("Windows"):GetChildren())) do
 						local cframe,size=windowModel:GetBoundingBox()
 						local sendTable = {
@@ -8913,7 +8919,7 @@ C.AvailableHacks ={
 					return;
 				end;
 
-				C.AvailableHacks.Bot[23].ActivateFunction(C.enHacks["AutoVote/Random"]);
+				C.AvailableHacks.Bot[28].ActivateFunction(C.enHacks["AutoVote/Random"]);
 			end,
 			["MyPlayerAdded"]=function()
 				local MapVotingBoard=workspace:WaitForChild("MapVotingBoard")

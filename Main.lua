@@ -9662,7 +9662,7 @@ end
 task.spawn(function()
 	JumpButton = plr.PlayerGui:WaitForChild("TouchGui",math.huge):WaitForChild("TouchControlFrame"):WaitForChild("JumpButton",math.huge);
 	table.insert(C.functs, JumpButton:GetPropertyChangedSignal("ImageRectOffset"):Connect(function()
-		org = isJumpBeingHeld
+		local org = isJumpBeingHeld
 		if JumpButton.ImageRectOffset.X > 3 then
 			isJumpBeingHeld = true;
 		else
@@ -10101,6 +10101,9 @@ local function registerObject(object,registerfunct,shouldntWait)
 		end;
 		task.spawn(registerfunct,lowerobject,shouldntWait)
 		table.insert(C.functs,lowerobject.AncestryChanged:Connect(IntermediateDescendantRemovingFunction));
+		if num%300 == 0 then
+			RunS.RenderStepped:Wait()
+		end
 	end
 end
 local function updateCurrentMap(newMap)
@@ -10150,6 +10153,9 @@ table.insert(C.functs,(PS.PlayerRemoving:Connect(intermediatePlayerRemovingFunct
 
 for num,theirPlr in ipairs(PS:GetPlayers()) do
 	task.spawn(PlayerAdded,theirPlr)
+	if num%10==0 then
+		RunS.RenderStepped:Wait()
+	end
 end
 
 --print(("Players Loaded %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL

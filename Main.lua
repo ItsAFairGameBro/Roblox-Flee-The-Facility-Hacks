@@ -721,7 +721,7 @@ local function StartBetterConsole()
 			Message = "<font color='rgb(50,50,200)'>Hack."..Script.Name .. "</font>" .. Message
 			print("Error Message Added :D")
 		end
-		Message = Message .. "\n"..Trace
+		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace}\n\tStack End`
 		processMessage(Message,Enum.MessageType.MessageError)
 	end
 	table.insert(C.functs,LS.MessageOut:Connect(onMessageOut))
@@ -9579,6 +9579,7 @@ if previousCopy then
 		elseif currentSize>0 then
 			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
 		end
+		RunS.RenderStepped:Wait()
 	end
 	changedEvent:Destroy()
 	clearedConnection:Disconnect()

@@ -151,7 +151,7 @@ C.RichTextEscapeCharacters = {
 function C.ApplyRichTextEscapeCharacters(str,toEscaped)
 	local whatRepl = toEscaped and 1 or 2
 	local toRepl = toEscaped and 2 or 1
-	local format = {NoUnformat = true}
+	local format = {NoUnformat = true, IgnoreRichText = true}
 	for _,escapeData in ipairs(C.RichTextEscapeCharacters) do
 		str = C.BetterGSub(str,escapeData[whatRepl],escapeData[toRepl],format)
 	end

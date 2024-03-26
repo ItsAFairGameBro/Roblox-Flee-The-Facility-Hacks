@@ -8904,8 +8904,6 @@ C.AvailableHacks ={
 				--table.sort(mapsToVoteFor,sortByNameFunction)
 				local selectedVote = mapsToVoteFor[Random.new(os.time()):NextInteger(1,#mapsToVoteFor)]
 				
-				print("Vote!:",selectedVote.Name)
-
 				if selectedVote.Pad then
 					teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,getHumanoidHeight(C.char)),
 						Vector3.new(selectedVote.Board:GetPivot().X,C.char:GetPivot().Y,selectedVote.Board:GetPivot().Z)))
@@ -8924,7 +8922,6 @@ C.AvailableHacks ={
 			["MyPlayerAdded"]=function()
 				local MapVotingBoard=workspace:WaitForChild("MapVotingBoard")
 				local function RSUpdateGameStatusFunction()
-					print("Change")
 					if not isInGame(C.char) then
 						C.AvailableHacks.Bot[28].ActivateFunction() 
 					end

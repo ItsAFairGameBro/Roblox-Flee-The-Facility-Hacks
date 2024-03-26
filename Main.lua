@@ -1344,7 +1344,7 @@ if not oldWarn then
 	oldWarn = warn
 end
 local oldPrint = getgenv().oldPrint
-if not oldWarn then
+if not oldPrint then
 	getgenv().oldPrint = print
 	oldPrint = print
 end

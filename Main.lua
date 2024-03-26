@@ -14,7 +14,7 @@ local SG=game:GetService("StarterGui")
 local GS=game:GetService("GuiService")
 local TS=game:GetService("TweenService")
 local LS=game:GetService("LogService")
-local SC=game:GetAttribute("ScriptContext")
+local SC=game:GetService("ScriptContext")
 local PathfindingService = game:GetService("PathfindingService")
 
 

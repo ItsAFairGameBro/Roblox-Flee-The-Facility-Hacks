@@ -721,7 +721,7 @@ local function StartBetterConsole()
 			Message = "<font color='rgb(50,50,200)'>"..Script.Name .. "</font>" .. Message
 			print("Error Message Added :D")
 		end
-		print(Message[Enum.MessageType.MessageError.Name])
+		Message = Message .. "\n"..Trace
 		processMessage(Message,Enum.MessageType.MessageError)
 	end
 	table.insert(C.functs,LS.MessageOut:Connect(onMessageOut))

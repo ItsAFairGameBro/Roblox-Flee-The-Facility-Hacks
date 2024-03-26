@@ -1,3 +1,4 @@
+script.Name = "Loading"
 local MyTextBox
 
 local PS=game:GetService("Players")
@@ -706,7 +707,7 @@ local function StartBetterConsole()
 		local isFromMe = checkmycaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
 			.. " ".. messageType.Name:sub(8).. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
-			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Hack.Unk" or "") .. message
+			.."] ".. "</font>" .. (message:sub(1,1)==":" and "<b>Hack.Unk</b>" or "") .. message
 		formatMessage(inputMessage,messageType,isFromMe,...)
 	end
 
@@ -718,7 +719,7 @@ local function StartBetterConsole()
 	end
 	local function onErrorOut(Message, Trace, Script)
 		if Message:sub(1,1)==":" then
-			Message = "<u><b>Hack."..Script.Name .. "</b></u>" .. Message
+			Message = "<b>Hack."..Script.Name .. "</b>" .. Message
 		end
 		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace:gsub("line","Line")}\tStack End`
 		processMessage(Message,Enum.MessageType.MessageError)
@@ -9367,6 +9368,7 @@ end
 
 --Multi Script Check:
 C.saveIndex = ((plr:GetAttribute(getID) or 0)+1)
+script.Name = "FleeHacks/"..C.saveIndex
 --if plr:GetAttribute("Cleared"..getID) then plr:SetAttribute("Cleared"..getID,false) end
 local previousCopy = (plr:GetAttribute(getID)~=nil)
 plr:SetAttribute(getID,C.saveIndex)
@@ -9577,6 +9579,7 @@ if previousCopy then
 			break
 		elseif currentSize>0 then
 			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
+			print("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!")
 		end
 		RunS.RenderStepped:Wait()
 	end

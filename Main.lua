@@ -1293,8 +1293,8 @@ local function printInstances(...)
 			printVal ..= " "
 		end
 		local print4Instance = val
-		if typeof(print4Instance) == "Instance" then
-			print4Instance = val:GetFullName()
+		if typeof(print4Instance) == "userdata" then
+			print4Instance = select(2,pcall(val.GetFullName,val))
 		end
 		printVal ..= tostring(print4Instance)
 	end
@@ -1310,7 +1310,7 @@ local function recurseLoopPrint(leftTbl,str,depth)
 			str..=("\n	}")
 		else
 			if depth ~= 0 and (totalValues>=1 or num~=1) then
-				str..=printInstances(num,val)
+				str..=printInstances(num).." = "..printInstances(val)
 			else
 				str..=printInstances(val)
 			end
@@ -9708,7 +9708,7 @@ local refreshTypes = ({
 		ToggleButton = hackFrame:WaitForChild("Toggle",60)
 		if isCleared then
 			if not ToggleButton then
-				return error("SEEMS GOOD: TOGGLE DOESN'T EXIST FOR "..hackInfo.Title)
+				return --error("SEEMS GOOD: TOGGLE DOESN'T EXIST FOR "..hackInfo.Title)
 			end
 			return
 		elseif not ToggleButton then

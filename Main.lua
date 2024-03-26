@@ -14,6 +14,7 @@ local SG=game:GetService("StarterGui")
 local GS=game:GetService("GuiService")
 local TS=game:GetService("TweenService")
 local LS=game:GetService("LogService")
+local SC=game:GetAttribute("ScriptContext")
 local PathfindingService = game:GetService("PathfindingService")
 
 
@@ -694,8 +695,8 @@ local function StartBetterConsole()
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromMe)
 	end
-
-	local function onMessageOut(message, messageType,...)
+	
+	local function processMessage(message, messageType,...)
 		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
 			for _,escapeData in ipairs(C.RichTextEscapeCharacters) do
 				message = C.BetterGSub(message,table.unpack(escapeData)) --message:gsub(toReplace,escapedStr)
@@ -705,10 +706,25 @@ local function StartBetterConsole()
 		local isFromMe = checkmycaller(message)
 		local inputMessage = "  "..myMessageColor .. "[%s"
 			.. " ".. messageType.Name:sub(8).. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
-			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Custom" or "") .. message
+			.."] ".. "</font>" .. (message:sub(1,1)==":" and "Unknown" or "") .. message
 		formatMessage(inputMessage,messageType,isFromMe,...)
 	end
+
+	local function onMessageOut(message, messageType,...)
+		if messageType==Enum.MessageType.MessageError then
+			return--Handle these in the "onErrorOut" request!
+		end
+		processMessage(message,messageType,...)
+	end
+	local function onErrorOut(Message, Trace, Script)
+		if Message:sub(1,1)==":" then
+			Message = "<font color='rgb(50,50,200)'>"..Script.Name .. "</font>" .. Message
+			print("Error Message Added :D")
+		end
+		processMessage(Message,Enum.MessageType.MessageError)
+	end
 	table.insert(C.functs,LS.MessageOut:Connect(onMessageOut))
+	table.insert(C.functs,SC.Error:Connect(onMessageOut))
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
 	if logSuccess then
 		for _, logData in ipairs(logResult) do
@@ -9504,7 +9520,10 @@ clear = function(isManualClear)
 	getgenv()["ActiveScript"..getID][C.saveIndex] = nil
 
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
-	HackGUI:Destroy()DS:AddItem(HackGUI,1)
+	if HackGUI then
+		HackGUI:Destroy()
+		DS:AddItem(HackGUI,1)
+	end
 	if isStudio then DS:AddItem(script,1) end
 	clear=nil
 end

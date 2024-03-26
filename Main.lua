@@ -534,6 +534,7 @@ local function StartBetterConsole()
 	noMessagesFound.Parent = script
 	noMessagesFound:AddTag("RemoveOnDestroy")
 	local function BetterConsole_SetMessagesVisibility(_,MessageLabel)
+		if isCleared then return end
 		if not MessageLabel then
 			visibleMessages = 0
 		end
@@ -692,6 +693,7 @@ local function StartBetterConsole()
 	end
 	--end
 	local function printFunction(message,messageType,isFromMe)
+		if isCleared then return end
 		allMessages += 1
 		local wasAtBottom =  BetterConsoleList.CanvasPosition.Y+40 >= BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y
 		local MessageLabel = BetterConsoleTextEx:Clone()
@@ -8905,7 +8907,7 @@ C.AvailableHacks ={
 				print("Vote!:",selectedVote.Name)
 
 				if selectedVote.Pad then
-					teleportMyself(CFrame.new(selectedVote.Pad:GetPivot()+Vector3.new(0,getHumanoidHeight(C.char)),
+					teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,getHumanoidHeight(C.char)),
 						Vector3.new(selectedVote.Board:GetPivot().X,C.char:GetPivot().Y,selectedVote.Board:GetPivot().Z)))
 					--C.FireSignal(selectedVote.Pad,selectedVote.Pad.TouchInterest,nil,C.char:FindFirstChildWhichIsA("BasePart"))
 				end

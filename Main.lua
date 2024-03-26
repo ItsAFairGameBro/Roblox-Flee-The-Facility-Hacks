@@ -148,7 +148,15 @@ C.RichTextEscapeCharacters = {
 	{'"',"&quot;"},
 	{"'","&apos;"},
 }
+function C.ApplyRichTextEscapeCharacters(str,toEscaped)
+	for _,escapeData in ipairs(C.RichTextEscapeCharacters) do
+		str = C.BetterGSub(str,toEscaped and escapeData[1] or escapeData[2],
+			toEscaped and escapeData[2] or escapeData[1])
+	end
+	return str
+end
 function C.BetterGSub(orgString,searchString,replacement,settings)
+	orgString = C.ApplyRichTextEscapeCharacters(orgString,false)
 	local lastChars = ""
 	local newText = ""
 	local canReplace = true
@@ -174,6 +182,7 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 			lastChars = ""
 		end
 	end
+	newText = C.ApplyRichTextEscapeCharacters(newText,true)
 	return newText
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
@@ -700,9 +709,7 @@ local function StartBetterConsole()
 	
 	local function processMessage(message, messageType,...)
 		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
-			for _,escapeData in ipairs(C.RichTextEscapeCharacters) do
-				message = C.BetterGSub(message,table.unpack(escapeData)) --message:gsub(toReplace,escapedStr)
-			end
+			message = C.ApplyRichTextEscapeCharacters(message,true)
 		end
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
 		local isFromMe = checkmycaller(message)

@@ -9590,6 +9590,9 @@ clear = function(isManualClear)
 		--	CrawlScript.Disabled=false
 		--end
 		C.AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
+		if C.AvailableHacks.Utility[7] then
+			C.AvailableHacks.Utility[7].ActivateFunction(false)--enable touchscreen, if needed!
+		end
 		C.AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		C.AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
 	else

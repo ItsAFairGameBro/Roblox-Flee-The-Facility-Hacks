@@ -7644,10 +7644,11 @@ C.AvailableHacks ={
 				end
 			end,
 			["CapsuleAdded"]=function(capsule)
-				if capsule:FindFirstChild("PodTrigger")~=nil then
-					wait(.5)
+				task.wait(.5)
+				local PodTrigger = capsule:FindFirstChild("PodTrigger")
+				if PodTrigger and PodTrigger:FindFirstChild("CapturedTorso") then
 					setChangedAttribute(
-						capsule.PodTrigger:FindFirstChild("CapturedTorso"),
+						PodTrigger.CapturedTorso,
 						"Value",C.enHacks.AutoRescue and (function()
 							C.AvailableHacks.Runner[80].RescueSurvivor(capsule)
 						end) or false)

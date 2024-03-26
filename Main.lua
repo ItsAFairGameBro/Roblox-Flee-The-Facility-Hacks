@@ -9066,7 +9066,8 @@ C.AvailableHacks ={
 				createCommandLine("Reset Sequence Activated")
 			end,
 			["ActivateFunction"]=function(newValue)
-				if C.char~=nil and human~=nil and C.char.Parent~=nil then
+				if C.char~=nil and human~=nil and C.char.Parent~=nil and human.Health > 0 then 
+					--(not C.char.PrimaryPart or not C.char.PrimaryPart.Anchored) then
 					local saveChar = C.char
 					C.AvailableHacks.Commands[24].BeforeReset()
 					if C.char.PrimaryPart then
@@ -9916,11 +9917,11 @@ local function CharacterAdded(theirChar,firstRun)
 				BeastAdded(theirPlr,theirPlr.Character);
 			end
 		end
-		if gameName=="FleeMain" and C.Map and C.Map.Parent
+		if gameName=="FleeMain" and C.Map and C.Map.Parent and isMyChar
 			and select(2,isInGame(theirChar)) == "Runner" then
 			local SpawnPad = C.Map:WaitForChild("OBSpawnPad")
 			if SpawnPad then
-				teleportMyself(SpawnPad:GetPivot() + Vector3.new(0,getHumanoidHeight(human),0))
+				teleportMyself(SpawnPad:GetPivot() + Vector3.new(0,getHumanoidHeight(theirChar),0))
 				print("My Teleport Function :P")
 			end
 		end

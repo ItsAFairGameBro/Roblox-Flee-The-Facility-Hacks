@@ -764,6 +764,21 @@ local function StartBetterConsole()
 		BetterConsole_onMessageOut("LogService:GetLogHistory has failed: "..tostring(logResult),Enum.MessageType.MessageError)
 	end
 end
+function C.FireSignal(instance,signal,Settings,...)
+	local elements = table.pack(...)
+	local success, result = pcall(function()
+		for _, data in ipairs(getconnections(signal)) do
+			if data.Enabled then
+				data:Fire(table.unpack(elements))
+				print("Fired Signal!")
+			end
+		end
+	end)
+	if not success then
+		warn(`Error Firing Signal For {instance:GetFullName()}, error: {result or "Unknown"}`)
+	end
+	return success
+end
 local function GuiCreationFunction()
 	--local Instance.new = Instance["new"];
 	local ExTextButton = Instance.new("Frame");
@@ -1328,7 +1343,7 @@ if not oldWarn then
 	getgenv().oldWarn = warn
 	oldWarn = warn
 end
-local oldPrint = getgenv().oldPrint or print
+local oldPrint = getgenv().oldPrint
 if not oldWarn then
 	getgenv().oldPrint = print
 	oldPrint = print
@@ -1339,8 +1354,10 @@ end
 local function print(...)
 	oldPrint(recurseLoopPrint({...},"",0))
 end
-getrenv().warn = warn
-getrenv().print = print
+if not isStudio then
+	getrenv().warn = warn
+	getrenv().print = print
+end
 local RemoteEvent
 if gameUniverse=="Flee" then
 	RemoteEvent = RS:WaitForChild("RemoteEvent")
@@ -8723,7 +8740,7 @@ C.AvailableHacks ={
 				end
 			end),--]]
 		},
-		[23]={
+		--[[[23]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto Vote For Known Maps",
 			["Desc"]="",
@@ -8838,18 +8855,91 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				local MapVotingBoard=workspace:WaitForChild("MapVotingBoard")
-				--[[for num,board in pairs(MapVotingBoard:GetChildren()) do
-					if string.sub(board.Name,1,8)=="MapBoard" then
-						setChangedAttribute(board:WaitForChild("SurfaceGui"),
-							"Enabled",
-						function() 
-							task.wait(1) 
-							if not C.AvailableHacks.Bot[23].IsRunning then
-								C.AvailableHacks.Bot[23].ActivateFunction() 
-							end
-						end)
+				local function RSUpdateGameStatusFunction()
+					if (not C.AvailableHacks.Bot[23].IsRunning and not ({isInGame(C.char)})[1]) then
+						C.AvailableHacks.Bot[23].ActivateFunction() 
+					else
+						--print(C.AvailableHacks.Bot[23].IsRunning)
 					end
-				end--]]
+				end
+				setChangedAttribute(RS.GameStatus, "Value", (RSUpdateGameStatusFunction))
+			end,
+		},--]]
+		[28]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Vote For Random Maps",
+			["Desc"]="Votes for maps synchronously",
+			["Shortcut"]="AutoVote/Random",
+			["Default"]=botModeEnabled,
+			["CurrentNum"]=0,
+			["DontActivate"]=true,
+			["CurrentPath"]=nil,
+			["IsRunning"]=false,
+			["CleanUp"]=function()
+				C.AvailableHacks.Bot[28].CurrentNum = C.AvailableHacks.Bot[28].CurrentNum + 1
+				C.AvailableHacks.Bot[28].IsRunning = false
+			end,
+			["ActivateFunction"]=function()
+				C.AvailableHacks.Bot[28].CurrentNum = C.AvailableHacks.Bot[28].CurrentNum + 1
+				local SaveNum=C.AvailableHacks.Bot[28].CurrentNum
+				local newPath=C.AvailableHacks.Bot[28].CurrentPath
+				if newPath==nil or SaveNum~=C.AvailableHacks.Bot[28].CurrentNum then 
+					return 
+				end
+				if not C.enHacks["AutoVote/Random"] then
+					C.AvailableHacks.Bot[28].IsRunning=false
+					return
+				end
+				C.AvailableHacks.Bot[28].IsRunning=true
+				local votableMaps={}
+				for num,board in pairs(workspace.MapVotingBoard:GetChildren()) do
+					if string.sub(board.Name,1,8)=="MapBoard" then
+						local SurfaceGui=board.SurfaceGui
+						if SurfaceGui.Enabled then
+							local pad=board.Parent["VoteBox"..string.sub(board.Name,9)]
+							local votableMapsData = {["Name"]=SurfaceGui.TitleLabel.Text,
+								["Board"]=board,["Pad"]=pad} 
+							table.insert(votableMaps,votableMapsData)
+						end
+					end
+				end
+				local mapsToVoteFor={}
+				for num,map in pairs(votableMaps) do
+					table.insert(mapsToVoteFor,map)
+				end
+				--local function sortByNameFunction(a,b)
+				--	return a.Name:lower()>b.Name:lower()
+				--end
+				--table.sort(mapsToVoteFor,sortByNameFunction)
+				local selectedVote = mapsToVoteFor[Random.new(os.time())]
+
+				if selectedVote.Pad then
+					C.FireSignal(selectedVote.Pad,selectedVote.Pad.Touched,nil,C.char:FindFirstChildWhichIsA("BasePart"))
+				end
+			end,
+			["MyStartUp"]=function()
+				task.wait();
+				local Torso=C.char:WaitForChild("Torso",30); 
+				if not Torso then 
+					return;
+				end;
+				local PathConfigurationTable = {
+					AgentCanJump=true,
+					Costs = {
+						NoWalkThru = math.huge
+					}
+				};
+
+				--DEAD ZONE:
+
+				local TSM=plr:WaitForChild("TempPlayerStatsModule");
+				local newPath = Path.new(C.char, PathConfigurationTable);
+				newPath.Visualize = true;
+				C.AvailableHacks.Bot[23].CurrentPath=newPath;
+				C.AvailableHacks.Bot[23].ActivateFunction(C.enHacks["AutoVote/Known"]);
+			end,
+			["MyPlayerAdded"]=function()
+				local MapVotingBoard=workspace:WaitForChild("MapVotingBoard")
 				local function RSUpdateGameStatusFunction()
 					if (not C.AvailableHacks.Bot[23].IsRunning and not ({isInGame(C.char)})[1]) then
 						C.AvailableHacks.Bot[23].ActivateFunction() 

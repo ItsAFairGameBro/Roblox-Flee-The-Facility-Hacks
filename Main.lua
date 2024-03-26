@@ -753,8 +753,10 @@ local function StartBetterConsole()
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
 	if logSuccess then
 		for num, logData in ipairs(logResult) do
-			task.spawn(processMessage,logData.message,logData.messageType,logData.timestamp)
-			if num%100==0 then
+			if checkmycaller(logData.message) then -- only if the message wasn't from "game!"
+				task.spawn(processMessage,logData.message,logData.messageType,logData.timestamp)
+			end
+			if num%30==0 then
 				RunS.RenderStepped:Wait()
 			end
 		end
@@ -7017,38 +7019,38 @@ C.AvailableHacks ={
 			end,
 		},
 		[60] = 
-			{
-				["Type"] = "ExTextButton",
-				["Title"] = "Auto Capture",
-				["Desc"] = "Instantly capture other survivors",
-				["Shortcut"] = "AutoCapture",
-				["Default"] = botModeEnabled,
-				["ActivateFunction"] = (function(newValue)
+		{
+			["Type"] = "ExTextButton",
+			["Title"] = "Auto Capture",
+			["Desc"] = "Instantly capture other survivors",
+			["Shortcut"] = "AutoCapture",
+			["Default"] = botModeEnabled,
+			["ActivateFunction"] = (function(newValue)
 
-					local TSM = plr:WaitForChild("TempPlayerStatsModule");
-					local TSM_IsBeast = TSM:WaitForChild("IsBeast");
+				local TSM = plr:WaitForChild("TempPlayerStatsModule");
+				local TSM_IsBeast = TSM:WaitForChild("IsBeast");
 
-					local function BlatantChangedFunction()
-						C.AvailableHacks.Beast[60].ChangedFunction();
-					end
-					local inputChangedAttribute_INPUT = (newValue and BlatantChangedFunction);
-					setChangedAttribute(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
+				local function BlatantChangedFunction()
 					C.AvailableHacks.Beast[60].ChangedFunction();
-				end),
-				["CaptureSurvivor"] = function(theirPlr,theirChar,override)
-					local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
-					if not TSM:WaitForChild("IsBeast") or not C.Beast then
+				end
+				local inputChangedAttribute_INPUT = (newValue and BlatantChangedFunction);
+				setChangedAttribute(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
+				C.AvailableHacks.Beast[60].ChangedFunction();
+			end),
+			["CaptureSurvivor"] = function(theirPlr,theirChar,override)
+				local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
+				if not TSM:WaitForChild("IsBeast") or not C.Beast then
 					return
 				end
-					if C.Beast.CarriedTorso.Value==nil then
+				if C.Beast.CarriedTorso.Value==nil then
 					return
 				end
-					if not C.enHacks.AutoCapture and not override then
+				if not C.enHacks.AutoCapture and not override then
 					return
 				end
-					--if C.enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
-					local capsule,closestDist=nil,10000
-					for num,cap in pairs(CS:GetTagged("Capsule")) do
+				--if C.enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
+				local capsule,closestDist=nil,10000
+				for num,cap in pairs(CS:GetTagged("Capsule")) do
 					if cap.PrimaryPart~=nil then
 						local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
 						if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
@@ -7056,13 +7058,13 @@ C.AvailableHacks ={
 						end
 					end
 				end
-					--print("Capturing survivor!")
-					if not capsule then
+				--print("Capturing survivor!")
+				if not capsule then
 					warn("Capsule Not Found For",theirPlr,theirChar)
 					return
 				end
-					local Trigger = capsule:WaitForChild("PodTrigger",5)
-					for s=1,3,1 do
+				local Trigger = capsule:WaitForChild("PodTrigger",5)
+				for s=1,3,1 do
 					local isOpened = (Trigger.ActionSign.Value==11)
 					if (Trigger and Trigger.CapturedTorso.Value~=nil) then 
 						break --we got ourselves a trapped survivor!
@@ -7079,44 +7081,54 @@ C.AvailableHacks ={
 						end
 					end
 				end
-				end,
-				["ChangedFunction"]=function()
-					local TSM=plr:WaitForChild("TempPlayerStatsModule")
-					if not TSM:WaitForChild("IsBeast").Value then
-						return
+			end,
+			["ChangedFunction"]=function()
+				local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				if not TSM:WaitForChild("IsBeast").Value then
+					return
+				end
+				local CarriedTorso=C.char:WaitForChild("CarriedTorso",20)
+				if CarriedTorso~=nil then
+					local function canRun(saveTorso)
+						return C.char == C.Beast and CarriedTorso.Parent and not isCleared and saveTorso==CarriedTorso.Value
 					end
-					local CarriedTorso=C.char:WaitForChild("CarriedTorso",20)
-					if CarriedTorso~=nil then
-						local function captureSurvivorFunction()
-							C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
+					local function captureSurvivorFunction()
+						local saveTorso = CarriedTorso.Value
+						while #CS:GetTagged("Capsule")==0 and canRun(saveTorso) do
+							CS:GetInstanceAddedSignal("Capsule"):Wait()
 						end
-						local input = C.enHacks.AutoCapture and captureSurvivorFunction
-						setChangedAttribute(CarriedTorso,"Value",input)
+						if not canRun(saveTorso) then
+							return
+						end
 						C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
-					elseif C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
-						warn("rope not found!!!! hackssss bro!", C.char:GetFullName())
 					end
-				end,
+					local input = C.enHacks.AutoCapture and captureSurvivorFunction
+					setChangedAttribute(CarriedTorso,"Value",input)
+					C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
+				elseif C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
+					warn("rope not found!!!! hackssss bro!", C.char:GetFullName())
+				end
+			end,
 
 
-				--["MyStartUp"]=function()
-				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				setChangedAttribute(
-					TSM:WaitForChild("IsBeast"),
-					"Value",C.enHacks.AutoCapture and function()
-						C.AvailableHacks.Beast[60].ChangedFunction()
-					end or false)--]]
-				--C.AvailableHacks.Beast[60].ChangedFunction()
-				--end,
+			--["MyStartUp"]=function()
+			--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
+			setChangedAttribute(
+				TSM:WaitForChild("IsBeast"),
+				"Value",C.enHacks.AutoCapture and function()
+					C.AvailableHacks.Beast[60].ChangedFunction()
+				end or false)--]]
+			--C.AvailableHacks.Beast[60].ChangedFunction()
+			--end,
 
 
-				["MyBeastAdded"]=function(theirPlr,theirChar)
-					C.AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
-				end,
-				--["OthersBeastAdded"]=function(theirPlr,theirChar)
-				--	C.AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
-				--end,
-			},
+			["MyBeastAdded"]=function(theirPlr,theirChar)
+				C.AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
+			end,
+			--["OthersBeastAdded"]=function(theirPlr,theirChar)
+			--	C.AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
+			--end,
+		},
 		[66]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto.Beast Hit",

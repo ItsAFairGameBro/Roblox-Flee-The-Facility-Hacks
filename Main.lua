@@ -721,10 +721,11 @@ local function StartBetterConsole()
 			Message = "<font color='rgb(50,50,200)'>"..Script.Name .. "</font>" .. Message
 			print("Error Message Added :D")
 		end
+		print(Message[Enum.MessageType.MessageError.Name])
 		processMessage(Message,Enum.MessageType.MessageError)
 	end
 	table.insert(C.functs,LS.MessageOut:Connect(onMessageOut))
-	table.insert(C.functs,SC.Error:Connect(onMessageOut))
+	table.insert(C.functs,SC.Error:Connect(onErrorOut))
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
 	if logSuccess then
 		for _, logData in ipairs(logResult) do

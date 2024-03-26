@@ -1321,8 +1321,16 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	end
 	return str
 end
-local oldWarn = warn
-local oldPrint = print
+local oldWarn = getgenv().oldWarn
+if not oldWarn then
+	getgenv().oldWarn = warn
+	oldWarn = warn
+end
+local oldPrint = getgenv().oldPrint or print
+if not oldWarn then
+	getgenv().oldPrint = print
+	oldPrint = print
+end
 local function warn(...)
 	oldWarn(recurseLoopPrint({...},"",0))
 end
@@ -1330,7 +1338,7 @@ local function print(...)
 	oldPrint(recurseLoopPrint({...},"",0))
 end
 getrenv().warn = warn
-getrenv().print = warn
+getrenv().print = print
 local RemoteEvent
 if gameUniverse=="Flee" then
 	RemoteEvent = RS:WaitForChild("RemoteEvent")

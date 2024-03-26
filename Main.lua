@@ -149,14 +149,18 @@ C.RichTextEscapeCharacters = {
 	{"'","&apos;"},
 }
 function C.ApplyRichTextEscapeCharacters(str,toEscaped)
+	local whatRepl = toEscaped and 1 or 2
+	local toRepl = toEscaped and 2 or 1
+	local format = {NoUnformat = true}
 	for _,escapeData in ipairs(C.RichTextEscapeCharacters) do
-		str = C.BetterGSub(str,toEscaped and escapeData[1] or escapeData[2],
-			toEscaped and escapeData[2] or escapeData[1])
+		str = C.BetterGSub(str,escapeData[whatRepl],escapeData[toRepl],format)
 	end
 	return str
 end
 function C.BetterGSub(orgString,searchString,replacement,settings)
-	orgString = C.ApplyRichTextEscapeCharacters(orgString,false)
+	if not settings.NoUnformat then
+		orgString = C.ApplyRichTextEscapeCharacters(orgString,false)
+	end
 	local lastChars = ""
 	local newText = ""
 	local canReplace = true
@@ -182,7 +186,9 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 			lastChars = ""
 		end
 	end
-	newText = C.ApplyRichTextEscapeCharacters(newText,true)
+	if not settings.NoUnformat then
+		newText = C.ApplyRichTextEscapeCharacters(newText,true)
+	end
 	return newText
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))

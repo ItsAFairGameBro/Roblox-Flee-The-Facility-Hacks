@@ -8923,26 +8923,14 @@ C.AvailableHacks ={
 				if not Torso then 
 					return;
 				end;
-				local PathConfigurationTable = {
-					AgentCanJump=true,
-					Costs = {
-						NoWalkThru = math.huge
-					}
-				};
 
-				--DEAD ZONE:
-
-				local TSM=plr:WaitForChild("TempPlayerStatsModule");
-				local newPath = Path.new(C.char, PathConfigurationTable);
-				newPath.Visualize = true;
-				C.AvailableHacks.Bot[23].CurrentPath=newPath;
-				C.AvailableHacks.Bot[23].ActivateFunction(C.enHacks["AutoVote/Known"]);
+				C.AvailableHacks.Bot[23].ActivateFunction(C.enHacks["AutoVote/Random"]);
 			end,
 			["MyPlayerAdded"]=function()
 				local MapVotingBoard=workspace:WaitForChild("MapVotingBoard")
 				local function RSUpdateGameStatusFunction()
-					if (not C.AvailableHacks.Bot[23].IsRunning and not ({isInGame(C.char)})[1]) then
-						C.AvailableHacks.Bot[23].ActivateFunction() 
+					if (not C.AvailableHacks.Bot[28].IsRunning and not ({isInGame(C.char)})[1]) then
+						C.AvailableHacks.Bot[28].ActivateFunction() 
 					else
 						--print(C.AvailableHacks.Bot[23].IsRunning)
 					end

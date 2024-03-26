@@ -9916,7 +9916,7 @@ local function CharacterAdded(theirChar,firstRun)
 				BeastAdded(theirPlr,theirPlr.Character);
 			end
 		end
-		if gameName=="FleeMain" and C.Map and C.Map.Parent and isMyChar
+		if gameName=="FleeMain" and C.Map and C.Map.Parent and isMyChar and not firstRun
 			and select(2,isInGame(theirChar)) == "Runner" then
 			local SpawnPad = C.Map:WaitForChild("OBSpawnPad")
 			if SpawnPad then

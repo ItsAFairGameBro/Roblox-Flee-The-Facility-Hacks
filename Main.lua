@@ -369,7 +369,7 @@ local function StartBetterConsole()
 	BetterConsoleTextEx.BackgroundTransparency = 1
 	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
 	BetterConsoleTextEx.BorderSizePixel = 0
-	BetterConsoleTextEx.Size = UDim2.new(1, 0, 0, 0)
+	BetterConsoleTextEx.Size = UDim2.new(1, -10, 0, 0)
 	BetterConsoleTextEx.RichText = true
 	BetterConsoleTextEx.AutomaticSize = Enum.AutomaticSize.Y
 	BetterConsoleTextEx.ZIndex = 5001
@@ -564,6 +564,7 @@ local function StartBetterConsole()
 			noMessagesFound.Parent = HackGUI
 			noMessagesFound.Visible = false
 		end
+		UIListLayout.HorizontalAlignment = noMessagesFound.Visible and Enum.HorizontalAlignment.Center or Enum.HorizontalAlignment.Right
 		UIListLayout.VerticalAlignment = visibleMessages==0 and Enum.VerticalAlignment.Center or Enum.VerticalAlignment.Top
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
@@ -705,7 +706,7 @@ local function StartBetterConsole()
 		end
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
 		local isFromMe = checkmycaller(message)
-		local inputMessage = "  "..myMessageColor .. "[%s"
+		local inputMessage = myMessageColor .. "[%s"
 			.. " ".. messageType.Name:sub(8).. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "<b>Hack.Unk</b>" or "") .. message
 		formatMessage(inputMessage,messageType,isFromMe,...)
@@ -718,7 +719,6 @@ local function StartBetterConsole()
 		processMessage(message,messageType,...)
 	end
 	local function onErrorOut(Message, Trace, theirScript)
-		print("Call",getcallingscript())
 		if Message:sub(1,1)==":" then
 			Message = "<b>Hack."..theirScript.Name .. "</b>" .. Message
 		end
@@ -3955,7 +3955,10 @@ C.AvailableHacks ={
 				end
 				local Hammer = C.char:WaitForChild("Hammer",30)
 				if not Hammer then
-					return warn("Hammer Not Found, Hacks Bro!")
+					if C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
+						warn("Hammer Not Found, Hacks Bro!")
+					end
+					return
 				end
 				local LocalClubScript = Hammer:WaitForChild("LocalClubScript",5)
 				if not LocalClubScript then
@@ -7044,19 +7047,19 @@ C.AvailableHacks ={
 				["ChangedFunction"]=function()
 					local TSM=plr:WaitForChild("TempPlayerStatsModule")
 					if not TSM:WaitForChild("IsBeast").Value then
-					return
-				end
+						return
+					end
 					local CarriedTorso=C.char:WaitForChild("CarriedTorso",20)
 					if CarriedTorso~=nil then
-					local function captureSurvivorFunction()
+						local function captureSurvivorFunction()
+							C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
+						end
+						local input = C.enHacks.AutoCapture and captureSurvivorFunction
+						setChangedAttribute(CarriedTorso,"Value",input)
 						C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
+					elseif C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
+						warn("rope not found!!!! hackssss bro!", C.char:GetFullName())
 					end
-					local input = C.enHacks.AutoCapture and captureSurvivorFunction
-					setChangedAttribute(CarriedTorso,"Value",input)
-					C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
-				else
-					warn("rope not found!!!! hackssss bro!", C.char:GetFullName())
-				end
 				end,
 
 

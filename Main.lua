@@ -1338,27 +1338,20 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	end
 	return str
 end
-local oldWarn = getgenv().oldWarn
+local oldWarn = getrenv().oldWarn
 if not oldWarn then
-	getgenv().oldWarn = warn
+	getrenv().oldWarn = warn
 	oldWarn = warn
 end
-local oldPrint = getgenv().oldPrint
+local oldPrint = getrenv().oldPrint
 if not oldWarn then
-	getgenv().oldPrint = print
+	getrenv().oldPrint = print
 	oldPrint = print
 end
 local function warn(...)
-	if true then
-		return oldWarn(...)-- in case it hasn't loaded!
-	end
 	oldWarn(recurseLoopPrint({...},"",0))
 end
 local function print(...)
-	if true then
-		return oldPrint(...)-- in case it hasn't loaded!
-	end
-	task.spawn(error,"hi")
 	oldPrint(recurseLoopPrint({...},"",0))
 end
 if not isStudio then

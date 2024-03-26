@@ -8896,7 +8896,7 @@ C.AvailableHacks ={
 				--	return a.Name:lower()>b.Name:lower()
 				--end
 				--table.sort(mapsToVoteFor,sortByNameFunction)
-				local selectedVote = mapsToVoteFor[Random.new(os.time())]
+				local selectedVote = mapsToVoteFor[Random.new(os.time()):NextInteger(1,#mapsToVoteFor)]
 				
 				print("Vote!:",selectedVote.Name)
 

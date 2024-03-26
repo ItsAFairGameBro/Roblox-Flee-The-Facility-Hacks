@@ -8873,10 +8873,6 @@ C.AvailableHacks ={
 			["Default"]=botModeEnabled,
 			["DontActivate"]=true,
 			["ActivateFunction"]=function()
-				local newPath=C.AvailableHacks.Bot[28].CurrentPath
-				if newPath==nil then 
-					return 
-				end
 				if not C.enHacks["AutoVote/Random"] then
 					return
 				end
@@ -8901,6 +8897,8 @@ C.AvailableHacks ={
 				--end
 				--table.sort(mapsToVoteFor,sortByNameFunction)
 				local selectedVote = mapsToVoteFor[Random.new(os.time())]
+				
+				print("Vote!:",selectedVote.Name)
 
 				if selectedVote.Pad then
 					C.FireSignal(selectedVote.Pad,selectedVote.Pad.Touched,nil,C.char:FindFirstChildWhichIsA("BasePart"))
@@ -8918,10 +8916,9 @@ C.AvailableHacks ={
 			["MyPlayerAdded"]=function()
 				local MapVotingBoard=workspace:WaitForChild("MapVotingBoard")
 				local function RSUpdateGameStatusFunction()
-					if (not C.AvailableHacks.Bot[28].IsRunning and not ({isInGame(C.char)})[1]) then
+					print("Change")
+					if not isInGame(C.char) then
 						C.AvailableHacks.Bot[28].ActivateFunction() 
-					else
-						--print(C.AvailableHacks.Bot[23].IsRunning)
 					end
 				end
 				setChangedAttribute(RS.GameStatus, "Value", (RSUpdateGameStatusFunction))

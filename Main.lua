@@ -10139,11 +10139,17 @@ local function registerObject(object,registerfunct,shouldntWait)
 		registerfunct(child,false)
 	end))
 	for num, lowerobject in ipairs(object:GetChildren()) do
+		if isCleared then
+			return--get out of here!
+		end
 		local function IntermediateDescendantRemovingFunction(newParent)
 			DescendantRemoving(lowerobject);
 		end;
 		task.spawn(registerfunct,lowerobject,shouldntWait)
 		table.insert(C.functs,lowerobject.AncestryChanged:Connect(IntermediateDescendantRemovingFunction));
+		if num%100 == 0 then
+			RunS.RenderStepped:Wait()
+		end
 	end
 end
 local function updateCurrentMap(newMap)

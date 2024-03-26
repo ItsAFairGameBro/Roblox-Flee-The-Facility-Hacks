@@ -712,15 +712,15 @@ local function StartBetterConsole()
 
 	local function onMessageOut(message, messageType,...)
 		if messageType==Enum.MessageType.MessageError then
-			--return--Handle these in the "onErrorOut" request!
+			return--Handle these in the "onErrorOut" request!
 		end
 		processMessage(message,messageType,...)
 	end
 	local function onErrorOut(Message, Trace, Script)
 		if Message:sub(1,1)==":" then
-			Message = "<font color='rgb(50,50,200)'>Hack."..Script.Name .. "</font>" .. Message
+			Message = "<u><b>Hack."..Script.Name .. "</u></b>" .. Message
 		end
-		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace}\n\tStack End`
+		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace:gsub("line","Line")}\tStack End`
 		processMessage(Message,Enum.MessageType.MessageError)
 	end
 	table.insert(C.functs,LS.MessageOut:Connect(onMessageOut))

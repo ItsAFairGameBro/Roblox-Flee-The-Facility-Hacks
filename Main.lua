@@ -709,9 +709,9 @@ local function StartBetterConsole()
 			BetterConsole_DoCmd("/bottom",true)
 		end
 	end
-	local function formatMessage(message,messageType,isFromMe,customTime)
+	local function formatMessage(beforeMessage,message,messageType,isFromMe,customTime)
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
-		printFunction(message:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", "")),messageType,isFromMe)
+		printFunction(beforeMessage:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", ""))..message,messageType,isFromMe)
 	end
 	
 	local function processMessage(message, messageType,...)
@@ -720,10 +720,11 @@ local function StartBetterConsole()
 		end
 		local myMessageColor = MessageTypeSettings[messageType.Name].Color
 		local isFromMe = checkmycaller(message)
-		local inputMessage = myMessageColor .. "[%s"
-			.. " ".. messageType.Name:sub(8).. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
+		local beforeMessage = myMessageColor .. "[%s"
+		local inputMessage = 
+			" ".. messageType.Name:sub(8).. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageColor))
 			.."] ".. "</font>" .. (message:sub(1,1)==":" and "<b>Hack.Unk</b>" or "") .. message
-		formatMessage(inputMessage,messageType,isFromMe,...)
+		formatMessage(beforeMessage,inputMessage,messageType,isFromMe,...)
 	end
 	
 	local function BetterConsole_wasFromMe(message)

@@ -718,10 +718,11 @@ local function StartBetterConsole()
 		processMessage(message,messageType,...)
 	end
 	local function onErrorOut(Message, Trace, theirScript)
+		print("Call",getcallingscript())
 		if Message:sub(1,1)==":" then
 			Message = "<b>Hack."..theirScript.Name .. "</b>" .. Message
 		end
-		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace:gsub("\n, ","\n\tScript '',"):gsub("line","Line")}\tStack End`
+		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace:gsub("\n, ","\n\tScript '', "):gsub("line","Line")}\tStack End`
 		processMessage(Message,Enum.MessageType.MessageError)
 	end
 	table.insert(C.functs,LS.MessageOut:Connect(onMessageOut))

@@ -9547,11 +9547,11 @@ local function iterPageItems(page)
 end
 getgenv()["ActiveScript"..getID] = getgenv()["ActiveScript"..getID] or {} 
 if previousCopy then
-	local changedEvent=Instance.new("BindableEvent")
+	local changedEvent=Instance.new("BindableEvent",script)
 	local startTime=os.clock()
 	local maxWaitTime=3
 	local function maxWaitTimeReturnFunction()
-		if not changedEvent then
+		if not changedEvent or not changedEvent.Parent then
 			return
 		end
 		print("Timeout Occured!")

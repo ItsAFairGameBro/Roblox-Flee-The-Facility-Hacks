@@ -5011,7 +5011,7 @@ C.AvailableHacks ={
 			["Title"]="Walk Through Invisible Walls",
 			["Desc"]="Walk Through All Invisible Walls In The Game",
 			["Shortcut"]="Basic_InviWalls",
-			["Default"]="Visible",
+			["Default"]=false,
 			["Options"]={
 				[false]={
 					["Title"]="DISABLED",
@@ -6692,7 +6692,6 @@ C.AvailableHacks ={
 			end,
 			["ActivateFunction"] = function(enabled, characterSpawn)
 				if enabled == C.AvailableHacks.Basic[30].Active and not characterSpawn then
-					print("Cancelled!")
 					return
 				end
 				C.AvailableHacks.Basic[30].Active = enabled

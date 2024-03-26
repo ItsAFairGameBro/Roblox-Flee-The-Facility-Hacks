@@ -718,7 +718,7 @@ local function StartBetterConsole()
 	end
 	local function onErrorOut(Message, Trace, Script)
 		if Message:sub(1,1)==":" then
-			Message = "<u><b>Hack."..Script.Name .. "</u></b>" .. Message
+			Message = "<u><b>Hack."..Script.Name .. "</b></u>" .. Message
 		end
 		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace:gsub("line","Line")}\tStack End`
 		processMessage(Message,Enum.MessageType.MessageError)

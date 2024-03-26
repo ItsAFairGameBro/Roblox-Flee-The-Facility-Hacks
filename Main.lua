@@ -766,16 +766,20 @@ local function StartBetterConsole()
 end
 function C.FireSignal(instance,signal,Settings,...)
 	local elements = table.pack(...)
+	local fired = 0
 	local success, result = pcall(function()
 		for _, data in ipairs(getconnections(signal)) do
-			if data.Enabled then
+			--if data.Enabled then
 				data:Fire(table.unpack(elements))
-				print("Fired Signal!")
-			end
+				print("Connection Found, Fired Signal!")
+			fired+=1
+			--end
 		end
 	end)
 	if not success then
 		warn(`Error Firing Signal For {instance:GetFullName()}, error: {result or "Unknown"}`)
+	else
+		print("<font color='rgb(0,255,0)'>Successful</font> in getting "..fired.." elements!")
 	end
 	return success
 end

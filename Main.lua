@@ -10161,6 +10161,7 @@ local function updateCurrentMap(newMap)
 		defaultFunction("MapAdded",{newMap});
 		task.spawn(registerObject,newMap,MapChildAdded)
 		table.insert(C.functs,newMap.AncestryChanged:Connect(function(newParent)
+			task.wait(2)--give a hefty wait time before deleting components, so that individual children can be erased first!
 			updateCurrentMap(nil)
 		end))
 	elseif C.Map and not newMap then

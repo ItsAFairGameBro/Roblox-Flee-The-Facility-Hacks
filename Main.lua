@@ -566,7 +566,7 @@ local function StartBetterConsole()
 			end
 		end
 		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
-		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..currentText..'"'
+		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
 		if visibleMessages==0 then
 			if allMessages > 0 then
 				noMessagesFound.Text = "No Messages Found!"
@@ -7089,9 +7089,12 @@ C.AvailableHacks ={
 					return false, "Capsule Not Found"
 				end
 				local Trigger = capsule:WaitForChild("PodTrigger",5)
+				local ActionSign = Trigger and Trigger:FindFirstChild("ActionSign")
 				for s=1,3,1 do
-					local isOpened = (Trigger.ActionSign.Value==11)
-					if (Trigger and Trigger.CapturedTorso.Value~=nil) then 
+					local isOpened = ActionSign and (ActionSign.Value==11)
+					if not Trigger or not ActionSign then
+						return
+					elseif (Trigger and Trigger.CapturedTorso.Value~=nil) then 
 						break --we got ourselves a trapped survivor!
 					elseif not C.enHacks.AutoCapture and not override then
 						break

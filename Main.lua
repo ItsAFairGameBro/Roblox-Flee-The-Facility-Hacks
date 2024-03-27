@@ -3965,8 +3965,8 @@ C.AvailableHacks ={
 			["Shortcut"]="Util_HideTouchscreen",
 			["Default"]=true,
 			["Universes"]={"Global"},
-			["ActivateFunction"]=function(newValue)
-				if isCleared then return end
+			["ActivateFunction"]=function(newValue,override)
+				if isCleared and not override then return end
 				local ContextActionGui = PlayerGui:WaitForChild("ContextActionGui")
 				local TouchGui = PlayerGui:WaitForChild("TouchGui");
 				local function updateTouchScreenEnability()
@@ -6637,7 +6637,9 @@ C.AvailableHacks ={
 				teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 				
 				task.spawn(function()
-					RunS.RenderStepped:Wait()
+					for s = 3, 1, -1 do
+						RunS.RenderStepped:Wait()
+					end
 					if orgChar and orgChar.PrimaryPart then
 						orgChar.PrimaryPart.Anchored = true
 					end
@@ -9591,7 +9593,7 @@ clear = function(isManualClear)
 		--end
 		C.AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
 		if C.AvailableHacks.Utility[7] then
-			C.AvailableHacks.Utility[7].ActivateFunction(false)--enable touchscreen, if needed!
+			C.AvailableHacks.Utility[7].ActivateFunction(false,true)--enable touchscreen, if needed!
 		end
 		C.AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		C.AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!

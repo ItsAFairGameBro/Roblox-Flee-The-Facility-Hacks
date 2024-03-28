@@ -556,6 +556,7 @@ local function StartBetterConsole()
 		isSorted = not includeALL
 		if not searchingONE then
 			SearchConsoleResults.Text = "Loading..."--In Case Still Visible
+			BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 			SearchConsoleResults.Text = includeALL and `Displaying Messages"\n({current}/{total})`
 				or `Filtering "{currentText}" ({current}/{total})`
 			lastText = SearchConsoleResults.Text

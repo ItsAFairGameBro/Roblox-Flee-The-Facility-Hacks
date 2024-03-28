@@ -556,12 +556,12 @@ local function StartBetterConsole()
 		isSorted = not includeALL
 		if not searchingONE then
 			SearchConsoleResults.Text = "Loading..."--In Case Still Visible
-			SearchConsoleResults.Text = includeALL and `Displaying Messages"\n{current}/{total} Complete`
-				or `Filtering "{currentText}"\n{current}/{total} Messages Searched`
+			SearchConsoleResults.Text = includeALL and `Displaying Messages"\n({current}/{total})`
+				or `Filtering "{currentText}" ({current}/{total})`
 			lastText = SearchConsoleResults.Text
 		end
 		for _, object in ipairs((searchingONE and {} or BetterConsoleList:GetChildren())) do
-			if noMessagesFound.Text ~= lastText and not searchingONE then
+			if SearchConsoleResults.Text ~= lastText and not searchingONE then
 				return -- out of order!
 			end
 			if object:IsA("TextLabel") then
@@ -569,7 +569,7 @@ local function StartBetterConsole()
 			end
 		end
 		for _, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
-			if noMessagesFound.Text ~= lastText and not searchingONE then
+			if SearchConsoleResults.Text ~= lastText and not searchingONE then
 				return -- out of order!
 			end
 			if object:IsA("TextLabel") then
@@ -593,9 +593,9 @@ local function StartBetterConsole()
 					visibleMessages += 1
 				end
 				current += 1
-				noMessagesFound.Text = includeALL and `Displaying Messages"\n{current}/{total} Complete`
-					or `Filtering "{currentText}"\n{current}/{total} Messages Searched`
-				lastText = noMessagesFound.Text
+				SearchConsoleResults.Text = includeALL and `Displaying Messages"\n({current}/{total})`
+					or `Filtering "{currentText}" ({current}/{total})`
+				lastText = SearchConsoleResults.Text
 				if (current%20)==0 then
 					RunS.RenderStepped:Wait()
 				end
@@ -603,7 +603,7 @@ local function StartBetterConsole()
 		end
 		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
-		if lastText == noMessagesFound.Text or searchingONE then
+		if lastText == SearchConsoleResults.Text or searchingONE then
 			if visibleMessages==0 then
 				if allMessages > 0 then
 					noMessagesFound.Text = "No Messages Found!"

@@ -532,8 +532,9 @@ local function StartBetterConsole()
 	noMessagesFound.RichText = false
 	noMessagesFound.TextXAlignment = Enum.TextXAlignment.Center
 	noMessagesFound.Parent = script
-	noMessagesFound.Size = BetterConsoleList
-	noMessagesFound.Position = BetterConsoleList
+	noMessagesFound.Pivot = BetterConsoleList.Pivot
+	noMessagesFound.Size = BetterConsoleList.Size
+	noMessagesFound.Position = BetterConsoleList.Position
 	noMessagesFound.ZIndex = BetterConsoleList.ZIndex + 1
 	noMessagesFound.Visible = false
 	noMessagesFound:AddTag("RemoveOnDestroy")

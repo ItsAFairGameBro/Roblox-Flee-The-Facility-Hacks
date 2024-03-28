@@ -795,17 +795,20 @@ local function StartBetterConsole()
 	end
 	table.insert(C.functs,LS.MessageOut:Connect(BetterConsole_onMessageOut))
 	table.insert(C.functs,SC.Error:Connect(BetterConsole_onErrorOut))
-	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
-	if logSuccess then
-		for num, logData in ipairs(logResult) do
-			if checkmycaller(logData.message) or true then -- only if the message wasn't from "game!"
-				task.spawn(processMessage,logData.message,logData.messageType,logData.timestamp)
-			end
-			if num%10==0 then
-				RunS.RenderStepped:Wait()
+	local logSuccess,logResult = pcall(function()
+		local logHistory = LS:GetLogHistory()
+		if logHistory then -- it should exist, right?
+			for num, logData in ipairs(logHistory) do
+				if checkmycaller(logData.message) or true then -- only if the message wasn't from "game!"
+					processMessage(logData.message,logData.messageType,logData.timestamp)
+				end
+				if num%10==0 then
+					RunS.RenderStepped:Wait()
+				end
 			end
 		end
-	else
+	end)
+	if not logSuccess then
 		BetterConsole_onMessageOut("LogService:GetLogHistory has failed: "..tostring(logResult),Enum.MessageType.MessageError)
 	end
 end

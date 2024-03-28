@@ -802,7 +802,7 @@ local function StartBetterConsole()
 				if checkmycaller(logData.message) or true then -- only if the message wasn't from "game!"
 					processMessage(logData.message,logData.messageType,logData.timestamp)
 				end
-				if num%10==0 then
+				if num%1==0 then
 					RunS.RenderStepped:Wait()
 				end
 			end

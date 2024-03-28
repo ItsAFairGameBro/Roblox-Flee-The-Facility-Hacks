@@ -562,7 +562,7 @@ local function StartBetterConsole()
 		end
 		noMessagesFound.Visible = not searchingONE
 		BetterConsoleList.Visible = searchingONE
-		for num, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
+		for _, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if noMessagesFound.Text ~= lastText and not searchingONE then
 				return -- out of order!
 			end
@@ -586,7 +586,8 @@ local function StartBetterConsole()
 				if willBeVisible then
 					visibleMessages += 1
 				end
-				noMessagesFound.Text = `Searching For "{currentText}"\n{num}/{total} Messages Searched`
+				current += 1
+				noMessagesFound.Text = `Searching For "{currentText}"\n{current}/{total} Messages Searched`
 				lastText = noMessagesFound.Text
 				task.wait(.3)
 			end
@@ -606,7 +607,7 @@ local function StartBetterConsole()
 			else
 				noMessagesFound.Visible = false
 			end
-			BetterConsoleList.Visible = true
+			BetterConsoleList.Visible = visibleMessages>0
 			UIListLayout.HorizontalAlignment = noMessagesFound.Visible and Enum.HorizontalAlignment.Center or Enum.HorizontalAlignment.Right
 			UIListLayout.VerticalAlignment = visibleMessages==0 and Enum.VerticalAlignment.Center or Enum.VerticalAlignment.Top
 		end

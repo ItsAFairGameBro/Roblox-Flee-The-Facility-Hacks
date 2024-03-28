@@ -6853,7 +6853,7 @@ C.AvailableHacks ={
 							human:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
 						end)
 						C.char.PrimaryPart.Anchored = false
-						C.char.PrimayPart:PivotTo(C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
+						C.char.PrimaryPart.CFrame = (C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 						camera.CameraSubject = human
 						for s = 2, 1, -1 do
 							RunS.RenderStepped:Wait()

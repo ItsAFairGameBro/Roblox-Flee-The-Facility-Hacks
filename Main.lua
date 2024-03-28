@@ -531,6 +531,7 @@ local function StartBetterConsole()
 		[Enum.MessageType.MessageError.Name] = {Text="Error",Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
 		["FromGMEGame"] = {Text="Game",Color="<font color='rgb(70,70,170)'>",Layout=4,Active=false},
 	}
+	local forceAtBottom = false
 	local noMessagesFound = BetterConsoleTextEx:Clone()
 	noMessagesFound.RichText = false
 	noMessagesFound.TextXAlignment = Enum.TextXAlignment.Center
@@ -542,12 +543,12 @@ local function StartBetterConsole()
 	noMessagesFound.Visible = false
 	noMessagesFound.Name = "NoMessagesFound"
 	noMessagesFound:AddTag("RemoveOnDestroy")
-	local function BetterConsole_SetMessagesVisibility(_,MessageLabel)
+	local function BetterConsole_SetMessagesVisibility(MessageLabel)
 		if isCleared then return end
 		if not MessageLabel then
 			visibleMessages = 0
 		end
-		local searchingONE = MessageLabel==nil -- if MessageLabel is specified, we're not searching much of anyone
+		local searchingONE = MessageLabel~=nil -- if MessageLabel is specified, we're not searching much of anyone
 		local currentText = SearchConsoleTextBox.Text:lower()
 		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
 		local current,total = 0,searchingONE and 1 or (#BetterConsoleList:GetChildren()-1)
@@ -608,8 +609,6 @@ local function StartBetterConsole()
 				noMessagesFound.Visible = false
 			end
 			BetterConsoleList.Visible = visibleMessages>0
-			UIListLayout.HorizontalAlignment = noMessagesFound.Visible and Enum.HorizontalAlignment.Center or Enum.HorizontalAlignment.Right
-			UIListLayout.VerticalAlignment = visibleMessages==0 and Enum.VerticalAlignment.Center or Enum.VerticalAlignment.Top
 		end
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
@@ -673,6 +672,7 @@ local function StartBetterConsole()
 				BetterConsole_TweenList:Cancel()
 				BetterConsole_TweenList:Destroy()
 			end
+			forceAtBottom = msg == "/bottom"
 			local targetPosition = msg=="/top" and Vector2.new(0,0) 
 				or Vector2.new(0,math.max(0,BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y+10))
 			if instant then
@@ -681,11 +681,13 @@ local function StartBetterConsole()
 				local duration = math.clamp(math.abs(targetPosition.Y - BetterConsoleList.CanvasPosition.Y)/1200,.2,1)
 				BetterConsole_TweenList = TS:Create(BetterConsoleList,TweenInfo.new(duration),{["CanvasPosition"] = targetPosition})
 				BetterConsole_TweenList:Play()
-				BetterConsole_TweenList.Completed:Connect(function(state)
-					if state == Enum.PlaybackState.Completed then
-						
-					end
-				end)
+				if msg == "/bottom" then
+					BetterConsole_TweenList.Completed:Connect(function(state)
+						if state == Enum.PlaybackState.Completed then
+							forceAtBottom = false
+						end
+					end)
+				end
 			end
 		end
 	end
@@ -728,7 +730,7 @@ local function StartBetterConsole()
 	local function printFunction(message,messageType,isFromMe)
 		if isCleared then return end
 		allMessages += 1
-		local wasAtBottom =  BetterConsoleList.CanvasPosition.Y+40 >= BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y
+		local wasAtBottom = forceAtBottom or BetterConsoleList.CanvasPosition.Y+40 >= BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y
 		local MessageLabel = BetterConsoleTextEx:Clone()
 		if not isFromMe then
 			MessageLabel:SetAttribute("IsGame",true)
@@ -739,7 +741,7 @@ local function StartBetterConsole()
 		MessageLabel.LayoutOrder = allMessages
 		MessageLabel.Name = allMessages
 		MessageLabel.Parent = BetterConsoleList
-		BetterConsole_SetMessagesVisibility(nil,MessageLabel)
+		BetterConsole_SetMessagesVisibility(MessageLabel)
 		if wasAtBottom then
 			BetterConsole_DoCmd("/bottom",true)
 		end

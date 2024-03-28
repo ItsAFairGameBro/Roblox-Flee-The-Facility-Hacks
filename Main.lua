@@ -6696,7 +6696,7 @@ C.AvailableHacks ={
 				teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 				
 				task.spawn(function()
-					for s = 2, 1, -1 do
+					for s = 1, 1, -1 do
 						RunS.RenderStepped:Wait()
 					end
 					if orgChar and orgChar.PrimaryPart then

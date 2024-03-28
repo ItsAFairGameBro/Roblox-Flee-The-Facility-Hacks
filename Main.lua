@@ -534,19 +534,19 @@ local function StartBetterConsole()
 	local noMessagesFound = BetterConsoleTextEx:Clone()
 	noMessagesFound.RichText = false
 	noMessagesFound.TextXAlignment = Enum.TextXAlignment.Center
-	noMessagesFound.Parent = script
+	noMessagesFound.Parent = BetterConsole
 	noMessagesFound.AnchorPoint = BetterConsoleList.AnchorPoint
 	noMessagesFound.Size = BetterConsoleList.Size
 	noMessagesFound.Position = BetterConsoleList.Position
 	noMessagesFound.ZIndex = BetterConsoleList.ZIndex + 1
 	noMessagesFound.Visible = false
+	noMessagesFound.Name = "NoMessagesFound"
 	noMessagesFound:AddTag("RemoveOnDestroy")
 	local function BetterConsole_SetMessagesVisibility(_,MessageLabel)
 		if isCleared then return end
 		if not MessageLabel then
 			visibleMessages = 0
 		end
-		noMessagesFound.Parent = script
 		local searchingONE = MessageLabel==nil -- if MessageLabel is specified, we're not searching much of anyone
 		local currentText = SearchConsoleTextBox.Text:lower()
 		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
@@ -554,7 +554,7 @@ local function StartBetterConsole()
 		local lastText
 		isSorted = not includeALL
 		if not searchingONE then
-			SearchConsoleResults.Text = "Please Wait"--In Case Still Visible
+			SearchConsoleResults.Text = "Loading..."--In Case Still Visible
 			noMessagesFound.Text = `Searching For "{currentText}"\n{current}/{total} Messages Searched`
 			lastText = noMessagesFound.Text
 			noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)

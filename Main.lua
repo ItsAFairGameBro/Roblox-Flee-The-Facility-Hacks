@@ -562,7 +562,7 @@ local function StartBetterConsole()
 		end
 		BetterConsoleList.Visible = searchingONE
 		for num, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
-			if noMessagesFound.Text ~= lastText or not searchingONE then
+			if noMessagesFound.Text ~= lastText and not searchingONE then
 				return -- out of order!
 			end
 			if object:IsA("TextLabel") then

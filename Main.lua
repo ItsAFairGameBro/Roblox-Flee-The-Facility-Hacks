@@ -6851,7 +6851,7 @@ C.AvailableHacks ={
 						C.char.PrimaryPart.Anchored = false
 						C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
-							for num, animTrack in ipairs(C.char.Animator:GetPlayingAnimationTracks()) do
+							for num, animTrack in ipairs(C.ClonedChar.Humanoid.Animator:GetPlayingAnimationTracks()) do
 								if animTrack.Animation.AnimationId~="rbxassetid://961932719" then
 									animTrack:Stop()
 								end

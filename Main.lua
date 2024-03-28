@@ -550,7 +550,7 @@ local function StartBetterConsole()
 		local searchingONE = MessageLabel==nil -- if MessageLabel is specified, we're not searching much of anyone
 		local currentText = SearchConsoleTextBox.Text:lower()
 		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
-		local current,total = 0,searchingONE and 1 or allMessages
+		local current,total = 0,searchingONE and 1 or (allMessages-1)
 		local lastText
 		isSorted = not includeALL
 		if not searchingONE then
@@ -587,11 +587,11 @@ local function StartBetterConsole()
 				end
 				noMessagesFound.Text = `Searching For "{currentText}"\n{num}/{total} Messages Searched`
 				lastText = noMessagesFound.Text
+				task.wait(.6)
 			end
 		end
 		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
-		print(lastText,noMessagesFound.Text,searchingONE)
 		if lastText == noMessagesFound.Text or searchingONE then
 			if visibleMessages==0 then
 				if allMessages > 0 then

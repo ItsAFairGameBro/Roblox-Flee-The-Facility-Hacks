@@ -588,9 +588,12 @@ local function StartBetterConsole()
 					visibleMessages += 1
 				end
 				current += 1
-				noMessagesFound.Text = `Searching For "{currentText}"\n{current}/{total} Messages Searched`
+				noMessagesFound.Text = includeALL and `Displaying Messages"\n{current}/{total} Complete`
+					or `Filtering "{currentText}"\n{current}/{total} Messages Searched`
 				lastText = noMessagesFound.Text
-				task.wait(.3)
+				if (current%20)==0 then
+					RunS.RenderStepped:Wait()
+				end
 			end
 		end
 		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)

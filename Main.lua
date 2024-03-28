@@ -755,6 +755,9 @@ local function StartBetterConsole()
 		end
 	end
 	local function formatMessage(beforeMessage,message,messageType,isFromMe,customTime)
+		if message:find("attempt to index nil with 'Value'") then
+			print("SCRIPT FOUND 😅")
+		end
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(beforeMessage:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", ""))..message,messageType,isFromMe)
 	end
@@ -762,9 +765,6 @@ local function StartBetterConsole()
 	local function processMessage(message, messageType,...)
 		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
 			message = C.ApplyRichTextEscapeCharacters(message,true)
-		end
-		if message:find("attempt to index nil with 'Value'") then
-			print("SCRIPT FOUND 😅")
 		end
 		local myMessageData = MessageTypeSettings[messageType.Name]
 		local isFromMe = checkmycaller(message)
@@ -810,7 +810,7 @@ local function StartBetterConsole()
 		local logHistory = LS:GetLogHistory()
 		if logHistory then -- it should exist, right?
 			for num, logData in ipairs(logHistory) do
-				if checkmycaller(logData.message) or true then -- only if the message wasn't from "game!"
+				if checkmycaller(logData.message) then -- only if the message wasn't from "game!"
 					processMessage(logData.message,logData.messageType,logData.timestamp)
 				end
 				if num%50==0 then

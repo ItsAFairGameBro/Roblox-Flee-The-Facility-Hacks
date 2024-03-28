@@ -6850,6 +6850,13 @@ C.AvailableHacks ={
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
 						C.char.PrimaryPart.Anchored = false
 						C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
+						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
+							for num, animTrack in ipairs(C.char.Animate:GetPlayingAnimationTracks()) do
+								if animTrack.Animation.AnimationId~="rbxassetid://961932719" then
+									animTrack:Stop()
+								end
+							end
+						end
 						camera.CameraSubject = human
 						for s = 2, 1, -1 do
 							RunS.RenderStepped:Wait()

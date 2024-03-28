@@ -550,16 +550,17 @@ local function StartBetterConsole()
 		local searchingONE = MessageLabel==nil -- if MessageLabel is specified, we're not searching much of anyone
 		local currentText = SearchConsoleTextBox.Text:lower()
 		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
-		local current,total = 0,searchingONE and 1 or (allMessages-1)
+		local current,total = 0,searchingONE and 1 or (#BetterConsoleList:GetChildren()-1)
 		local lastText
 		isSorted = not includeALL
 		if not searchingONE then
 			SearchConsoleResults.Text = "Loading..."--In Case Still Visible
-			noMessagesFound.Text = `Searching For "{currentText}"\n{current}/{total} Messages Searched`
+			noMessagesFound.Text = includeALL and `Displaying Messages"\n{current}/{total} Complete`
+				or `Filtering "{currentText}"\n{current}/{total} Messages Searched`
 			lastText = noMessagesFound.Text
 			noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
-			noMessagesFound.Visible = true
 		end
+		noMessagesFound.Visible = not searchingONE
 		BetterConsoleList.Visible = searchingONE
 		for num, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if noMessagesFound.Text ~= lastText and not searchingONE then
@@ -587,7 +588,7 @@ local function StartBetterConsole()
 				end
 				noMessagesFound.Text = `Searching For "{currentText}"\n{num}/{total} Messages Searched`
 				lastText = noMessagesFound.Text
-				task.wait(.6)
+				task.wait(.3)
 			end
 		end
 		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)

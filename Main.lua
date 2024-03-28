@@ -532,6 +532,10 @@ local function StartBetterConsole()
 	noMessagesFound.RichText = false
 	noMessagesFound.TextXAlignment = Enum.TextXAlignment.Center
 	noMessagesFound.Parent = script
+	noMessagesFound.Size = BetterConsoleList
+	noMessagesFound.Position = BetterConsoleList
+	noMessagesFound.ZIndex = BetterConsoleList.ZIndex + 1
+	noMessagesFound.Visible = false
 	noMessagesFound:AddTag("RemoveOnDestroy")
 	local function BetterConsole_SetMessagesVisibility(_,MessageLabel)
 		if isCleared then return end
@@ -546,13 +550,16 @@ local function StartBetterConsole()
 		local lastText
 		isSorted = not includeALL
 		if not searchingONE then
+			SearchConsoleResults.Text = "Please Wait"--In Case Still Visible
 			noMessagesFound.Text = `Searching For "{currentText}"\n{current}/{total} Messages Searched`
+			lastText = noMessagesFound.Text
 			noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
-			noMessagesFound.Parent = BetterConsoleList
-			SearchConsoleResults.Text = "Please Wait"
 			noMessagesFound.Visible = true
 		end
 		for num, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
+			if noMessagesFound.Text ~= lastText then
+				return -- out of order!
+			end
 			if object:IsA("TextLabel") and object ~= noMessagesFound then
 				local theirText=object:GetAttribute("OrgText")
 				local willBeVisible = includeALL or theirText:lower():find(currentText)
@@ -588,10 +595,8 @@ local function StartBetterConsole()
 					noMessagesFound.Text = "No Messages Yet!"
 					noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
 				end
-				noMessagesFound.Parent = BetterConsoleList
 				noMessagesFound.Visible = true
 			else
-				noMessagesFound.Parent = HackGUI
 				noMessagesFound.Visible = false
 			end
 		end

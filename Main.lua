@@ -798,10 +798,10 @@ local function StartBetterConsole()
 	local logSuccess,logResult = pcall(LS.GetLogHistory,LS)
 	if logSuccess then
 		for num, logData in ipairs(logResult) do
-			if checkmycaller(logData.message) then -- only if the message wasn't from "game!"
+			if checkmycaller(logData.message) or true then -- only if the message wasn't from "game!"
 				task.spawn(processMessage,logData.message,logData.messageType,logData.timestamp)
 			end
-			if num%30==0 then
+			if num%10==0 then
 				RunS.RenderStepped:Wait()
 			end
 		end

@@ -755,8 +755,8 @@ local function StartBetterConsole()
 		end
 	end
 	local function formatMessage(beforeMessage,message,messageType,isFromMe,customTime)
-		if message:find("attempt") then
-			print("SCRIPT FOUND 😅")
+		if message:find("attempt to index") then
+			print("SCRIPT FOUND 222😅")
 		end
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(beforeMessage:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", ""))..message,messageType,isFromMe)

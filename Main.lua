@@ -5288,7 +5288,7 @@ C.AvailableHacks ={
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				newHuman:ChangeState(oldHuman:GetState())
-				human:ChangeState(Enum.HumanoidStateType.Running)
+				--newHuman:ChangeState(Enum.HumanoidStateType.Running)
 				local clonedHRP, currentHRP = clonedChar:FindFirstChild("HumanoidRootPart"), currentChar:FindFirstChild("HumanoidRootPart")
 				if clonedHRP and currentHRP then
 					clonedHRP.AssemblyLinearVelocity = currentHRP.AssemblyLinearVelocity
@@ -5297,6 +5297,10 @@ C.AvailableHacks ={
 					clonedHRP.AssemblyLinearVelocity = Vector3.new()
 					clonedHRP.AssemblyAngularVelocity = Vector3.new()
 				end
+				newHuman:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
+				task.delay(1,function()
+					newHuman:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
+				end)
 			end,
 			["ReplicateProperties"]={
 				{"Humanoid","HipHeight"},
@@ -6855,13 +6859,13 @@ C.AvailableHacks ={
 							RunS.RenderStepped:Wait()
 						end
 						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
-						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
+						--[[if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
 							for num, animTrack in ipairs(C.ClonedChar.Humanoid.Animator:GetPlayingAnimationTracks()) do
 								if animTrack.Animation.AnimationId~="rbxassetid://961932719" then
 									animTrack:Stop()
 								end
 							end
-						end
+						end--]]
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()

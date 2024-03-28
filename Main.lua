@@ -5288,7 +5288,7 @@ C.AvailableHacks ={
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				newHuman:ChangeState(oldHuman:GetState())
-				oldHuman:ChangeState(Enum.HumanoidStateType.Landed)
+				human:ChangeState(Enum.HumanoidStateType.Running)
 				local clonedHRP, currentHRP = clonedChar:FindFirstChild("HumanoidRootPart"), currentChar:FindFirstChild("HumanoidRootPart")
 				if clonedHRP and currentHRP then
 					clonedHRP.AssemblyLinearVelocity = currentHRP.AssemblyLinearVelocity
@@ -6696,7 +6696,7 @@ C.AvailableHacks ={
 				teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 				
 				task.spawn(function()
-					for s = 1, 1, -1 do
+					for s = 2, 1, -1 do
 						RunS.RenderStepped:Wait()
 					end
 					if orgChar and orgChar.PrimaryPart then
@@ -6849,11 +6849,12 @@ C.AvailableHacks ={
 					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.char and C.char.Parent then
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
 						C.char.PrimaryPart.Anchored = false
-						RunS.RenderStepped:Wait()
+						C.ClonedChar:PivotTo(C.char)--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
+						for s = 2, 1, -1 do
+							RunS.RenderStepped:Wait()
+						end
 						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
-						teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 						camera.CameraSubject = human
-						human:ChangeState(Enum.HumanoidStateType.Running)
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()

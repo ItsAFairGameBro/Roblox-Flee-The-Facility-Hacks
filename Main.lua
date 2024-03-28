@@ -6684,7 +6684,7 @@ C.AvailableHacks ={
 				teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 				
 				task.spawn(function()
-					for s = 3, 1, -1 do
+					for s = 2, 1, -1 do
 						RunS.RenderStepped:Wait()
 					end
 					if orgChar and orgChar.PrimaryPart then
@@ -6836,9 +6836,10 @@ C.AvailableHacks ={
 					end
 					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.char and C.char.Parent then
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
+						C.char.PrimaryPart.Anchored = false
+						RunS.RenderStepped:Wait()
 						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
 						teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
-						C.char.PrimaryPart.Anchored = false
 						camera.CameraSubject = human
 						human:ChangeState(Enum.HumanoidStateType.Running)
 					end

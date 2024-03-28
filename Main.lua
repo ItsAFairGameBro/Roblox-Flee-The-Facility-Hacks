@@ -755,9 +755,6 @@ local function StartBetterConsole()
 		end
 	end
 	local function formatMessage(beforeMessage,message,messageType,isFromMe,customTime)
-		if message:find("attempt to index nil with ") then
-			print("SCRIPT FOUND 222😅")
-		end
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
 		printFunction(beforeMessage:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", ""))..message,messageType,isFromMe)
 	end
@@ -6690,6 +6687,10 @@ C.AvailableHacks ={
 				clonedChar:PivotTo(saveLoc)
 				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,human)
 				removeAllClasses(clonedChar,"Sound")
+				local CLONEDHammer = clonedChar:FindFirstChild("Hammer")
+				if CLONEDHammer then
+					CLONEDHammer:Destroy()
+				end
 				
 				
 				teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)

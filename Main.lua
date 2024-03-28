@@ -6849,9 +6849,9 @@ C.AvailableHacks ={
 					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.char and C.char.Parent then
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
 						C.char.PrimaryPart.Anchored = false
-						newHuman:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
+						human:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
 						task.delay(1,function()
-							newHuman:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
+							human:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
 						end)
 						C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 						camera.CameraSubject = human

@@ -8252,6 +8252,19 @@ C.AvailableHacks ={
 						RunS.RenderStepped:Wait()
 					end
 				end)
+				local function canCapture()
+					local keyNeeded = 0
+					for key, theirPlr in ipairs(runnerPlrs) do
+						if not theirPlr:GetAttribute("HasCaptured") then
+							keyNeeded = key
+						end
+					end
+					return (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") or #runnerPlrs==1
+				end
+				C.AvailableHacks.Bot[15].GetFreeze(canRun,canCapture)
+			end,
+			["GetFreeze"]=function(canRun,canCapture)
+				local currentPath = C.AvailableHacks.Bot[15].CurrentPath
 				while canRun(true) do
 					human:SetAttribute("OverrideSpeed",((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<16 and 25 or 42))
 					local inRange = (C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<8
@@ -8261,34 +8274,29 @@ C.AvailableHacks ={
 					local i = 0
 					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<6)) do
 						-- or TSM.Ragdoll.Value))  do
-						local keyNeeded = 0
-						for key, theirPlr in ipairs(runnerPlrs) do
-							if not theirPlr:GetAttribute("HasCaptured") then
-								keyNeeded = key
-							end
-						end
 						i+=1
 						if i==10 then
 							i = 0
 						elseif i>1 then
 							RunS.RenderStepped:Wait()
 						end
-						if (myRunerPlrKey==keyNeeded and not plr:GetAttribute("HasCaptured")) or plr:GetAttribute("HasRescued") or #runnerPlrs==1 then
+						if not canCapture or canCapture() then
 							--task.wait(1/2)
 							if not canRun(true) then
 								return
 							end
-							if not TSM.Ragdoll.Value and C.Beast and C.Beast.Parent then
-								StringWaitForChild(C.Beast,"Hammer.HammerEvent"):FireServer("HammerHit", C.char.Head)
+							local HammerEvent = StringWaitForChild(C.Beast,"Hammer.HammerEvent",25)
+							if not myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent then
+								HammerEvent:FireServer("HammerHit", C.char.Head)
 								--task.wait(1/4)
 							end
 							if not canRun(true) then
 								return
 							end
-							if TSM.Ragdoll.Value and C.Beast and C.Beast.Parent then
+							if myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent then
 								--teleportMyself(C.Beast:GetPivot()*CFrame.new(0,0,2))
 								--RunS.RenderStepped:Wait()
-								C.AvailableHacks.Runner[7].RopeSurvivor(TSM,plr,true)
+								C.AvailableHacks.Runner[7].RopeSurvivor(myTSM,plr,true)
 								--task.wait(1/2)
 								--if C.Beast.CarriedTorso.Value and C.Beast.CarriedTorso.Value.Parent==C.char then
 								--	C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char,true)
@@ -8301,11 +8309,10 @@ C.AvailableHacks ={
 						--task.wait(1/6)
 					end
 					RunS.RenderStepped:Wait()
-					while TSM.DisableCrawl.Value do
-						TSM.DisableCrawl.Changed:Wait()
+					while myTSM.DisableCrawl.Value do
+						myTSM.DisableCrawl.Changed:Wait()
 					end
 				end
-
 			end,
 			["ActivateFunction"]=function()
 				--print("Bot Function Activated")
@@ -9453,6 +9460,34 @@ C.AvailableHacks ={
 					:WaitForChild("ScreenGui"):WaitForChild("MenusTabFrame").Visible=true
 				end
 			end,--]]
+		},
+		[22]={
+			["Type"]="ExTextButton",
+			["Title"]="Get Frozen",
+			["Desc"]="Forces yourself to get frozen. Includes Chat Message",
+			["Shortcut"]="Commands_GetFrozen",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[false]={
+					["Title"]="FREEZE",
+					["TextColor"]=newColor3(0,170),
+				},
+				[true]={
+					["Title"]="Running",
+					["TextColor"]=newColor3(0,170),
+				},
+			},
+			["SaveDeb"] = 0,
+			["ActivateFunction"]=function(newValue)
+				C.AvailableHacks.Commands[22].SaveDeb += 1
+				local saveDeb = C.AvailableHacks.Commands[22].SaveDeb
+				local function canRun()
+					return saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and newValue and select(2,isInGame(C.char))=="Runner"
+						and not isCleared and C.Map and C.Beast
+				end
+				C.AvailableHacks.Bot[15].GetFreeze(canRun,false)
+			end,
 		},
 
 	}

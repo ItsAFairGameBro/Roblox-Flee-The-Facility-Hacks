@@ -763,6 +763,9 @@ local function StartBetterConsole()
 		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
 			message = C.ApplyRichTextEscapeCharacters(message,true)
 		end
+		if message:find("attempt to index nil with 'Value'") then
+			print("SCRIPT FOUND 😅")
+		end
 		local myMessageData = MessageTypeSettings[messageType.Name]
 		local isFromMe = checkmycaller(message)
 		local beforeMessage = myMessageData.Color .. "[%s"
@@ -783,15 +786,23 @@ local function StartBetterConsole()
 		end
 		processMessage(message,messageType,...)
 	end
-	local function BetterConsole_onErrorOut(Message, Trace, theirScript)
-		if BetterConsole_wasFromMe(Message) then
+	local function BetterConsole_onErrorOut(message, Trace, theirScript)
+		if BetterConsole_wasFromMe(message) then
 			return
 		end
-		if Message:sub(1,1)==":" then
-			Message = "<b>Hack."..theirScript.Name .. "</b>" .. Message
+		if message:sub(1,1)==":" then
+			message = "<b>Hack."..theirScript.Name .. "</b>" .. message
 		end
-		Message = `{Message}\n\tStack Begin\n\tScript ''{Trace:gsub("\n, ","\n\tScript '', "):gsub("line","Line")}\tStack End`
-		processMessage(Message,Enum.MessageType.MessageError)
+		if theirScript.Name == "LocalPlayerScript" and message:find("attempt to index nil with 'Value'") then
+			if human then
+				task.delay(1,function()
+					human:SetStateEnabled(Enum.HumanoidStateType.Jumpingp, true)
+					warn("JUMP FIX APPLIED!")
+				end)
+			end
+		end
+		message = `{message}\n\tStack Begin\n\tScript ''{Trace:gsub("\n, ","\n\tScript '', "):gsub("line","Line")}\tStack End`
+		processMessage(message,Enum.MessageType.MessageError)
 	end
 	table.insert(C.functs,LS.MessageOut:Connect(BetterConsole_onMessageOut))
 	table.insert(C.functs,SC.Error:Connect(BetterConsole_onErrorOut))

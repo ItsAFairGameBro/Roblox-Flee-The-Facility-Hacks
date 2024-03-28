@@ -591,6 +591,7 @@ local function StartBetterConsole()
 		end
 		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
+		print(lastText,noMessagesFound.Text,searchingONE)
 		if lastText == noMessagesFound.Text or searchingONE then
 			if visibleMessages==0 then
 				if allMessages > 0 then

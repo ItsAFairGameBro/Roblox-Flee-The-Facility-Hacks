@@ -556,13 +556,18 @@ local function StartBetterConsole()
 		isSorted = not includeALL
 		if not searchingONE then
 			SearchConsoleResults.Text = "Loading..."--In Case Still Visible
-			noMessagesFound.Text = includeALL and `Displaying Messages"\n{current}/{total} Complete`
+			SearchConsoleResults.Text = includeALL and `Displaying Messages"\n{current}/{total} Complete`
 				or `Filtering "{currentText}"\n{current}/{total} Messages Searched`
-			lastText = noMessagesFound.Text
-			noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
+			lastText = SearchConsoleResults.Text
 		end
-		noMessagesFound.Visible = not searchingONE
-		BetterConsoleList.Visible = searchingONE
+		for _, object in ipairs((searchingONE and {} or BetterConsoleList:GetChildren())) do
+			if noMessagesFound.Text ~= lastText and not searchingONE then
+				return -- out of order!
+			end
+			if object:IsA("TextLabel") then
+				object.Visible = false
+			end
+		end
 		for _, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if noMessagesFound.Text ~= lastText and not searchingONE then
 				return -- out of order!
@@ -611,7 +616,6 @@ local function StartBetterConsole()
 			else
 				noMessagesFound.Visible = false
 			end
-			BetterConsoleList.Visible = visibleMessages>0
 		end
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do

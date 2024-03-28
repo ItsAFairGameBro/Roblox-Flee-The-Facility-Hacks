@@ -1398,14 +1398,14 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	end
 	return str
 end
-local oldWarn = getgenv().oldWarn
+local oldWarn = getrenv().oldWarn
 if not oldWarn then
 	getgenv().oldWarn = warn
 	oldWarn = warn
 end
-local oldPrint = getgenv().oldPrint
+local oldPrint = getrenv().oldPrint
 if not oldPrint then
-	getgenv().oldPrint = print
+	getrenv().oldPrint = print
 	oldPrint = print
 end
 local function warn(...)
@@ -1415,8 +1415,8 @@ local function print(...)
 	oldPrint(recurseLoopPrint({...},"",0))
 end
 if not isStudio then
-	getgenv().warn = warn
-	getgenv().print = print
+	getrenv().warn = warn
+	getrenv().print = print
 end
 local RemoteEvent
 if gameUniverse=="Flee" then
@@ -10059,7 +10059,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			return "Load Hacks Cleared (Code 104)"
 		elseif not hack then
 			differentHacks[num] = nil -- clear this so that it isn't referenced again-
-			continue -- skip this lol!
+			continue -- skip this lolo!
 		end
 		local canPass = categoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,gameUniverse))) or (not hack.Universes and not hack.Places and gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,gameName)));
 		if canPass then

@@ -755,7 +755,7 @@ local function StartBetterConsole()
 		end
 	end
 	local function formatMessage(beforeMessage,message,messageType,isFromMe,customTime)
-		if message:find("attempt to index nil with 'Value'") then
+		if message:find("attempt") then
 			print("SCRIPT FOUND 😅")
 		end
 		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())

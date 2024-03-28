@@ -6848,19 +6848,19 @@ C.AvailableHacks ={
 					end
 					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.char and C.char.Parent then
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
-						C.char.PrimaryPart.Anchored = false
 						human:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
 						task.delay(1,function()
 							human:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
 						end)
+						C.char.PrimaryPart.Anchored = false
 						C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 						camera.CameraSubject = human
 						for s = 2, 1, -1 do
 							RunS.RenderStepped:Wait()
 						end
 						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
-						--[[if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
-							for num, animTrack in ipairs(C.ClonedChar.Humanoid.Animator:GetPlayingAnimationTracks()) do
+						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
+							for num, animTrack in ipairs(C.char.Humanoid.Animator:GetPlayingAnimationTracks()) do
 								if animTrack.Animation.AnimationId~="rbxassetid://961932719" then
 									animTrack:Stop()
 								end

@@ -539,10 +539,20 @@ local function StartBetterConsole()
 			visibleMessages = 0
 		end
 		noMessagesFound.Parent = script
+		local searchingONE = MessageLabel==nil -- if MessageLabel is specified, we're not searching much of anyone
 		local currentText = SearchConsoleTextBox.Text:lower()
 		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
+		local current,total = 0,searchingONE and 1 or allMessages
+		local lastText
 		isSorted = not includeALL
-		for num, object in ipairs((MessageLabel and {MessageLabel} or BetterConsoleList:GetChildren())) do
+		if not searchingONE then
+			noMessagesFound.Text = `Searching For "{currentText}"\n{current}/{total} Messages Searched`
+			noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
+			noMessagesFound.Parent = BetterConsoleList
+			SearchConsoleResults.Text = "Please Wait"
+			noMessagesFound.Visible = true
+		end
+		for num, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if object:IsA("TextLabel") and object ~= noMessagesFound then
 				local theirText=object:GetAttribute("OrgText")
 				local willBeVisible = includeALL or theirText:lower():find(currentText)
@@ -563,23 +573,27 @@ local function StartBetterConsole()
 				if willBeVisible then
 					visibleMessages += 1
 				end
+				noMessagesFound.Text = `Searching For "{currentText}"\n{num}/{total} Messages Searched`
+				lastText = noMessagesFound.Text
 			end
 		end
 		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
-		if visibleMessages==0 then
-			if allMessages > 0 then
-				noMessagesFound.Text = "No Messages Found!"
-				noMessagesFound.TextColor3 = Color3.fromRGB(200,50,50)
+		if lastText == noMessagesFound.Text then
+			if visibleMessages==0 then
+				if allMessages > 0 then
+					noMessagesFound.Text = "No Messages Found!"
+					noMessagesFound.TextColor3 = Color3.fromRGB(200,50,50)
+				else
+					noMessagesFound.Text = "No Messages Yet!"
+					noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
+				end
+				noMessagesFound.Parent = BetterConsoleList
+				noMessagesFound.Visible = true
 			else
-				noMessagesFound.Text = "No Messages Yet!"
-				noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
+				noMessagesFound.Parent = HackGUI
+				noMessagesFound.Visible = false
 			end
-			noMessagesFound.Parent = BetterConsoleList
-			noMessagesFound.Visible = true
-		else
-			noMessagesFound.Parent = HackGUI
-			noMessagesFound.Visible = false
 		end
 		UIListLayout.HorizontalAlignment = noMessagesFound.Visible and Enum.HorizontalAlignment.Center or Enum.HorizontalAlignment.Right
 		UIListLayout.VerticalAlignment = visibleMessages==0 and Enum.VerticalAlignment.Center or Enum.VerticalAlignment.Top
@@ -653,6 +667,11 @@ local function StartBetterConsole()
 				local duration = math.clamp(math.abs(targetPosition.Y - BetterConsoleList.CanvasPosition.Y)/1200,.2,1)
 				BetterConsole_TweenList = TS:Create(BetterConsoleList,TweenInfo.new(duration),{["CanvasPosition"] = targetPosition})
 				BetterConsole_TweenList:Play()
+				BetterConsole_TweenList.Completed:Connect(function(state)
+					if state == Enum.PlaybackState.Completed then
+						
+					end
+				end)
 			end
 		end
 	end
@@ -3529,7 +3548,8 @@ C.AvailableHacks ={
 				local ComputerBase = Computer.PrimaryPart
 				local BestTrigger
 				local bestAngle = 3
-				for _, trigger_name in ipairs({"ComputerTrigger1","ComputerTrigger2","ComputerTrigger3"}) do
+				for trigger_index = 1, 3, 1 do -- loop through ComputerTrigger 1 through 3
+					local trigger_name = "ComputerTrigger"..trigger_index
 					local trigger = Computer:WaitForChild(trigger_name, 20)
 					if not trigger then
 						return
@@ -7092,7 +7112,7 @@ C.AvailableHacks ={
 				local ActionSign = Trigger and Trigger:FindFirstChild("ActionSign")
 				for s=1,3,1 do
 					local isOpened = ActionSign and (ActionSign.Value==11)
-					if not Trigger or not ActionSign then
+					if not Trigger or not ActionSign or not Trigger:FindFirstChild("CapturedTorso") then
 						return
 					elseif (Trigger and Trigger.CapturedTorso.Value~=nil) then 
 						break --we got ourselves a trapped survivor!

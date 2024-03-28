@@ -141,6 +141,9 @@ local function createToggleButton(Toggle, ExTextButton)
 	Toggle.TextWrapped = true;
 	Toggle.Size = UDim2.new(0.443029076, 0, 1, 0);
 end;
+local function clear()--temporary clear!
+	
+end
 C.RichTextEscapeCharacters = {
 	{"&","&amp;"},
 	{"<","&lt;"},
@@ -557,11 +560,12 @@ local function StartBetterConsole()
 			noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
 			noMessagesFound.Visible = true
 		end
+		BetterConsoleList.Visible = searchingONE
 		for num, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if noMessagesFound.Text ~= lastText then
 				return -- out of order!
 			end
-			if object:IsA("TextLabel") and object ~= noMessagesFound then
+			if object:IsA("TextLabel") then
 				local theirText=object:GetAttribute("OrgText")
 				local willBeVisible = includeALL or theirText:lower():find(currentText)
 				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
@@ -587,7 +591,7 @@ local function StartBetterConsole()
 		end
 		BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 		SearchConsoleResults.Text = includeALL and "" or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..'</font> search results for found "'..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
-		if lastText == noMessagesFound.Text then
+		if lastText == noMessagesFound.Text or searchingONE then
 			if visibleMessages==0 then
 				if allMessages > 0 then
 					noMessagesFound.Text = "No Messages Found!"
@@ -600,9 +604,10 @@ local function StartBetterConsole()
 			else
 				noMessagesFound.Visible = false
 			end
+			BetterConsoleList.Visible = true
+			UIListLayout.HorizontalAlignment = noMessagesFound.Visible and Enum.HorizontalAlignment.Center or Enum.HorizontalAlignment.Right
+			UIListLayout.VerticalAlignment = visibleMessages==0 and Enum.VerticalAlignment.Center or Enum.VerticalAlignment.Top
 		end
-		UIListLayout.HorizontalAlignment = noMessagesFound.Visible and Enum.HorizontalAlignment.Center or Enum.HorizontalAlignment.Right
-		UIListLayout.VerticalAlignment = visibleMessages==0 and Enum.VerticalAlignment.Center or Enum.VerticalAlignment.Top
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
 		local BoxFrame = BetterConsoleFilterBox:Clone()
@@ -9592,15 +9597,6 @@ local function attributeAddedFunction()
 	--end
 end
 
-if script==nil or plr:GetAttribute(getID)~=C.saveIndex then
-	setChangedAttribute()
-	return "Saved Index Changed (Code 101)"
-end
-attributeChangedSignal = plr:GetAttributeChangedSignal(getID):Connect(attributeAddedFunction)
-table.insert(C.functs,attributeChangedSignal)
-
-C.PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
-
 --DELETION--
 clear = function(isManualClear)
 	isCleared=true
@@ -9736,6 +9732,17 @@ clear = function(isManualClear)
 	if isStudio then DS:AddItem(script,1) end
 	clear=nil
 end
+
+if script==nil or plr:GetAttribute(getID)~=C.saveIndex then
+	attributeAddedFunction()
+	return "Saved Index Changed (Code 101)"
+end
+attributeChangedSignal = plr:GetAttributeChangedSignal(getID):Connect(attributeAddedFunction)
+table.insert(C.functs,attributeChangedSignal)
+
+C.PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
+
+
 
 --Anti Main Check:
 local function iterPageItems(page)

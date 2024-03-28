@@ -6849,7 +6849,7 @@ C.AvailableHacks ={
 					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.char and C.char.Parent then
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
 						C.char.PrimaryPart.Anchored = false
-						C.char:PivotTo(C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
+						C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 						camera.CameraSubject = human
 						for s = 2, 1, -1 do
 							RunS.RenderStepped:Wait()

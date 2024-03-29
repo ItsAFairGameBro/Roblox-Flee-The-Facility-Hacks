@@ -4007,20 +4007,24 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				if C.saveIndex == 1 then -- it's first execute, let's fix keyboard input!
-					local rando
-					while true do
-						rando = PlayerGui:FindFirstChildWhichIsA("TextBox",true)
+					local randoTB = Instance.new("TextBox",PlayerGui)
+					--[[while true do
+						rando = :FindFirstChildWhichIsA("TextBox",true)
 						print("Searching")
 						if rando then
 							break
 						else
 							RunS.RenderStepped:Wait()
 						end
-					end
-					rando:CaptureFocus()
+					end--]]
+					randoTB:CaptureFocus()
 					RunS.RenderStepped:Wait()
-					if rando and rando.Parent and rando:IsFocused() then
-						rando:ReleaseFocus()
+					if randoTB and randoTB.Parent then
+						
+						if randoTB:IsFocused() then
+							randoTB:ReleaseFocus()
+						end
+						randoTB:Destroy()
 					end
 				end
 			end,

@@ -4007,7 +4007,15 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				if C.saveIndex == 1 then -- it's first execute, let's fix keyboard input!
-					local rando = PlayerGui:FindFirstChildWhichIsA("TextBox",true)
+					local rando
+					while true do
+						rando = game:FindFirstChildWhichIsA("TextBox",true)
+						if rando then
+							RunS.RenderStepped:Wait()
+						else
+							break
+						end
+					end
 					rando:CaptureFocus()
 					RunS.RenderStepped:Wait()
 					if rando and rando.Parent and rando:IsFocused() then

@@ -4005,6 +4005,18 @@ C.AvailableHacks ={
 					RunS.RenderStepped:Wait()
 				end
 			end,
+			["MyPlayerAdded"]=function()
+				if C.saveIndex == 1 then -- first execute!
+					print("First Run")
+					local rando = PlayerGui:FindFirstChildOfClass("TextBox",true)
+					rando:CaptureFocus()
+					RunS.RenderStepped:Wait()
+					if rando and rando.Parent and rando:IsFocused() then
+						print("and release!")
+						rando:ReleaseFocus()
+					end
+				end
+			end,
 		}),
 		[4]={
 			["Type"]="ExTextButton",

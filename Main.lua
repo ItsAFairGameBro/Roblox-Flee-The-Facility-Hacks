@@ -188,7 +188,7 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 				canReplace = false
 			end
 		end
-		if canReplace then
+		--if canReplace then
 			local combined = lastChars..char
 			local combinedComparator = (settings and settings.IgnoreCase and combined:lower() or combined)
 			if combinedComparator == searchString:sub(1,combined:len()) and canReplace then
@@ -207,9 +207,9 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 				newText..=combined
 				lastChars = ""
 			end
-		else
-			newText..=char
-		end
+		--else
+		--	newText..=char
+		--end
 		if char == ">" then
 			canReplace = true
 		end
@@ -578,7 +578,7 @@ local function StartBetterConsole()
 		local current,total = 0,searchingONE and 1 or (#BetterConsoleList:GetChildren()-1)
 		local lastText
 		isSorted = not includeALL
-		if total == 0 then
+		if total ~= 0 then
 			if not searchingONE then
 				SearchConsoleResults.Text = "Loading..."--In Case Still Visible
 				BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
@@ -588,6 +588,8 @@ local function StartBetterConsole()
 			end
 		else
 			BetterConsoleList:TweenSize(UDim2.fromScale(1,.846),"Out","Quad",.6,true)
+			SearchConsoleResults.Text = ""--In Case Still Visible
+			lastText = ""
 		end
 		for _, object in ipairs((searchingONE and {} or BetterConsoleList:GetChildren())) do
 			if SearchConsoleResults.Text ~= lastText and not searchingONE then

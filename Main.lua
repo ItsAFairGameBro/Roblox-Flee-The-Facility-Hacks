@@ -3874,10 +3874,26 @@ C.AvailableHacks ={
 			["Desc"]="Fixes elements",
 			["Shortcut"]="Util_Fix",
 			["Default"]=true,
-			["Funct"]=nil,
+			["Functs"]={},
 			["DontActivate"] = true,
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
+				for num, funct in ipairs(C.AvailableHacks.Utility[3].Functs) do
+					funct:Disconnect()
+				end
+				C.AvailableHacks.Utility[3].Functs = {}
+
+				local textScaledTL = C.AvailableHacks.Utility[3]
+				if textScaledTL then
+					textScaledTL:Destroy()
+				end
+				textScaledTL = Instance.new("TextBox")
+				textScaledTL.Visible = true
+				textScaledTL.Position = UDim2.fromScale(5,0)
+				textScaledTL.TextScaled = true
+				textScaledTL:AddTag("RemoveOnDestroy")
+				C.AvailableHacks.Utility[3] = textScaledTL
+
 				if gameUniverse=="Flee" then
 					local ScreenGui = PlayerGui:WaitForChild("ScreenGui");
 					local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
@@ -3983,6 +3999,25 @@ C.AvailableHacks ={
 				end
 				setChangedAttribute(camera,"CameraType", (newValue and cameraChanged or nil));
 				cameraChanged()
+				local function textBoxSelected(TextBox)
+					if TextBox.TextScaled then
+						textScaledTL.Font = TextBox.Font
+						textScaledTL.Size = TextBox.Size
+						textScaledTL.Text = TextBox.PlaceholderText
+						local setSize = 8 
+						for size = 64, setSize, -1 do
+							textScaledTL.TextSize = size
+							RunS.RenderStepped:Wait()
+							if textScaledTL.TextFits then
+								setSize = size
+								break
+							end
+						end
+						print("Best Predicted Value",setSize)
+						TextBox.TextSize = setSize
+					end
+				end
+				table.insert(C.AvailableHacks.Utility[3].Functs,UIS.TextBoxFocused:Connect(textBoxSelected))
 				--if (newValue and not C.AvailableHacks.Utility[3].Funct) then
 					--[[C.AvailableHacks.Utility[3].Funct = UIS.InputBegan:Connect(function(input, gameprocesssed)
 						if gameprocesssed then

@@ -9663,6 +9663,9 @@ C.AvailableHacks ={
 			["SaveDeb"] = 0,
 			["ActivateFunction"]=function(newValue)
 				C.AvailableHacks.Commands[22].SaveDeb += 1
+				if newValue == false then
+					return
+				end
 				local saveDeb = C.AvailableHacks.Commands[22].SaveDeb
 				local function canRun()
 					return saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and newValue and select(2,isInGame(C.char))=="Runner"

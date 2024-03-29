@@ -10444,6 +10444,7 @@ local function MapChildAdded(child,shouldntWait)
 		CS:AddTag(doorTrigger,"DoorAndExit");
 		if child.Name=="ExitDoor" then
 			CS:AddTag(child,"Exit");
+			CS:AddTag(child:WaitForChild("ExitArea"),"Exit")
 		else
 			CS:AddTag(child,"Door");
 			CS:AddTag(doorTrigger,doorTrigger_NAME);

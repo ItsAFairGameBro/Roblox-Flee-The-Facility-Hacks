@@ -6923,11 +6923,6 @@ C.AvailableHacks ={
 							C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPrimaryPartCFrame())
 							--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 						end
-						camera.CameraSubject = human
-						for s = 2, 1, -1 do
-							RunS.RenderStepped:Wait()
-						end
-						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
 						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
 							for num, animTrack in ipairs(C.char.Humanoid.Animator:GetPlayingAnimationTracks()) do
 								if animTrack.Animation.AnimationId~="rbxassetid://961932719" then
@@ -6935,6 +6930,11 @@ C.AvailableHacks ={
 								end
 							end
 						end--]]
+						camera.CameraSubject = human
+						--for s = 2, 1, -1 do
+							--RunS.RenderStepped:Wait()
+						--end
+						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()

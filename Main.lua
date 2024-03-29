@@ -3883,7 +3883,7 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Utility[3].Functs = {}
 
-				local textScaledTL = C.AvailableHacks.Utility[3]
+				local textScaledTL = C.AvailableHacks.Utility[3].DummyTextBox
 				if textScaledTL then
 					textScaledTL:Destroy()
 				end
@@ -3892,7 +3892,7 @@ C.AvailableHacks ={
 				textScaledTL.Position = UDim2.fromScale(5,0)
 				textScaledTL.TextScaled = true
 				textScaledTL:AddTag("RemoveOnDestroy")
-				C.AvailableHacks.Utility[3] = textScaledTL
+				C.AvailableHacks.Utility[3].DummyTextBox = textScaledTL
 
 				if gameUniverse=="Flee" then
 					local ScreenGui = PlayerGui:WaitForChild("ScreenGui");

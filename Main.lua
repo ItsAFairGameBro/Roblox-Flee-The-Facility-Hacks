@@ -9893,6 +9893,7 @@ if previousCopy then
 	end
 	local clearedConnection=(plr:GetAttributeChangedSignal("Cleared"..getID):Connect(clearFunct))
 	local currentSize = getDictLength(getgenv()["ActiveScript"..getID])
+	task.delay(1,changedEvent.Fire,changedEvent)
 	while currentSize>0 do
 		changedEvent.Event:Wait()
 		--[[while currentSize == getDictLength(getgenv()["ActiveScript"..getID]) do

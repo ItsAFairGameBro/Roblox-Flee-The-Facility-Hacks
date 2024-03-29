@@ -3887,7 +3887,7 @@ C.AvailableHacks ={
 				if textScaledTL then
 					textScaledTL:Destroy()
 				end
-				textScaledTL = Instance.new("TextBox")
+				textScaledTL = Instance.new("TextBox",HackGUI)
 				textScaledTL.Visible = true
 				textScaledTL.Position = UDim2.fromScale(5,0)
 				textScaledTL.TextScaled = true

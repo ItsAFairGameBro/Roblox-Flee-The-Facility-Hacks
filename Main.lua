@@ -652,6 +652,8 @@ local function StartBetterConsole()
 			else
 				noMessagesFound.Visible = false
 			end
+		else
+			noMessagesFound.Visible = false
 		end
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
@@ -10444,7 +10446,7 @@ local function MapChildAdded(child,shouldntWait)
 		CS:AddTag(doorTrigger,"DoorAndExit");
 		if child.Name=="ExitDoor" then
 			CS:AddTag(child,"Exit");
-			CS:AddTag(child:WaitForChild("ExitArea"),"Exit")
+			CS:AddTag(child:WaitForChild("ExitArea"),"Trigger")
 		else
 			CS:AddTag(child,"Door");
 			CS:AddTag(doorTrigger,doorTrigger_NAME);

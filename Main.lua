@@ -5020,7 +5020,7 @@ C.AvailableHacks ={
 				local isR6=human.RigType==Enum.HumanoidRigType.R6
 				local function update(new,saveHeight)
 					local blackListTable = {"Blacklist",C.char}
-					local directionPosition1 = C.char.PrimaryPart.Size.Y/2+(isR6 and C.char["Right Leg"] or C.char["Lower Leg"]).Size.Y/2+3.03
+					local directionPosition1 = C.char.PrimaryPart.Size.Y/2+(isR6 and C.char["Right Leg"] or C.char["LowerLeftLeg"]).Size.Y/2+3.03
 					local directionPosition2 = getHumanoidHeight(C.char)
 					local directionPosition
 					if isR6 then
@@ -9651,13 +9651,18 @@ C.AvailableHacks ={
 			["Options"]={
 				[false]={
 					["Title"]="FREEZE",
-					["TextColor"]=newColor3(0,170),
+					["TextColor"]=newColor3(255,255,255),
+				},
+				["In Progress"]={
+					["Title"]="IN PROGRESS",["Locked"]=true,
+					["TextColor"]=newColor3(255,0,255),
 				},
 				[true]={
-					["Title"]="Running",
-					["TextColor"]=newColor3(0,170),
+					["Title"]="ENABLED",
+					["TextColor"]=newColor3(0,255,0),
 				},
 			},
+		},
 			["SaveDeb"] = 0,
 			["ActivateFunction"]=function(newValue)
 				C.AvailableHacks.Commands[22].SaveDeb += 1

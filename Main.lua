@@ -43,7 +43,7 @@ local isJumpBeingHeld = false
 
 local lastRunningEnv = getfenv()
 local reloadFunction = function()
-	loadstring(game:HttpGet("https://raw.githubusercontent.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/main/Load.lua",false))
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/main/Load.lua",false))()
 end--lastRunningEnv.ReloadFunction
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false

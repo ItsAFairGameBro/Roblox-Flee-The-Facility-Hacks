@@ -3942,10 +3942,8 @@ C.AvailableHacks ={
 					CAS:UnbindAction("PushSlash"..C.saveIndex)
 				end
 				local function cameraChanged()
-					print("Camera Checked!")
 					local newCameraType = camera.CameraType
 					if newCameraType == Enum.CameraType.Custom and C.enHacks.Util_Fix then
-						print("Set to TRAK")
 						camera.CameraType = Enum.CameraType.Track
 					elseif newCameraType == Enum.CameraType.Track and not C.enHacks.Util_Fix then
 						camera.CameraType = Enum.CameraType.Custom
@@ -3989,11 +3987,11 @@ C.AvailableHacks ={
 				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
 			end,
 			["MyStartUp"]=function()
+				RunS.RenderStepped:Wait()--Delay it
+				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
 				if gameUniverse ~= "Flee" then
 					return
 				end
-				RunS.RenderStepped:Wait()--Delay it
-				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
 				task.wait(2)
 				for s = 300, 1, -1 do
 					if not SG:GetCore("ChatActive") then

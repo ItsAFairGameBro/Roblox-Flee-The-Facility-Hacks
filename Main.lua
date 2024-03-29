@@ -3943,10 +3943,13 @@ C.AvailableHacks ={
 				end
 				local function cameraChanged()
 					local newCameraType = camera.CameraType
+					print("Cur",newCameraType)
 					if newCameraType == Enum.CameraType.Custom and C.enHacks.Util_Fix then
 						camera.CameraType = Enum.CameraType.Follow
+						print("Set")
 					elseif newCameraType == Enum.CameraType.Follow and not C.enHacks.Util_Fix then
 						camera.CameraType = Enum.CameraType.Custom
+						print("Disabled")
 					end
 				end
 				setChangedAttribute(camera,"CameraType", (newValue and cameraChanged or nil));

@@ -191,8 +191,7 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 		if combinedComparator == searchString:sub(1,combined:len()) and canReplace then
 			lastChars = combined
 			if combinedComparator == searchString then
-				print(replacement,combined)
-				newText..=replacement:format(combined)
+				newText..=replacement:gsub("%%s",combined)
 				lastChars=""
 			end
 		else

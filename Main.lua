@@ -9711,7 +9711,6 @@ end
 --DELETION--
 C.clear = function(isManualClear)
 	isCleared=true
-	print("I started clearing",C.saveIndex)
 	if HackGUI then
 		HackGUI.Enabled=false
 	end
@@ -9837,6 +9836,7 @@ C.clear = function(isManualClear)
 
 
 	getgenv()["ActiveScript"..getID][C.saveIndex] = nil
+	
 
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
 	if HackGUI then
@@ -9844,7 +9844,8 @@ C.clear = function(isManualClear)
 		DS:AddItem(HackGUI,1)
 	end
 	if isStudio then DS:AddItem(script,1) end
-	clear=nil
+	print("I started clearing",C.saveIndex)
+	C.clear=nil
 end
 
 if script==nil or plr:GetAttribute(getID)~=C.saveIndex then
@@ -9898,6 +9899,7 @@ if previousCopy then
 			warn("waiting",getDictLength(getgenv()["ActiveScript"..getID]),currentSize,getgenv()["ActiveScript"..getID])
 			RunS.RenderStepped:Wait()
 		end--]]
+		RunS.RenderStepped:Wait()
 		currentSize = getDictLength(getgenv()["ActiveScript"..getID])
 		if isCleared then
 			DS:AddItem(script,1)
@@ -9911,7 +9913,6 @@ if previousCopy then
 			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
 			print("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!")
 		end
-		RunS.RenderStepped:Wait()
 	end
 	changedEvent:Destroy()
 	clearedConnection:Disconnect()
@@ -9996,9 +9997,9 @@ CAS:BindAction("hack_jump"..C.saveIndex,jumpAction,false, Enum.PlayerActions.Cha
 --GUI CODING
 local refreshTypes = ({
 	ExTextButton = function(hackFrame,hackInfo,isFirstRun)
-		selectedKey = (C.enHacks[hackInfo.Shortcut]);
-		selectedOption = hackInfo.Options[selectedKey];
-		ToggleButton = hackFrame:WaitForChild("Toggle",60)
+		local selectedKey = (C.enHacks[hackInfo.Shortcut]);
+		local selectedOption = hackInfo.Options[selectedKey];
+		local ToggleButton = hackFrame:WaitForChild("Toggle",60)
 		if isCleared then
 			if not ToggleButton then
 				return --error("SEEMS GOOD: TOGGLE DOESN'T EXIST FOR "..hackInfo.Title)

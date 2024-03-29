@@ -9675,18 +9675,18 @@ local previousCopy = (plr:GetAttribute(getID)~=nil)
 plr:SetAttribute(getID,C.saveIndex)
 local attributeChangedSignal
 local function attributeAddedFunction()
-	if attributeChangedSignal then
-		attributeChangedSignal:Disconnect()
-		attributeChangedSignal=nil
-	end
 	local newIndex = plr:GetAttribute(getID)
-	if clear==nil then
-		isCleared=true
-		print("Clear Not Found!",C.saveIndex)
-		DS:AddItem(script,15)
-		return
-	end
 	if newIndex>C.saveIndex then
+		if attributeChangedSignal then
+			attributeChangedSignal:Disconnect()
+			attributeChangedSignal=nil
+		end
+		if clear==nil then
+			isCleared=true
+			print("Clear Not Found!",C.saveIndex)
+			DS:AddItem(script,15)
+			return
+		end
 		print("Different:",newIndex,C.saveIndex)
 		clear()
 	end

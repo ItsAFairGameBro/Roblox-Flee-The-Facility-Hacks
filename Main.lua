@@ -8451,7 +8451,7 @@ C.AvailableHacks ={
 				local currentPath = C.AvailableHacks.Bot[15].CurrentPath
 				while canRun(true) do
 					human:SetAttribute("OverrideSpeed",((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<16 and 25 or 42))
-					local inRange = (C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<8
+					local inRange = (C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<6
 					if not inRange and not myTSM.Captured.Value then
 						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end

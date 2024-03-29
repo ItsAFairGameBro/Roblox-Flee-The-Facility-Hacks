@@ -9686,9 +9686,9 @@ local function attributeAddedFunction()
 		DS:AddItem(script,15)
 		return
 	end
-	--if newIndex~=C.saveIndex then
-	clear()
-	--end
+	if newIndex~=C.saveIndex then
+		clear()
+	end
 end
 
 --DELETION--

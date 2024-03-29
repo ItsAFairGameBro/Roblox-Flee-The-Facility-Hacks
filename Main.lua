@@ -28,7 +28,7 @@ isStudio=RunS:IsStudio()
 
 local C={enHacks = {},playerEvents={},objectFuncts={},functs={},refreshEnHack={},
 Map=nil,char=nil,Beast=nil,TestPart=nil,ToggleTag=nil,clear=nil,saveIndex=nil,AvailableHacks=nil,ResetEvent=nil,
-CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil}
+CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil,textBoxSize=24}
 --local C.Map,C.char,C.Beast,C.TestPart,C.C.ToggleTag,clear,C.saveIndex,C.AvailableHacks,ResetEvent,C.C.C.CommandBarLine,C.Console,C.ConsoleButton,C.PlayerControlModule
 --= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
 --comma_value=nil
@@ -285,7 +285,7 @@ local function StartBetterConsole()
 	SearchConsoleTextBox.Text = ""
 	SearchConsoleTextBox.TextColor3 = Color3.new(1,1,1)
 	SearchConsoleTextBox.TextScaled = true
-	SearchConsoleTextBox.TextSize = 14
+	SearchConsoleTextBox.TextSize = C.textBoxSize
 	SearchConsoleTextBox.TextStrokeColor3 = Color3.new(0,0,0)
 	SearchConsoleTextBox.TextStrokeTransparency = 0
 	SearchConsoleTextBox.TextWrapped = true
@@ -1015,7 +1015,7 @@ local function GuiCreationFunction()
 	MyTextBox.Text = "0";
 	MyTextBox.TextColor3 = Color3.fromRGB(255, 255, 255);
 	MyTextBox.TextScaled = true;
-	MyTextBox.TextSize = 14.000;
+	MyTextBox.TextSize = C.textBoxSize;
 	MyTextBox.TextStrokeTransparency = 0.000;
 	MyTextBox.TextWrapped = true;
 	MyTextBox.ClearTextOnFocus = false;
@@ -3883,7 +3883,7 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Utility[3].Functs = {}
 
-				local textScaledTL = C.AvailableHacks.Utility[3].DummyTextBox
+				--[[local textScaledTL = C.AvailableHacks.Utility[3].DummyTextBox
 				if textScaledTL then
 					textScaledTL:Destroy()
 				end
@@ -3891,7 +3891,7 @@ C.AvailableHacks ={
 				textScaledTL.Visible = true
 				textScaledTL.Position = UDim2.fromScale(5,0)
 				textScaledTL:AddTag("RemoveOnDestroy")
-				C.AvailableHacks.Utility[3].DummyTextBox = textScaledTL
+				C.AvailableHacks.Utility[3].DummyTextBox = textScaledTL--]]
 
 				if gameUniverse=="Flee" then
 					local ScreenGui = PlayerGui:WaitForChild("ScreenGui");
@@ -3998,7 +3998,7 @@ C.AvailableHacks ={
 				end
 				setChangedAttribute(camera,"CameraType", (newValue and cameraChanged or nil));
 				cameraChanged()
-				local function textBoxSelected(TextBox)
+				--[[local function textBoxSelected(TextBox)
 					if TextBox.TextScaled then
 						textScaledTL.Font = TextBox.Font
 						textScaledTL.Size = TextBox.Size
@@ -4017,7 +4017,7 @@ C.AvailableHacks ={
 						TextBox.TextSize = setSize
 					end
 				end
-				table.insert(C.AvailableHacks.Utility[3].Functs,UIS.TextBoxFocused:Connect(textBoxSelected))
+				table.insert(C.AvailableHacks.Utility[3].Functs,UIS.TextBoxFocused:Connect(textBoxSelected))--]]
 				--if (newValue and not C.AvailableHacks.Utility[3].Funct) then
 					--[[C.AvailableHacks.Utility[3].Funct = UIS.InputBegan:Connect(function(input, gameprocesssed)
 						if gameprocesssed then

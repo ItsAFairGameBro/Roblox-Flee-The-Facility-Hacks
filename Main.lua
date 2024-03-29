@@ -575,7 +575,7 @@ local function StartBetterConsole()
 			end
 			if object:IsA("TextLabel") then
 				local theirText=object:GetAttribute("OrgText")
-				local willBeVisible = includeALL or theirText:lower():find(currentText)
+				local willBeVisible = includeALL or theirText:lower():match(currentText)
 				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
 					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
 				if willBeVisible then

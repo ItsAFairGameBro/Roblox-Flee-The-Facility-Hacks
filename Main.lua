@@ -1567,7 +1567,7 @@ local trigger_params = {FreezePod = 0, Computer = 0, Exit = 0, Door = 0}
 local trigger_enabledNames = {}
 local trigger_allowedExceptions
 local trigger_allEnabled = {FreezePod = true, Computer = true, Exit = true, Door = true, AllowExceptions={}}
-local trigger_allDisabled = {FreezePod = true, Computer = true, Exit = true, Door = true, AllowExceptions={}}
+local trigger_allDisabled = {FreezePod = false, Computer = false, Exit = false, Door = false, AllowExceptions={}}
 local function trigger_gettype(triggerParent)
 	local triggerType = (triggerParent.Name=="FreezePod" and "FreezePod")
 		or (triggerParent:HasTag("Computer") and "Computer") or (triggerParent:HasTag("Exit") and "Exit") or (triggerParent:HasTag("Door") and "Door")
@@ -1634,7 +1634,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 					trigger.Size=newVector3(.0001,.0001,.0001)
 				end
 				trigger.CanTouch=enabled
-
+				print("Trigger",trigger.Name,triggerType,enabled)
 			end
 		end
 	end

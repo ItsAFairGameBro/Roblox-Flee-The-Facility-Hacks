@@ -3890,7 +3890,6 @@ C.AvailableHacks ={
 				textScaledTL = Instance.new("TextBox",HackGUI)
 				textScaledTL.Visible = true
 				textScaledTL.Position = UDim2.fromScale(5,0)
-				textScaledTL.TextScaled = true
 				textScaledTL:AddTag("RemoveOnDestroy")
 				C.AvailableHacks.Utility[3].DummyTextBox = textScaledTL
 

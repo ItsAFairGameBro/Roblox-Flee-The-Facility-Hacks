@@ -1381,7 +1381,8 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	local totalValues = #leftTbl
 	for num, val in pairs(leftTbl) do
 		str..=string.rep("\t",depth)
-		if typeof(val)=="table" then
+		local isTable = typeof(val)=="table"
+		if isTable then
 			str..=("tbl "..num..":	{\n")
 			str..=recurseLoopPrint(val,"",depth+1)
 			str..=("\n	}")
@@ -1394,6 +1395,9 @@ local function recurseLoopPrint(leftTbl,str,depth)
 		end
 		if totalValues ~= num then
 			str..=" "
+			if isTable then
+				str..="\n"
+			end
 		end
 	end
 	return str
@@ -3937,6 +3941,16 @@ C.AvailableHacks ={
 					end
 					CAS:UnbindAction("PushSlash"..C.saveIndex)
 				end
+				local function cameraChanged()
+					local newCameraType = camera.CameraType
+					if newCameraType == Enum.CameraType.Custom and C.enHacks.Util_Fix then
+						camera.CameraType = Enum.CameraType.Follow
+					elseif newCameraType == Enum.CameraType.Follow and not C.enHacks.Util_Fix then
+						camera.CameraType = Enum.CameraType.Custom
+					end
+				end
+				setChangedAttribute(camera,"CameraType", (newValue and cameraChanged or nil));
+				cameraChanged()
 				--if (newValue and not C.AvailableHacks.Utility[3].Funct) then
 					--[[C.AvailableHacks.Utility[3].Funct = UIS.InputBegan:Connect(function(input, gameprocesssed)
 						if gameprocesssed then

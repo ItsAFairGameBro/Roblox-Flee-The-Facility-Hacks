@@ -192,7 +192,13 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 			if combinedComparator == searchString:sub(1,combined:len()) and canReplace then
 				lastChars = combined
 				if combinedComparator == searchString then
-					newText..=replacement:gsub("%%s",combined)
+					if typeof(replacement) == "string" then
+						newText..=replacement
+					elseif typeof(replacement) == "table" then
+						newText..=replacement[1]..combined..replacement[2]
+					else
+						error("Unknown Replacement '"..replacement.."' for gsub function!");
+					end
 					lastChars=""
 				end
 			else
@@ -598,7 +604,7 @@ local function StartBetterConsole()
 
 					else
 						local lastChars = ""
-						local newText = C.BetterGSub(theirText,currentText,'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">%s</stroke>',{IgnoreRichText = true, IgnoreCase = true})
+						local newText = C.BetterGSub(theirText,currentText,{'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">','</stroke>'},{IgnoreRichText = true, IgnoreCase = true})
 						object.Text=newText
 						willBeVisible = newText ~= theirText--make sure we found an ACTUAL occurance!
 					end

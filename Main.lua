@@ -9687,6 +9687,7 @@ local function attributeAddedFunction()
 		return
 	end
 	if newIndex~=C.saveIndex then
+		print("Different:",newIndex,C.saveIndex)
 		clear()
 	end
 end

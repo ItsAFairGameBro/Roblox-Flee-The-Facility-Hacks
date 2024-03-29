@@ -205,6 +205,8 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 				newText..=combined
 				lastChars = ""
 			end
+		else
+			newText..=char
 		end
 		if char == ">" then
 			canReplace = true
@@ -9675,6 +9677,7 @@ end
 
 --Multi Script Check:
 C.saveIndex = ((plr:GetAttribute(getID) or 0)+1)
+print("My SaveIndex:",C.saveIndex)
 script.Name = "FleeHacks/"..C.saveIndex
 --if plr:GetAttribute("Cleared"..getID) then plr:SetAttribute("Cleared"..getID,false) end
 local previousCopy = (plr:GetAttribute(getID)~=nil)

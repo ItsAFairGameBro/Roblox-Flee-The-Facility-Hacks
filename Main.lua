@@ -4012,9 +4012,9 @@ C.AvailableHacks ={
 						rando = PlayerGui:FindFirstChildWhichIsA("TextBox",true)
 						print("Searching")
 						if rando then
-							RunS.RenderStepped:Wait()
-						else
 							break
+						else
+							RunS.RenderStepped:Wait()
 						end
 					end
 					rando:CaptureFocus()

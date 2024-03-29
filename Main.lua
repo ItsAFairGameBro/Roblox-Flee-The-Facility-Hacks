@@ -9686,7 +9686,7 @@ local function attributeAddedFunction()
 		DS:AddItem(script,15)
 		return
 	end
-	if newIndex~=C.saveIndex then
+	if newIndex>C.saveIndex then
 		print("Different:",newIndex,C.saveIndex)
 		clear()
 	end

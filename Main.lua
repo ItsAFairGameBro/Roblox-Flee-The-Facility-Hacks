@@ -6935,6 +6935,12 @@ C.AvailableHacks ={
 							--RunS.RenderStepped:Wait()
 						--end
 						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
+						RunS.RenderStepped:Wait()
+						for num, animTrack in ipairs(C.char.Humanoid.Animator:GetPlayingAnimationTracks()) do
+							if animTrack.Animation.AnimationId~="rbxassetid://961932719" then
+								animTrack:Stop(0)
+							end
+						end
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()

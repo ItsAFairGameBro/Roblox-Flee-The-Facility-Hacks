@@ -9739,7 +9739,7 @@ clear = function(isManualClear)
 	if isManualClear then
 		getrenv().warn = oldWarn
 		getrenv().print = oldPrint
-		local LocalPlayerScript = C.char:WaitForChild("LocalPlayerScript")
+		local LocalPlayerScript = gameUniverse=="Flee" and C.char:WaitForChild("LocalPlayerScript")
 		if LocalPlayerScript then
 			LocalPlayerScript.Disabled = true
 			LocalPlayerScript.Disabled = false

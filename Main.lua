@@ -186,17 +186,19 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 				canReplace = false
 			end
 		end
-		local combined = lastChars..char
-		local combinedComparator = (settings and settings.IgnoreCase and combined:lower() or combined)
-		if combinedComparator == searchString:sub(1,combined:len()) and canReplace then
-			lastChars = combined
-			if combinedComparator == searchString then
-				newText..=replacement:gsub("%%s",combined)
-				lastChars=""
+		if canReplace then
+			local combined = lastChars..char
+			local combinedComparator = (settings and settings.IgnoreCase and combined:lower() or combined)
+			if combinedComparator == searchString:sub(1,combined:len()) and canReplace then
+				lastChars = combined
+				if combinedComparator == searchString then
+					newText..=replacement:gsub("%%s",combined)
+					lastChars=""
+				end
+			else
+				newText..=combined
+				lastChars = ""
 			end
-		else
-			newText..=combined
-			lastChars = ""
 		end
 		if char == ">" then
 			canReplace = true

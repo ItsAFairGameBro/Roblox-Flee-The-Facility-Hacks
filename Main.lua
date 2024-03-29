@@ -3942,8 +3942,10 @@ C.AvailableHacks ={
 					CAS:UnbindAction("PushSlash"..C.saveIndex)
 				end
 				local function cameraChanged()
+					print("Camera Checked!")
 					local newCameraType = camera.CameraType
 					if newCameraType == Enum.CameraType.Custom and C.enHacks.Util_Fix then
+						print("Set to TRAK")
 						camera.CameraType = Enum.CameraType.Track
 					elseif newCameraType == Enum.CameraType.Track and not C.enHacks.Util_Fix then
 						camera.CameraType = Enum.CameraType.Custom
@@ -4006,13 +4008,11 @@ C.AvailableHacks ={
 				end
 			end,
 			["MyPlayerAdded"]=function()
-				if C.saveIndex == 1 then -- first execute!
-					print("First Run")
+				if C.saveIndex == 1 then -- it's first execute, let's fix keyboard input!
 					local rando = PlayerGui:FindFirstChildWhichIsA("TextBox",true)
 					rando:CaptureFocus()
 					RunS.RenderStepped:Wait()
 					if rando and rando.Parent and rando:IsFocused() then
-						print("and release!")
 						rando:ReleaseFocus()
 					end
 				end
@@ -6914,7 +6914,7 @@ C.AvailableHacks ={
 				end
 			end,
 			--[[["MyPlayerAdded"] = function()
-				task.wait(1.5)--TODO HERE
+				task.wait(1.5)
 				C.AvailableHacks.Basic[30].ActivateFunction(C.enHacks["Basic_InvisibleChar"])
 				C.AvailableHacks.Basic[30].Funct = plr.CharacterAppearanceLoaded:Connect(function()
 					print("Character Appearence Loaded!")

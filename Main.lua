@@ -141,9 +141,6 @@ local function createToggleButton(Toggle, ExTextButton)
 	Toggle.TextWrapped = true;
 	Toggle.Size = UDim2.new(0.443029076, 0, 1, 0);
 end;
-local function clear()--temporary clear!
-	
-end
 C.RichTextEscapeCharacters = {
 	{"&","&amp;"},
 	{"<","&lt;"},
@@ -151,11 +148,26 @@ C.RichTextEscapeCharacters = {
 	{'"',"&quot;"},
 	{"'","&apos;"},
 }
-function C.ApplyRichTextEscapeCharacters(str,toEscaped)
+C.DefaultStringEscapeCharacters = {
+	{"$","%$"},
+	{"%","%%"},
+	{"^","%^"},
+	{"*","%*"},
+	{"(","%("},
+	{")","%)"},
+	{".","%."},
+	{"[","%["},
+	{"]","%]"},
+	{"+","%+"},
+	{"-","%-"},
+	{"?","%?"},
+
+}
+function C.ApplyRichTextEscapeCharacters(str,toEscaped,escapelist)
 	local fromIndex = toEscaped and 1 or 2
 	local toIndex = toEscaped and 2 or 1
 	local format = {IgnoreRichText = true,NoUndoFormat=true}
-	for _,escapeData in ipairs(C.RichTextEscapeCharacters) do
+	for _,escapeData in ipairs(escapelist or C.RichTextEscapeCharacters) do
 		str = C.BetterGSub(str,escapeData[fromIndex],escapeData[toIndex],format)
 	end
 	return str
@@ -575,7 +587,7 @@ local function StartBetterConsole()
 			end
 			if object:IsA("TextLabel") then
 				local theirText=object:GetAttribute("OrgText")
-				local willBeVisible = includeALL or theirText:lower():match(currentText)
+				local willBeVisible = includeALL or theirText:lower():match(C.ApplyRichTextEscapeCharacters(currentText,true,C.DefaultStringEscapeCharacters))
 				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
 					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
 				if willBeVisible then

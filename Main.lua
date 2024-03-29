@@ -4004,6 +4004,7 @@ C.AvailableHacks ={
 						textScaledTL.Font = TextBox.Font
 						textScaledTL.Size = TextBox.Size
 						textScaledTL.Text = TextBox.PlaceholderText
+						textScaledTL.Position = TextBox.Position - UDim2.fromOffset(0,100)
 						local setSize = 8 
 						for size = 64, setSize, -1 do
 							textScaledTL.TextSize = size

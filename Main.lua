@@ -41,10 +41,7 @@ local isActionProgress=false
 local isCleared=false
 local isJumpBeingHeld = false
 
-local lastRunningEnv
-pcall(function()
-	lastRunningEnv = getfenv()
-end)
+local lastRunningEnv = table.clone(getfenv())
 local reloadFunction = lastRunningEnv.ReloadFunction
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
@@ -7041,7 +7038,7 @@ C.AvailableHacks ={
 						lastRunningEnv.GlobalSettings.enHacks[hackID] = value
 					end
 					task.wait(1)
-					reloadFunction()
+					task.spawn(reloadFunction)
 				else
 					print("Update/Reload Function Not Found!")
 				end

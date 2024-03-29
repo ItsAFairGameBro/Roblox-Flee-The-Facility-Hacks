@@ -637,9 +637,7 @@ local function StartBetterConsole()
 			end
 		end
 		BetterConsoleList:TweenSize((includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
-		SearchConsoleResults.Text = (includeALL or total==0) and "" 
-			or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
-		BetterConsoleDesc.Text = `({tostring(visibleMessages)} {lastText} | {SearchConsoleResults.Text} /// {tostring(lastText==SearchConsoleResults.Text)}`
+		--BetterConsoleDesc.Text = `{tostring(visibleMessages)} {lastText} | {SearchConsoleResults.Text} /// {tostring(lastText==SearchConsoleResults.Text)}`
 		if lastText == SearchConsoleResults.Text or searchingONE then
 			if visibleMessages==0 then
 				if allMessages > 0 then
@@ -656,6 +654,8 @@ local function StartBetterConsole()
 		else
 			noMessagesFound.Visible = false
 		end
+		SearchConsoleResults.Text = (includeALL or total==0) and "" 
+			or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
 		local BoxFrame = BetterConsoleFilterBox:Clone()

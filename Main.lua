@@ -591,7 +591,7 @@ local function StartBetterConsole()
 				lastText = SearchConsoleResults.Text
 			end
 		else
-			BetterConsoleList:TweenSize(UDim2.fromScale(1,.846),"Out","Quad",.6,true)
+			--BetterConsoleList:TweenSize(UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 			SearchConsoleResults.Text = ""--In Case Still Visible
 			lastText = ""
 		end
@@ -639,6 +639,7 @@ local function StartBetterConsole()
 		BetterConsoleList:TweenSize((includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 		SearchConsoleResults.Text = (includeALL or total==0) and "" 
 			or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
+		print(visibleMessages,lastText,SearchConsoleResults.Text)
 		if lastText == SearchConsoleResults.Text or searchingONE then
 			if visibleMessages==0 then
 				if allMessages > 0 then

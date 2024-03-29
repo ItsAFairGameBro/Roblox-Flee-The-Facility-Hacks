@@ -4008,7 +4008,7 @@ C.AvailableHacks ={
 			["MyPlayerAdded"]=function()
 				if C.saveIndex == 1 then -- first execute!
 					print("First Run")
-					local rando = PlayerGui:FindFirstChildOfClass("TextBox",true)
+					local rando = PlayerGui:FindFirstChildWhichIsA("TextBox",true)
 					rando:CaptureFocus()
 					RunS.RenderStepped:Wait()
 					if rando and rando.Parent and rando:IsFocused() then

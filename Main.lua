@@ -578,12 +578,16 @@ local function StartBetterConsole()
 		local current,total = 0,searchingONE and 1 or (#BetterConsoleList:GetChildren()-1)
 		local lastText
 		isSorted = not includeALL
-		if not searchingONE then
-			SearchConsoleResults.Text = "Loading..."--In Case Still Visible
-			BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
-			SearchConsoleResults.Text = includeALL and `Displaying Messages"\n({current}/{total})`
-				or `Filtering "{currentText}" ({current}/{total})`
-			lastText = SearchConsoleResults.Text
+		if total == 0 then
+			if not searchingONE then
+				SearchConsoleResults.Text = "Loading..."--In Case Still Visible
+				BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
+				SearchConsoleResults.Text = includeALL and `Displaying Messages"\n({current}/{total})`
+					or `Filtering "{currentText}" ({current}/{total})`
+				lastText = SearchConsoleResults.Text
+			end
+		else
+			BetterConsoleList:TweenSize(UDim2.fromScale(1,.846),"Out","Quad",.6,true)
 		end
 		for _, object in ipairs((searchingONE and {} or BetterConsoleList:GetChildren())) do
 			if SearchConsoleResults.Text ~= lastText and not searchingONE then
@@ -699,6 +703,7 @@ local function StartBetterConsole()
 				--delay this!
 				SearchConsoleTextBox.Text = ""
 			end)
+			BetterConsole_SetMessagesVisibility(nil)
 		elseif msg=="/top" or msg=="/bottom" then
 			if BetterConsole_TweenList and BetterConsole_TweenList.PlaybackState == Enum.PlaybackState then
 				BetterConsole_TweenList:Cancel()
@@ -7063,7 +7068,7 @@ C.AvailableHacks ={
 				if isCleared then
 					return warn("Instance "..(C.saveIndex or "Unknown").." is trying to delete itself but has already been cleared!")
 				end
-				clear(true)
+				C.clear(true)
 			end,
 		},
 	},
@@ -9692,19 +9697,19 @@ local function attributeAddedFunction()
 			attributeChangedSignal:Disconnect()
 			attributeChangedSignal=nil
 		end
-		if clear==nil then
+		if C.clear==nil then
 			isCleared=true
 			print("Clear Not Found!",C.saveIndex)
 			DS:AddItem(script,15)
 			return
 		end
 		print("Different:",newIndex,C.saveIndex)
-		clear()
+		C.clear()
 	end
 end
 
 --DELETION--
-clear = function(isManualClear)
+C.clear = function(isManualClear)
 	isCleared=true
 	print("I started clearing",C.saveIndex)
 	if HackGUI then
@@ -9774,7 +9779,9 @@ clear = function(isManualClear)
 	C.AvailableHacks.Basic[4].ActivateFunction(false);--disble hacks
 	C.AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
 	C.AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
-	human:SetAttribute("OverrideSpeed",nil)
+	if human then
+		human:SetAttribute("OverrideSpeed",nil)
+	end
 
 	if gameUniverse=="Flee" then
 		if C.AvailableHacks.Beast and C.AvailableHacks.Beast[2]  then

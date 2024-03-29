@@ -41,7 +41,10 @@ local isActionProgress=false
 local isCleared=false
 local isJumpBeingHeld = false
 
-local lastRunningEnv = getfenv()
+local lastRunningEnv
+pcall(function()
+	lastRunningEnv = getfenv()
+end)
 local reloadFunction = lastRunningEnv.ReloadFunction
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false

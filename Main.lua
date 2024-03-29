@@ -9663,15 +9663,19 @@ C.AvailableHacks ={
 			["SaveDeb"] = 0,
 			["ActivateFunction"]=function(newValue)
 				C.AvailableHacks.Commands[22].SaveDeb += 1
+				trigger_setTriggers("GetFrozen",{Exit = not newValue})
 				if newValue == false then
 					return
 				end
 				local saveDeb = C.AvailableHacks.Commands[22].SaveDeb
 				local function canRun()
-					return saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and newValue and select(2,isInGame(C.char))=="Runner"
+					return saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and newValue and select(2,isInGame(C.char,true))=="Runner"
 						and not isCleared and C.Map and C.Beast
 				end
 				C.AvailableHacks.Bot[15].GetFreeze(canRun,false)
+			end,
+			["CleanUp"] = function()
+				C.refreshEnHack["Commands_GetFrozen"](false)
 			end,
 		},
 
@@ -9729,7 +9733,7 @@ end
 
 --Multi Script Check:
 C.saveIndex = ((plr:GetAttribute(getID) or 0)+1)
-print("My SaveIndex:",C.saveIndex)
+--print("My SaveIndex:",C.saveIndex)
 script.Name = "FleeHacks/"..C.saveIndex
 --if plr:GetAttribute("Cleared"..getID) then plr:SetAttribute("Cleared"..getID,false) end
 local previousCopy = (plr:GetAttribute(getID)~=nil)
@@ -9889,7 +9893,7 @@ C.clear = function(isManualClear)
 		DS:AddItem(HackGUI,1)
 	end
 	if isStudio then DS:AddItem(script,1) end
-	print("I started clearing",C.saveIndex)
+	--print("I started clearing",C.saveIndex)
 	C.clear=nil
 end
 

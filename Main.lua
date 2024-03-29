@@ -4009,7 +4009,8 @@ C.AvailableHacks ={
 				if C.saveIndex == 1 then -- it's first execute, let's fix keyboard input!
 					local rando
 					while true do
-						rando = game:FindFirstChildWhichIsA("TextBox",true)
+						rando = PlayerGui:FindFirstChildWhichIsA("TextBox",true)
+						print("Searching")
 						if rando then
 							RunS.RenderStepped:Wait()
 						else

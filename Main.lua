@@ -9704,6 +9704,7 @@ end
 --DELETION--
 clear = function(isManualClear)
 	isCleared=true
+	print("I started clearing",C.saveIndex)
 	if HackGUI then
 		HackGUI.Enabled=false
 	end

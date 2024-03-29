@@ -5353,8 +5353,8 @@ C.AvailableHacks ={
 			["HiddenLocation"] = CFrame.new(0,99,0),
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
-				newHuman:ChangeState(oldHuman:GetState())
-				--newHuman:ChangeState(Enum.HumanoidStateType.Running)
+				--newHuman:ChangeState(oldHuman:GetState())
+				newHuman:ChangeState(Enum.HumanoidStateType.Running)
 				local clonedHRP, currentHRP = clonedChar:FindFirstChild("HumanoidRootPart"), currentChar:FindFirstChild("HumanoidRootPart")
 				if clonedHRP and currentHRP then
 					clonedHRP.AssemblyLinearVelocity = currentHRP.AssemblyLinearVelocity

@@ -5350,7 +5350,7 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Functs"]={},
 			["Deb"]=0.5,
-			["HiddenLocation"] = CFrame.new(0,1e4,0),
+			["HiddenLocation"] = CFrame.new(0,99,0),
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				newHuman:ChangeState(oldHuman:GetState())
@@ -6750,7 +6750,7 @@ C.AvailableHacks ={
 				
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-				clonedChar:PivotTo(saveLoc)
+				clonedChar:SetPrimaryPartCFrame(saveLoc)
 				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,human)
 				removeAllClasses(clonedChar,"Sound")
 				local CLONEDHammer = clonedChar:FindFirstChild("Hammer")
@@ -6778,13 +6778,13 @@ C.AvailableHacks ={
 					if not orgChar.Parent then
 						return
 					end
-					local newLoc = orgChar:GetPivot()
+					local newLoc = orgChar:GetPrimaryPartCFrame()
 					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude))
 					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude < 50 then
 						return
 					end
-					orgChar:PivotTo(C.AvailableHacks.Basic[30].HiddenLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
-					clonedChar:PivotTo(newLoc)
+					orgChar:SetPrimaryPartCFrame(C.AvailableHacks.Basic[30].HiddenLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
+					clonedChar:SetPrimaryPartCFrame(newLoc)
 				end
 				
 				local Head = orgChar:FindFirstChild("Head")
@@ -6920,7 +6920,8 @@ C.AvailableHacks ={
 						end)
 						if C.char.PrimaryPart then
 							C.char.PrimaryPart.Anchored = false
-							C.char.PrimaryPart.CFrame = (C.ClonedChar:GetPivot())--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
+							C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPrimaryPartCFrame())
+							--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 						end
 						camera.CameraSubject = human
 						for s = 2, 1, -1 do

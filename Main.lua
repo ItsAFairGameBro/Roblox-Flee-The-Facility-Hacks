@@ -1731,12 +1731,12 @@ local function trigger_setTriggers(name,setTriggerParams)
 		OLParams.FilterDescendantsInstances = newTouch
 		local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
 		for _, obj in ipairs(workspace:GetPartsInPart(Torso,OLParams)) do
-			charEnv.TriggerTouch(obj,true,false)
+			task.spawn(pcall,charEnv.TriggerTouch,obj,true,false)
 			--C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
 		end
 		OLParams.FilterDescendantsInstances = loseTouch
 		for _, obj in ipairs(workspace:GetPartBoundsInRadius(Torso.Position,10,OLParams)) do
-			charEnv.TriggerTouch(obj,false,false)
+			task.spawn(pcall,charEnv.TriggerTouch,obj,false,false)
 			--C.FireSignal(C.char.Torso,C.char.Torso.TouchEnded,nil,obj)
 		end
 	end

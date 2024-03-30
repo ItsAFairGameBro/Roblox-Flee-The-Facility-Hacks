@@ -879,7 +879,6 @@ function C.YieldCacheValues()
 			data = getsenv(instance)
 		else
 			local code2Run = ("return game.%s.%s"):format(instance:GetFullName(),signal)
-			print(code2Run)
 			signal = loadstring(code2Run)()
 			data = getconnections(signal)
 		end
@@ -906,7 +905,7 @@ function C.GetHardValue(instance,signal,Settings)
 			if theirData[1] == instance and theirData[2] == signal then
 				if Settings.yield then
 					print("Waiting For IT")
-					myEvent = theirData[3] or Instance.new("BindableEvent")
+					myEvent = theirData[3] or Instance.new("BindableEvent",PlayerGui)
 					theirData[3] = myEvent
 					return myEvent.Event:Wait()
 				else
@@ -915,7 +914,7 @@ function C.GetHardValue(instance,signal,Settings)
 			end
 		end
 		if Settings.yield then
-			myEvent = Instance.new("BindableEvent")
+			myEvent = Instance.new("BindableEvent",PlayerGui)
 			Settings.event = myEvent
 		end
 		table.insert(C.RequestedHardValues,{instance,signal,Settings.event})

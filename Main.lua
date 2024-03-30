@@ -3509,14 +3509,14 @@ C.AvailableHacks ={
 				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
 				C.AvailableHacks.Render[29].SetEnabled(newTag)
 				local function setToggleFunction()
-					if C.Beast.CapturedTorso.Value ~= theirPrimPart then
+					if C.Beast.CarriedTorso.Value ~= theirPrimPart then
 						C.AvailableHacks.Beast[55].RopeSurvivor(theirTSM,theirPlr,true) -- Rope the survivor
 					else
 						C.AvailableHacks.Runner[3].ChangedFunction(theirPrimPart,true) -- Unrope him!
 					end
 				end
 				local function setVisible()
-					if C.Beast and C.Beast:FindFirstChild("CapturedTorso") and C.Beast.CapturedTorso.Value == theirPrimPart then
+					if C.Beast and C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value == theirPrimPart then
 						ToggleButton.Text = "Unattach🪢"
 					else
 						ToggleButton.Text = "Attach🪢"

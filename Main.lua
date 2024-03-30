@@ -3505,7 +3505,7 @@ C.AvailableHacks ={
 					return
 				end
 				local ToggleButton = newTag.Toggle
-				ToggleButton.BackgroundColor3 = Color3.fromRGB(255,0,255)
+				ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
 				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
 				C.AvailableHacks.Render[29].SetEnabled(newTag)
 				local function setToggleFunction()
@@ -3517,9 +3517,9 @@ C.AvailableHacks ={
 				end
 				local function setVisible()
 					if C.Beast and C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value == theirPrimPart then
-						ToggleButton.Text = "Unattach🪢"
+						ToggleButton.Text = "❌"
 					else
-						ToggleButton.Text = "Attach🪢"
+						ToggleButton.Text = "🪢"
 					end
 					ToggleButton.Visible = theirRagdollValue.Value
 				end

@@ -3339,7 +3339,124 @@ C.AvailableHacks ={
 		[30]={
 			["Type"]="ExTextButton",
 			["Title"]="Freezing Pods",
-			["Desc"]="Interact with Freezing Pods",
+			["Desc"]="Interactable Freezing Pods",
+			["Shortcut"]="Render_FreezingPods",
+			["Default"]=false,
+			["Event"]=nil,
+			["SetEnabled"]=function(tag)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local newValue = C.enHacks.Render_FreezingPods
+
+				local canBeActive = newValue == true
+				tag.Enabled=canBeActive and (camera.CameraType == Enum.CameraType.Track or camera.CameraType==Enum.CameraType.Custom) and isInGame
+				if tag:FindFirstChild("Toggle") then
+					tag.Toggle.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local hackDisplayList = CS:GetTagged("HackDisplay3")
+				for num,tag in ipairs(hackDisplayList) do
+					C.AvailableHacks.Render[30].SetEnabled(tag)
+				end
+			end,
+			["CleanUp"]=function()
+				DestroyAllTaggedObjects("HackDisplay3")
+				if C.AvailableHacks.Render[30].Event then
+					C.AvailableHacks.Render[30].Event:Destroy()
+				end
+				C.AvailableHacks.Render[30].Event=nil
+				if C.objectFuncts[C.AvailableHacks.Render[30].Event] then
+					C.objectFuncts[C.AvailableHacks.Render[30].Event][1]:Disconnect()
+					C.objectFuncts[C.AvailableHacks.Render[30].Event] = nil
+				end
+			end,
+			["UpdateDisplays"]=function()
+				C.AvailableHacks.Render[30].ActivateFunction(C.enHacks.RemotelyHackComputers)
+			end,
+			--CHECKED UNDER REMOTE DOORS HACK!
+			["CapsuleAdded"]=function(Capsule)
+				local CapsulePrimaryPart = Capsule.PrimaryPart
+				local PodTriggerPart = Capsule:WaitForChild("PodTrigger",30)
+				if not PodTriggerPart then
+					return
+				end
+				local CapturedTorso = Capsule:WaitForChild("PodTrigger"):WaitForChild("CapturedTorso")
+				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
+				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
+				if not carriedTorso then
+					if C.Map then
+						print("uh oh! not found")
+					end
+					return
+				end
+				local isBeast = myTSM:WaitForChild("IsBeast")
+
+				local newTag=C.ToggleTag:Clone()
+				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
+				newTag.Name = "Pod"
+				newTag.Parent=HackGUI
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
+				newTag.Adornee=CapsulePrimaryPart
+				CS:AddTag(newTag,"RemoveOnDestroy")
+				CS:AddTag(newTag,"HackDisplay3")
+				task.wait()
+				if newTag==nil or newTag.Parent==nil or newTag:FindFirstChild("Toggle")==nil then
+					return
+				end
+				local ToggleButton = newTag.Toggle
+				ToggleButton.BackgroundColor3 = Color3.fromRGB(255,0,255)
+				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+				C.AvailableHacks.Render[30].SetEnabled(newTag)
+				local function setToggleFunction()
+					if isBeast.Value then
+						local theirChar = C.Beast.CarriedTorso.Value.Parent
+						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
+					else
+						if myTSM.Health.Value > 0 then
+							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
+						else
+							print("You aren't a runner, so you can't rescue!")
+						end
+					end
+				end
+				local function setVisible()
+					if isBeast.Value and ActionSign.Value == 30 
+						and C.Beast and C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value then--30: TRAP
+						ToggleButton.Visible = true
+					elseif not isBeast.Value and ActionSign.Value == 31 and CapturedTorso.Value then--31: FREE
+						ToggleButton.Visible = true
+					else
+						ToggleButton.Visible = false
+					end
+				end
+				C.objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
+					CapturedTorso.Changed:Connect(setVisible),
+					ActionSign.Changed:Connect(setVisible),
+					carriedTorso.Event:Connect(setVisible)
+				}
+				setVisible()
+			end,
+			["MapAdded"]=function()
+				C.AvailableHacks.Render[30].Event = C.AvailableHacks.Render[30].Event or Instance.new("BindableEvent")
+				C.AvailableHacks.Render[30].Event:AddTag("RemoveOnDestroy")
+				C.AvailableHacks.Render[30].Event.Name="CarriedTorsoChanged"
+				C.AvailableHacks.Render[30].Event.Parent = workspace
+			end,
+			["MyBeastAdded"]=function()
+				repeat
+					RunS.RenderStepped:Wait()
+				until C.AvailableHacks.Render[30].Event
+				if not C.Beast then return end
+				C.objectFuncts[C.AvailableHacks.Render[30].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
+					C.AvailableHacks.Render[30].Event:Fire()
+				end)}
+			end,
+		},
+		[29]={
+			["Type"]="ExTextButton",
+			["Title"]="Interactable Downed Pods",
+			["Desc"]="Attach/Unattach Rope",
 			["Shortcut"]="Render_FreezingPods",
 			["Default"]=false,
 			["Event"]=nil,
@@ -3456,7 +3573,7 @@ C.AvailableHacks ={
 		[28]={
 			["Type"]="ExTextButton",
 			["Title"]="Remote Computers",
-			["Desc"]="Remotely Hack Computers",
+			["Desc"]="Interactable Computers",
 			["Shortcut"]="Render_HackComputers",
 			["Default"]=false,
 			["SetEnabled"]=function(tag)
@@ -3703,17 +3820,18 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				local function updateDisplays()
+					C.AvailableHacks.Blatant[15].UpdateDisplays()
+					C.AvailableHacks.Render[28].UpdateDisplays()
+					C.AvailableHacks.Render[30].UpdateDisplays()
+					C.AvailableHacks.Render[32].UpdateDisplays()
+				end
 				table.insert(C.functs,RS:WaitForChild("AnnouncementEvent").OnClientEvent:Connect(function(...)
 					--print(...)
 					if not ... then
-						C.AvailableHacks.Blatant[15].UpdateDisplays()
-						C.AvailableHacks.Blatant[20].UpdateDisplays()
+						updateDisplays()
 					end
 				end))--]]
-				local function updateDisplays()
-					C.AvailableHacks.Blatant[15].UpdateDisplays()
-					C.AvailableHacks.Blatant[20].UpdateDisplays()
-				end
 				setChangedAttribute(RS.IsGameActive,"Value",updateDisplays)
 				setChangedAttribute(camera,"CameraSubject",updateDisplays)
 				setChangedAttribute(TSM:WaitForChild("Escaped"),"Value",updateDisplays)

@@ -901,7 +901,7 @@ function C.GetHardValue(instance,signal,Settings)
 				if Settings.yield then
 					print("Waiting For IT")
 					myEvent = theirData[3] or Instance.new("BindableEvent")
-					theirData[3].event = myEvent
+					theirData[3] = myEvent
 					return myEvent.Event:Wait()
 				else
 					return -- already in the cache

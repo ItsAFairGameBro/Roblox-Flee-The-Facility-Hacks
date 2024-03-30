@@ -872,7 +872,7 @@ function C.YieldCacheValues()
 		if not nextIndex then
 			break
 		end
-		local instance, signal, event = nextIndex[1], nextIndex[2], nextIndex[3]
+		local instance, signal = nextIndex[1], nextIndex[2]
 		local data
 		if signal=="env" then -- then its a script!
 			data = getsenv(instance)
@@ -883,17 +883,19 @@ function C.YieldCacheValues()
 			data = getconnections(signal)
 		end
 		C.CashedHardValues[instance] = data
+		local event = nextIndex[3]
 		if event then
+			print("Event Fired!")
 			event:Fire(data)
 			event:Destroy()
 		end
-		table.remove(C.RequestedHardValues,1)
 		task.wait(0.8)
+		table.remove(C.RequestedHardValues,1)
 	end
 	C.YieldCacheRunning = false
 end
 function C.GetHardValue(instance,signal,Settings)
-	if C.CashedHardValues[instance] and not Settings.noCashe then
+	if C.CashedHardValues[instance] and not Settings.noCache then
 		print("In Table Already!!")
 		return C.CashedHardValues[instance]
 	else

@@ -867,7 +867,6 @@ C.RequestedHardValues = {}
 C.YieldCacheRunning = false
 function C.YieldCacheValues()
 	while true do
-		warn("Yield List:",#C.RequestedHardValues)
 		local nextIndex = C.RequestedHardValues[1]
 		if not nextIndex then
 			break
@@ -884,7 +883,7 @@ function C.YieldCacheValues()
 		C.CashedHardValues[instance] = data
 		local event = nextIndex[3]
 		if event then
-			print("Event Fired",event)
+			event.Name = "Complete"
 			event:Fire()
 			event:Destroy()
 		end
@@ -892,22 +891,20 @@ function C.YieldCacheValues()
 		table.remove(C.RequestedHardValues,1)
 	end
 	C.YieldCacheRunning = false
-	warn("Yield Ended")
 end
 function C.GetHardValue(instance,signal,Settings)
 	if C.CashedHardValues[instance] and not Settings.noCache then
-		print("In Table Already!!")
 		return C.CashedHardValues[instance]
 	else
 		local myEvent
 		for num, theirData in ipairs(C.RequestedHardValues) do
 			if theirData[1] == instance and theirData[2] == signal then
 				if Settings.yield then
-					print("Waiting For IT")
 					myEvent = theirData[3] or Instance.new("BindableEvent",script)
-					myEvent.Name = "YieldDataExtra"
 					theirData[3] = myEvent
-					myEvent.Event:Wait()
+					if myEvent.Name~="Complete" then
+						myEvent.Event:Wait()
+					end
 					return C.CashedHardValues[instance]
 				else
 					return -- already in the cache
@@ -916,17 +913,17 @@ function C.GetHardValue(instance,signal,Settings)
 		end
 		if Settings.yield then
 			myEvent = Instance.new("BindableEvent",script)
-			myEvent.Name = "YieldEvent"
 			Settings.event = myEvent
 		end
 		table.insert(C.RequestedHardValues,{instance,signal,Settings.event})
-		print("Getting Value!")
 		if not C.YieldCacheRunning then
 			C.YieldCacheRunning = true
-			task.delay(.5,C.YieldCacheValues)
+			task.spawn(C.YieldCacheValues)
 		end
 		if myEvent then
-			myEvent.Event:Wait()
+			if myEvent.Name~="Complete" and myEvent.Parent then
+				myEvent.Event:Wait()
+			end
 			return C.CashedHardValues[instance]
 		end
 	end

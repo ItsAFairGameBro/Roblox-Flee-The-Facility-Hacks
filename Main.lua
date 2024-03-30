@@ -892,6 +892,7 @@ function C.GetHardValue(instance,signal,settings)
 	if C.CashedHardValues[instance] and not settings.noCashe then
 		return C.CashedHardValues[instance]
 	else
+		print("Getting Value!")
 		local myEvent
 		if settings.yield then
 			myEvent = Instance.new("BindableEvent")
@@ -912,7 +913,7 @@ function C.FireSignal(instance,signal,Settings,...)
 	local success, result = pcall(function()
 		for _, data in ipairs(C.GetHardValue(instance,signal,{yield=true})) do
 			--if data.Enabled then
-			task.spawn(data.Fire,data,table.unpack(elements))
+			task.spawn(data.Function,table.unpack(elements))
 			print("Connection Found, Fired Signal!")
 			fired+=1
 			--end

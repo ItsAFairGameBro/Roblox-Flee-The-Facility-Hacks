@@ -118,7 +118,7 @@ end
 local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
 local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
 local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
-local absMinTimeBetweenPCs=30 --abs min time to hack, overrides minspeed
+local absMinTimeBetweenPCs=15 --abs min time to hack, overrides minspeed
 local botBeastBreakMin=13.5 --in minutes
 local waitForChildTimout = 20
 local max_tpStackSize = 1
@@ -865,7 +865,7 @@ function C.FireSignal(instance,signal,Settings,...)
 	local success, result = pcall(function()
 		for _, data in ipairs(getconnections(signal)) do
 			--if data.Enabled then
-			data:Fire(table.unpack(elements))
+			task.spawn(data.Fire,data,table.unpack(elements))
 			print("Connection Found, Fired Signal!")
 			fired+=1
 			--end
@@ -1617,6 +1617,8 @@ local function trigger_setTriggers(name,setTriggerParams)
 			previously[name] = setValue
 		end
 	end
+	local newTouch = {}
+	local loseTouch = {}
 	local currentEvent = myTSM and myTSM:WaitForChild("ActionEvent").Value
 	local beforeEn,afterEn
 	for num,trigger in ipairs(CS:GetTagged("Trigger")) do
@@ -1626,18 +1628,24 @@ local function trigger_setTriggers(name,setTriggerParams)
 				local triggerType = trigger_gettype(triggerParent)
 				assert(triggerType,"Unknown Trigger Type: "..trigger:GetFullName())
 				local enabled = name=="Override" or trigger_params[triggerType]<=(triggerParent:GetAttribute("Trigger_AllowException") or 0)
-				if currentEvent and currentEvent.Parent and currentEvent.Parent.Parent==triggerParent then
-					beforeEn = trigger.CanTouch--checks if it was enabled previously
-					afterEn = enabled
+				if trigger.CanTouch ~= enabled then
+					if currentEvent and currentEvent.Parent and currentEvent.Parent.Parent==triggerParent then
+						beforeEn = trigger.CanTouch--checks if it was enabled previously
+						afterEn = enabled
+					end
+					if enabled and trigger:GetAttribute("OrgSize")~=nil then
+						trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
+					elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
+						trigger:SetAttribute("OrgSize",trigger.Size)
+						trigger.Size=newVector3(.0001,.0001,.0001)
+					end
+					trigger.CanTouch=enabled
+					table.insert(enabled and newTouch or loseTouch, trigger)
+					
+					if Torso then
+					end
+					--print("Trigger",trigger.Name,triggerType,enabled)
 				end
-				if enabled and trigger:GetAttribute("OrgSize")~=nil then
-					trigger.Size=trigger:GetAttribute("OrgSize") trigger:SetAttribute("OrgSize",nil)
-				elseif not enabled and trigger:GetAttribute("OrgSize")==nil then
-					trigger:SetAttribute("OrgSize",trigger.Size)
-					trigger.Size=newVector3(.0001,.0001,.0001)
-				end
-				trigger.CanTouch=enabled
-				print("Trigger",trigger.Name,triggerType,enabled)
 			end
 		end
 	end
@@ -1648,9 +1656,19 @@ local function trigger_setTriggers(name,setTriggerParams)
 			task.spawn(stopCurrentAction)
 		end
 	end
+	local Torso = C.char and C.char:FindFirstChild("Torso")
+	if Torso then
+		for _, obj in ipairs(Torso:GetTouchingParts()) do
+			if table.find(newTouch,obj) then
+				C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
+			elseif table.find(loseTouch,obj) then
+				C.FireSignal(C.char.Torso,C.char.Torso.TouchEnded,nil,obj)
+			end
+		end
+	end
 end
 
-
+getrenv().setTriggers=trigger_setTriggers
 function stopCurrentAction(override)
 	if not override and myTSM.ActionEvent.Value and myTSM.ActionEvent.Value.Parent and 
 		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)] or -1) > 0 then

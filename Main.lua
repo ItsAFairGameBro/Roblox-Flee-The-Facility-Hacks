@@ -885,8 +885,8 @@ function C.YieldCacheValues()
 		local event = nextIndex[3]
 		if event then
 			print("Event Fired",event)
-			event:Fire(data)
-			DS:AddItem(event,1)
+			event:Fire()
+			event:Destroy()
 		end
 		task.wait(0.8)
 		table.remove(C.RequestedHardValues,1)
@@ -907,7 +907,8 @@ function C.GetHardValue(instance,signal,Settings)
 					myEvent = theirData[3] or Instance.new("BindableEvent",script)
 					myEvent.Name = "YieldDataExtra"
 					theirData[3] = myEvent
-					return myEvent.Event:Wait()
+					myEvent.Event:Wait()
+					return C.CashedHardValues[instance]
 				else
 					return -- already in the cache
 				end
@@ -925,7 +926,8 @@ function C.GetHardValue(instance,signal,Settings)
 			task.delay(.5,C.YieldCacheValues)
 		end
 		if myEvent then
-			return myEvent.Event:Wait()
+			myEvent.Event:Wait()
+			return C.CashedHardValues[instance]
 		end
 	end
 end

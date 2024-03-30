@@ -1710,7 +1710,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 				C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
 		end
 		OLParams.FilterDescendantsInstances = loseTouch
-		for _, obj in ipairs(workspace:GetPartBoundsInRadius(Torso,10,OLParams)) do
+		for _, obj in ipairs(workspace:GetPartBoundsInRadius(Torso.Position,10,OLParams)) do
 			C.FireSignal(C.char.Torso,C.char.Torso.TouchEnded,nil,obj)
 		end
 	end

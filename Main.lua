@@ -1721,7 +1721,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 		if beforeEn and not afterEn then
 			--myTSM.ActionInput.Value = false
 			--myTSM.ActionEvent.Value = nil
-			task.spawn(stopCurrentAction)
+			--task.spawn(stopCurrentAction)
 		end
 	end
 	local Torso = C.char and C.char:FindFirstChild("Torso")

@@ -3455,68 +3455,51 @@ C.AvailableHacks ={
 		},
 		[29]={
 			["Type"]="ExTextButton",
-			["Title"]="Interactable Downed Pods",
-			["Desc"]="Attach/Unattach Rope",
-			["Shortcut"]="Render_FreezingPods",
+			["Title"]="Interactable Downed Runners",
+			["Desc"]="Attach/Unattach Rope To Downed Runners",
+			["Shortcut"]="Render_DownedRunner",
 			["Default"]=false,
-			["Event"]=nil,
 			["SetEnabled"]=function(tag)
 				local isInGame=isInGame(camera.CameraSubject.Parent)
-				local newValue = C.enHacks.Render_FreezingPods
+				local newValue = C.enHacks.Render_DownedRunner
 
 				local canBeActive = newValue == true
 				tag.Enabled=canBeActive and (camera.CameraType == Enum.CameraType.Track or camera.CameraType==Enum.CameraType.Custom) and isInGame
-				if tag:FindFirstChild("Toggle") then
-					tag.Toggle.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
-				end
 			end,
 			["ActivateFunction"]=function(newValue)
 				local isInGame=isInGame(camera.CameraSubject.Parent)
-				local hackDisplayList = CS:GetTagged("HackDisplay3")
+				local hackDisplayList = CS:GetTagged("HackDisplay5")
 				for num,tag in ipairs(hackDisplayList) do
-					C.AvailableHacks.Render[30].SetEnabled(tag)
-				end
-			end,
-			["CleanUp"]=function()
-				DestroyAllTaggedObjects("HackDisplay3")
-				if C.AvailableHacks.Render[30].Event then
-					C.AvailableHacks.Render[30].Event:Destroy()
-				end
-				C.AvailableHacks.Render[30].Event=nil
-				if C.objectFuncts[C.AvailableHacks.Render[30].Event] then
-					C.objectFuncts[C.AvailableHacks.Render[30].Event][1]:Disconnect()
-					C.objectFuncts[C.AvailableHacks.Render[30].Event] = nil
+					C.AvailableHacks.Render[29].SetEnabled(tag)
 				end
 			end,
 			["UpdateDisplays"]=function()
-				C.AvailableHacks.Render[30].ActivateFunction(C.enHacks.RemotelyHackComputers)
+				C.AvailableHacks.Render[29].ActivateFunction(C.enHacks.Render_DownedRunner)
 			end,
-			--CHECKED UNDER REMOTE DOORS HACK!
-			["CapsuleAdded"]=function(Capsule)
-				local CapsulePrimaryPart = Capsule.PrimaryPart
-				local PodTriggerPart = Capsule:WaitForChild("PodTrigger",30)
-				if not PodTriggerPart then
-					return
-				end
-				local CapturedTorso = Capsule:WaitForChild("PodTrigger"):WaitForChild("CapturedTorso")
-				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
+			["StartUp"]=function(theirPlr,theirChar)
+				local theirPrimPart = theirChar:WaitForChild("Torso",30)
 				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
-				if not carriedTorso then
-					if C.Map then
-						print("uh oh! not found")
+				if not carriedTorso or not theirPrimPart then
+					if C.Map and not isCleared then
+						print("uh oh! CarriedTorsoChanged.Event found")
 					end
 					return
 				end
-				local isBeast = myTSM:WaitForChild("IsBeast")
-
+				local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule",30)
+				local theirRagdollValue = theirTSM and theirTSM:WaitForChild("Ragdoll",30)
+				if not theirRagdollValue then
+					print("Ragdoll Not Found For",theirPlr)
+					return
+				end
+				
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
-				newTag.Name = "Pod"
+				newTag.Name = "Player"
 				newTag.Parent=HackGUI
-				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
-				newTag.Adornee=CapsulePrimaryPart
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 0, 0)
+				newTag.Adornee=theirPrimPart
 				CS:AddTag(newTag,"RemoveOnDestroy")
-				CS:AddTag(newTag,"HackDisplay3")
+				CS:AddTag(newTag,"HackDisplay5")
 				task.wait()
 				if newTag==nil or newTag.Parent==nil or newTag:FindFirstChild("Toggle")==nil then
 					return
@@ -3524,50 +3507,42 @@ C.AvailableHacks ={
 				local ToggleButton = newTag.Toggle
 				ToggleButton.BackgroundColor3 = Color3.fromRGB(255,0,255)
 				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
-				C.AvailableHacks.Render[30].SetEnabled(newTag)
+				C.AvailableHacks.Render[29].SetEnabled(newTag)
 				local function setToggleFunction()
-					if isBeast.Value then
-						local theirChar = C.Beast.CarriedTorso.Value.Parent
-						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
+					if C.Beast.CapturedTorso.Value ~= theirPrimPart then
+						C.AvailableHacks.Beast[55].RopeSurvivor(theirTSM,theirPlr,true) -- Rope the survivor
 					else
-						if myTSM.Health.Value > 0 then
-							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
-						else
-							print("You aren't a runner, so you can't rescue!")
-						end
+						C.AvailableHacks.Runner[3].ChangedFunction(theirPrimPart,true) -- Unrope him!
 					end
 				end
 				local function setVisible()
-					if isBeast.Value and ActionSign.Value == 30 
-						and C.Beast and C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value then--30: TRAP
-						ToggleButton.Visible = true
-					elseif not isBeast.Value and ActionSign.Value == 31 and CapturedTorso.Value then--31: FREE
-						ToggleButton.Visible = true
+					if C.Beast and C.Beast:FindFirstChild("CapturedTorso") and C.Beast.CapturedTorso.Value == theirPrimPart then
+						ToggleButton.Text = "Unattach🪢"
 					else
-						ToggleButton.Visible = false
+						ToggleButton.Text = "Attach🪢"
 					end
+					ToggleButton.Visible = theirRagdollValue.Value
 				end
 				C.objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
-					CapturedTorso.Changed:Connect(setVisible),
-					ActionSign.Changed:Connect(setVisible),
-					carriedTorso.Event:Connect(setVisible)
+					carriedTorso.Event:Connect(setVisible),
+					theirRagdollValue.Changed:Connect(setVisible),
 				}
 				setVisible()
 			end,
-			["MapAdded"]=function()
-				C.AvailableHacks.Render[30].Event = C.AvailableHacks.Render[30].Event or Instance.new("BindableEvent")
-				C.AvailableHacks.Render[30].Event:AddTag("RemoveOnDestroy")
-				C.AvailableHacks.Render[30].Event.Name="CarriedTorsoChanged"
-				C.AvailableHacks.Render[30].Event.Parent = workspace
+			["MyStartUp"]=function(...)
+				C.AvailableHacks.Render[29].StartUp(...)
 			end,
-			["MyBeastAdded"]=function()
-				repeat
-					RunS.RenderStepped:Wait()
-				until C.AvailableHacks.Render[30].Event
-				if not C.Beast then return end
-				C.objectFuncts[C.AvailableHacks.Render[30].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
-					C.AvailableHacks.Render[30].Event:Fire()
-				end)}
+			["OthersStartUp"]=function(...)
+				C.AvailableHacks.Render[29].StartUp(...)
+			end,
+			["BeastAdded"]=function(beastPlr,beastChar)
+				
+			end,
+			["MyBeastAdded"]=function(...)
+				C.AvailableHacks.Render[29].BeastAdded(...)
+			end,
+			["OthersBeastAdded"]=function(...)
+				C.AvailableHacks.Render[29].BeastAdded(...)
 			end,
 		},
 		[28]={
@@ -7927,7 +7902,7 @@ C.AvailableHacks ={
 				},
 			},
 			["Default"]=false,
-			["ChangedFunction"]=function(newSet)
+			["ChangedFunction"]=function(newSet,override)
 				--print("begun")
 				if C.Beast==nil then
 					return
@@ -7936,12 +7911,8 @@ C.AvailableHacks ={
 				if CarriedTorso==nil then
 					return
 				end
-				while newSet~=nil and CarriedTorso.Value~=newSet do
-					--print("waiting")
-					task.wait(1/3)
-				end
 				local Hammer=C.Beast:WaitForChild("Hammer")
-				if Hammer==nil or not C.enHacks.AutoRemoveRope then
+				if Hammer==nil or (not override and not C.enHacks.AutoRemoveRope) then
 					return
 				end
 				if not C.char:IsAncestorOf(CarriedTorso.Value) and C.enHacks.AutoRemoveRope=="Me" then

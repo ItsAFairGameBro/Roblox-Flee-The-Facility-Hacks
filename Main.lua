@@ -922,7 +922,7 @@ function C.GetHardValue(instance,signal,Settings)
 		print("Getting Value!")
 		if not C.YieldCacheRunning then
 			C.YieldCacheRunning = true
-			task.spawn(C.YieldCacheValues)
+			task.delay(.5,C.YieldCacheValues)
 		end
 		if myEvent then
 			return myEvent.Event:Wait()

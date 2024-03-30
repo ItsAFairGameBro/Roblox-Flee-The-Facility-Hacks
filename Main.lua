@@ -10074,7 +10074,7 @@ if previousCopy then
 			warn(( "Maximum Wait Time Reached ("..maxWaitTime.."s), Starting Script..." ))
 			break
 		elseif currentSize>0 then
-			createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
+			--createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
 			print("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!")
 		end
 	end

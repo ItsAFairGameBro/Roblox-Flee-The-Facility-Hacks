@@ -3336,6 +3336,210 @@ C.AvailableHacks ={
 				ActionChanged()
 			end,
 		},
+		[30]={
+			["Type"]="ExTextButton",
+			["Title"]="Freezing Pods",
+			["Desc"]="Interact with Freezing Pods",
+			["Shortcut"]="Render_FreezingPods",
+			["Default"]=false,
+			["Event"]=nil,
+			["SetEnabled"]=function(tag)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local newValue = C.enHacks.Render_FreezingPods
+
+				local canBeActive = newValue == true
+				tag.Enabled=canBeActive and camera.CameraType==Enum.CameraType.Custom and isInGame
+				if tag:FindFirstChild("Toggle") then
+					tag.Toggle.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local hackDisplayList = CS:GetTagged("HackDisplay3")
+				for num,tag in ipairs(hackDisplayList) do
+					C.AvailableHacks.Render[30].SetEnabled(tag)
+				end
+			end,
+			["CleanUp"]=function()
+				DestroyAllTaggedObjects("HackDisplay3")
+				if C.AvailableHacks.Render[30].Event then
+					C.AvailableHacks.Render[30].Event:Destroy()
+				end
+				C.AvailableHacks.Render[30].Event=nil
+				if C.objectFuncts[C.AvailableHacks.Render[30].Event] then
+					C.objectFuncts[C.AvailableHacks.Render[30].Event][1]:Disconnect()
+					C.objectFuncts[C.AvailableHacks.Render[30].Event] = nil
+				end
+			end,
+			["UpdateDisplays"]=function()
+				C.AvailableHacks.Render[30].ActivateFunction(C.enHacks.RemotelyHackComputers)
+			end,
+			--CHECKED UNDER REMOTE DOORS HACK!
+			["CapsuleAdded"]=function(Capsule)
+				local CapsulePrimaryPart = Capsule.PrimaryPart
+				local PodTriggerPart = Capsule:WaitForChild("PodTrigger",30)
+				if not PodTriggerPart then
+					return
+				end
+				local CapturedTorso = Capsule:WaitForChild("PodTrigger"):WaitForChild("CapturedTorso")
+				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
+				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
+				if not carriedTorso then
+					if C.Map then
+						print("uh oh! not found")
+					end
+					return
+				end
+				local isBeast = myTSM:WaitForChild("IsBeast")
+
+				local newTag=C.ToggleTag:Clone()
+				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
+				newTag.Name = "Pod"
+				newTag.Parent=HackGUI
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
+				newTag.Adornee=CapsulePrimaryPart
+				CS:AddTag(newTag,"RemoveOnDestroy")
+				CS:AddTag(newTag,"HackDisplay3")
+				task.wait()
+				if newTag==nil or newTag.Parent==nil or newTag:FindFirstChild("Toggle")==nil then
+					return
+				end
+				local ToggleButton = newTag.Toggle
+				ToggleButton.BackgroundColor3 = Color3.fromRGB(255,0,255)
+				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+				C.AvailableHacks.Render[30].SetEnabled(newTag)
+				local function setToggleFunction()
+					if isBeast.Value then
+						local theirChar = C.Beast.CarriedTorso.Value.Parent
+						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
+					else
+						if myTSM.Health.Value > 0 then
+							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
+						else
+							print("You aren't a runner, so you can't rescue!")
+						end
+					end
+				end
+				local function setVisible()
+					if isBeast.Value and ActionSign.Value == 30 
+						and C.Beast and C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value then--30: TRAP
+						ToggleButton.Visible = true
+					elseif not isBeast.Value and ActionSign.Value == 31 and CapturedTorso.Value then--31: FREE
+						ToggleButton.Visible = true
+					else
+						ToggleButton.Visible = false
+					end
+				end
+				C.objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
+					CapturedTorso.Changed:Connect(setVisible),
+					ActionSign.Changed:Connect(setVisible),
+					carriedTorso.Event:Connect(setVisible)
+				}
+				setVisible()
+			end,
+			["MapAdded"]=function()
+				C.AvailableHacks.Render[30].Event = C.AvailableHacks.Render[30].Event or Instance.new("BindableEvent")
+				C.AvailableHacks.Render[30].Event:AddTag("RemoveOnDestroy")
+				C.AvailableHacks.Render[30].Event.Name="CarriedTorsoChanged"
+				C.AvailableHacks.Render[30].Event.Parent = workspace
+			end,
+			["MyBeastAdded"]=function()
+				repeat
+					RunS.RenderStepped:Wait()
+				until C.AvailableHacks.Render[30].Event
+				if not C.Beast then return end
+				C.objectFuncts[C.AvailableHacks.Render[30].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
+					C.AvailableHacks.Render[30].Event:Fire()
+				end)}
+			end,
+		},
+		[28]={
+			["Type"]="ExTextButton",
+			["Title"]="Remote Computers",
+			["Desc"]="Remotely Hack Computers",
+			["Shortcut"]="Render_HackComputers",
+			["Default"]=false,
+			["Event"]=nil,
+			["SetEnabled"]=function(tag)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local newValue = C.enHacks.Render_HackComputers
+
+				local canBeActive = newValue == true
+				tag.Enabled=canBeActive and (camera.CameraType==Enum.CameraType.Custom or camera.CameraType==Enum.CameraType.Follow) and isInGame
+			end,
+			["ActivateFunction"]=function(newValue)
+				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local hackDisplayList = CS:GetTagged("HackDisplay4")
+				for num,tag in ipairs(hackDisplayList) do
+					C.AvailableHacks.Blatant[20].SetEnabled(tag)
+				end
+			end,
+			["CleanUp"]=function()
+				DestroyAllTaggedObjects("HackDisplay4")
+			end,
+			["UpdateDisplays"]=function()
+				C.AvailableHacks.Blatant[20].ActivateFunction(C.enHacks.Render_HackComputers)
+			end,
+			--CHECKED UNDER REMOTE DOORS HACK!
+			["ComputerAdded"]=function(Computer)
+				local Screen = Computer:WaitForChild("Screen")
+				local ComputerBase = Computer.PrimaryPart
+				local BestTrigger
+				local bestAngle = 3
+				for trigger_index = 1, 3, 1 do -- loop through ComputerTrigger 1 through 3
+					local trigger_name = "ComputerTrigger"..trigger_index
+					local trigger = Computer:WaitForChild(trigger_name, 20)
+					if not trigger then
+						return
+					end
+					local angle = math.abs(math.acos(ComputerBase.CFrame.LookVector:Dot((trigger.Position - ComputerBase.Position).Unit)))
+					if math.abs(angle - 1.57) < bestAngle then
+						bestAngle = angle
+						BestTrigger = trigger
+					end
+				end
+
+				local newTag=C.ToggleTag:Clone()
+				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
+				newTag.Name = "PC"
+				newTag.Parent=HackGUI
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
+				newTag.Adornee=ComputerBase
+				CS:AddTag(newTag,"RemoveOnDestroy")
+				CS:AddTag(newTag,"HackDisplay4")
+				task.wait()
+				if newTag==nil or newTag.Parent==nil or newTag:FindFirstChild("Toggle")==nil then
+					return
+				end
+				local ToggleButton = newTag.Toggle
+				ToggleButton.Text = "Teleport"
+				local function setToggleFunction()
+					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
+					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
+					if ActionEventVal and TriggerType=="Computer" then
+						task.spawn(stopCurrentAction)
+					end
+					local goodTriggers = C.AvailableHacks.Bot[15].getGoodTriggers(Computer)
+					if #goodTriggers>0 then
+						local selectedTriggerKey = table.find(goodTriggers,BestTrigger) or 1
+						teleportMyself(goodTriggers[selectedTriggerKey]:GetPivot())
+					else
+						teleportMyself(BestTrigger:GetPivot())
+					end
+				end
+				local function hackedTeleportFunction()
+					if ((Screen.Color.G*255)<128) and ((Screen.Color.G*255)>126) then--check if its green, meaning no hack hecked pcs!
+						ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+					else
+						ToggleButton.BackgroundColor3 = Color3.fromRGB(0,0,170)
+					end
+				end
+				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
+				C.AvailableHacks.Blatant[20].SetEnabled(newTag)
+				setChangedAttribute(Screen, "Color", hackedTeleportFunction)
+				hackedTeleportFunction()
+			end,
+		},
 	},
 	["Blatant"]={
 		--[[[1]={
@@ -3680,210 +3884,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[20].ActivateFunction(C.enHacks.Basic_InviWalls)
 			end,
 		},
-		[30]={
-			["Type"]="ExTextButton",
-			["Title"]="Freezing Pods",
-			["Desc"]="Interact with Freezing Pods",
-			["Shortcut"]="Render_FreezingPods",
-			["Default"]=false,
-			["Event"]=nil,
-			["SetEnabled"]=function(tag)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
-				local newValue = C.enHacks.Render_FreezingPods
-
-				local canBeActive = newValue == true
-				tag.Enabled=canBeActive and camera.CameraType==Enum.CameraType.Custom and isInGame
-				if tag:FindFirstChild("Toggle") then
-					tag.Toggle.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
-				end
-			end,
-			["ActivateFunction"]=function(newValue)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
-				local hackDisplayList = CS:GetTagged("HackDisplay3")
-				for num,tag in ipairs(hackDisplayList) do
-					C.AvailableHacks.Render[30].SetEnabled(tag)
-				end
-			end,
-			["CleanUp"]=function()
-				DestroyAllTaggedObjects("HackDisplay3")
-				if C.AvailableHacks.Render[30].Event then
-					C.AvailableHacks.Render[30].Event:Destroy()
-				end
-				C.AvailableHacks.Render[30].Event=nil
-				if C.objectFuncts[C.AvailableHacks.Render[30].Event] then
-					C.objectFuncts[C.AvailableHacks.Render[30].Event][1]:Disconnect()
-					C.objectFuncts[C.AvailableHacks.Render[30].Event] = nil
-				end
-			end,
-			["UpdateDisplays"]=function()
-				C.AvailableHacks.Render[30].ActivateFunction(C.enHacks.RemotelyHackComputers)
-			end,
-			--CHECKED UNDER REMOTE DOORS HACK!
-			["CapsuleAdded"]=function(Capsule)
-				local CapsulePrimaryPart = Capsule.PrimaryPart
-				local PodTriggerPart = Capsule:WaitForChild("PodTrigger",30)
-				if not PodTriggerPart then
-					return
-				end
-				local CapturedTorso = Capsule:WaitForChild("PodTrigger"):WaitForChild("CapturedTorso")
-				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
-				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
-				if not carriedTorso then
-					if C.Map then
-						print("uh oh! not found")
-					end
-					return
-				end
-				local isBeast = myTSM:WaitForChild("IsBeast")
-
-				local newTag=C.ToggleTag:Clone()
-				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
-				newTag.Name = "Pod"
-				newTag.Parent=HackGUI
-				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
-				newTag.Adornee=CapsulePrimaryPart
-				CS:AddTag(newTag,"RemoveOnDestroy")
-				CS:AddTag(newTag,"HackDisplay3")
-				task.wait()
-				if newTag==nil or newTag.Parent==nil or newTag:FindFirstChild("Toggle")==nil then
-					return
-				end
-				local ToggleButton = newTag.Toggle
-				ToggleButton.BackgroundColor3 = Color3.fromRGB(255,0,255)
-				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
-				C.AvailableHacks.Render[30].SetEnabled(newTag)
-				local function setToggleFunction()
-					if isBeast.Value then
-						local theirChar = C.Beast.CarriedTorso.Value.Parent
-						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
-					else
-						if myTSM.Health.Value > 0 then
-							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
-						else
-							print("You aren't a runner, so you can't rescue!")
-						end
-					end
-				end
-				local function setVisible()
-					if isBeast.Value and ActionSign.Value == 30 
-						and C.Beast and C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value then--30: TRAP
-						ToggleButton.Visible = true
-					elseif not isBeast.Value and ActionSign.Value == 31 and CapturedTorso.Value then--31: FREE
-						ToggleButton.Visible = true
-					else
-						ToggleButton.Visible = false
-					end
-				end
-				C.objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
-					CapturedTorso.Changed:Connect(setVisible),
-					ActionSign.Changed:Connect(setVisible),
-					carriedTorso.Event:Connect(setVisible)
-				}
-				setVisible()
-			end,
-			["MapAdded"]=function()
-				C.AvailableHacks.Render[30].Event = C.AvailableHacks.Render[30].Event or Instance.new("BindableEvent")
-				C.AvailableHacks.Render[30].Event:AddTag("RemoveOnDestroy")
-				C.AvailableHacks.Render[30].Event.Name="CarriedTorsoChanged"
-				C.AvailableHacks.Render[30].Event.Parent = workspace
-			end,
-			["MyBeastAdded"]=function()
-				repeat
-					RunS.RenderStepped:Wait()
-				until C.AvailableHacks.Render[30].Event
-				if not C.Beast then return end
-				C.objectFuncts[C.AvailableHacks.Render[30].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
-					C.AvailableHacks.Render[30].Event:Fire()
-				end)}
-			end,
-		},
-		[28]={
-			["Type"]="ExTextButton",
-			["Title"]="Remote Computers",
-			["Desc"]="Remotely Hack Computers",
-			["Shortcut"]="Render_HackComputers",
-			["Default"]=false,
-			["Event"]=nil,
-			["SetEnabled"]=function(tag)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
-				local newValue = C.enHacks.Render_HackComputers
-
-				local canBeActive = newValue == true
-				tag.Enabled=canBeActive and (camera.CameraType==Enum.CameraType.Custom or camera.CameraType==Enum.CameraType.Follow) and isInGame
-			end,
-			["ActivateFunction"]=function(newValue)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
-				local hackDisplayList = CS:GetTagged("HackDisplay4")
-				for num,tag in ipairs(hackDisplayList) do
-					C.AvailableHacks.Blatant[20].SetEnabled(tag)
-				end
-			end,
-			["CleanUp"]=function()
-				DestroyAllTaggedObjects("HackDisplay4")
-			end,
-			["UpdateDisplays"]=function()
-				C.AvailableHacks.Blatant[20].ActivateFunction(C.enHacks.Render_HackComputers)
-			end,
-			--CHECKED UNDER REMOTE DOORS HACK!
-			["ComputerAdded"]=function(Computer)
-				local Screen = Computer:WaitForChild("Screen")
-				local ComputerBase = Computer.PrimaryPart
-				local BestTrigger
-				local bestAngle = 3
-				for trigger_index = 1, 3, 1 do -- loop through ComputerTrigger 1 through 3
-					local trigger_name = "ComputerTrigger"..trigger_index
-					local trigger = Computer:WaitForChild(trigger_name, 20)
-					if not trigger then
-						return
-					end
-					local angle = math.abs(math.acos(ComputerBase.CFrame.LookVector:Dot((trigger.Position - ComputerBase.Position).Unit)))
-					if math.abs(angle - 1.57) < bestAngle then
-						bestAngle = angle
-						BestTrigger = trigger
-					end
-				end
-
-				local newTag=C.ToggleTag:Clone()
-				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
-				newTag.Name = "PC"
-				newTag.Parent=HackGUI
-				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
-				newTag.Adornee=ComputerBase
-				CS:AddTag(newTag,"RemoveOnDestroy")
-				CS:AddTag(newTag,"HackDisplay4")
-				task.wait()
-				if newTag==nil or newTag.Parent==nil or newTag:FindFirstChild("Toggle")==nil then
-					return
-				end
-				local ToggleButton = newTag.Toggle
-				ToggleButton.Text = "Teleport"
-				local function setToggleFunction()
-					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
-					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
-					if ActionEventVal and TriggerType=="Computer" then
-						task.spawn(stopCurrentAction)
-					end
-					local goodTriggers = C.AvailableHacks.Bot[15].getGoodTriggers(Computer)
-					if #goodTriggers>0 then
-						local selectedTriggerKey = table.find(goodTriggers,BestTrigger) or 1
-						teleportMyself(goodTriggers[selectedTriggerKey]:GetPivot())
-					else
-						teleportMyself(BestTrigger:GetPivot())
-					end
-				end
-				local function hackedTeleportFunction()
-					if ((Screen.Color.G*255)<128) and ((Screen.Color.G*255)>126) then--check if its green, meaning no hack hecked pcs!
-						ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-					else
-						ToggleButton.BackgroundColor3 = Color3.fromRGB(0,0,170)
-					end
-				end
-				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
-				C.AvailableHacks.Blatant[20].SetEnabled(newTag)
-				setChangedAttribute(Screen, "Color", hackedTeleportFunction)
-				hackedTeleportFunction()
-			end,
-		},
+		
 	},
 	["Utility"]={
 		[1]={
@@ -7604,7 +7605,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Beast[66].MyBeastAdded=C.AvailableHacks.Beast[66].BeastStartUp
 			end,
 		},
-		[70]={
+		--[[[70]={
 			["Type"]="ExTextButton",
 			["Title"]="Insta Rope",
 			["Desc"]="Beast INSTA ropes downed users when near",
@@ -7659,7 +7660,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Beast[70].OthersBeastAdded=C.AvailableHacks.Beast[70].BeastStartUp
 				C.AvailableHacks.Beast[70].MyBeastAdded=C.AvailableHacks.Beast[70].BeastStartUp
 			end,
-		},
+		},--]]
 		[77]={
 			["Type"]="ExTextButton",
 			["Title"]="Insta Capture All",

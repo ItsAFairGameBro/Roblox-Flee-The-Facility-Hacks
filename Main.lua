@@ -866,7 +866,6 @@ C.CashedHardValues = {}
 C.RequestedHardValues = {}
 C.YieldCacheRunning = false
 function C.YieldCacheValues()
-	warn("Yield Begun")
 	while true do
 		warn("Yield List:",#C.RequestedHardValues)
 		local nextIndex = C.RequestedHardValues[1]
@@ -905,7 +904,8 @@ function C.GetHardValue(instance,signal,Settings)
 			if theirData[1] == instance and theirData[2] == signal then
 				if Settings.yield then
 					print("Waiting For IT")
-					myEvent = theirData[3] or Instance.new("BindableEvent",PlayerGui)
+					myEvent = theirData[3] or Instance.new("BindableEvent",script)
+					myEvent.Name = "YieldDataExtra"
 					theirData[3] = myEvent
 					return myEvent.Event:Wait()
 				else
@@ -914,9 +914,8 @@ function C.GetHardValue(instance,signal,Settings)
 			end
 		end
 		if Settings.yield then
-			myEvent = Instance.new("BindableEvent",PlayerGui)
+			myEvent = Instance.new("BindableEvent",script)
 			myEvent.Name = "YieldEvent"
-			task.wait(1)
 			Settings.event = myEvent
 		end
 		table.insert(C.RequestedHardValues,{instance,signal,Settings.event})

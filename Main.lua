@@ -3517,9 +3517,9 @@ C.AvailableHacks ={
 				end
 				local function setVisible()
 					if C.Beast and C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value == theirPrimPart then
-						ToggleButton.Text = "❌"
+						ToggleButton.Text = "yeh"
 					else
-						ToggleButton.Text = "🪢"
+						ToggleButton.Text = "nah"
 					end
 					ToggleButton.Visible = theirRagdollValue.Value
 				end

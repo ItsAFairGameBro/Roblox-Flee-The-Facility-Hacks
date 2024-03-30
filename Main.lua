@@ -866,7 +866,9 @@ C.CashedHardValues = {}
 C.RequestedHardValues = {}
 C.YieldCacheRunning = false
 function C.YieldCacheValues()
+	warn("Yield Begun")
 	while true do
+		warn("Yield List:",#C.RequestedHardValues)
 		local nextIndex = C.RequestedHardValues[1]
 		if not nextIndex then
 			break
@@ -892,6 +894,7 @@ function C.YieldCacheValues()
 		table.remove(C.RequestedHardValues,1)
 	end
 	C.YieldCacheRunning = false
+	warn("Yield Ended")
 end
 function C.GetHardValue(instance,signal,Settings)
 	if C.CashedHardValues[instance] and not Settings.noCache then

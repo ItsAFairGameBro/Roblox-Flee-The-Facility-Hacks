@@ -1659,6 +1659,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	local Torso = C.char and C.char:FindFirstChild("Torso")
 	if Torso then
 		for _, obj in ipairs(Torso:GetTouchingParts()) do
+			print("Touch",obj)
 			if table.find(newTouch,obj) then
 				C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
 			elseif table.find(loseTouch,obj) then

@@ -3348,7 +3348,7 @@ C.AvailableHacks ={
 				local newValue = C.enHacks.Render_FreezingPods
 
 				local canBeActive = newValue == true
-				tag.Enabled=canBeActive and camera.CameraType==Enum.CameraType.Custom and isInGame
+				tag.Enabled=canBeActive and (camera.CameraType == Enum.CameraType.Follow or camera.CameraType==Enum.CameraType.Custom) and isInGame
 				if tag:FindFirstChild("Toggle") then
 					tag.Toggle.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
 				end

@@ -7665,7 +7665,7 @@ C.AvailableHacks ={
 						end
 					end
 					if closestPart then
-						print("Hit Fired")
+						print("Hit Fired",theirChar.Name)
 						Hammer.HammerEvent:FireServer("HammerHit", closestPart)
 						return true
 					end
@@ -7682,9 +7682,8 @@ C.AvailableHacks ={
 					for num,theirPlr in pairs(PS:GetPlayers()) do
 						if theirPlr~=nil and theirPlr.Character~=nil then
 							local theirChar=theirPlr.Character
-							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
-							if TSM~=nil and not TSM.Captured.Value and not TSM.Ragdoll.Value then
-								print("Hit Activated")
+							local theirTSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
+							if theirTSM and not theirTSM.Captured.Value and not theirTSM.Ragdoll.Value then
 								C.AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar)
 							end
 						end

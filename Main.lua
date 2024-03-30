@@ -845,11 +845,13 @@ local function StartBetterConsole()
 	local logSuccess,logResult = pcall(function()
 		local logHistory = LS:GetLogHistory()
 		if logHistory then -- it should exist, right?
-			for num, logData in ipairs(logHistory) do
+			--for num, logData in ipairs(logHistory) do
+			for index = math.max(#logHistory-50,1), #logHistory, 1 do
+				local logData = logHistory[index]
 				if checkmycaller(logData.message) then -- only if the message wasn't from "game!"
 					processMessage(logData.message,logData.messageType,logData.timestamp)
 				end
-				if num%50==0 then
+				if index%50==0 then
 					RunS.RenderStepped:Wait()
 				end
 			end
@@ -859,11 +861,56 @@ local function StartBetterConsole()
 		BetterConsole_onMessageOut("LogService:GetLogHistory has failed: "..tostring(logResult),Enum.MessageType.MessageError)
 	end
 end
+C.CashedHardValues = {}
+C.RequestedHardValues = {}
+C.YieldCacheRunning = false
+function C.YieldCacheValues()
+	C.YieldCacheRunning = true
+	while true do
+		local nextIndex = C.RequestedHardValues[1]
+		if not nextIndex then
+			break
+		end
+		local instance, signal, event = unpack(nextIndex)
+		local data
+		if signal=="env" then -- then its a script!
+			data = getsenv(instance)
+		else
+			data = getconnections(signal)
+		end
+		C.CashedHardValues[instance] = data
+		if event then
+			event:Fire(data)
+			event:Destroy()
+		end
+		table.remove(nextIndex,1)
+		task.wait(0.8)
+	end
+	C.YieldCacheRunning = false
+end
+function C.GetHardValue(instance,signal,settings)
+	if C.CashedHardValues[instance] and not settings.noCashe then
+		return C.CashedHardValues[instance]
+	else
+		local myEvent
+		if settings.yield then
+			myEvent = Instance.new("BindableEvent")
+			settings.event = myEvent
+		end
+		table.insert(C.RequestedHardValues,{instance,signal,settings.event})
+		if not C.YieldCacheRunning then
+			task.spawn(C.YieldCacheValues)
+		end
+		if myEvent then
+			return myEvent:Wait()
+		end
+	end
+end
 function C.FireSignal(instance,signal,Settings,...)
 	local elements = table.pack(...)
 	local fired = 0
 	local success, result = pcall(function()
-		for _, data in ipairs(getconnections(signal)) do
+		for _, data in ipairs(C.GetHardValue(instance,signal,{yield=true})) do
 			--if data.Enabled then
 			task.spawn(data.Fire,data,table.unpack(elements))
 			print("Connection Found, Fired Signal!")

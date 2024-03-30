@@ -876,6 +876,7 @@ function C.YieldCacheValues()
 		if signal=="env" then -- then its a script!
 			data = getsenv(instance)
 		else
+			print(signal)
 			local code2Run = ("return game.%s.%s"):format(instance:GetFullName(),signal)
 			signal = loadstring(code2Run)()
 			data = getconnections(signal)

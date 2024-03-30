@@ -877,6 +877,7 @@ function C.YieldCacheValues()
 		if signal=="env" then -- then its a script!
 			data = getsenv(instance)
 		else
+			print("Getting",instance,signal)
 			data = getconnections(signal)
 		end
 		C.CashedHardValues[instance] = data
@@ -917,7 +918,7 @@ function C.GetHardValue(instance,signal,Settings)
 			task.spawn(C.YieldCacheValues)
 		end
 		if myEvent then
-			return myEvent:Wait()
+			return myEvent.Event:Wait()
 		end
 	end
 end

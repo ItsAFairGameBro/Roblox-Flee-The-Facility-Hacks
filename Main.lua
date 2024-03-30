@@ -897,7 +897,6 @@ function C.GetHardValue(instance,signal,Settings)
 		print("In Table Already!!")
 		return C.CashedHardValues[instance]
 	else
-		print("Getting Value!")
 		local myEvent
 		for num, theirData in ipairs(C.RequestedHardValues) do
 			if theirData[1] == instance and theirData[2] == signal then
@@ -916,6 +915,7 @@ function C.GetHardValue(instance,signal,Settings)
 			Settings.event = myEvent
 		end
 		table.insert(C.RequestedHardValues,{instance,signal,Settings.event})
+		print("Getting Value!")
 		if not C.YieldCacheRunning then
 			task.spawn(C.YieldCacheValues)
 		end

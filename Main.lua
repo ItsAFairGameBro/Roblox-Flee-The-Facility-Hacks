@@ -878,7 +878,7 @@ function C.YieldCacheValues()
 			data = getsenv(instance)
 		else
 			print("Getting",instance,signal)
-			data = getconnections(signal)
+			data = getconnections(instance[signal])
 		end
 		C.CashedHardValues[instance] = data
 		if event then

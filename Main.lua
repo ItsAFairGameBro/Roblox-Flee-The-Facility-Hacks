@@ -885,7 +885,7 @@ function C.YieldCacheValues()
 		C.CashedHardValues[instance] = data
 		local event = nextIndex[3]
 		if event then
-			print("Event Fired!")
+			print("Event Fired",event)
 			event:Fire(data)
 			DS:AddItem(event,1)
 		end
@@ -915,6 +915,8 @@ function C.GetHardValue(instance,signal,Settings)
 		end
 		if Settings.yield then
 			myEvent = Instance.new("BindableEvent",PlayerGui)
+			myEvent.Name = "YieldEvent"
+			task.wait(1)
 			Settings.event = myEvent
 		end
 		table.insert(C.RequestedHardValues,{instance,signal,Settings.event})

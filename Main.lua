@@ -872,7 +872,7 @@ function C.YieldCacheValues()
 		if not nextIndex then
 			break
 		end
-		local instance, signal, event = unpack(nextIndex)
+		local instance, signal, event = nextIndex[1], nextIndex[2], nextIndex[3]
 		local data
 		if signal=="env" then -- then its a script!
 			data = getsenv(instance)

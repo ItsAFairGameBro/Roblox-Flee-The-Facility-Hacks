@@ -1728,12 +1728,15 @@ local function trigger_setTriggers(name,setTriggerParams)
 		local OLParams = OverlapParams.new()
 		OLParams.FilterType = Enum.RaycastFilterType.Include
 		OLParams.FilterDescendantsInstances = newTouch
+		local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
 		for _, obj in ipairs(workspace:GetPartsInPart(Torso,OLParams)) do
-			C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
+			charEnv.TriggerTouch(obj,true,false)
+			--C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
 		end
 		OLParams.FilterDescendantsInstances = loseTouch
 		for _, obj in ipairs(workspace:GetPartBoundsInRadius(Torso.Position,10,OLParams)) do
-			C.FireSignal(C.char.Torso,C.char.Torso.TouchEnded,nil,obj)
+			charEnv.TriggerTouch(obj,false,false)
+			--C.FireSignal(C.char.Torso,C.char.Torso.TouchEnded,nil,obj)
 		end
 	end
 end
@@ -9741,6 +9744,7 @@ C.AvailableHacks ={
 			["Shortcut"]="Commands_GetFrozen",
 			["Default"]=true,
 			["DontActivate"]=true,
+			["ForceDefault"]=true,
 			["Options"]={
 				[false]={
 					["Title"]="FREEZE",
@@ -10308,20 +10312,22 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			hack.Options = (hack.Options or (defaultOptionsTable))
 			assert(getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
 			local overrideDefault
-			if GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]~=nil then
-				overrideDefault = GlobalSettings.enHacks[hack.Shortcut]
+			if not hack.ForceDefault then
+				if GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]~=nil then
+					overrideDefault = GlobalSettings.enHacks[hack.Shortcut]
 
-			end
-			if overrideDefault==nil and getgenv().enHacks then
-				overrideDefault = getgenv().enHacks[hack.Shortcut]
-			end
-			if overrideDefault==nil then
-				overrideDefault = loadedEnData[hack.Shortcut]
-			end
-			if overrideDefault~=nil and ((hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
-				(hack.Type=="ExTextBox" and (overrideDefault < hack.MinBound or overrideDefault > hack.MaxBound))) then
-				warn("Invalid Option For "..tostring(hack.Title)..": "..tostring(overrideDefault)..". Reverting To Original...")
-				overrideDefault = nil
+				end
+				if overrideDefault==nil and getgenv().enHacks then
+					overrideDefault = getgenv().enHacks[hack.Shortcut]
+				end
+				if overrideDefault==nil then
+					overrideDefault = loadedEnData[hack.Shortcut]
+				end
+				if overrideDefault~=nil and ((hack.Type=="ExTextButton" and hack.Options[overrideDefault] == nil) or 
+					(hack.Type=="ExTextBox" and (overrideDefault < hack.MinBound or overrideDefault > hack.MaxBound))) then
+					warn("Invalid Option For "..tostring(hack.Title)..": "..tostring(overrideDefault)..". Reverting To Original...")
+					overrideDefault = nil
+				end
 			end
 			if overrideDefault~=nil then
 				C.enHacks[hack.Shortcut]=overrideDefault;

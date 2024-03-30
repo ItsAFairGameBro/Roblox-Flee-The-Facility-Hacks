@@ -887,7 +887,7 @@ function C.YieldCacheValues()
 			event:Fire(data)
 			event:Destroy()
 		end
-		table.remove(nextIndex,1)
+		table.remove(C.RequestedHardValues,1)
 		task.wait(0.8)
 	end
 	C.YieldCacheRunning = false

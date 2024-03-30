@@ -877,8 +877,7 @@ function C.YieldCacheValues()
 		if signal=="env" then -- then its a script!
 			data = getsenv(instance)
 		else
-			print(instance,signal,event)
-			data = getconnections(signal)
+			data = getconnections(loadstring(("return %s.%s"):format(instance,signal))())
 		end
 		C.CashedHardValues[instance] = data
 		if event then
@@ -913,7 +912,6 @@ function C.GetHardValue(instance,signal,Settings)
 			myEvent = Instance.new("BindableEvent")
 			Settings.event = myEvent
 		end
-		print("Signal",signal)
 		table.insert(C.RequestedHardValues,{instance,signal,Settings.event})
 		if not C.YieldCacheRunning then
 			task.spawn(C.YieldCacheValues)

@@ -872,13 +872,12 @@ function C.YieldCacheValues()
 		if not nextIndex then
 			break
 		end
-		local instance, signal, event = table.unpack(nextIndex)
+		local instance, signal, event = unpack(nextIndex)
 		local data
 		if signal=="env" then -- then its a script!
 			data = getsenv(instance)
 		else
-			print("Getting",instance,signal)
-			data = getconnections(instance[signal])
+			data = getconnections(signal)
 		end
 		C.CashedHardValues[instance] = data
 		if event then

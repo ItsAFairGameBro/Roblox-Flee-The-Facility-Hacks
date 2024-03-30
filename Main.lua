@@ -3459,7 +3459,6 @@ C.AvailableHacks ={
 			["Desc"]="Remotely Hack Computers",
 			["Shortcut"]="Render_HackComputers",
 			["Default"]=false,
-			["Event"]=nil,
 			["SetEnabled"]=function(tag)
 				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local newValue = C.enHacks.Render_HackComputers
@@ -3501,7 +3500,7 @@ C.AvailableHacks ={
 
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
-				newTag.Name = "PC"
+				newTag.Name = "PCTrigger"
 				newTag.Parent=HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
 				newTag.Adornee=ComputerBase

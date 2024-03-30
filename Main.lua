@@ -3464,8 +3464,7 @@ C.AvailableHacks ={
 				local newValue = C.enHacks.Render_HackComputers
 
 				local canBeActive = newValue == true
-				print("Set",tag,newValue,isInGame)
-				tag.Enabled=canBeActive and (camera.CameraType==Enum.CameraType.Custom or camera.CameraType==Enum.CameraType.Follow) and isInGame
+				tag.Enabled=canBeActive and (camera.CameraType==Enum.CameraType.Custom or camera.CameraType==Enum.CameraType.Track) and isInGame
 			end,
 			["ActivateFunction"]=function(newValue)
 				local isInGame=isInGame(camera.CameraSubject.Parent)

@@ -78,6 +78,7 @@ local mainZIndex = 2
 local getscriptfunction = require
 local checkcaller = isStudio and (function() return true end) or checkcaller
 local getrenv = isStudio and _G or getrenv
+local getsenv = isStudio and (function() return {} end) or getsenv
 local getconnections = isStudio and (function(signal) return {} end) or getconnections
 --DEBUG--
 local botModeEnabled=GlobalSettings.botModeEnabled
@@ -888,17 +889,30 @@ function C.YieldCacheValues()
 	end
 	C.YieldCacheRunning = false
 end
-function C.GetHardValue(instance,signal,settings)
-	if C.CashedHardValues[instance] and not settings.noCashe then
+function C.GetHardValue(instance,signal,Settings)
+	if C.CashedHardValues[instance] and not Settings.noCashe then
+		print("In Table Already!!")
 		return C.CashedHardValues[instance]
 	else
 		print("Getting Value!")
 		local myEvent
-		if settings.yield then
-			myEvent = Instance.new("BindableEvent")
-			settings.event = myEvent
+		for num, theirData in ipairs(C.RequestedHardValues) do
+			if theirData[1] == instance and theirData[2] == signal then
+				if Settings.yield then
+					print("Waiting For IT")
+					myEvent = theirData[3] or Instance.new("BindableEvent")
+					theirData[3].event = myEvent
+					return myEvent.Event:Wait()
+				else
+					return -- already in the cache
+				end
+			end
 		end
-		table.insert(C.RequestedHardValues,{instance,signal,settings.event})
+		if Settings.yield then
+			myEvent = Instance.new("BindableEvent")
+			Settings.event = myEvent
+		end
+		table.insert(C.RequestedHardValues,{instance,signal,Settings.event})
 		if not C.YieldCacheRunning then
 			task.spawn(C.YieldCacheValues)
 		end
@@ -907,6 +921,7 @@ function C.GetHardValue(instance,signal,settings)
 		end
 	end
 end
+getrenv().GetHardValue = C.GetHardValue
 function C.FireSignal(instance,signal,Settings,...)
 	local elements = table.pack(...)
 	local fired = 0
@@ -1707,7 +1722,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 		OLParams.FilterType = Enum.RaycastFilterType.Include
 		OLParams.FilterDescendantsInstances = newTouch
 		for _, obj in ipairs(workspace:GetPartsInPart(Torso,OLParams)) do
-				C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
+			C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
 		end
 		OLParams.FilterDescendantsInstances = loseTouch
 		for _, obj in ipairs(workspace:GetPartBoundsInRadius(Torso.Position,10,OLParams)) do

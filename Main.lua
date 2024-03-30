@@ -7633,7 +7633,7 @@ C.AvailableHacks ={
 			},
 		[66]={
 			["Type"]="ExTextButton",
-			["Title"]="Auto.Beast Hit",
+			["Title"]="Auto Beast Hit",
 			["Desc"]="Beast AUTO hits when near",
 			["Shortcut"]="AutoBeastHit",
 			["DontActivate"]=false,
@@ -7665,6 +7665,7 @@ C.AvailableHacks ={
 						end
 					end
 					if closestPart then
+						print("Hit Fired")
 						Hammer.HammerEvent:FireServer("HammerHit", closestPart)
 						return true
 					end
@@ -7683,11 +7684,12 @@ C.AvailableHacks ={
 							local theirChar=theirPlr.Character
 							local TSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
 							if TSM~=nil and not TSM.Captured.Value and not TSM.Ragdoll.Value then
+								print("Hit Activated")
 								C.AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar)
 							end
 						end
 					end
-					RunS.PreAnimation:Wait()
+					RunS.RenderStepped:Wait()
 				end
 			end,
 			["ActivateFunction"]=function(newValue)

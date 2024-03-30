@@ -877,7 +877,7 @@ function C.YieldCacheValues()
 		if signal=="env" then -- then its a script!
 			data = getsenv(instance)
 		else
-			signal = (loadstring(("return %s.%s"):format(instance,signal)))()
+			signal = (loadstring(("return %s.%s"):format(instance:GetFullName(),signal)))()
 			data = getconnections(signal)
 		end
 		C.CashedHardValues[instance] = data

@@ -921,7 +921,7 @@ function C.GetHardValue(instance,signal,Settings)
 			task.spawn(C.YieldCacheValues)
 		end
 		if myEvent then
-			if myEvent.Name~="Complete" and myEvent.Parent then
+			if myEvent.Name~="Complete" then
 				myEvent.Event:Wait()
 			end
 			return C.CashedHardValues[instance]
@@ -8540,6 +8540,7 @@ C.AvailableHacks ={
 				local currentPath = C.AvailableHacks.Bot[15].CurrentPath
 				while canRun(true) do
 					human:SetAttribute("OverrideSpeed",((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<16 and 25 or 42))
+					print("Outter Loop")
 					local inRange = (C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<6
 					if not inRange and not myTSM.Captured.Value then
 						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-2),canRun)
@@ -8547,6 +8548,7 @@ C.AvailableHacks ={
 					local i = 0
 					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<6)) do
 						-- or TSM.Ragdoll.Value))  do
+						print("Inner Loop")
 						i+=1
 						if i==10 then
 							i = 0

@@ -3471,14 +3471,14 @@ C.AvailableHacks ={
 				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay4")
 				for num,tag in ipairs(hackDisplayList) do
-					C.AvailableHacks.Blatant[20].SetEnabled(tag)
+					C.AvailableHacks.Render[28].SetEnabled(tag)
 				end
 			end,
 			["CleanUp"]=function()
 				DestroyAllTaggedObjects("HackDisplay4")
 			end,
 			["UpdateDisplays"]=function()
-				C.AvailableHacks.Blatant[20].ActivateFunction(C.enHacks.Render_HackComputers)
+				C.AvailableHacks.Render[28].ActivateFunction(C.enHacks.Render_HackComputers)
 			end,
 			--CHECKED UNDER REMOTE DOORS HACK!
 			["ComputerAdded"]=function(Computer)
@@ -3535,7 +3535,7 @@ C.AvailableHacks ={
 					end
 				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
-				C.AvailableHacks.Blatant[20].SetEnabled(newTag)
+				C.AvailableHacks.Render[28].SetEnabled(newTag)
 				setChangedAttribute(Screen, "Color", hackedTeleportFunction)
 				hackedTeleportFunction()
 			end,

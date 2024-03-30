@@ -1666,7 +1666,6 @@ local function trigger_setTriggers(name,setTriggerParams)
 		end
 	end
 	local newTouch = {}
-	local totTouch = {}
 	local loseTouch = {}
 	local currentEvent = myTSM and myTSM:WaitForChild("ActionEvent").Value
 	local beforeEn,afterEn
@@ -1690,7 +1689,6 @@ local function trigger_setTriggers(name,setTriggerParams)
 					end
 					trigger.CanTouch=enabled
 					table.insert(enabled and newTouch or loseTouch, trigger)
-					table.insert(totTouch,trigger)
 					--print("Trigger",trigger.Name,triggerType,enabled)
 				end
 			end
@@ -1707,13 +1705,13 @@ local function trigger_setTriggers(name,setTriggerParams)
 	if Torso then
 		local OLParams = OverlapParams.new()
 		OLParams.FilterType = Enum.RaycastFilterType.Include
-		OLParams.FilterDescendantsInstances = totTouch
+		OLParams.FilterDescendantsInstances = newTouch
 		for _, obj in ipairs(workspace:GetPartsInPart(Torso,OLParams)) do
-			if table.find(newTouch,obj) then
 				C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
-			elseif table.find(loseTouch,obj) then
-				C.FireSignal(C.char.Torso,C.char.Torso.TouchEnded,nil,obj)
-			end
+		end
+		OLParams.FilterDescendantsInstances = loseTouch
+		for _, obj in ipairs(workspace:GetPartBoundsInRadius(Torso,10,OLParams)) do
+			C.FireSignal(C.char.Torso,C.char.Torso.TouchEnded,nil,obj)
 		end
 	end
 end

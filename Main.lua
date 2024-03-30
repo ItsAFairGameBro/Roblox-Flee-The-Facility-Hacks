@@ -3452,6 +3452,9 @@ C.AvailableHacks ={
 					C.AvailableHacks.Render[30].Event:Fire()
 				end)}
 			end,
+			["OthersBeastAdded"]=function()
+				C.AvailableHacks.Render[30].MyBeastAdded()
+			end,
 		},
 		[29]={
 			["Type"]="ExTextButton",

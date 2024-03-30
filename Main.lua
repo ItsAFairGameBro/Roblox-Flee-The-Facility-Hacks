@@ -866,7 +866,6 @@ C.CashedHardValues = {}
 C.RequestedHardValues = {}
 C.YieldCacheRunning = false
 function C.YieldCacheValues()
-	C.YieldCacheRunning = true
 	while true do
 		local nextIndex = C.RequestedHardValues[1]
 		if not nextIndex then
@@ -887,7 +886,7 @@ function C.YieldCacheValues()
 		if event then
 			print("Event Fired!")
 			event:Fire(data)
-			event:Destroy()
+			DS:AddItem(event,1)
 		end
 		task.wait(0.8)
 		table.remove(C.RequestedHardValues,1)
@@ -919,6 +918,7 @@ function C.GetHardValue(instance,signal,Settings)
 		table.insert(C.RequestedHardValues,{instance,signal,Settings.event})
 		print("Getting Value!")
 		if not C.YieldCacheRunning then
+			C.YieldCacheRunning = true
 			task.spawn(C.YieldCacheValues)
 		end
 		if myEvent then

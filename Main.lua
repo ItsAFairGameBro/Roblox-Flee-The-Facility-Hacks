@@ -4089,8 +4089,6 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				local TSMModule = require(myTSM)
 
-				local SpectatorFrame = StringWaitForChild(PlayerGui, "ScreenGui.SpectatorFrame")
-
 				local allowedEndValues = {
 					"PlayerGui.ScreenGui.LocalGuiScript:704\n",
 					"PlayerGui.ScreenGui.LocalGuiScript:712\n",
@@ -10119,6 +10117,9 @@ C.clear = function(isManualClear)
 		C.AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
 		if C.AvailableHacks.Utility[7] then
 			C.AvailableHacks.Utility[7].ActivateFunction(false,true)--enable touchscreen, if needed!
+		end
+		if C.AvailableHacks.Utility[5] then
+			C.AvailableHacks.Utility[5].ActivateFunction(false)--disable spectate hacks
 		end
 		C.AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		C.AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!

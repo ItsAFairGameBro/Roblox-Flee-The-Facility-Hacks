@@ -7267,8 +7267,10 @@ C.AvailableHacks ={
 				end
 
 				for _, basePart in ipairs(clonedChar:GetDescendants()) do
-					if basePart.Name=="Weight" or (basePart.Parent and basePart.Parent.Name=="PackedHammer") then
+					if basePart.Name=="Weight" then
 						basePart:Destroy()
+					elseif (basePart.Parent and basePart.Parent.Name=="PackedHammer") then
+						basePart.Transparency = 1
 					elseif basePart:IsA("BasePart") and basePart.Name ~= "HumanoidRootPart" then
 						--and basePart.Parent == clonedChar then
 						--local local function updLocalTrans()

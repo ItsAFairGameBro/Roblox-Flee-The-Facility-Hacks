@@ -8197,7 +8197,7 @@ C.AvailableHacks ={
 					if actionValue and actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent.Parent)=="Computer" then
 						if C.enHacks.Blatant_RemoteHackPCs then
 							C.char.Torso.CanTouch = false
-							trigger_setTriggers("Typing",false)
+							trigger_setTriggers("Typing",{AllowExceptions={actionValue.Parent.Parent}})
 							local changed
 							changed = myTSM.CurrentAnimation.Changed:Connect(function()
 								RunS.RenderStepped:Wait()

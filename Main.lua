@@ -4160,7 +4160,7 @@ C.AvailableHacks ={
 											end
 										end
 									end
-									if valName=="Health" then
+									if valName=="Health" and canContinue2 then
 										local MapLighting = C.Map and (C.Map:FindFirstChild("_LightingSettings") or C.Map:FindFirstChild("NotLightingSettings"))
 										if MapLighting then
 											MapLighting.Name = "NotLightingSettings"

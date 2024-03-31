@@ -4208,7 +4208,7 @@ C.AvailableHacks ={
 				upd() updMap()
 				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName")
 				local function updateSpectatorFrameColor3()
-					local theirPlr = PS:FindFirstChild(spectatorName.Name)
+					local theirPlr = PS:FindFirstChild(spectatorName.Text)
 					if theirPlr then
 						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
 						if theirTSM then

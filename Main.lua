@@ -4125,10 +4125,11 @@ C.AvailableHacks ={
 				
 				for num, theirPlr in ipairs(PS:GetPlayers()) do
 					if theirPlr ~= C.plr then
+						print("read",theirPlr.Name)
 						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
 						local theirTSMMod = require(theirTSM)
 						local function TheirPlayerNormalFunction(valName)
-							return myTSM:FindFirstChild(valName).Value
+							return theirTSM:FindFirstChild(valName).Value
 						end
 						theirTSMMod.GetValue = newValue and function(valName)
 							local caller = getcallingscript()

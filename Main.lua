@@ -4104,8 +4104,7 @@ C.AvailableHacks ={
 					local caller = getcallingscript()
 					if caller.Name == "LocalGuiScript" then
 						local canContinue = false
-						if not canContinue and C.enHacks.Util_ForceAllowSpectate
-							and SpectatorFrame.Visible then
+						if not canContinue and C.enHacks.Util_ForceAllowSpectate then
 							local debugTraceBack = debug.traceback("",1)
 							for num, str in ipairs(allowedEndValues) do
 								if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then

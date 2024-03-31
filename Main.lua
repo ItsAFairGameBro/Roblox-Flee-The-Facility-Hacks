@@ -4131,7 +4131,6 @@ C.AvailableHacks ={
 				
 				for num, theirPlr in ipairs(PS:GetPlayers()) do
 					if theirPlr ~= plr then
-						print("read",theirPlr.Name)
 						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
 						local theirTSMMod = require(theirTSM)
 						local function TheirPlayerNormalFunction(valName)
@@ -4158,7 +4157,6 @@ C.AvailableHacks ={
 											if theirTSM2 and (theirTSM2.Health.Value > 0 or theirTSM2.IsBeast.Value) then
 												canContinue2 = false
 												if theirTSM2 == theirTSM then
-													print("Faked",theirPlr.Name)
 													if valName == "Health" then
 														return 100
 													elseif valName == "IsBeast" then
@@ -4208,6 +4206,26 @@ C.AvailableHacks ={
 				table.insert(C.AvailableHacks.Utility[5].Funct,LS:GetPropertyChangedSignal("ClockTime"):Connect(upd))
 				table.insert(C.AvailableHacks.Utility[5].Funct,RS.IsGameActive.Changed:Connect(updMap))
 				upd() updMap()
+				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName")
+				local function updateSpectatorFrameColor3()
+					local theirPlr = PS:FindFirstChild(spectatorName.Name)
+					if theirPlr then
+						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
+						if theirTSM then
+							if theirTSM.IsBeast.Value then
+								spectatorName.TextColor3 = Color3.fromRGB(255)
+								return
+							elseif theirTSM.Health.Value>100 then
+								spectatorName.TextColor3 = Color3.fromRGB(0,0,255)
+								return
+							end
+						end
+					end
+					spectatorName.TextColor3 = Color3.fromRGB(255,255,255)
+				end
+				table.insert(C.AvailableHacks.Utility[5].Funct,
+					spectatorName:GetPropertyChangedSignal("Text"):Connect(updateSpectatorFrameColor3))
+				updateSpectatorFrameColor3()
 			end,
 			["MapAdded"]=function()
 				C.AvailableHacks.Utility[5].MyPlayerAdded()

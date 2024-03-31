@@ -7207,7 +7207,7 @@ C.AvailableHacks ={
 					local newLoc = orgChar:GetPrimaryPartCFrame()
 					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude))
 					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 50
-						or os.clock() - TPDelay < .5 then
+						or os.clock() - TPDelay < .2 then
 						return
 					end
 					TPDelay = os.clock()

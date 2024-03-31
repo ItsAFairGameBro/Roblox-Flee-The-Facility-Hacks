@@ -7185,7 +7185,7 @@ C.AvailableHacks ={
 						return
 					end
 					local newLoc = orgChar:GetPrimaryPartCFrame()
-					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude))
+					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude))
 					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 50 then
 						return
 					end

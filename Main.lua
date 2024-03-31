@@ -7230,6 +7230,16 @@ C.AvailableHacks ={
 				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(function()
 					camera.CameraSubject = clonedHuman
 				end))
+				table.insert(connections,clonedChar.Torso.Touched:Connect(function(instance)
+					--TODO HERE
+					local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
+					charEnv.TriggerTouch(instance,true)
+				end))
+				table.insert(connections,clonedChar.Torso.TouchEnded:Connect(function(instance)
+					--TODO HERE
+					local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
+					charEnv.TriggerTouch(instance,false)
+				end))
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						local MoveDirection = C.PlayerControlModule:GetMoveVector()

@@ -4212,6 +4212,7 @@ C.AvailableHacks ={
 					if theirPlr then
 						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
 						if theirTSM then
+							print(theirTSM.Health.Value)
 							if theirTSM.IsBeast.Value then
 								spectatorName.TextColor3 = Color3.fromRGB(255)
 								return

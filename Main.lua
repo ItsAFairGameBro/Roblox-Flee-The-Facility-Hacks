@@ -5754,7 +5754,7 @@ C.AvailableHacks ={
 			["Functs"]={},
 			["Deb"]=0.5,
 			["HiddenLocation"] = Vector3.new(0,99,0),
-			["LastTeleportLocation"] = Vector3.new(),
+			["LastTeleportLocation"] = CFrame.new(),
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				--newHuman:ChangeState(oldHuman:GetState())

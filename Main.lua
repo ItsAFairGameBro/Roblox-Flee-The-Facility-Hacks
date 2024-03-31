@@ -5753,7 +5753,8 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Functs"]={},
 			["Deb"]=0.5,
-			["HiddenLocation"] = CFrame.new(0,99,0),
+			["HiddenLocation"] = Vector3.new(0,99,0),
+			["LastTeleportLocation"] = Vector3.new(),
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				--newHuman:ChangeState(oldHuman:GetState())
@@ -7162,7 +7163,8 @@ C.AvailableHacks ={
 				end
 
 
-				teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
+				C.AvailableHacks.Basic[30].LastTeleportLocation = orgChar:GetPivot() + C.AvailableHacks.Basic[30].HiddenLocation
+				teleportMyself(C.AvailableHacks.Basic[30].LastTeleportLocation)
 
 				task.spawn(function()
 					for s = 5, 1, -1 do
@@ -7184,10 +7186,11 @@ C.AvailableHacks ={
 					end
 					local newLoc = orgChar:GetPrimaryPartCFrame()
 					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude))
-					if (newLoc.Position - C.AvailableHacks.Basic[30].HiddenLocation.Position).Magnitude < 50 then
+					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation).Magnitude < 50 then
 						return
 					end
-					orgChar:SetPrimaryPartCFrame(C.AvailableHacks.Basic[30].HiddenLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
+					C.AvailableHacks.Basic[30].LastTeleportLocation = orgChar:GetPivot() + C.AvailableHacks.Basic[30].HiddenLocation
+					orgChar:SetPrimaryPartCFrame(C.AvailableHacks.Basic[30].LastTeleportLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 					clonedChar:SetPrimaryPartCFrame(newLoc)
 				end
 
@@ -10148,7 +10151,7 @@ local function attributeAddedFunction()
 			DS:AddItem(script,15)
 			return
 		end
-		print("Different:",newIndex,C.saveIndex)
+		--print("Different:",newIndex,C.saveIndex)
 		C.clear()
 	end
 end

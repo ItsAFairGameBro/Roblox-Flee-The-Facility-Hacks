@@ -5642,9 +5642,9 @@ C.AvailableHacks ={
 				local doorNames = {"Door","DoorL","DoorR"}
 
 				if table.find(doorNames,object.Parent.Name) then--or object.Name=="WalkThru" then
-					return "Door", object.Parent
-				elseif table.find(doorNames,object.Parent.Parent.Name) then
 					return "Door", object.Parent.Parent
+				elseif table.find(doorNames,object.Parent.Parent.Name) then
+					return "Door", object.Parent.Parent.Parent
 				else
 					local worldSize = GetAbsoluteWorldSize(object)
 					if (((worldSize.X >= 9 and worldSize.Z <=9) or (worldSize.X <= 9 and worldSize.Z >= 9)) or worldSize.Y > 18) 

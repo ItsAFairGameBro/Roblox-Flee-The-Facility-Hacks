@@ -5637,7 +5637,7 @@ C.AvailableHacks ={
 			["GetStructure"]=function(object)
 				local doorNames = {"Door","DoorL","DoorR"}
 
-				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) then
+				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) or object.Name=="WalkThru" then
 					return "Door"
 				else
 					local worldSize = GetAbsoluteWorldSize(object)
@@ -5651,13 +5651,14 @@ C.AvailableHacks ={
 			["InstanceRemoved"]=function(object)
 				local structure = C.AvailableHacks.Basic[20].GetStructure(object)
 				object:RemoveTag(object,"InviWalls")
-				if object.Name=="WalkThru" and structure == "Door" then
+				print(object.Name,structure)
+				--[[if object.Name=="WalkThru" and structure == "Door" then
 					local DoorTrigger = StringWaitForChild(object.Parent,"DoorTrigger.ActionSign",0)
 					print(object.Name,DoorTrigger and DoorTrigger.Value)
 					object.CanCollide = DoorTrigger and DoorTrigger.Value == 10
-				else
+				else--]]
 					object.CanCollide = not object:GetAttribute("WeirdCanCollide")
-				end
+				--end
 				object.Color = object:GetAttribute("OrgColor") or object.Color
 				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency
 				object.CastShadow = true

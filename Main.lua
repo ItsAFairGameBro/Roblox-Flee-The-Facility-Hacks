@@ -7333,11 +7333,26 @@ C.AvailableHacks ={
 			["LoadedAnim"]=nil,
 			["Default"]=false,
 			["DontActivate"]=true,
+			--[[["Options"]={
+				[false]={
+					["Title"]="OFF",
+					["TextColor"]=newColor3(255, 0, 0),
+				},
+				["CrawlOnly"]={
+					["Title"]="CRAWL ONLY",
+					["TextColor"]=newColor3(255, 255, 0),
+				},
+				[true]={
+					["Title"]="ON",
+					["TextColor"]=newColor3(0, 255, 0),
+				},
+			},--]]
 			["ActivateFunction"]=function(newValue)
 				--C.AvailableHacks.Beast[2].SetScriptActive()
 				if not newValue then
 					C.AvailableHacks.Beast[2].Crawl(false)
 				end
+				--C.AvailableHacks.Beast[2].UpdateVentsVisibility()
 			end,
 			["MyStartUp"]=function()
 				if C.AvailableHacks.Beast[2].LoadedAnim~=nil then
@@ -7407,6 +7422,20 @@ C.AvailableHacks ={
 				end))
 			end,
 			["IsCrawling"]=false,
+			["MapAdded"]=function()
+				task.wait(5) -- Delay this so it doesn't cause lag!
+				for num, instance in ipairs(C.Map:GetChildren()) do
+					if instance.Name == "Vent" then
+						local VentBlock = instance:FindFirstChild("VentBlock")
+						if VentBlock then
+							VentBlock:Destroy()
+						end
+					end
+					if num%100==0 then
+						RunS.RenderStepped:Wait()
+					end
+				end
+			end,
 			["Crawl"]=function(set,instant)
 				local TSM = plr:WaitForChild("TempPlayerStatsModule");
 				local animTrack = C.AvailableHacks.Beast[2].LoadedAnim;

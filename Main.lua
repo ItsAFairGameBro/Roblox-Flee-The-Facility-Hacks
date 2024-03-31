@@ -5664,6 +5664,7 @@ C.AvailableHacks ={
 					object.CanCollide = DoorTrigger and DoorTrigger.Value == 10
 				else--]]
 				if structure == "Door" then
+					print("CanCOllide",instance,instance:GetAttribute("Closed"))
 					object.CanCollide = not instance:GetAttribute("Closed")
 				else
 					object.CanCollide = not object:GetAttribute("WeirdCanCollide")

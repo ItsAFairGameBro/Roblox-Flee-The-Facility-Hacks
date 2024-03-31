@@ -4089,6 +4089,7 @@ C.AvailableHacks ={
 			["Functs"]={},
 			["ActivateFunction"]=function(newValue)
 				local TSMModule = require(myTSM)
+				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName")
 
 				local allowedEndValues = {
 					"PlayerGui.ScreenGui.LocalGuiScript:704\n",
@@ -4166,7 +4167,8 @@ C.AvailableHacks ={
 											end
 										end
 									end
-									if valName=="Health" and canContinue2 then
+									if valName=="Health" and canContinue2 
+										and (not spectatorName.Parent.Visible or spectatorName.TextColor3.G > .9) then
 										local MapLighting = C.Map and (C.Map:FindFirstChild("_LightingSettings") or C.Map:FindFirstChild("NotLightingSettings"))
 										if MapLighting then
 											MapLighting.Name = "NotLightingSettings"

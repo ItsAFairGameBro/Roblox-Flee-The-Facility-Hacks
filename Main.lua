@@ -3779,6 +3779,9 @@ C.AvailableHacks ={
 				Toggle.Text = C.AvailableHacks.Blatant[15].DifferentColors[currentSign][1]
 				Toggle.BackgroundColor3 = C.AvailableHacks.Blatant[15].DifferentColors[currentSign][2]
 				Toggle.Visible = (door.Name~="ExitDoor" or currentSign~=0)
+				if ActionSign == 10 or ActionSign == 11 then
+					door:SetAttribute("Closed",ActionSign == 11)
+				end
 				local modifier=door:WaitForChild("WalkThru",20)
 				if modifier~=nil then
 					modifier.PathfindingModifier.Label = ((currentSign==10 or currentSign==12) and "DoorPath" or "DoorOpened")
@@ -5637,8 +5640,10 @@ C.AvailableHacks ={
 			["GetStructure"]=function(object)
 				local doorNames = {"Door","DoorL","DoorR"}
 
-				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) then--or object.Name=="WalkThru" then
-					return "Door"
+				if table.find(doorNames,object.Parent.Name) then--or object.Name=="WalkThru" then
+					return "Door", object.Parent
+				elseif table.find(doorNames,object.Parent.Parent.Name) then
+					return "Door", object.Parent.Parent
 				else
 					local worldSize = GetAbsoluteWorldSize(object)
 					if (((worldSize.X >= 9 and worldSize.Z <=9) or (worldSize.X <= 9 and worldSize.Z >= 9)) or worldSize.Y > 18) 
@@ -5649,7 +5654,7 @@ C.AvailableHacks ={
 				end					
 			end,
 			["InstanceRemoved"]=function(object)
-				local structure = C.AvailableHacks.Basic[20].GetStructure(object)
+				local structure, instance = C.AvailableHacks.Basic[20].GetStructure(object)
 				object:RemoveTag(object,"InviWalls")
 				--print(object.Name,structure)
 				--[[if object.Name=="WalkThru" and structure == "Door" then
@@ -5657,15 +5662,19 @@ C.AvailableHacks ={
 					print(object.Name,DoorTrigger and DoorTrigger.Value)
 					object.CanCollide = DoorTrigger and DoorTrigger.Value == 10
 				else--]]
+				if structure == "Door" then
+					object.CanCollide = not instance:GetAttribute("Closed")
+				else
 					object.CanCollide = not object:GetAttribute("WeirdCanCollide")
+				end
 				object:SetAttribute("WeirdCanCollide",nil)
 				--end
 				object.Color = object:GetAttribute("OrgColor") or object.Color
 				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency
 				object.CastShadow = true
-				if structure == "Door" then
+				--[[if structure == "Door" then
 					setChangedAttribute(object,"CanCollide",false)
-				end
+				end--]]
 			end,
 			["InstanceAdded"]=function(object)
 				if not object:IsA("BasePart") or not object.Parent or not object.Parent.Parent then 
@@ -5696,15 +5705,13 @@ C.AvailableHacks ={
 					object.CastShadow = false
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					object.Color = Color3.fromRGB(0,0,200)
-					if isDoor then
-						local disabled = false
+					--[[if isDoor then
 						setChangedAttribute(object,"CanCollide",function()
-							if disabled then return end disabled = true
 							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
-					end
+					end--]]
 				end
 			end,
 			["ApplyInvi"]=function(instance)

@@ -4094,6 +4094,10 @@ C.AvailableHacks ={
 					"PlayerGui.ScreenGui.LocalGuiScript:712\n",
 					"PlayerGui.ScreenGui.LocalGuiScript:726\n",
 				}
+				local allowedEndValues2 = {
+					"PlayerGui.ScreenGui.LocalGuiScript:735\n",
+					"PlayerGui.ScreenGui.LocalGuiScript:739\n",
+				}
 				local function NormalFunction(valName)
 					return myTSM:FindFirstChild(valName).Value
 				end
@@ -4137,13 +4141,16 @@ C.AvailableHacks ={
 								local canContinue = false
 								if not canContinue and C.enHacks.Util_ForceAllowSpectate then
 									local debugTraceBack = debug.traceback("",1)
-									print("Accessing",theirPlr.Name,valName,TheirPlayerNormalFunction(valName),debugTraceBack)
+									for num, str in ipairs(allowedEndValues2) do
+										if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
+											canContinue = true
+											break
+										end
+									end
 								end
-								if canContinue then
+								if canContinue and not RS.GameInProgress.Value then
 									if valName=="Health" then
-										return 0
-									elseif valName=="IsBeast" then
-										return false
+										return 100
 									end
 								end
 							end

@@ -4150,7 +4150,21 @@ C.AvailableHacks ={
 									end
 								end
 								if canContinue and not RS.IsGameActive.Value then
+									local canContinue2 = true
+									for num, theirPlr in ipairs(PS:GetPlayers()) do
+										if theirPlr ~= plr then
+											local theirTSM2 = theirPlr:WaitForChild("TempPlayerStatsModule")
+											if theirTSM2 and (theirTSM2.Health.Value > 0 or theirTSM2.IsBeast.Value) then
+												canContinue2 = false
+												break
+											end
+										end
+									end
 									if valName=="Health" then
+										local MapLighting = C.Map and (C.Map:FindFirstChild("_LightingSettings") or C.Map:FindFirstChild("NotLightingSettings"))
+										if MapLighting then
+											MapLighting.Name = "NotLightingSettings"
+										end
 										return 100
 									end
 								end
@@ -4172,10 +4186,23 @@ C.AvailableHacks ={
 						DefaultLightning.Name = "DefaultLightingSettings"
 					end
 				end
+				local function updMap()
+					local MapLighting = C.Map and (C.Map:FindFirstChild("_LightingSettings") or C.Map:FindFirstChild("NotLightingSettings"))
+					if not MapLighting then return end
+					if RS.IsGameActive.Value then
+						MapLighting.Name = "_LightingSettings"
+					else
+						MapLighting.Name = "NotLightingSettings"
+					end
+				end
 				table.insert(C.AvailableHacks.Utility[5].Funct,myTSM.Health.Changed:Connect(upd))
 				table.insert(C.AvailableHacks.Utility[5].Funct,myTSM.IsBeast.Changed:Connect(upd))
-				table.insert(C.AvailableHacks.Utility[5].Funct,game.Lighting:GetPropertyChangedSignal("ClockTime"):Connect(upd))
-				upd()
+				table.insert(C.AvailableHacks.Utility[5].Funct,LS:GetPropertyChangedSignal("ClockTime"):Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Funct,RS.IsGameActive.Changed:Connect(updMap))
+				upd() updMap()
+			end,
+			["MapAdded"]=function()
+				C.AvailableHacks.Utility[5].MyPlayerAdded()
 			end,
 		},
 		[3]=({

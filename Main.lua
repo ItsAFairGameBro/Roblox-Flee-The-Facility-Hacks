@@ -4122,6 +4122,35 @@ C.AvailableHacks ={
 
 					return NormalFunction(valName)
 				end or NormalFunction
+				
+				for num, theirPlr in ipairs(PS:GetPlayers()) do
+					if theirPlr ~= C.plr then
+						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
+						local theirTSMMod = require(theirTSM)
+						local function TheirPlayerNormalFunction(valName)
+							return myTSM:FindFirstChild(valName).Value
+						end
+						theirTSMMod.GetValue = newValue and function(valName)
+							local caller = getcallingscript()
+							if caller.Name == "LocalGuiScript" then
+								local canContinue = false
+								if not canContinue and C.enHacks.Util_ForceAllowSpectate then
+									local debugTraceBack = debug.traceback("",1)
+									print("Accessing",theirPlr.Name,valName,TheirPlayerNormalFunction(valName))
+								end
+								if canContinue then
+									if valName=="Health" then
+										return 0
+									elseif valName=="IsBeast" then
+										return false
+									end
+								end
+							end
+
+							return NormalFunction(valName)
+						end or TheirPlayerNormalFunction
+					end
+				end
 			end,
 			["MyPlayerAdded"]=function()
 				local DefaultLightning = game.ReplicatedStorage:FindFirstChild("DefaultLightingSettings") or game.ReplicatedStorage:FindFirstChild("NotDefaultLightingSettings")

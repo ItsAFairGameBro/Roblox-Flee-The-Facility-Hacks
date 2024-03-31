@@ -4086,7 +4086,7 @@ C.AvailableHacks ={
 			["Desc"]="Allows you to spectate at any time",
 			["Shortcut"]="Util_ForceAllowSpectate",
 			["Default"]=true,
-			["Funct"]={},
+			["Functs"]={},
 			["ActivateFunction"]=function(newValue)
 				local TSMModule = require(myTSM)
 
@@ -4201,10 +4201,10 @@ C.AvailableHacks ={
 						MapLighting.Name = "NotLightingSettings"
 					end
 				end
-				table.insert(C.AvailableHacks.Utility[5].Funct,myTSM.Health.Changed:Connect(upd))
-				table.insert(C.AvailableHacks.Utility[5].Funct,myTSM.IsBeast.Changed:Connect(upd))
-				table.insert(C.AvailableHacks.Utility[5].Funct,LS:GetPropertyChangedSignal("ClockTime"):Connect(upd))
-				table.insert(C.AvailableHacks.Utility[5].Funct,RS.IsGameActive.Changed:Connect(updMap))
+				table.insert(C.AvailableHacks.Utility[5].Functs,myTSM.Health.Changed:Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Functs,myTSM.IsBeast.Changed:Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Functs,LS:GetPropertyChangedSignal("ClockTime"):Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Functs,RS.IsGameActive.Changed:Connect(updMap))
 				upd() updMap()
 				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName")
 				local function updateSpectatorFrameColor3()
@@ -4212,7 +4212,6 @@ C.AvailableHacks ={
 					if theirPlr then
 						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
 						if theirTSM then
-							print(theirTSM.Health.Value)
 							if theirTSM.IsBeast.Value then
 								spectatorName.TextColor3 = Color3.fromRGB(255)
 								return
@@ -4224,7 +4223,7 @@ C.AvailableHacks ={
 					end
 					spectatorName.TextColor3 = Color3.fromRGB(255,255,255)
 				end
-				table.insert(C.AvailableHacks.Utility[5].Funct,
+				table.insert(C.AvailableHacks.Utility[5].Functs,
 					spectatorName:GetPropertyChangedSignal("Text"):Connect(updateSpectatorFrameColor3))
 				updateSpectatorFrameColor3()
 			end,

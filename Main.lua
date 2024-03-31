@@ -4095,6 +4095,7 @@ C.AvailableHacks ={
 					"PlayerGui.ScreenGui.LocalGuiScript:726\n",
 				}
 				local allowedEndValues2 = {
+					"PlayerGui.ScreenGui.LocalGuiScript:712\n",
 					"PlayerGui.ScreenGui.LocalGuiScript:735\n",
 					"PlayerGui.ScreenGui.LocalGuiScript:739\n",
 				}

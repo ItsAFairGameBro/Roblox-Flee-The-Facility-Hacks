@@ -5697,9 +5697,8 @@ C.AvailableHacks ={
 					object.Color = Color3.fromRGB(0,0,200)
 					if isDoor then
 						setChangedAttribute(object,"CanCollide",function()
-							RunS.RenderStepped:Wait()
-							print("CanCollide Upd",object,object.CanCollide)
 							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
+							setChangedAttribute(object,"CanCollide",nil)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
 					end

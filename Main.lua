@@ -4079,6 +4079,70 @@ C.AvailableHacks ={
 				updateZoom(nil,not newValue)
 			end,
 		},
+		[3]={
+			["Type"]="ExTextButton",
+			["Title"]="Force Allow Spectate",
+			["Desc"]="Allows you to spectate at any time",
+			["Shortcut"]="Util_ForceAllowSpectate",
+			["Default"]=true,
+			["Funct"]={},
+			["ActivateFunction"]=function(newValue)
+				local TSMModule = require(myTSM)
+
+				local SpectatorFrame = StringWaitForChild(PlayerGui, "ScreenGui.SpectatorFrame")
+
+				local allowedEndValues = {
+					"PlayerGui.ScreenGui.LocalGuiScript:704\n",
+					"PlayerGui.ScreenGui.LocalGuiScript:712\n",
+					"PlayerGui.ScreenGui.LocalGuiScript:726\n",
+				}
+				local function NormalFunction(valName)
+					return myTSM:FindFirstChild(valName).Value
+				end
+
+				TSMModule.GetValue = newValue and function(valName)
+					local caller = getcallingscript()
+					if caller.Name == "LocalGuiScript" then
+						local canContinue = false
+						if not canContinue and C.enHacks.Util_ForceAllowSpectate
+							and SpectatorFrame.Visible then
+							local debugTraceBack = debug.traceback("",1)
+							for num, str in ipairs(allowedEndValues) do
+								if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
+									canContinue = true
+									break
+								end
+							end
+						end
+						if canContinue then
+							if valName=="Health" then
+								return 0
+							elseif valName=="IsBeast" then
+								return false
+							end
+						end
+					end
+
+					return NormalFunction(valName)
+				end or NormalFunction
+			end,
+			["MyPlayerAdded"]=function()
+				local DefaultLightning = game.ReplicatedStorage:FindFirstChild("DefaultLightingSettings") or game.ReplicatedStorage:FindFirstChild("NotDefaultLightingSettings")
+
+
+				local function upd()
+					if (myTSM.IsBeast.Value or myTSM.Health.Value > 0) and math.abs(game.Lighting.ClockTime - 14) > .2 then
+						DefaultLightning.Name = "NotDefaultLightingSettings"
+					else
+						DefaultLightning.Name = "DefaultLightingSettings"
+					end
+				end
+				table.insert(C.AvailableHacks.Utility[3].Funct,myTSM.Health.Changed:Connect(upd))
+				table.insert(C.AvailableHacks.Utility[3].Funct,myTSM.IsBeast.Changed:Connect(upd))
+				table.insert(C.AvailableHacks.Utility[3].Funct,game.Lighting:GetPropertyChangedSignal("ClockTime"):Connect(upd))
+				upd()
+			end,
+		},
 		[3]=({
 			["Type"]="ExTextButton",
 			["Title"]="Client Improvements",

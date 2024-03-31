@@ -4215,7 +4215,7 @@ C.AvailableHacks ={
 							if theirTSM.IsBeast.Value then
 								spectatorName.TextColor3 = Color3.fromRGB(255)
 								return
-							elseif theirTSM.Health.Value>100 then
+							elseif theirTSM.Health.Value>0 then
 								spectatorName.TextColor3 = Color3.fromRGB(0,0,255)
 								return
 							end

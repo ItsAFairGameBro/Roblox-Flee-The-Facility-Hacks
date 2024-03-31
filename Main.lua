@@ -949,6 +949,7 @@ function C.FireSignal(instance,signal,Settings,...)
 	return success
 end
 local function GuiCreationFunction()
+	if isCleared then return end
 	--local Instance.new = Instance["new"];
 	local ExTextButton = Instance.new("Frame");
 
@@ -3801,8 +3802,8 @@ C.AvailableHacks ={
 				local function updateDisplays()
 					C.AvailableHacks.Blatant[15].UpdateDisplays()
 					C.AvailableHacks.Render[28].UpdateDisplays()
-					C.AvailableHacks.Render[30].UpdateDisplays()
-					C.AvailableHacks.Render[32].UpdateDisplays()
+					C.AvailableHacks.Render[29].UpdateDisplays()
+					C.AvailableHacks.Render[30].UpdateDisplays()					
 				end
 				table.insert(C.functs,RS:WaitForChild("AnnouncementEvent").OnClientEvent:Connect(function(...)
 					--print(...)

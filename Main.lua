@@ -4079,7 +4079,7 @@ C.AvailableHacks ={
 				updateZoom(nil,not newValue)
 			end,
 		},
-		[3]={
+		[5]={
 			["Type"]="ExTextButton",
 			["Title"]="Force Allow Spectate",
 			["Desc"]="Allows you to spectate at any time",
@@ -4137,9 +4137,9 @@ C.AvailableHacks ={
 						DefaultLightning.Name = "DefaultLightingSettings"
 					end
 				end
-				table.insert(C.AvailableHacks.Utility[3].Funct,myTSM.Health.Changed:Connect(upd))
-				table.insert(C.AvailableHacks.Utility[3].Funct,myTSM.IsBeast.Changed:Connect(upd))
-				table.insert(C.AvailableHacks.Utility[3].Funct,game.Lighting:GetPropertyChangedSignal("ClockTime"):Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Funct,myTSM.Health.Changed:Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Funct,myTSM.IsBeast.Changed:Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Funct,game.Lighting:GetPropertyChangedSignal("ClockTime"):Connect(upd))
 				upd()
 			end,
 		},

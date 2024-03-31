@@ -14,7 +14,8 @@ local SP=game:GetService("StarterPlayer")
 local SG=game:GetService("StarterGui")
 local GS=game:GetService("GuiService")
 local TS=game:GetService("TweenService")
-local LS=game:GetService("LogService")
+local LogS=game:GetService("LogService")
+local LS=game:GetService("Lighting")
 local SC=game:GetService("ScriptContext")
 local PathfindingService = game:GetService("PathfindingService")
 
@@ -841,10 +842,10 @@ local function StartBetterConsole()
 		message = `{message}\n\tStack Begin\n\tScript ''{Trace:gsub("\n, ","\n\tScript '', "):gsub("line","Line")}\tStack End`
 		processMessage(message,Enum.MessageType.MessageError)
 	end
-	table.insert(C.functs,LS.MessageOut:Connect(BetterConsole_onMessageOut))
+	table.insert(C.functs,LogS.MessageOut:Connect(BetterConsole_onMessageOut))
 	table.insert(C.functs,SC.Error:Connect(BetterConsole_onErrorOut))
 	local logSuccess,logResult = pcall(function()
-		local logHistory = LS:GetLogHistory()
+		local logHistory = LogS:GetLogHistory()
 		if logHistory then -- it should exist, right?
 			--for num, logData in ipairs(logHistory) do
 			for index = math.max(#logHistory-50,1), #logHistory, 1 do
@@ -9715,7 +9716,7 @@ C.AvailableHacks ={
 			},
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
-				LS:ClearOutput() --rconsoleclear()
+				LogS:ClearOutput() --rconsoleclear()
 				BetterConsole_ClearConsoleFunction()
 				clearCommandLines()
 			end,

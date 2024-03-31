@@ -5653,6 +5653,7 @@ C.AvailableHacks ={
 				object:RemoveTag(object,"InviWalls")
 				if object.Name=="WalkThru" and structure == "Door" then
 					local DoorTrigger = StringWaitForChild(object.Parent,"DoorTrigger.ActionSign",0)
+					print(object.Name,DoorTrigger and DoorTrigger.Value)
 					object.CanCollide = DoorTrigger and DoorTrigger.Value == 10
 				else
 					object.CanCollide = not object:GetAttribute("WeirdCanCollide")

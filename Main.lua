@@ -7163,7 +7163,7 @@ C.AvailableHacks ={
 				end
 
 
-				C.AvailableHacks.Basic[30].LastTeleportLocation = orgChar:GetPivot() + C.AvailableHacks.Basic[30].HiddenLocation
+				C.AvailableHacks.Basic[30].LastTeleportLocation = orgChar:GetPrimaryPartCFrame() + C.AvailableHacks.Basic[30].HiddenLocation
 				teleportMyself(C.AvailableHacks.Basic[30].LastTeleportLocation)
 
 				task.spawn(function()
@@ -7189,7 +7189,7 @@ C.AvailableHacks ={
 					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 50 then
 						return
 					end
-					C.AvailableHacks.Basic[30].LastTeleportLocation = orgChar:GetPivot() + C.AvailableHacks.Basic[30].HiddenLocation
+					C.AvailableHacks.Basic[30].LastTeleportLocation = newLoc + C.AvailableHacks.Basic[30].HiddenLocation
 					orgChar:SetPrimaryPartCFrame(C.AvailableHacks.Basic[30].LastTeleportLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 					clonedChar:SetPrimaryPartCFrame(newLoc)
 				end

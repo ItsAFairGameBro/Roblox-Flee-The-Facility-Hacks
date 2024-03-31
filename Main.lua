@@ -7422,14 +7422,20 @@ C.AvailableHacks ={
 				end))
 			end,
 			["IsCrawling"]=false,
-			["MapAdded"]=function()
-				task.wait(5) -- Delay this so it doesn't cause lag!
+			["MapAdded"]=function(newMap,firstRun)
+				if not firstRun then
+					task.wait(5) -- Delay this so it doesn't cause lag!
+				else
+					task.wait(1)
+				end
 				for num, instance in ipairs(C.Map:GetChildren()) do
 					if instance.Name == "Vent" then
 						local VentBlock = instance:FindFirstChild("VentBlock")
 						if VentBlock then
 							VentBlock:Destroy()
 						end
+					elseif instance.Name == "VentBlock" then
+						instance:Destroy()
 					end
 					if num%100==0 then
 						RunS.RenderStepped:Wait()
@@ -10714,13 +10720,13 @@ local function registerObject(object,registerfunct,shouldntWait)
 		end
 	end
 end
-local function updateCurrentMap(newMap)
+local function updateCurrentMap(newMap,firstRun)
 	if newMap ~= C.Map and newMap then
 		C.Map = newMap;
 		task.wait(1);
 		if isCleared then return end
 		local inputArray = {newMap};
-		defaultFunction("MapAdded",{newMap});
+		defaultFunction("MapAdded",{newMap,firstRun});
 		task.spawn(registerObject,newMap,MapChildAdded)
 		table.insert(C.functs,newMap.AncestryChanged:Connect(function(newParent)
 			task.wait(2)--give a hefty wait time before deleting components, so that individual children can be erased first!
@@ -10738,7 +10744,7 @@ end
 if gameName == "FleeMain" then
 	local MapChangedValue = RS:WaitForChild("CurrentMap")
 
-	task.spawn(updateCurrentMap,MapChangedValue.Value)
+	task.spawn(updateCurrentMap,MapChangedValue.Value,true)
 	table.insert(C.functs,MapChangedValue.Changed:Connect(updateCurrentMap))
 end
 

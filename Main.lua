@@ -4149,7 +4149,7 @@ C.AvailableHacks ={
 										end
 									end
 								end
-								if canContinue and not RS.GameInProgress.Value then
+								if canContinue and not RS.IsGameActive.Value then
 									if valName=="Health" then
 										return 100
 									end

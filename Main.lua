@@ -5637,7 +5637,7 @@ C.AvailableHacks ={
 			["GetStructure"]=function(object)
 				local doorNames = {"Door","DoorL","DoorR"}
 
-				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) or object.Name=="WalkThru" then
+				if table.find(doorNames,object.Parent.Name) or table.find(doorNames,object.Parent.Parent.Name) then--or object.Name=="WalkThru" then
 					return "Door"
 				else
 					local worldSize = GetAbsoluteWorldSize(object)

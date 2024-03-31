@@ -8210,6 +8210,14 @@ C.AvailableHacks ={
 								changed:Disconnect()
 							end)
 							table.insert(C.functs,changed)
+							task.delay(.5,function()
+								if changed then
+									table.remove(C.functs,table.find(C.functs,changed))
+									changed:Disconnect()
+									trigger_setTriggers("Typing",true)
+									C.char.Torso.CanTouch = true
+								end
+							end)
 							return
 						else
 							if actionValue.Parent and not table.find(C.char.Torso:GetTouchingParts(),actionValue.Parent) then

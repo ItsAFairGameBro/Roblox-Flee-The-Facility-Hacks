@@ -10211,6 +10211,14 @@ C.clear = function(isManualClear)
 		end
 		if C.AvailableHacks.Utility[5] then
 			C.AvailableHacks.Utility[5].ActivateFunction(false)--disable spectate hacks
+			local DefaultLightning = game.ReplicatedStorage:FindFirstChild("DefaultLightingSettings") or game.ReplicatedStorage:FindFirstChild("NotDefaultLightingSettings")
+			if DefaultLightning then
+				DefaultLightning.Name = "DefaultLightingSettings"
+			end
+			local MapLighting = C.Map and (C.Map:FindFirstChild("_LightingSettings") or C.Map:FindFirstChild("NotLightingSettings"))
+			if MapLighting then
+				MapLighting.Name = "_LightingSettings"
+			end
 		end
 		C.AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		C.AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!

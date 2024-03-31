@@ -7227,6 +7227,9 @@ C.AvailableHacks ={
 				table.insert(connections,(CenterPart)
 					:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				table.insert(connections,HRP:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
+				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(function()
+					camera.CameraSubject = clonedHuman
+				end))
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						local MoveDirection = C.PlayerControlModule:GetMoveVector()
@@ -7264,7 +7267,7 @@ C.AvailableHacks ={
 				end
 
 				for _, basePart in ipairs(clonedChar:GetDescendants()) do
-					if basePart.Name=="Weight" then
+					if basePart.Name=="Weight" or basePart.Parent.Name=="PackedHammer" then
 						basePart:Destroy()
 					elseif basePart:IsA("BasePart") and basePart.Name ~= "HumanoidRootPart" then
 						--and basePart.Parent == clonedChar then

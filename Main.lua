@@ -5651,7 +5651,7 @@ C.AvailableHacks ={
 			["InstanceRemoved"]=function(object)
 				local structure = C.AvailableHacks.Basic[20].GetStructure(object)
 				object:RemoveTag(object,"InviWalls")
-				print(object.Name,structure)
+				--print(object.Name,structure)
 				--[[if object.Name=="WalkThru" and structure == "Door" then
 					local DoorTrigger = StringWaitForChild(object.Parent,"DoorTrigger.ActionSign",0)
 					print(object.Name,DoorTrigger and DoorTrigger.Value)

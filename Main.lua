@@ -5651,7 +5651,12 @@ C.AvailableHacks ={
 			["InstanceRemoved"]=function(object)
 				local structure = C.AvailableHacks.Basic[20].GetStructure(object)
 				object:RemoveTag(object,"InviWalls")
-				object.CanCollide = not object:GetAttribute("WeirdCanCollide")
+				if object.Name=="WalkThru" and structure == "Door" then
+					local DoorTrigger = StringWaitForChild(object.Parent,"DoorTrigger.ActionSign",0)
+					object.CanCollide = DoorTrigger and DoorTrigger.Value == 10
+				else
+					object.CanCollide = not object:GetAttribute("WeirdCanCollide")
+				end
 				object.Color = object:GetAttribute("OrgColor") or object.Color
 				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency
 				object.CastShadow = true
@@ -7163,7 +7168,7 @@ C.AvailableHacks ={
 				end
 
 
-				C.AvailableHacks.Basic[30].LastTeleportLocation = orgChar:GetPrimaryPartCFrame() + C.AvailableHacks.Basic[30].HiddenLocation
+				C.AvailableHacks.Basic[30].LastTeleportLocation = saveLoc + C.AvailableHacks.Basic[30].HiddenLocation
 				teleportMyself(C.AvailableHacks.Basic[30].LastTeleportLocation)
 
 				task.spawn(function()

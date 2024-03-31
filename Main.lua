@@ -4124,7 +4124,7 @@ C.AvailableHacks ={
 				end or NormalFunction
 				
 				for num, theirPlr in ipairs(PS:GetPlayers()) do
-					if theirPlr ~= C.plr then
+					if theirPlr ~= plr then
 						print("read",theirPlr.Name)
 						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
 						local theirTSMMod = require(theirTSM)

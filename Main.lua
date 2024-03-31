@@ -7201,6 +7201,9 @@ C.AvailableHacks ={
 				local TPDelay = os.clock()
 
 				local function doCFrameChanged()
+					for s = 5, 1, -1 do
+						RunS.RenderStepped:Wait()
+					end
 					if not orgChar.Parent then
 						return
 					end

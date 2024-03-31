@@ -4149,6 +4149,7 @@ C.AvailableHacks ={
 											break
 										end
 									end
+									print(debugTraceBack)
 								end
 								if canContinue and not RS.IsGameActive.Value then
 									local canContinue2 = true

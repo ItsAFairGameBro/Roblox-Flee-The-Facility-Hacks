@@ -833,7 +833,7 @@ local function StartBetterConsole()
 		if theirScript.Name == "LocalPlayerScript" and message:find("attempt to index nil with 'Value'") then
 			if human then
 				task.delay(1,function()
-					human:SetStateEnabled(Enum.HumanoidStateType.Jumpingp, true)
+					human:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
 					warn("JUMP FIX APPLIED!")
 				end)
 			end
@@ -7655,7 +7655,7 @@ C.AvailableHacks ={
 			["HitFunction"]=function(Hammer,Handle,theirChar)
 				local Dist=(Handle.Position-theirChar.PrimaryPart.Position).magnitude
 				if Dist<15 then
-					local closestPart, closestDist = nil, 12
+					local closestPart, closestDist = nil, 10 -- Test Success: Hit Part Must Be < 8 Studs of Hammer
 					for num, part in ipairs(theirChar:GetChildren()) do
 						if part:IsA("BasePart") then
 							local testDist = (part.Position-Handle.Position).Magnitude
@@ -7665,7 +7665,6 @@ C.AvailableHacks ={
 						end
 					end
 					if closestPart then
-						print("Hit Fired",theirChar.Name)
 						Hammer.HammerEvent:FireServer("HammerHit", closestPart)
 						return true
 					end
@@ -10095,10 +10094,7 @@ C.clear = function(isManualClear)
 
 
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
-	if HackGUI then
-		HackGUI:Destroy()
-		DS:AddItem(HackGUI,1)
-	end
+	DS:AddItem(HackGUI,1)
 	if isStudio then DS:AddItem(script,1) end
 	--print("I started clearing",C.saveIndex)
 	C.clear=nil
@@ -10201,6 +10197,8 @@ end;
 local mainAccountDetected = (success and ((numOfFriends)>=(15)) and not isStudio);
 if mainAccountDetected then
 	plr:Kick("Anti Main Hack: Main Account Detected!");
+	C.clear(true)
+	return
 end;
 --print(("Friend Check Finished %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 

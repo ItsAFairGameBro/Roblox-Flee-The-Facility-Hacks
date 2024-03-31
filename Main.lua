@@ -4176,7 +4176,7 @@ C.AvailableHacks ={
 								end
 							end
 
-							return NormalFunction(valName)
+							return TheirPlayerNormalFunction(valName)
 						end or TheirPlayerNormalFunction
 					end
 				end

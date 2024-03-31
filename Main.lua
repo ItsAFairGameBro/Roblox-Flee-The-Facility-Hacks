@@ -3780,6 +3780,7 @@ C.AvailableHacks ={
 				Toggle.BackgroundColor3 = C.AvailableHacks.Blatant[15].DifferentColors[currentSign][2]
 				Toggle.Visible = (door.Name~="ExitDoor" or currentSign~=0)
 				if ActionSign == 10 or ActionSign == 11 then
+					print(door,ActionSign,ActionSign==10)
 					door:SetAttribute("Closed",ActionSign == 10)
 				end
 				local modifier=door:WaitForChild("WalkThru",20)

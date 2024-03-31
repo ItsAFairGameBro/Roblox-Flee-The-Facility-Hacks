@@ -7372,7 +7372,8 @@ C.AvailableHacks ={
 						end
 						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
 							for num, animTrack in ipairs(C.char.Humanoid.Animator:GetPlayingAnimationTracks()) do
-								if animTrack.Animation.AnimationId~="rbxassetid://961932719" then
+								if animTrack.Animation.AnimationId~="rbxassetid://961932719"
+									and animTrack.Animation.AnimationId~="rbxassetid://1416947241" then
 									animTrack:Stop(0)
 								end
 							end

@@ -7197,6 +7197,8 @@ C.AvailableHacks ={
 				clonedChar.Parent = workspace
 
 				camera.CameraSubject = clonedHuman
+				
+				local TPDelay = os.clock()
 
 				local function doCFrameChanged()
 					if not orgChar.Parent then
@@ -7204,9 +7206,11 @@ C.AvailableHacks ={
 					end
 					local newLoc = orgChar:GetPrimaryPartCFrame()
 					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude))
-					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 50 then
+					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 50
+						or os.clock() - TPDelay < .5 then
 						return
 					end
+					TPDelay = os.clock()
 					C.AvailableHacks.Basic[30].LastTeleportLocation = newLoc + C.AvailableHacks.Basic[30].HiddenLocation
 					orgChar:SetPrimaryPartCFrame(C.AvailableHacks.Basic[30].LastTeleportLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 					clonedChar:SetPrimaryPartCFrame(newLoc)

@@ -4149,7 +4149,6 @@ C.AvailableHacks ={
 											break
 										end
 									end
-									print(debugTraceBack)
 								end
 								if canContinue and not RS.IsGameActive.Value then
 									local canContinue2 = true
@@ -4158,7 +4157,14 @@ C.AvailableHacks ={
 											local theirTSM2 = theirPlr:WaitForChild("TempPlayerStatsModule")
 											if theirTSM2 and (theirTSM2.Health.Value > 0 or theirTSM2.IsBeast.Value) then
 												canContinue2 = false
-												break
+												if theirTSM2 == theirTSM then
+													print("Faked",theirPlr.Name)
+													if valName == "Health" then
+														return 100
+													elseif valName == "IsBeast" then
+														return true
+													end
+												end
 											end
 										end
 									end

@@ -11010,61 +11010,71 @@ local function PlayerAdded(theirPlr)
 	if gameUniverse=="Flee" then
 		if isMe then
 			--MY PLAYER CHAT
-			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
-			local connectionsFuncts = {}
-			for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
-				connection:Disable()
-				table.insert(connectionsFuncts,connection)
-			end
-			table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
-				local inputMsg = chatBar.Text
-				if enterPressed then
-					if inputMsg:sub(1,1)==";" then
-						chatBar.Text = ""
-						enterPressed = false
-						
-						local args = inputMsg:sub(2):split(" ")
-						local command = args[1]
-						table.remove(args,1)
-						for index = 1, 3, 1 do
-							args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
-						end
-						local CommandData = C.CommandFunctions[command]
-						if CommandData then
-							local canRunFunction = true
-							if CommandData.Type=="Players" then
-								if args[1]=="all" then
-									args[1] = PS:GetPlayers()
-								elseif args[1] == "others" then
-									args[1] = PS:GetPlayers()
-									table.remove(args[1],table.find(args[1],plr))
-								elseif args[1] == "me" then
-									args[1] = {plr}
-								elseif args[1] == "random" then
-									args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
-								else
-									local ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
-									if ChosenPlr then
-										args[1] = {ChosenPlr}
+			local function registerNewChatBar()
+				local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
+				chatBar:AddTag("ChatBar")
+				local connectionsFuncts = {}
+				for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
+					connection:Disable()
+					table.insert(connectionsFuncts,connection)
+				end
+				table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
+					local inputMsg = chatBar.Text
+					if enterPressed then
+						if inputMsg:sub(1,1)==";" then
+							chatBar.Text = ""
+							enterPressed = false
+
+							local args = inputMsg:sub(2):split(" ")
+							local command = args[1]
+							table.remove(args,1)
+							for index = 1, 3, 1 do
+								args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
+							end
+							local CommandData = C.CommandFunctions[command]
+							if CommandData then
+								local canRunFunction = true
+								if CommandData.Type=="Players" then
+									if args[1]=="all" then
+										args[1] = PS:GetPlayers()
+									elseif args[1] == "others" then
+										args[1] = PS:GetPlayers()
+										table.remove(args[1],table.find(args[1],plr))
+									elseif args[1] == "me" then
+										args[1] = {plr}
+									elseif args[1] == "random" then
+										args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
 									else
-										canRunFunction = C.CreateSysMessage(`Players Not Found: {command}; allowed: all, others, me, <plrName>`)
+										local ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
+										if ChosenPlr then
+											args[1] = {ChosenPlr}
+										else
+											canRunFunction = C.CreateSysMessage(`Players Not Found: {command}; allowed: all, others, me, <plrName>`)
+										end
 									end
+								else
+									canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}`)
+								end
+								if canRunFunction then
+									task.spawn(C.CommandFunctions[command].Run,args)
 								end
 							else
-								canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}`)
+								C.CreateSysMessage(`Command Not Found: {command}`)
 							end
-							if canRunFunction then
-								task.spawn(C.CommandFunctions[command].Run,args)
-							end
-						else
-							C.CreateSysMessage(`Command Not Found: {command}`)
 						end
 					end
-				end
-				for num, connectionFunct in ipairs(connectionsFuncts) do
-					connectionFunct.Function(enterPressed)
+					for num, connectionFunct in ipairs(connectionsFuncts) do
+						connectionFunct.Function(enterPressed)
+					end
+				end))
+			end
+			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame").ChildAdded:Connect(function(child)
+				print("Child Added",child)
+				if child.Name=="ChatBox" then
+					registerNewChatBar()
 				end
 			end))
+			registerNewChatBar()
 		end
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		if theirTSM then

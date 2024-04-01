@@ -7207,13 +7207,15 @@ C.AvailableHacks ={
 				local TPDelay = os.clock()
 
 				local function doCFrameChanged()
-					for s = 5, 1, -1 do
-						--RunS.RenderStepped:Wait()
-					end
 					if not orgChar.Parent then
 						return
 					end
 					local newLoc = orgChar:GetPrimaryPartCFrame()
+					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 1e-2 then
+						for s = 5, 1, -1 do
+							RunS.RenderStepped:Wait()
+						end
+					end
 					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude))
 					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 50
 						or os.clock() - TPDelay < .2 then
@@ -7251,12 +7253,12 @@ C.AvailableHacks ={
 				table.insert(connections,clonedChar.Torso.TouchEnded:Connect(function(instance)
 					charEnv.TriggerTouch(instance,false)
 				end))
-				table.insert(connections,RemoteEvent.OnClientEvent:Connect(function(thing)
+				--[[table.insert(connections,RemoteEvent.OnClientEvent:Connect(function(thing)
 					if thing=="FadeBlackTransition" then
 						local lastPosition = clonedChar:GetPrimaryPartCFrame().Position
 						for s = 300, 1, -1 do
 							print('l00p')
-							local dist = (clonedChar:GetPrimaryPartCFrame().Position - lastPosition).Magnitude
+							local dist = (orgch:GetPrimaryPartCFrame().Position - lastPosition).Magnitude
 							if dist > 30 then
 								print('SERVER TELEPORT!',dist)
 								orgChar.PrimaryPart.Anchored = false
@@ -7265,13 +7267,14 @@ C.AvailableHacks ={
 								end
 								doCFrameChanged()
 								teleportMyCharacterAway()
+								return
 							end
 							lastPosition = clonedChar:GetPrimaryPartCFrame().Position
 							RunS.RenderStepped:Wait()
 						end
 						print("I didn't teleporT?")
 					end
-				end))
+				end))--]]
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						local MoveDirection = C.PlayerControlModule:GetMoveVector()

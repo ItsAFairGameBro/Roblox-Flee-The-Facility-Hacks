@@ -190,7 +190,7 @@ function C.StringStartsWith(tbl,name)
 	end
 	name = name:lower()
 	for _, theirName in ipairs(tbl) do
-		if tostring(theirName):lower():sub(1,name) == name then
+		if tostring(theirName):lower():sub(1,name:len()) == name then
 			return theirName
 		end
 	end

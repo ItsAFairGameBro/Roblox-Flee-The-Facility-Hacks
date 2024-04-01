@@ -10908,8 +10908,7 @@ local function PlayerAdded(theirPlr)
 	end
 	
 	if gameUniverse=="Flee" then
-		print("isunvi",theirPlr == C.plr)
-		if theirPlr == C.plr then
+		if isMe then
 			print("Chat funct activate")
 			--MY PLAYER CHAT
 			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")

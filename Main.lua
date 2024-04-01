@@ -10169,7 +10169,7 @@ C.AvailableHacks ={
 					["TextColor"]=newColor3(0,170),
 				},
 				[true]={
-					["Title"]="Running",["Locked"]=true,
+					["Title"]="Running",
 					["TextColor"]=newColor3(0,170),
 				},
 			},

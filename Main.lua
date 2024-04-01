@@ -11068,7 +11068,7 @@ local function PlayerAdded(theirPlr)
 					end
 				end))
 			end
-			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame").ChildAdded:Connect(function(child)
+			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame").ChildAdded:Connect(function(child)
 				print("Child Added",child)
 				if child.Name=="ChatBox" then
 					registerNewChatBar()

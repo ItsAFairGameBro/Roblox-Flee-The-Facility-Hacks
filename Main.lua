@@ -11014,6 +11014,9 @@ local function PlayerAdded(theirPlr)
 						local args = inputMsg:sub(2):split(" ")
 						local command = args[1]
 						table.remove(args,1)
+						for index = 1, 3, 1 do
+							args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
+						end
 						if C.CommandFunctions[command] then
 							C.CommandFunctions[command](args)
 						else

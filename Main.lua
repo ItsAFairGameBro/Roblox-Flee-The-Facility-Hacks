@@ -11028,21 +11028,19 @@ local function PlayerAdded(theirPlr)
 			end
 			local chatBar
 			local index = 1
-			local function runFunction(actionName,keyInput)
-				if keyInput ~= Enum.UserInputState.Begin or not chatBar or chatBar:HasFocused() then
+			table.insert(C.functs,UIS.InputBegan:Connect(function(Key,GameProcessed)
+				if not chatBar:HasFocused() then
 					return
 				end
-				if actionName == "UpArrow"..C.saveIndex then
+				if Key.KeyCode == Enum.KeyCode.Up then
 					index+=1
 				else
 					index-=1
 				end
 				index = math.clamp(1,#savedCommands)
-				
+
 				chatBar.Text = savedCommands[index]
-			end
-			CAS:BindAction("UpArrow"..C.saveIndex,runFunction,false,Enum.KeyCode.Up)
-			CAS:BindAction("DownArrow"..C.saveIndex,runFunction,false,Enum.KeyCode.Down)
+			end))
 			local function registerNewChatBar(_,firstRun)
 				chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 				local connectionsFuncts = {}

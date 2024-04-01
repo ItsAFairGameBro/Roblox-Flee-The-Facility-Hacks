@@ -11011,7 +11011,7 @@ local function PlayerAdded(theirPlr)
 						chatBar.Text = ""
 						enterPressed = false
 						
-						local args = inputMsg:split(" ")
+						local args = inputMsg:sub(2):split(" ")
 						local command = args[1]
 						table.remove(args,1)
 						if C.CommandFunctions[command] then

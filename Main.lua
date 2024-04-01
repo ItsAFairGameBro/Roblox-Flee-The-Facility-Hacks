@@ -7212,7 +7212,7 @@ C.AvailableHacks ={
 					end
 					local newLoc = orgChar:GetPrimaryPartCFrame()
 					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 1e-2 then
-						for s = 5, 1, -1 do
+						for s = 25, 1, -1 do
 							RunS.RenderStepped:Wait()
 						end
 					end

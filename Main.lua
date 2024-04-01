@@ -7191,7 +7191,7 @@ C.AvailableHacks ={
 					for s = 5, 1, -1 do
 						--RunS.RenderStepped:Wait()
 					end
-					if clonedChar and clonedChar.Parent and orgChar and orgChar.PrimaryPart then
+					if orgChar and orgChar.PrimaryPart then
 						--local bodyForce = Instance.new("BodyForce")
 						local mass = 0
 						for num, part in ipairs(orgChar:GetDescendants()) do
@@ -7203,7 +7203,7 @@ C.AvailableHacks ={
 						local attachment = Instance.new("Attachment")
 						vectorForce.RelativeTo = "World"
 						vectorForce.ApplyAtCenterOfMass = true;
-						vectorForce.Parent = attachment
+						vectorForce.Parent = orgChar.PrimaryPart
 						vectorForce.Attachment0 = attachment
 						vectorForce.Force = Vector3.new(0, mass * workspace.Gravity, 0)
 						attachment:AddTag("RemoveOnDestroy")

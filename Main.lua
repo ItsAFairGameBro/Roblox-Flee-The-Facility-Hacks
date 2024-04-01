@@ -8281,7 +8281,9 @@ C.AvailableHacks ={
 						end
 					end
 					trigger_setTriggers("Typing",true)
-					C.char.Torso.CanTouch = true
+					if C.char:FindFirstChild("Torso") then
+						C.char.Torso.CanTouch = true
+					end
 					if C.AvailableHacks.Runner[4].Changed then
 						C.AvailableHacks.Runner[4].Changed:Disconnect()
 						C.AvailableHacks.Runner[4].Changed=nil

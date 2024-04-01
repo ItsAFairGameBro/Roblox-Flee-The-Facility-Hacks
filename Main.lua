@@ -7199,8 +7199,16 @@ C.AvailableHacks ={
 								mass += part:GetMass()
 							end
 						end
-						bodyForce.Force = Vector3.new(0, mass * workspace.Gravity, 0)
-						bodyForce.Parent = orgChar.PrimaryPart
+						local vectorForce = Instance.new("VectorForce")
+						local attachment = Instance.new("Attachment", orgChar.PrimaryPart)
+						vectorForce.RelativeTo = "World"
+						vectorForce.ApplyAtCenterOfMass = true;
+						vectorForce.Parent = attachment
+						vectorForce.Attachment0 = attachment
+						vectorForce.Force = Vector3.new(0, mass * workspace.Gravity, 0)
+						attachment:AddTag("RemoveOnDestroy")
+						attachment.Name = "FloatAttachment"
+
 						--orgChar.PrimaryPart.Anchored = true
 						human:ChangeState(Enum.HumanoidStateType.Landed)
 					end
@@ -7413,7 +7421,11 @@ C.AvailableHacks ={
 							C.char.PrimaryPart.Anchored = false
 							C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPrimaryPartCFrame())
 							--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
+							if C.char.PrimaryPart:FindFirstChild("FloatAttachment") then
+								C.char.PrimaryPart.FloatAttachment:Destroy()
+							end	
 						end
+						
 						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
 							for num, animTrack in ipairs(C.char.Humanoid.Animator:GetPlayingAnimationTracks()) do
 								if animTrack.Animation.AnimationId~="rbxassetid://961932719"

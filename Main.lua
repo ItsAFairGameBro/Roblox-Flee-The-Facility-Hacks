@@ -11044,18 +11044,19 @@ local function PlayerAdded(theirPlr)
 							local CommandData = C.CommandFunctions[command]
 							if CommandData then
 								local canRunFunction = true
+								local ChosenPlr = args[1]
 								if CommandData.Type=="Players" then
-									if args[1]=="all" then
+									if ChosenPlr=="all" then
 										args[1] = PS:GetPlayers()
-									elseif args[1] == "others" then
+									elseif ChosenPlr == "others" then
 										args[1] = PS:GetPlayers()
 										table.remove(args[1],table.find(args[1],plr))
-									elseif args[1] == "me" then
+									elseif ChosenPlr == "me" then
 										args[1] = {plr}
-									elseif args[1] == "random" then
+									elseif ChosenPlr == "random" then
 										args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
 									else
-										local ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
+										ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
 										if ChosenPlr then
 											args[1] = {ChosenPlr}
 										else
@@ -11072,8 +11073,11 @@ local function PlayerAdded(theirPlr)
 										table.remove(returns,1)
 										local displayNameCommand = command:sub(1,1):upper() .. command:sub(2)
 										if wasSuccess then
+											local length = #args[1]
+											local playersAffected = (length==1 and #args[1][1]==plr.Name and "you") or 
+												(typeof(ChosenPlr)=="Instance" and ChosenPlr.Name or ChosenPlr)
 											C.CreateSysMessage(
-												`{displayNameCommand} {(#args[1]==1 and args[1][1].Name or (`{#args[1]==plr.Name and "you" or args[1]} Players`))}{
+												`{displayNameCommand} {(#args[1]==1 and args[1][1].Name or (`{playersAffected} Players`))}{
 												(CommandData.AfterTxt or ""):format(table.unpack(returns))}`,
 												Color3.fromRGB(255,255,255))
 										else

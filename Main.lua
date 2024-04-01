@@ -11046,7 +11046,7 @@ local function PlayerAdded(theirPlr)
 								canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}`)
 							end
 							if canRunFunction then
-								C.CommandFunctions[command](args)
+								C.CommandFunctions[command].Run(args)
 							end
 						else
 							C.CreateSysMessage(`Command Not Found: {command}`)

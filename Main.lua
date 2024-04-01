@@ -7335,7 +7335,7 @@ C.AvailableHacks ={
 				end
 
 				for _, basePart in ipairs(clonedChar:GetDescendants()) do
-					if basePart.Name=="Weight" then
+					if basePart.Name=="Weight" or basePart.Name=="Gemstone" then
 						basePart:Destroy()
 					elseif (basePart.Name=="Handle" and basePart.Parent and basePart.Parent.Name=="PackedHammer") then
 						basePart.Transparency = 1
@@ -10344,6 +10344,13 @@ C.clear = function(isManualClear)
 		end
 		C.AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		C.AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
+		
+		if gameUniverse == "Flee" then
+			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
+			for num, chatConnection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
+				chatConnection:Enable()
+			end
+		end
 	else
 		getgenv().enHacks = table.clone(C.enHacks)
 	end
@@ -10899,8 +10906,29 @@ local function PlayerAdded(theirPlr)
 			end
 		end))
 	end
-
+	
 	if gameUniverse=="Flee" then
+		if theirPlr == C.plr then
+			--MY PLAYER CHAT
+			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
+			local connectionsFuncts = {}
+			for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
+				connection:Disable()
+				table.insert(connectionsFuncts,connection)
+			end
+			table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
+				if enterPressed then
+					if chatBar.Text:sub(1,1)==";" then
+						chatBar.Text = ""
+						enterPressed = false
+					end
+				end
+				for num, connectionFunct in ipairs(connectionsFuncts) do
+					connectionFunct.Function(enterPressed)
+					print("Fired",num)
+				end
+			end))
+		end
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		if theirTSM then
 			local isBeastValue = theirTSM:WaitForChild("IsBeast");

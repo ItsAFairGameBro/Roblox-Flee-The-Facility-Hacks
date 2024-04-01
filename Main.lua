@@ -5779,7 +5779,7 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Functs"]={},
 			["Deb"]=0.5,
-			["HiddenLocation"] = Vector3.new(0,99,0),
+			["HiddenLocation"] = Vector3.new(0,5,0),
 			["LastTeleportLocation"] = CFrame.new(),
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
@@ -7192,7 +7192,16 @@ C.AvailableHacks ={
 						RunS.RenderStepped:Wait()
 					end
 					if clonedChar and clonedChar.Parent and orgChar and orgChar.PrimaryPart then
-						orgChar.PrimaryPart.Anchored = true
+						local bodyForce = Instance.new("BodyForce")
+						local mass = 0
+						for num, part in ipairs(orgChar:GetDescendants()) do
+							if part:IsA("BasePart") then
+								mass += part:GetMass()
+							end
+						end
+						bodyForce.Force = Vector3.new(0, mass * workspace.Gravity, 0)
+						bodyForce.Parent = orgChar.PrimaryPart
+						--orgChar.PrimaryPart.Anchored = true
 						human:ChangeState(Enum.HumanoidStateType.Landed)
 					end
 				end
@@ -10141,7 +10150,7 @@ C.AvailableHacks ={
 					["TextColor"]=newColor3(0,170),
 				},
 				[true]={
-					["Title"]="Running",
+					["Title"]="Running",["Locked"]=true,
 					["TextColor"]=newColor3(0,170),
 				},
 			},

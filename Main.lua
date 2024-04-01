@@ -10909,11 +10909,13 @@ local function PlayerAdded(theirPlr)
 	
 	if gameUniverse=="Flee" then
 		if theirPlr == C.plr then
+			print("Chat funct activate")
 			--MY PLAYER CHAT
 			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 			local connectionsFuncts = {}
 			for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
 				connection:Disable()
+				print("disabled",num)
 				table.insert(connectionsFuncts,connection)
 			end
 			table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)

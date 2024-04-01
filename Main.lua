@@ -4438,6 +4438,9 @@ C.AvailableHacks ={
 					C.AvailableHacks.Utility[3].Funct = nil
 				end--]]
 			end,
+			["ChatBarAdded"]=function(chatBar)
+				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
+			end,
 			["MyBeastAdded"]=function()
 				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
 			end,
@@ -11012,7 +11015,6 @@ local function PlayerAdded(theirPlr)
 			--MY PLAYER CHAT
 			local function registerNewChatBar()
 				local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
-				chatBar:AddTag("ChatBar")
 				local connectionsFuncts = {}
 				for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
 					connection:Disable()
@@ -11067,9 +11069,9 @@ local function PlayerAdded(theirPlr)
 						connectionFunct.Function(enterPressed)
 					end
 				end))
+				defaultFunction("ChatBarAdded",{chatBar})
 			end
 			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame").ChildAdded:Connect(function(child)
-				print("Child Added",child)
 				registerNewChatBar()
 			end))
 			registerNewChatBar()

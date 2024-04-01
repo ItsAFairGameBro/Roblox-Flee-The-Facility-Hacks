@@ -175,6 +175,10 @@ C.AllowedCameraEnums = {
 	[Enum.CameraType.Track] = true,
 	[Enum.CameraType.Custom] = true,
 }
+function C.CreateSystemMessage(message)
+	SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = Color3.fromRGB(255,255,255), 
+		Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
+end
 function C.ApplyRichTextEscapeCharacters(str,toEscaped,escapelist)
 	local fromIndex = toEscaped and 1 or 2
 	local toIndex = toEscaped and 2 or 1
@@ -10881,9 +10885,7 @@ C.CommandFunctions = {
 
 		local selectedName = checkFriendsPCALLFunction()
 		if not selectedName then
-			SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] No User Found For "{args[1]}"`, Color = Color3.fromRGB(255,255,255), 
-				Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
-			return
+			return C.CreateSystemMessage(`Not Found For {args1[]}`)
 		end
 
 		for num, theirPlr in ipairs(PS:GetPlayers()) do
@@ -11003,17 +11005,19 @@ local function PlayerAdded(theirPlr)
 				table.insert(connectionsFuncts,connection)
 			end
 			table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
-				local inputMsg = chatBar.Text
+				local inputMsg = chatBar.Text:lower()
 				if enterPressed then
 					if inputMsg:sub(1,1)==";" then
 						chatBar.Text = ""
 						enterPressed = false
 						
-						local args = inputMsg:split(" ")
+						local args = chatBar:split(" ")
 						local command = args[1]
 						table.remove(args,1)
 						if C.CommandFunctions[command] then
 							C.CommandFunctions[command](args)
+						else
+							C.CreateSystemMessage(`Command Not Found: {command}`)
 						end
 					end
 				end

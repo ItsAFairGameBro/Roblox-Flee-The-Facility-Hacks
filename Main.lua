@@ -7189,7 +7189,7 @@ C.AvailableHacks ={
 				end
 				local function teleportMyCharacterAway()
 					for s = 5, 1, -1 do
-						RunS.RenderStepped:Wait()
+						--RunS.RenderStepped:Wait()
 					end
 					if clonedChar and clonedChar.Parent and orgChar and orgChar.PrimaryPart then
 						local bodyForce = Instance.new("BodyForce")

@@ -11075,7 +11075,9 @@ local function PlayerAdded(theirPlr)
 										if wasSuccess then
 											local length = #args[1]
 											local playersAffected = (length==1 and #args[1][1]==plr.Name and "you") or 
-												(typeof(ChosenPlr)=="Instance" and ChosenPlr.Name or ChosenPlr)
+												(typeof(ChosenPlr)=="Instance" and ChosenPlr.Name 
+													or (ChosenPlr:sub(1,1):upper() .. 
+														ChosenPlr:sub(2,ChosenPlr:sub(ChosenPlr:len())=="s" and ChosenPlr:len()-1 or ChosenPlr:len())))
 											C.CreateSysMessage(
 												`{displayNameCommand} {(#args[1]==1 and args[1][1].Name or (`{playersAffected} Players`))}{
 												(CommandData.AfterTxt or ""):format(table.unpack(returns))}`,

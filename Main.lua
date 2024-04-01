@@ -11020,6 +11020,7 @@ local function PlayerAdded(theirPlr)
 						for index = 1, 3, 1 do
 							args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
 						end
+						print(args)
 						if C.CommandFunctions[command] then
 							C.CommandFunctions[command](args)
 						else

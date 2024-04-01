@@ -10887,11 +10887,7 @@ C.CommandFunctions = {
 			table.sort(friendsTable,function(a,b)
 				local aLen = a:len()
 				local bLen = b:len()
-				if aLen > bLen then
-					return true
-				else
-					return false
-				end
+				return aLen < bLen
 			end)
 			local selectedName = C.StringStartsWith(friendsTable,args[2])
 			return selectedName

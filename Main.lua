@@ -10835,6 +10835,7 @@ C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
+		AfterTxt=" to %s",
 		Run=function(args)
 		local function morphPlayer(targetPlr, targetID)
 			local targetChar = targetPlr.Character
@@ -10906,13 +10907,13 @@ C.CommandFunctions = {
 
 		local selectedName = checkFriendsPCALLFunction()
 		if not selectedName then
-			return C.CreateSysMessage(`User Not Found: {args[2]}`)
+			return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
 		end
 
 		for num, theirPlr in ipairs(args[1]) do
 			morphPlayer(theirPlr,PS:GetUserIdFromNameAsync(selectedName))
 		end
-		C.CreateSysMessage(`Morphed {(#args[1]==1 and args[1][1].Name or (`{#args[1]} Players`))} to {selectedName}`,Color3.fromRGB(255,255,255))
+		return true,selectedName
 	end},
 }
 
@@ -11065,7 +11066,21 @@ local function PlayerAdded(theirPlr)
 									canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}`)
 								end
 								if canRunFunction then
-									task.spawn(C.CommandFunctions[command].Run,args)
+									task.spawn(function()
+										local returns = table.pack(C.CommandFunctions[command].Run(args))
+										local wasSuccess = returns[1]
+										table.remove(returns,1)
+										if wasSuccess then
+											C.CreateSysMessage(
+												`{command} {(#args[1]==1 and args[1][1].Name or (`{#args[1]==plr.Name and "you" or args[1]} Players`))}{
+												(CommandData.AfterTxt or ""):format(returns)}`,
+												Color3.fromRGB(255,255,255))
+										else
+											C.CreateSysMessage(
+												`{command} Error: {returns[1] or "unknown"}`,
+												Color3.fromRGB(255))
+										end
+									end)
 								end
 							else
 								C.CreateSysMessage(`Command Not Found: {command}`)

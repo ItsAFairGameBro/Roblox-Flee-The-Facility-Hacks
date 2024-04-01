@@ -10885,10 +10885,12 @@ C.CommandFunctions = {
 			table.insert(friendsTable,"LivyC4l1f3")
 			table.insert(friendsTable,"areallycoolguy")
 			table.sort(friendsTable,function(a,b)
-				if a:len() > b:len() then
-					return a
+				local aLen = a:len()
+				local bLen = b:len()
+				if aLen > bLen then
+					return true
 				else
-					return b
+					return false
 				end
 			end)
 			local selectedName = C.StringStartsWith(friendsTable,args[2])

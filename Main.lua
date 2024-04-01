@@ -11032,14 +11032,18 @@ local function PlayerAdded(theirPlr)
 				if not chatBar or not chatBar:IsFocused() then
 					return
 				end
+				print("KeyCode",Key.KeyCode.Name)
 				if Key.KeyCode == Enum.KeyCode.Up then
 					index+=1
-				else
+				elseif Key.KeyCode == Enum.KeyCode.Down then
 					index-=1
+				else
+					return
 				end
 				index = math.clamp(1,#savedCommands)
 
 				chatBar.Text = savedCommands[index]
+				print("Set To",savedCommands[index])
 			end))
 			local function registerNewChatBar(_,firstRun)
 				chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
@@ -11056,7 +11060,7 @@ local function PlayerAdded(theirPlr)
 							chatBar.Text = ""
 							enterPressed = false
 							
-							table.insert(savedCommands,chatBar)
+							table.insert(savedCommands,chatBar.Text)
 							if #savedCommands > 10 then
 								table.remove(savedCommands,#savedCommands)
 							end

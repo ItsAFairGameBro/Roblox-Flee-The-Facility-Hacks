@@ -10884,6 +10884,9 @@ C.CommandFunctions = {
 			local friendsTable = iterPageItems(friendsPages)
 			table.insert(friendsTable,"LivyC4l1f3")
 			table.insert(friendsTable,"areallycoolguy")
+			table.sort(friendsTable,function(a,b)
+				return a:len() > b:len() and a or b
+			end)
 			local selectedName = C.StringStartsWith(friendsTable,args[2])
 			return selectedName
 		end

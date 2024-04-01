@@ -7195,8 +7195,6 @@ C.AvailableHacks ={
 				end)
 
 				clonedChar.Parent = workspace
-
-				camera.CameraSubject = clonedHuman
 				
 				local TPDelay = os.clock()
 
@@ -7230,9 +7228,13 @@ C.AvailableHacks ={
 				table.insert(connections,(CenterPart)
 					:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				table.insert(connections,HRP:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
-				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(function()
-					camera.CameraSubject = clonedHuman
-				end))
+				local function updateCamera()
+					if camera.CameraSubject == human then
+						camera.CameraSubject = clonedHuman
+					end
+				end
+				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(updateCamera))
+				updateCamera()
 				table.insert(connections,clonedChar.Torso.Touched:Connect(function(instance)
 					--TODO HERE
 					local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})

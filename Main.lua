@@ -11075,12 +11075,13 @@ local function PlayerAdded(theirPlr)
 										if wasSuccess then
 											local length = #args[1]
 											local playersAffected = 
-												((typeof(ChosenPlr)=="Instance" and (ChosenPlr==plr and "me" or ChosenPlr.Name)) 
+												(typeof(ChosenPlr)=="Instance" and (ChosenPlr==plr and  ChosenPlr.Name) 
 													or (ChosenPlr:sub(1,1):upper() .. 
 														ChosenPlr:sub(2,ChosenPlr:sub(ChosenPlr:len())=="s" and ChosenPlr:len()-1 or ChosenPlr:len())))
-											C.CreateSysMessage(
-												`{displayNameCommand}ed {(#args[1]==1 and args[1][1].Name or (`{playersAffected} Players`))}{
-												(CommandData.AfterTxt or ""):format(table.unpack(returns))}`,
+											if playersAffected == plr.Name then
+												playersAffected = "you"
+											end
+											C.CreateSysMessage(`{displayNameCommand}ed {(playersAffected)}{(CommandData.AfterTxt or ""):format(table.unpack(returns))}`,
 												Color3.fromRGB(255,255,255))
 										else
 											C.CreateSysMessage(

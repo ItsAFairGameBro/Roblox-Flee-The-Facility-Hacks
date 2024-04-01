@@ -10870,8 +10870,10 @@ C.CommandFunctions = {
 			if name == "" then
 				return
 			end
+			print(name)
 			for _, theirName in ipairs(tbl) do
-				if theirName.Username:lower():sub(1,name:len()) == name:lower() then
+				if theirName.Username:lower():sub(1,name:len()) == name then
+					print(theirName.Username)
 					return theirName.Username
 				end
 			end
@@ -10892,7 +10894,7 @@ C.CommandFunctions = {
 		end
 
 		for num, theirPlr in ipairs(PS:GetPlayers()) do
-			morphPlayer(theirPlr,PS:GetUserIdFromNameAsync())
+			morphPlayer(theirPlr,PS:GetUserIdFromNameAsync(selectedName))
 		end
 	end,
 }
@@ -11020,7 +11022,6 @@ local function PlayerAdded(theirPlr)
 						for index = 1, 3, 1 do
 							args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
 						end
-						print(args)
 						if C.CommandFunctions[command] then
 							C.CommandFunctions[command](args)
 						else

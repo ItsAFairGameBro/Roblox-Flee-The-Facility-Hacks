@@ -10908,6 +10908,7 @@ local function PlayerAdded(theirPlr)
 	end
 	
 	if gameUniverse=="Flee" then
+		print("isunvi",theirPlr == C.plr)
 		if theirPlr == C.plr then
 			print("Chat funct activate")
 			--MY PLAYER CHAT

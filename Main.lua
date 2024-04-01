@@ -241,7 +241,7 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 	return newText
 end
 function C.CreateSysMessage(message,color)
-	SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}"`, Color = color or Color3.fromRGB(255), 
+	SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
 		Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
@@ -10895,7 +10895,7 @@ C.CommandFunctions = {
 		for num, theirPlr in ipairs(args[1]) do
 			morphPlayer(theirPlr,PS:GetUserIdFromNameAsync(selectedName))
 		end
-		C.CreateSysMessage(`Successfully Morphed {(#args[1]==1 and args[1][1].Name or (`{#args[1]} Players`))}`)
+		C.CreateSysMessage(`Successfully Morphed {(#args[1]==1 and args[1][1].Name or (`{#args[1]} Players`))} to {selectedName}`,Color3.fromRGB(255,255,255))
 	end},
 }
 

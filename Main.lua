@@ -7209,6 +7209,8 @@ C.AvailableHacks ={
 						attachment:AddTag("RemoveOnDestroy")
 						attachment.Name = "FloatAttachment"
 						attachment.Parent = orgChar.PrimaryPart
+						
+						human.PlatformStand = true
 
 						--orgChar.PrimaryPart.Anchored = true
 						human:ChangeState(Enum.HumanoidStateType.Landed)
@@ -7418,8 +7420,10 @@ C.AvailableHacks ={
 						task.delay(1,function()
 							human:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
 						end)
+						if human then
+							human.PlatformStand = false
+						end
 						if C.char.PrimaryPart then
-							C.char.PrimaryPart.Anchored = false
 							C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPrimaryPartCFrame())
 							--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
 							if C.char.PrimaryPart:FindFirstChild("FloatAttachment") then

@@ -10878,7 +10878,7 @@ local function PlayerAdded(theirPlr)
 	local isMe = (plr==theirPlr)
 	C.playerEvents[theirPlr.UserId] = {}
 	if theirPlr.Character~=nil then
-		CharacterAdded(theirPlr.Character,true)
+		task.spawn(CharacterAdded,theirPlr.Character,true)
 	end
 	local myPlayerAddedInputArray = {theirPlr}
 	local characterFunctionName = "OthersPlayerAdded";

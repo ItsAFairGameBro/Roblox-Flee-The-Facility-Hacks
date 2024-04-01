@@ -1446,6 +1446,7 @@ local function isInGame(theirChar,noDefactoAllowed)
 	--print("runner ", theirChar.Name, "false")
 	return false,"Lobby"--]]
 end
+getgenv().isInGame = isInGame
 local jumpChangedEvent
 
 --CLOSEST POINT ON PART
@@ -7235,14 +7236,11 @@ C.AvailableHacks ={
 				end
 				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(updateCamera))
 				updateCamera()
+				local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
 				table.insert(connections,clonedChar.Torso.Touched:Connect(function(instance)
-					--TODO HERE
-					local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
 					charEnv.TriggerTouch(instance,true)
 				end))
 				table.insert(connections,clonedChar.Torso.TouchEnded:Connect(function(instance)
-					--TODO HERE
-					local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
 					charEnv.TriggerTouch(instance,false)
 				end))
 				task.spawn(function()

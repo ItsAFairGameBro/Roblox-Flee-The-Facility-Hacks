@@ -8197,6 +8197,7 @@ C.AvailableHacks ={
 			["Shortcut"]="Blatant_RemoteHackPCs",
 			["Default"]=true,
 			["Funct"]=nil,
+			["Changed"]=nil,
 			["ActivateFunction"]=function(newValue)
 
 				local actionEvent = myTSM:WaitForChild("ActionEvent")
@@ -8205,22 +8206,13 @@ C.AvailableHacks ={
 						if C.enHacks.Blatant_RemoteHackPCs then
 							C.char.Torso.CanTouch = false
 							trigger_setTriggers("Typing",{AllowExceptions={actionValue.Parent.Parent}})
-							local changed
-							changed = myTSM.CurrentAnimation.Changed:Connect(function()
+							C.AvailableHacks.Blatant[4].Changed = myTSM.CurrentAnimation.Changed:Connect(function()
 								RunS.RenderStepped:Wait()
 								myTSM.CurrentAnimation.Value = ""
-								table.remove(C.functs,table.find(C.functs,changed))
-								changed:Disconnect()
+								table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Blatant[4].Changed))
+								C.AvailableHacks.Blatant[4].Changed:Disconnect()
 							end)
-							table.insert(C.functs,changed)
-							task.delay(.5,function()
-								if changed then
-									table.remove(C.functs,table.find(C.functs,changed))
-									changed:Disconnect()
-									trigger_setTriggers("Typing",true)
-									C.char.Torso.CanTouch = true
-								end
-							end)
+							table.insert(C.functs,C.AvailableHacks.Blatant[4].Changed)
 							return
 						else
 							if actionValue.Parent and not table.find(C.char.Torso:GetTouchingParts(),actionValue.Parent) then
@@ -8230,6 +8222,10 @@ C.AvailableHacks ={
 					end
 					trigger_setTriggers("Typing",true)
 					C.char.Torso.CanTouch = true
+					if C.AvailableHacks.Blatant[4].Changed then
+						C.AvailableHacks.Blatant[4].Changed:Disconnect()
+						C.AvailableHacks.Blatant[4].Changed=nil
+					end
 				end
 
 				if not C.AvailableHacks.Runner[4].Funct and newValue then
@@ -8237,6 +8233,10 @@ C.AvailableHacks ={
 				elseif C.AvailableHacks.Runner[4].Funct and not newValue then
 					C.AvailableHacks.Runner[4].Funct:Disconnect()
 					C.AvailableHacks.Runner[4].Funct=nil
+				end
+				if C.AvailableHacks.Blatant[4].Changed then
+					C.AvailableHacks.Blatant[4].Changed:Disconnect()
+					C.AvailableHacks.Blatant[4].Changed=nil
 				end
 				--setChangedAttribute(currentAnimation,"Value",newValue and currentAnimationUpdate)
 				currentAnimationUpdate()

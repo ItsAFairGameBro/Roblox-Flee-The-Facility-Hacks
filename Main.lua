@@ -10160,7 +10160,7 @@ C.AvailableHacks ={
 			["Title"]="Get Frozen",
 			["Desc"]="Forces yourself to get frozen. Includes Chat Message",
 			["Shortcut"]="Commands_GetFrozen",
-			["Default"]=true,
+			["Default"]=false,
 			["DontActivate"]=true,
 			["ForceDefault"]=true,
 			["Options"]={
@@ -10186,6 +10186,9 @@ C.AvailableHacks ={
 						and not isCleared and C.Map and C.Beast
 				end
 				C.AvailableHacks.Bot[15].GetFreeze(canRun,false)
+				if saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and not isCleared then
+					C.refreshEnHack["Commands_GetFrozen"](false)
+				end
 			end,
 			["CleanUp"] = function()
 				C.refreshEnHack["Commands_GetFrozen"](false)

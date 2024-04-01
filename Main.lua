@@ -7202,7 +7202,7 @@ C.AvailableHacks ={
 
 				local function doCFrameChanged()
 					for s = 5, 1, -1 do
-						RunS.RenderStepped:Wait()
+						--RunS.RenderStepped:Wait()
 					end
 					if not orgChar.Parent then
 						return

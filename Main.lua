@@ -7192,7 +7192,7 @@ C.AvailableHacks ={
 						--RunS.RenderStepped:Wait()
 					end
 					if clonedChar and clonedChar.Parent and orgChar and orgChar.PrimaryPart then
-						local bodyForce = Instance.new("BodyForce")
+						--local bodyForce = Instance.new("BodyForce")
 						local mass = 0
 						for num, part in ipairs(orgChar:GetDescendants()) do
 							if part:IsA("BasePart") then
@@ -7200,7 +7200,7 @@ C.AvailableHacks ={
 							end
 						end
 						local vectorForce = Instance.new("VectorForce")
-						local attachment = Instance.new("Attachment", orgChar.PrimaryPart)
+						local attachment = Instance.new("Attachment")
 						vectorForce.RelativeTo = "World"
 						vectorForce.ApplyAtCenterOfMass = true;
 						vectorForce.Parent = attachment
@@ -7208,6 +7208,7 @@ C.AvailableHacks ={
 						vectorForce.Force = Vector3.new(0, mass * workspace.Gravity, 0)
 						attachment:AddTag("RemoveOnDestroy")
 						attachment.Name = "FloatAttachment"
+						attachment.Parent = orgChar.PrimaryPart
 
 						--orgChar.PrimaryPart.Anchored = true
 						human:ChangeState(Enum.HumanoidStateType.Landed)

@@ -11021,19 +11021,47 @@ local function PlayerAdded(theirPlr)
 	if gameUniverse=="Flee" then
 		if isMe then
 			--MY PLAYER CHAT
+			local savedCommands = getrenv().lastCommands
+			if not savedCommands then
+				savedCommands = {}
+				getrenv().lastCommands = savedCommands
+			end
+			local chatBar
+			local index = 1
+			local function runFunction(actionName,keyInput)
+				if keyInput ~= Enum.UserInputState.Begin or not chatBar or chatBar:HasFocused() then
+					return
+				end
+				if actionName == "UpArrow"..C.saveIndex then
+					index+=1
+				else
+					index-=1
+				end
+				index = math.clamp(1,#savedCommands)
+				
+				chatBar.Text = savedCommands[index]
+			end
+			CAS:BindAction("UpArrow"..C.saveIndex,runFunction,false,Enum.KeyCode.Up)
+			CAS:BindAction("DownArrow"..C.saveIndex,runFunction,false,Enum.KeyCode.Down)
 			local function registerNewChatBar(_,firstRun)
-				local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
+				chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 				local connectionsFuncts = {}
 				for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
 					connection:Disable()
 					table.insert(connectionsFuncts,connection)
 				end
 				table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
+					index = 0
 					local inputMsg = chatBar.Text
 					if enterPressed then
 						if inputMsg:sub(1,1)==";" then
 							chatBar.Text = ""
 							enterPressed = false
+							
+							table.insert(savedCommands,chatBar)
+							if #savedCommands > 10 then
+								table.remove(savedCommands,#savedCommands)
+							end
 
 							local args = inputMsg:sub(2):split(" ")
 							local command = args[1]

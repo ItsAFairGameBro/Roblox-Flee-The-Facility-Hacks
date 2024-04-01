@@ -10867,6 +10867,9 @@ C.CommandFunctions = {
 		end
 
 		local function startsWith(tbl,name)
+			if name == "" then
+				return
+			end
 			for _, theirName in ipairs(tbl) do
 				if theirName.Username:lower():sub(1,name:len()) == name:lower() then
 					return theirName.Username

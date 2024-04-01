@@ -3839,6 +3839,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 6, 0)
 				newTag.Adornee=door:WaitForChild("WalkThru")
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay2")
@@ -7186,20 +7187,20 @@ C.AvailableHacks ={
 				if CLONEDHammer then
 					CLONEDHammer:Destroy()
 				end
-
-
-				C.AvailableHacks.Basic[30].LastTeleportLocation = saveLoc + C.AvailableHacks.Basic[30].HiddenLocation
-				teleportMyself(C.AvailableHacks.Basic[30].LastTeleportLocation)
-
-				task.spawn(function()
+				local function teleportMyCharacterAway()
 					for s = 5, 1, -1 do
 						RunS.RenderStepped:Wait()
 					end
-					if orgChar and orgChar.PrimaryPart then
+					if clonedChar and clonedChar.Parent and orgChar and orgChar.PrimaryPart then
 						orgChar.PrimaryPart.Anchored = true
 						human:ChangeState(Enum.HumanoidStateType.Landed)
 					end
-				end)
+				end
+				C.AvailableHacks.Basic[30].LastTeleportLocation = saveLoc + C.AvailableHacks.Basic[30].HiddenLocation
+				teleportMyself(C.AvailableHacks.Basic[30].LastTeleportLocation)
+				
+				task.spawn(teleportMyCharacterAway,saveLoc)
+				
 
 				clonedChar.Parent = workspace
 				
@@ -7222,6 +7223,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Basic[30].LastTeleportLocation = newLoc + C.AvailableHacks.Basic[30].HiddenLocation
 					orgChar:SetPrimaryPartCFrame(C.AvailableHacks.Basic[30].LastTeleportLocation) --teleportMyself(C.AvailableHacks.Basic[30].HiddenLocation)
 					clonedChar:SetPrimaryPartCFrame(newLoc)
+					return true
 				end
 
 				local Head = orgChar:FindFirstChild("Head")
@@ -7248,6 +7250,27 @@ C.AvailableHacks ={
 				end))
 				table.insert(connections,clonedChar.Torso.TouchEnded:Connect(function(instance)
 					charEnv.TriggerTouch(instance,false)
+				end))
+				table.insert(connections,RemoteEvent.OnClientEvent:Connect(function(thing)
+					if thing=="FadeBlackTransition" then
+						local lastPosition = clonedChar:GetPrimaryPartCFrame().Position
+						for s = 300, 1, -1 do
+							print('l00p')
+							local dist = (clonedChar:GetPrimaryPartCFrame().Position - lastPosition).Magnitude
+							if dist > 30 then
+								print('SERVER TELEPORT!',dist)
+								orgChar.PrimaryPart.Anchored = false
+								for s = 3, 1, -1 do
+									RunS.RenderStepped:Wait()
+								end
+								doCFrameChanged()
+								teleportMyCharacterAway()
+							end
+							lastPosition = clonedChar:GetPrimaryPartCFrame().Position
+							RunS.RenderStepped:Wait()
+						end
+						print("I didn't teleporT?")
+					end
 				end))
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do

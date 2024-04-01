@@ -11009,7 +11009,7 @@ local function PlayerAdded(theirPlr)
 						chatBar.Text = ""
 						enterPressed = false
 						
-						local args = chatBar:split(" ")
+						local args = inputMsg:split(" ")
 						local command = args[1]
 						table.remove(args,1)
 						if C.CommandFunctions[command] then

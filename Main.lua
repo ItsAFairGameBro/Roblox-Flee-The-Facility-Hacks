@@ -171,6 +171,10 @@ C.DefaultStringEscapeCharacters = {
 	{"?","%?"},
 
 }
+C.AllowedCameraEnums = {
+	[Enum.CameraType.Track] = true,
+	[Enum.CameraType.Custom] = true,
+}
 function C.ApplyRichTextEscapeCharacters(str,toEscaped,escapelist)
 	local fromIndex = toEscaped and 1 or 2
 	local toIndex = toEscaped and 2 or 1
@@ -3351,7 +3355,7 @@ C.AvailableHacks ={
 				local newValue = C.enHacks.Render_FreezingPods
 
 				local canBeActive = newValue == true
-				tag.Enabled=canBeActive and (camera.CameraType == Enum.CameraType.Track or camera.CameraType==Enum.CameraType.Custom) and isInGame
+				tag.Enabled=canBeActive and C.AllowedCameraEnums[camera.CameraType] and isInGame
 				if tag:FindFirstChild("Toggle") then
 					tag.Toggle.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
 				end
@@ -3470,7 +3474,7 @@ C.AvailableHacks ={
 				local newValue = C.enHacks.Render_DownedRunner
 
 				local canBeActive = newValue == true
-				tag.Enabled=canBeActive and (camera.CameraType == Enum.CameraType.Track or camera.CameraType==Enum.CameraType.Custom) and isInGame
+				tag.Enabled=canBeActive and C.AllowedCameraEnums[camera.CameraType] and isInGame
 			end,
 			["ActivateFunction"]=function(newValue)
 				local isInGame=isInGame(camera.CameraSubject.Parent)
@@ -3562,7 +3566,7 @@ C.AvailableHacks ={
 				local newValue = C.enHacks.Render_HackComputers
 
 				local canBeActive = newValue == true
-				tag.Enabled=canBeActive and (camera.CameraType==Enum.CameraType.Custom or camera.CameraType==Enum.CameraType.Track) and isInGame
+				tag.Enabled=canBeActive and C.AllowedCameraEnums[camera.CameraType] and isInGame
 			end,
 			["ActivateFunction"]=function(newValue)
 				local isInGame=isInGame(camera.CameraSubject.Parent)
@@ -3792,7 +3796,7 @@ C.AvailableHacks ={
 				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay2")
 				for num,tag in ipairs(hackDisplayList) do
-					tag.Enabled=newValue and camera.CameraType==Enum.CameraType.Custom and isInGame
+					tag.Enabled=newValue and C.AllowedCameraEnums[camera.CameraType] and isInGame
 				end
 			end,
 			["CleanUp"]=function()
@@ -3890,7 +3894,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[15].DoorFuncts[door] = setToggleFunction
 				newTag.Toggle.MouseButton1Up:Connect(setToggleFunction)
 				C.AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
-				newTag.Enabled=(C.enHacks.RemotelyOpenDoors and (camera.CameraType==Enum.CameraType.Custom and isInGame))
+				newTag.Enabled=(C.enHacks.RemotelyOpenDoors and (C.AllowedCameraEnums[camera.CameraType] and isInGame))
 				local function actionSignChangedFunct()
 					C.AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
 				end

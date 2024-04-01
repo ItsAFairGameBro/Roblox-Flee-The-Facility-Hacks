@@ -11029,7 +11029,7 @@ local function PlayerAdded(theirPlr)
 			local chatBar
 			local index = 1
 			table.insert(C.functs,UIS.InputBegan:Connect(function(Key,GameProcessed)
-				print(Key)
+				print(Key.KeyCode.Name)
 				if not chatBar or not chatBar:IsFocused() then
 					return
 				end

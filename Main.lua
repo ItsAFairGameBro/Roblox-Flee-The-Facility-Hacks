@@ -8206,13 +8206,13 @@ C.AvailableHacks ={
 						if C.enHacks.Blatant_RemoteHackPCs then
 							C.char.Torso.CanTouch = false
 							trigger_setTriggers("Typing",{AllowExceptions={actionValue.Parent.Parent}})
-							C.AvailableHacks.Blatant[4].Changed = myTSM.CurrentAnimation.Changed:Connect(function()
+							C.AvailableHacks.Runner[4].Changed = myTSM.CurrentAnimation.Changed:Connect(function()
 								RunS.RenderStepped:Wait()
 								myTSM.CurrentAnimation.Value = ""
-								table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Blatant[4].Changed))
-								C.AvailableHacks.Blatant[4].Changed:Disconnect()
+								table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Runner[4].Changed))
+								C.AvailableHacks.Runner[4].Changed:Disconnect()
 							end)
-							table.insert(C.functs,C.AvailableHacks.Blatant[4].Changed)
+							table.insert(C.functs,C.AvailableHacks.Runner[4].Changed)
 							return
 						else
 							if actionValue.Parent and not table.find(C.char.Torso:GetTouchingParts(),actionValue.Parent) then
@@ -8222,9 +8222,9 @@ C.AvailableHacks ={
 					end
 					trigger_setTriggers("Typing",true)
 					C.char.Torso.CanTouch = true
-					if C.AvailableHacks.Blatant[4].Changed then
-						C.AvailableHacks.Blatant[4].Changed:Disconnect()
-						C.AvailableHacks.Blatant[4].Changed=nil
+					if C.AvailableHacks.Runner[4].Changed then
+						C.AvailableHacks.Runner[4].Changed:Disconnect()
+						C.AvailableHacks.Runner[4].Changed=nil
 					end
 				end
 
@@ -8234,9 +8234,9 @@ C.AvailableHacks ={
 					C.AvailableHacks.Runner[4].Funct:Disconnect()
 					C.AvailableHacks.Runner[4].Funct=nil
 				end
-				if C.AvailableHacks.Blatant[4].Changed then
-					C.AvailableHacks.Blatant[4].Changed:Disconnect()
-					C.AvailableHacks.Blatant[4].Changed=nil
+				if C.AvailableHacks.Runner[4].Changed then
+					C.AvailableHacks.Runner[4].Changed:Disconnect()
+					C.AvailableHacks.Runner[4].Changed=nil
 				end
 				--setChangedAttribute(currentAnimation,"Value",newValue and currentAnimationUpdate)
 				currentAnimationUpdate()

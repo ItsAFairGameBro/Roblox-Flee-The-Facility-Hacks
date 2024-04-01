@@ -1235,8 +1235,7 @@ local function GuiCreationFunction()
 	AmtFinished.BackgroundTransparency = (0.1)
 	AmtFinished.Size = UDim2.new(0, 0, 1, 0)
 
-	C.ToggleTag.Name = "C.ToggleTag"
-	TextBoxExamples["C.ToggleTag"] = C.ToggleTag
+	C.ToggleTag.Name = "ToggleTag"
 	C.ToggleTag["Active"] = true
 	C.ToggleTag.AlwaysOnTop = true
 	C.ToggleTag.Enabled = false	
@@ -3840,7 +3839,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
-				newTag.Adornee=doorTrigger
+				newTag.Adornee=door:WaitForChild("WalkThru")
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay2")
 				task.wait()

@@ -1414,6 +1414,9 @@ local function isInGame(theirChar,noDefactoAllowed)
 	--[[local a=Vector3.new(410.495, 59.4767, -197.00)
 	local b=Vector3.new(-54.505, 59.4767, -547.007)
 	return (point.X >= a.X and point.X <= b.X) and (point.Z >= a.Z and point.Z <= b.Z)--]]
+	if theirChar.Name == "InviClone" then
+		theirChar = C.char
+	end
 	if theirChar~=nil and
 		theirChar:FindFirstChild("Hammer")~=nil or (C.Map~=nil and C.Map:IsAncestorOf(theirChar)) then
 		--print("beast ", theirChar.Name)

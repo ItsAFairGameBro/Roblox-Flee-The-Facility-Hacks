@@ -7213,7 +7213,7 @@ C.AvailableHacks ={
 						human.PlatformStand = true
 
 						--orgChar.PrimaryPart.Anchored = true
-						human:ChangeState(Enum.HumanoidStateType.Landed)
+						--human:ChangeState(Enum.HumanoidStateType.Landed)
 					end
 				end
 				C.AvailableHacks.Basic[30].LastTeleportLocation = saveLoc + C.AvailableHacks.Basic[30].HiddenLocation

@@ -8209,8 +8209,10 @@ C.AvailableHacks ={
 							C.AvailableHacks.Runner[4].Changed = myTSM.CurrentAnimation.Changed:Connect(function()
 								RunS.RenderStepped:Wait()
 								myTSM.CurrentAnimation.Value = ""
-								table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Runner[4].Changed))
-								C.AvailableHacks.Runner[4].Changed:Disconnect()
+								if C.AvailableHacks.Runner[4].Changed then
+									table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Runner[4].Changed))
+									C.AvailableHacks.Runner[4].Changed:Disconnect()
+								end
 							end)
 							table.insert(C.functs,C.AvailableHacks.Runner[4].Changed)
 							return

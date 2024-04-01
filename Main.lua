@@ -184,6 +184,17 @@ function C.ApplyRichTextEscapeCharacters(str,toEscaped,escapelist)
 	end
 	return str
 end
+function C.StringStartsWith(tbl,name)
+	if name == "" then
+		return
+	end
+	name = name:lower()
+	for _, theirName in ipairs(tbl) do
+		if tostring(theirName):lower():sub(1,name) == name then
+			return theirName
+		end
+	end
+end
 function C.BetterGSub(orgString,searchString,replacement,settings)
 	if not settings or not settings.NoUndoFormat then
 		orgString = C.ApplyRichTextEscapeCharacters(orgString,false)
@@ -10812,7 +10823,9 @@ C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 
 --COMMANDS CONTROL
 C.CommandFunctions = {
-	["morph"]=function(args)
+	["morph"]={
+		Type="Players",
+		Run=function(args)
 		local function morphPlayer(targetPlr, targetID)
 			local targetChar = targetPlr.Character
 			if not targetChar then
@@ -10857,7 +10870,7 @@ C.CommandFunctions = {
 			repeat
 				local info = (page and page:GetCurrentPage()) or ({})
 				for i, friendInfo in pairs(info) do
-					table.insert(PlayersFriends, friendInfo)
+					table.insert(PlayersFriends, friendInfo.Username)
 				end
 				if not page.IsFinished then 
 					page:AdvanceToNextPageAsync()
@@ -10866,24 +10879,11 @@ C.CommandFunctions = {
 			return PlayersFriends
 		end
 
-		local function startsWith(tbl,name)
-			if name == "" then
-				return
-			end
-			print(name)
-			for _, theirName in ipairs(tbl) do
-				if theirName.Username:lower():sub(1,name:len()) == name then
-					print(theirName.Username)
-					return theirName.Username
-				end
-			end
-			--error("NO NAME FOUND FOR "..tostring(name):upper())
-		end
 
 		local function checkFriendsPCALLFunction()
 			local friendsPages = PS:GetFriendsAsync(26682673)
 			local friendsTable = iterPageItems(friendsPages)
-			local selectedName = startsWith(friendsTable,args[1])
+			local selectedName = C.StringStartsWith(friendsTable,args[2])
 			return selectedName
 		end
 
@@ -10893,10 +10893,10 @@ C.CommandFunctions = {
 			return C.CreateSysMessage(`User Not Found: {selectedName}`)
 		end
 
-		for num, theirPlr in ipairs(PS:GetPlayers()) do
+		for num, theirPlr in ipairs(args[1]) do
 			morphPlayer(theirPlr,PS:GetUserIdFromNameAsync(selectedName))
 		end
-	end,
+	end},
 }
 
 --HACK CONTROL
@@ -11022,8 +11022,32 @@ local function PlayerAdded(theirPlr)
 						for index = 1, 3, 1 do
 							args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
 						end
-						if C.CommandFunctions[command] then
-							C.CommandFunctions[command](args)
+						local CommandData = C.CommandFunctions[command]
+						if CommandData then
+							local canRunFunction = true
+							if CommandData.Type=="Players" then
+								local Chosen = C.StringStartsWith({"all","others","me"},args[1])
+								if Chosen=="all" then
+									args[1] = PS:GetPlayers()
+								elseif Chosen == "others" then
+									args[1] = PS:GetPlayers()
+									table.remove(args[1],plr)
+								elseif Chosen == "me" then
+									args[1] = {plr}
+								else
+									Chosen = C.StringStartsWith(PS:GetPlayers(),args[1])
+									if Chosen then
+										args[1] = {Chosen}
+									else
+										canRunFunction = C.CreateSysMessage(`Players Not Found: {command}; allowed: all, others, me, <plrName>`)
+									end
+								end
+							else
+								canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}`)
+							end
+							if canRunFunction then
+								C.CommandFunctions[command](args)
+							end
 						else
 							C.CreateSysMessage(`Command Not Found: {command}`)
 						end

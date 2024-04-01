@@ -4372,12 +4372,12 @@ C.AvailableHacks ={
 						C.AvailableHacks.Utility[3].Funct:Disconnect()
 						C.AvailableHacks.Utility[3].Funct=nil
 					end
+					CAS:UnbindAction("PushSlash"..C.saveIndex)
 					if UIS.TouchEnabled then
 						chatTextLabel.Text = "Tap here to chat"
 					else
 						chatTextLabel.Text = 'To chat click here or press "/" key'
 					end
-					CAS:UnbindAction("PushSlash"..C.saveIndex)
 				end
 				local function cameraChanged()
 					local newCameraType = camera.CameraType
@@ -4438,7 +4438,14 @@ C.AvailableHacks ={
 					C.AvailableHacks.Utility[3].Funct = nil
 				end--]]
 			end,
-			["ChatBarAdded"]=function(chatBar)
+			["ChatBarAdded"]=function(chatBar,firstRun)
+				if firstRun then return end
+				C.AvailableHacks.Utility[3].Active=nil
+				if C.AvailableHacks.Utility[3].Funct then
+					C.AvailableHacks.Utility[3].Funct:Disconnect()
+					C.AvailableHacks.Utility[3].Funct=nil
+				end
+				CAS:UnbindAction("PushSlash"..C.saveIndex)
 				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
 			end,
 			["MyBeastAdded"]=function()
@@ -11013,7 +11020,7 @@ local function PlayerAdded(theirPlr)
 	if gameUniverse=="Flee" then
 		if isMe then
 			--MY PLAYER CHAT
-			local function registerNewChatBar()
+			local function registerNewChatBar(_,firstRun)
 				local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 				local connectionsFuncts = {}
 				for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
@@ -11069,12 +11076,12 @@ local function PlayerAdded(theirPlr)
 						connectionFunct.Function(enterPressed)
 					end
 				end))
-				defaultFunction("ChatBarAdded",{chatBar})
+				defaultFunction("ChatBarAdded",{chatBar,firstRun})
 			end
 			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame").ChildAdded:Connect(function(child)
 				registerNewChatBar()
 			end))
-			registerNewChatBar()
+			registerNewChatBar(nil,true)
 		end
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		if theirTSM then

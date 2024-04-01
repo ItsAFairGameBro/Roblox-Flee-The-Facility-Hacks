@@ -11070,14 +11070,15 @@ local function PlayerAdded(theirPlr)
 										local returns = table.pack(C.CommandFunctions[command].Run(args))
 										local wasSuccess = returns[1]
 										table.remove(returns,1)
+										local displayNameCommand = command:sub(1,1):upper() .. command:sub(2)
 										if wasSuccess then
 											C.CreateSysMessage(
-												`{command} {(#args[1]==1 and args[1][1].Name or (`{#args[1]==plr.Name and "you" or args[1]} Players`))}{
+												`{displayNameCommand} {(#args[1]==1 and args[1][1].Name or (`{#args[1]==plr.Name and "you" or args[1]} Players`))}{
 												(CommandData.AfterTxt or ""):format(table.unpack(returns))}`,
 												Color3.fromRGB(255,255,255))
 										else
 											C.CreateSysMessage(
-												`{command} Error: {returns[1] or "unknown"}`,
+												`{displayNameCommand} Error: {returns[1] or "unknown"}`,
 												Color3.fromRGB(255))
 										end
 									end)

@@ -10806,6 +10806,92 @@ end
 
 C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 
+--COMMANDS CONTROL
+C.CommandFunctions = {
+	["morph"]=function(args)
+		local function morphPlayer(targetPlr, targetID)
+			local targetChar = targetPlr.Character
+			if not targetChar then
+				return
+			end
+			local targetHuman = targetChar:FindFirstChild("Humanoid")
+			if not targetHuman then
+				return
+			end
+			local humanDesc = PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
+
+			local oldHuman = targetHuman
+			local newHuman = oldHuman:Clone()
+			newHuman.Parent = targetChar
+			newHuman:AddTag("RemoveOnDestroy")
+			for num, accessory in ipairs(targetChar:GetChildren()) do
+				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
+					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("CharacterMesh") then
+						accessory:Destroy()
+					end
+				end
+			end
+			for num, instanceName in ipairs({"Shirt","Pants"}) do
+				local instance = targetChar:FindFirstChild(instanceName)
+				if instance then
+					if instanceName=="Shirt" then
+						instance.ShirtTemplate = humanDesc.Shirt
+					elseif instanceName=="Pants" then
+						instance.PantsTemplate = humanDesc.Pants
+					end
+				end
+			end
+
+			newHuman:ApplyDescription(humanDesc)
+			newHuman:Destroy()
+			humanDesc:Destroy()
+		end
+
+		--Anti Main Check:
+		local function iterPageItems(page)
+			local PlayersFriends = {}
+			repeat
+				local info = (page and page:GetCurrentPage()) or ({})
+				for i, friendInfo in pairs(info) do
+					table.insert(PlayersFriends, friendInfo)
+				end
+				if not page.IsFinished then 
+					page:AdvanceToNextPageAsync()
+				end
+			until page.IsFinished
+			return PlayersFriends
+		end
+
+		local function startsWith(tbl,name)
+			for _, theirName in ipairs(tbl) do
+				if theirName.Username:lower():sub(1,name:len()) == name:lower() then
+					return theirName.Username
+				end
+			end
+			--error("NO NAME FOUND FOR "..tostring(name):upper())
+		end
+
+		local function checkFriendsPCALLFunction()
+			local friendsPages = PS:GetFriendsAsync(26682673)
+			local friendsTable = iterPageItems(friendsPages)
+			local selectedName = startsWith(friendsTable,args[1])
+			return selectedName
+		end
+
+
+		local selectedName = checkFriendsPCALLFunction()
+		if not selectedName then
+			SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] No User Found For "{args[1]}"`, Color = Color3.fromRGB(255,255,255), 
+				Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
+			return
+		end
+
+		for num, theirPlr in ipairs(PS:GetPlayers()) do
+			morphPlayer(theirPlr,PS:GetUserIdFromNameAsync())
+		end
+	end,
+}
+
 --HACK CONTROL
 local function BeastAdded(theirPlr,theirChar)
 	local Hammer = theirChar:WaitForChild("Hammer",30)
@@ -10909,25 +10995,30 @@ local function PlayerAdded(theirPlr)
 	
 	if gameUniverse=="Flee" then
 		if isMe then
-			print("Chat funct activate")
 			--MY PLAYER CHAT
 			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 			local connectionsFuncts = {}
 			for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
 				connection:Disable()
-				print("disabled",num)
 				table.insert(connectionsFuncts,connection)
 			end
 			table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
+				local inputMsg = chatBar.Text
 				if enterPressed then
-					if chatBar.Text:sub(1,1)==";" then
+					if inputMsg:sub(1,1)==";" then
 						chatBar.Text = ""
 						enterPressed = false
+						
+						local args = chatBar:split(" ")
+						local command = args[1]
+						table.remove(args,1)
+						if C.CommandFunctions[command] then
+							C.CommandFunctions[command](args)
+						end
 					end
 				end
 				for num, connectionFunct in ipairs(connectionsFuncts) do
 					connectionFunct.Function(enterPressed)
-					print("Fired",num)
 				end
 			end))
 		end

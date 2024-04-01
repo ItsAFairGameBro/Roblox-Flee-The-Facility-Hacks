@@ -10882,6 +10882,7 @@ C.CommandFunctions = {
 		local function checkFriendsPCALLFunction()
 			local friendsPages = PS:GetFriendsAsync(26682673)
 			local friendsTable = iterPageItems(friendsPages)
+			table.insert(friendsTable,"LivyC4l1f3")
 			local selectedName = C.StringStartsWith(friendsTable,args[2])
 			return selectedName
 		end

@@ -7251,9 +7251,12 @@ C.AvailableHacks ={
 					end
 				end)
 				task.spawn(function()
+					local lastJumpTime = os.clock()
 					while clonedChar and clonedHuman and clonedChar.Parent do
-						if clonedHuman.FloorMaterial ~= Enum.Material.Air then
+						if (os.clock() - lastJumpTime > .3 and clonedHuman.FloorMaterial ~= Enum.Material.Air)
+							or (os.clock() - lastJumpTime > .1 and clonedHuman:GetState() == Enum.HumanoidStateType.Climbing) then
 							if isJumpBeingHeld then
+								lastJumpTime = os.clock()
 								clonedHuman:ChangeState(Enum.HumanoidStateType.Jumping)
 								RunS.RenderStepped:Wait()
 							else

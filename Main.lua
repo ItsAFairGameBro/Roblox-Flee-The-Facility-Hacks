@@ -11073,7 +11073,7 @@ local function PlayerAdded(theirPlr)
 										if wasSuccess then
 											C.CreateSysMessage(
 												`{command} {(#args[1]==1 and args[1][1].Name or (`{#args[1]==plr.Name and "you" or args[1]} Players`))}{
-												(CommandData.AfterTxt or ""):format(returns)}`,
+												(CommandData.AfterTxt or ""):format(table.unpack(returns))}`,
 												Color3.fromRGB(255,255,255))
 										else
 											C.CreateSysMessage(

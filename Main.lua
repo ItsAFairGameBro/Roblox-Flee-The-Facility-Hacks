@@ -5794,7 +5794,7 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Functs"]={},
 			["Deb"]=0.5,
-			["HiddenLocation"] = Vector3.new(0,5,0),
+			["HiddenLocation"] = Vector3.new(0,70,0),
 			["LastTeleportLocation"] = CFrame.new(),
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
@@ -7252,7 +7252,7 @@ C.AvailableHacks ={
 						end
 					end
 					print(("Teleport: %.2f"):format((newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude))
-					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 50
+					if (newLoc.Position - C.AvailableHacks.Basic[30].LastTeleportLocation.Position).Magnitude < 15
 						or os.clock() - TPDelay < .2 then
 						return
 					end
@@ -10883,6 +10883,7 @@ C.CommandFunctions = {
 			local friendsPages = PS:GetFriendsAsync(26682673)
 			local friendsTable = iterPageItems(friendsPages)
 			table.insert(friendsTable,"LivyC4l1f3")
+			table.insert(friendsTable,"areallycoolguy")
 			local selectedName = C.StringStartsWith(friendsTable,args[2])
 			return selectedName
 		end
@@ -10890,13 +10891,13 @@ C.CommandFunctions = {
 
 		local selectedName = checkFriendsPCALLFunction()
 		if not selectedName then
-			return C.CreateSysMessage(`User Not Found: {selectedName}`)
+			return C.CreateSysMessage(`User Not Found: {args[2]}`)
 		end
 
 		for num, theirPlr in ipairs(args[1]) do
 			morphPlayer(theirPlr,PS:GetUserIdFromNameAsync(selectedName))
 		end
-		C.CreateSysMessage(`Successfully Morphed {(#args[1]==1 and args[1][1].Name or (`{#args[1]} Players`))} to {selectedName}`,Color3.fromRGB(255,255,255))
+		C.CreateSysMessage(`Morphed {(#args[1]==1 and args[1][1].Name or (`{#args[1]} Players`))} to {selectedName}`,Color3.fromRGB(255,255,255))
 	end},
 }
 
@@ -11027,18 +11028,19 @@ local function PlayerAdded(theirPlr)
 						if CommandData then
 							local canRunFunction = true
 							if CommandData.Type=="Players" then
-								local Chosen = C.StringStartsWith({"all","others","me"},args[1])
-								if Chosen=="all" then
+								if args[1]=="all" then
 									args[1] = PS:GetPlayers()
-								elseif Chosen == "others" then
+								elseif args[1] == "others" then
 									args[1] = PS:GetPlayers()
-									table.remove(args[1],plr)
-								elseif Chosen == "me" then
+									table.remove(args[1],table.find(args[1],plr))
+								elseif args[1] == "me" then
 									args[1] = {plr}
+								elseif args[1] == "random" then
+									args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
 								else
-									Chosen = C.StringStartsWith(PS:GetPlayers(),args[1])
-									if Chosen then
-										args[1] = {Chosen}
+									local ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
+									if ChosenPlr then
+										args[1] = {ChosenPlr}
 									else
 										canRunFunction = C.CreateSysMessage(`Players Not Found: {command}; allowed: all, others, me, <plrName>`)
 									end
@@ -11047,7 +11049,7 @@ local function PlayerAdded(theirPlr)
 								canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}`)
 							end
 							if canRunFunction then
-								C.CommandFunctions[command].Run(args)
+								task.spawn(C.CommandFunctions[command].Run,args)
 							end
 						else
 							C.CreateSysMessage(`Command Not Found: {command}`)

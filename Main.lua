@@ -11094,6 +11094,7 @@ local function PlayerAdded(theirPlr)
 					index = math.clamp(index,1,#savedCommands)
 
 					chatBar.Text = savedCommands[index]
+					print("Set To",savedCommands[index])
 					--end
 					--lastText = chatBar.Text
 				end))

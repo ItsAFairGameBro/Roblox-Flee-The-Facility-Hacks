@@ -11127,7 +11127,7 @@ local function PlayerAdded(theirPlr)
 											if playersAffected == plr.Name then
 												playersAffected = "you"
 											end
-											C.CreateSysMessage(`{displayNameCommand}ed {(playersAffected)}{(CommandData.AfterTxt or ""):format(table.unpack(returns))}`,
+											C.CreateSysMessage(`{displayNameCommand}ed {(playersAffected)}{(CommandData.AfterTxt or ""):format(table.unpack(returns)):gsub("  "," ")}`,
 												Color3.fromRGB(255,255,255))
 										else
 											C.CreateSysMessage(

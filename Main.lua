@@ -11028,24 +11028,6 @@ local function PlayerAdded(theirPlr)
 			end
 			local chatBar
 			local index = 1
-			table.insert(C.functs,UIS.InputBegan:Connect(function(Key,GameProcessed)
-				print(Key.KeyCode.Name)
-				if not chatBar or not chatBar:IsFocused() then
-					return
-				end
-				print("KeyCode",Key.KeyCode.Name)
-				if Key.KeyCode == Enum.KeyCode.Up then
-					index+=1
-				elseif Key.KeyCode == Enum.KeyCode.Down then
-					index-=1
-				else
-					return
-				end
-				index = math.clamp(1,#savedCommands)
-
-				chatBar.Text = savedCommands[index]
-				print("Set To",savedCommands[index])
-			end))
 			local function registerNewChatBar(_,firstRun)
 				chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 				local connectionsFuncts = {}
@@ -11053,6 +11035,24 @@ local function PlayerAdded(theirPlr)
 					connection:Disable()
 					table.insert(connectionsFuncts,connection)
 				end
+				table.insert(C.functs,chatBar.InputBegan:Connect(function(Key,GameProcessed)
+					print(Key.KeyCode.Name)
+					if not chatBar or not chatBar:IsFocused() then
+						return
+					end
+					print("KeyCode",Key.KeyCode.Name)
+					if Key.KeyCode == Enum.KeyCode.Up then
+						index+=1
+					elseif Key.KeyCode == Enum.KeyCode.Down then
+						index-=1
+					else
+						return
+					end
+					index = math.clamp(1,#savedCommands)
+
+					chatBar.Text = savedCommands[index]
+					print("Set To",savedCommands[index])
+				end))
 				table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
 					index = 0
 					local inputMsg = chatBar.Text

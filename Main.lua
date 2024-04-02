@@ -10878,15 +10878,17 @@ C.CommandFunctions = {
 
 		local function iterPageItems22(page)
 			local PlayersFriends = {}
-			repeat
+			while true do
 				local info = (page and page:GetCurrentPage()) or ({})
 				for i, friendInfo in pairs(info) do
 					table.insert(PlayersFriends, friendInfo.Username)
 				end
 				if not page.IsFinished then 
 					page:AdvanceToNextPageAsync()
+				else
+					break
 				end
-			until page.IsFinished
+			end
 			return PlayersFriends
 		end
 
@@ -10901,7 +10903,6 @@ C.CommandFunctions = {
 				local bLen = b:len()
 				return aLen < bLen
 			end)
-			print(friendsTable)
 			local selectedName = C.StringStartsWith(friendsTable,args[2])
 			return selectedName
 		end

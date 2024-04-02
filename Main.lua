@@ -8291,6 +8291,7 @@ C.AvailableHacks ={
 							trigger_setTriggers("Typing",{AllowExceptions={actionValue.Parent.Parent}})
 							C.AvailableHacks.Runner[4].Changed = myTSM.CurrentAnimation.Changed:Connect(function()
 								RunS.RenderStepped:Wait()
+								actionValue.Parent.Parent.Screen.SoundTyping:Stop()
 								myTSM.CurrentAnimation.Value = ""
 								if C.AvailableHacks.Runner[4].Changed then
 									table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Runner[4].Changed))
@@ -9965,22 +9966,26 @@ C.AvailableHacks ={
 					task.wait(1);
 					teleportMyself(CFrame.new(1e3,1e-3,1e3))
 					task.wait(.25);
-					if C.char.Humanoid.Health<=0 then
-						local chardescendants = C.char:GetDescendants();
-						for num,part in ipairs(chardescendants) do
-							if part:IsA("BasePart") then
-								part:Destroy();
+					if C.char.Humanoid:FindFirstChild("Humanoid") then
+						if C.char.Humanoid.Health<=0 then
+							local chardescendants = C.char:GetDescendants();
+							for num,part in ipairs(chardescendants) do
+								if part:IsA("BasePart") then
+									part:Destroy();
+								end;
 							end;
+						else
+							C.char.Humanoid.Health = 0;
 						end;
+						task.delay(30,function()
+							if C.char==saveChar and botModeEnabled and C.enHacks.BotRunner and not isCleared then
+								createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>",error)
+								plr:Kick("Reset Activation Failed")
+							end
+						end)
 					else
-						C.char.Humanoid.Health = 0;
-					end;
-					task.delay(30,function()
-						if C.char==saveChar and botModeEnabled and C.enHacks.BotRunner and not isCleared then
-							createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>",error)
-							plr:Kick("Reset Activation Failed")
-						end
-					end)
+						warn("Humanoid Not Found!")
+					end
 				end
 			end,
 			--[[["MyStartUp"]=function()

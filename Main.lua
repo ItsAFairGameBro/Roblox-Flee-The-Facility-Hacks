@@ -10872,7 +10872,7 @@ C.CommandFunctions = {
 					end
 				end
 				---local orgDesc = Instance.new("HumanoidDescription")
-				newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
+				--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
 				newHuman:ApplyDescription(humanDesc)
 				newHuman.Parent = nil
 				DS:AddItem(newHuman,3)

@@ -10859,7 +10859,7 @@ C.CommandFunctions = {
 					end
 				end
 			end
-			targetChar.Head.face.Decal = 
+			--targetChar.Head.face.Decal = 
 			for num, instanceName in ipairs({"Shirt","Pants"}) do
 				local instance = targetChar:FindFirstChild(instanceName)
 				if instance then

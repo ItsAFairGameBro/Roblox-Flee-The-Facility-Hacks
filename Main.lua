@@ -3855,7 +3855,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
-				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 2, 0)
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 1, 0)
 				newTag.Adornee=door:WaitForChild("WalkThru")
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay2")

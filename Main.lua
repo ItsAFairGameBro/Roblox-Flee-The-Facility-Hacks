@@ -189,9 +189,10 @@ function C.StringStartsWith(tbl,name)
 		return
 	end
 	name = name:lower()
-	for _, theirName in ipairs(tbl) do
-		if tostring(theirName):lower():sub(1,name:len()) == name then
-			return theirName
+	for index, theirValue in pairs(tbl) do
+		local itsIndex = typeof(index)=="number" and theirValue or index
+		if tostring(itsIndex):lower():sub(1,name:len()) == name then
+			return theirValue
 		end
 	end
 end
@@ -10852,7 +10853,6 @@ C.CommandFunctions = {
 				if not targetHuman then
 					return
 				end
-				print("TargetId",targetID)
 				local humanDesc = PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
 
 				local oldHuman = targetHuman
@@ -11075,6 +11075,21 @@ local function PlayerAdded(theirPlr)
 					chatBar.Text = savedCommands[index]
 					print("Set To",savedCommands[index])
 				end))--]]
+				local lastText = chatBar.Text
+				table.insert(C.functs,chatBar:GetPropertyChangedSignal("Text"):Connect(function()
+					if not chatBar or not chatBar:IsFocused() then
+						lastText = chatBar.Text
+						return
+					end
+					if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
+						local WhatsNew = chatBar.Text:sub(#lastText+1)
+						print("This is what's new!",WhatsNew)
+						if WhatsNew=="w" or WhatsNew=="s" then
+							print("EEE")
+						end
+					end
+					lastText = chatBar.Text
+				end))
 				table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
 					index = 0
 					local inputMsg = chatBar.Text

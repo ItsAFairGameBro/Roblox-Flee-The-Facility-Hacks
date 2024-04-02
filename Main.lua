@@ -737,6 +737,7 @@ local function StartBetterConsole()
 			BetterConsole_SetMessagesVisibility(nil)
 		elseif msg=="/top" or msg=="/bottom" then
 			if BetterConsole_TweenList and BetterConsole_TweenList.PlaybackState == Enum.PlaybackState then
+				BetterConsole_TweenList:SetAttribute("NoChange",true)
 				BetterConsole_TweenList:Cancel()
 				BetterConsole_TweenList:Destroy()
 			end
@@ -751,7 +752,7 @@ local function StartBetterConsole()
 				BetterConsole_TweenList:Play()
 				if msg == "/bottom" then
 					BetterConsole_TweenList.Completed:Connect(function(state)
-						if state == Enum.PlaybackState.Completed then
+						if not BetterConsole_TweenList:GetAttribute("NoChange") then
 							forceAtBottom = false
 						end
 					end)
@@ -8282,7 +8283,6 @@ C.AvailableHacks ={
 			["Funct"]=nil,
 			["Changed"]=nil,
 			["ActivateFunction"]=function(newValue)
-
 				local actionEvent = myTSM:WaitForChild("ActionEvent")
 				local function currentAnimationUpdate(actionValue)
 					if actionValue and actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent.Parent)=="Computer" then
@@ -11035,7 +11035,7 @@ local function PlayerAdded(theirPlr)
 					connection:Disable()
 					table.insert(connectionsFuncts,connection)
 				end
-				table.insert(C.functs,chatBar.InputChanged:Connect(function(Key,GameProcessed)
+				--[[table.insert(C.functs,chatBar.InputChanged:Connect(function(Key,GameProcessed)
 					print(Key.KeyCode.Name)
 					--if not chatBar or not chatBar:IsFocused() then
 					--	return
@@ -11053,7 +11053,7 @@ local function PlayerAdded(theirPlr)
 
 					chatBar.Text = savedCommands[index]
 					print("Set To",savedCommands[index])
-				end))
+				end))--]]
 				table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
 					index = 0
 					local inputMsg = chatBar.Text

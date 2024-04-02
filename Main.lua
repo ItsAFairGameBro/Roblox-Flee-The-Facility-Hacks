@@ -10876,7 +10876,7 @@ C.CommandFunctions = {
 			humanDesc:Destroy()
 		end
 
-		local function iterPageItems(page)
+		local function iterPageItems22(page)
 			local PlayersFriends = {}
 			repeat
 				local info = (page and page:GetCurrentPage()) or ({})
@@ -10893,7 +10893,7 @@ C.CommandFunctions = {
 
 		local function checkFriendsPCALLFunction()
 			local friendsPages = PS:GetFriendsAsync(26682673)
-			local friendsTable = iterPageItems(friendsPages)
+			local friendsTable = iterPageItems22(friendsPages)
 			table.insert(friendsTable,"LivyC4l1f3")
 			table.insert(friendsTable,"areallycoolguy")
 			table.sort(friendsTable,function(a,b)

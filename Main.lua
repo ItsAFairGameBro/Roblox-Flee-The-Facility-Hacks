@@ -11075,13 +11075,14 @@ local function PlayerAdded(theirPlr)
 					chatBar.Text = savedCommands[index]
 					print("Set To",savedCommands[index])
 				end))--]]
+				local lastText 
 				table.insert(C.functs,chatBar:GetPropertyChangedSignal("Text"):Connect(function()
 					if not chatBar or not chatBar:IsFocused() then
 						return
 					end
 					--local WhatsNew = chatBar.Text:sub(lastText:len())
 					--if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
-					if #savedCommands==0 then
+					if #savedCommands==0 or lastText == chatBar.Text then
 						return
 					end
 					if chatBar.Text=="/up" then
@@ -11094,6 +11095,7 @@ local function PlayerAdded(theirPlr)
 					index = math.clamp(index,0,#savedCommands)
 
 					local setTo = index==0 and "" or savedCommands[index]
+					lastText = setTo
 					chatBar.Text = setTo
 					print("Applied To",setTo)
 					--end

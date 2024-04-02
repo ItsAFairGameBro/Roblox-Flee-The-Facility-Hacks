@@ -11095,7 +11095,7 @@ local function PlayerAdded(theirPlr)
 
 					local setTo = index==0 and "" or savedCommands[index]
 					chatBar.Text = setTo
-					print("Set To",setTo)
+					print("Applied To",setTo)
 					--end
 					--lastText = chatBar.Text
 				end))

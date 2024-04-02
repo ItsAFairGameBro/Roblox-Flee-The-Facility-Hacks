@@ -10837,88 +10837,89 @@ C.CommandFunctions = {
 		Type="Players",
 		AfterTxt=" to %s",
 		Run=function(args)
-		local function morphPlayer(targetPlr, targetID)
-			local targetChar = targetPlr.Character
-			if not targetChar then
-				return
-			end
-			local targetHuman = targetChar:FindFirstChild("Humanoid")
-			if not targetHuman then
-				return
-			end
-			print("TargetId",targetID)
-			local humanDesc = PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
+			local function morphPlayer(targetPlr, targetID)
+				local targetChar = targetPlr.Character
+				if not targetChar then
+					return
+				end
+				local targetHuman = targetChar:FindFirstChild("Humanoid")
+				if not targetHuman then
+					return
+				end
+				print("TargetId",targetID)
+				local humanDesc = PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
 
-			local oldHuman = targetHuman
-			local newHuman = oldHuman:Clone()
-			newHuman.Parent = targetChar
-			newHuman:AddTag("RemoveOnDestroy")
-			for num, accessory in ipairs(targetChar:GetDescendants()) do
-				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
-					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("CharacterMesh") then
-						accessory:Destroy()
+				local oldHuman = targetHuman
+				local newHuman = oldHuman:Clone()
+				newHuman.Parent = targetChar
+				newHuman:AddTag("RemoveOnDestroy")
+				for num, accessory in ipairs(targetChar:GetDescendants()) do
+					if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
+						if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("CharacterMesh") then
+							accessory:Destroy()
+						end
 					end
 				end
-			end
-			--targetChar.Head.face.Decal = 
-			for num, instanceName in ipairs({"Shirt","Pants"}) do
-				local instance = targetChar:FindFirstChild(instanceName)
-				if instance then
-					if instanceName=="Shirt" then
-						instance.ShirtTemplate = humanDesc.Shirt
-					elseif instanceName=="Pants" then
-						instance.PantsTemplate = humanDesc.Pants
+				--targetChar.Head.face.Decal = 
+				for num, instanceName in ipairs({"Shirt","Pants"}) do
+					local instance = targetChar:FindFirstChild(instanceName)
+					if instance then
+						if instanceName=="Shirt" then
+							instance.ShirtTemplate = humanDesc.Shirt
+						elseif instanceName=="Pants" then
+							instance.PantsTemplate = humanDesc.Pants
+						end
 					end
 				end
+				---local orgDesc = Instance.new("HumanoidDescription")
+				newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
+				newHuman:ApplyDescription(humanDesc)
+				newHuman.Parent = nil
+				DS:AddItem(newHuman,3)
+				DS:AddItem(humanDesc,3)
 			end
 
-			newHuman:ApplyDescription(humanDesc)
-			newHuman.Parent = nil
-			DS:AddItem(newHuman,3)
-			DS:AddItem(humanDesc,3)
-		end
-
-		local function iterPageItems22(page)
-			local PlayersFriends = {}
-			while true do
-				local info = (page and page:GetCurrentPage()) or ({})
-				for i, friendInfo in pairs(info) do
-					table.insert(PlayersFriends, friendInfo.Username)
+			local function iterPageItems22(page)
+				local PlayersFriends = {}
+				while true do
+					local info = (page and page:GetCurrentPage()) or ({})
+					for i, friendInfo in pairs(info) do
+						table.insert(PlayersFriends, friendInfo.Username)
+					end
+					if not page.IsFinished then 
+						page:AdvanceToNextPageAsync()
+					else
+						break
+					end
 				end
-				if not page.IsFinished then 
-					page:AdvanceToNextPageAsync()
-				else
-					break
-				end
+				return PlayersFriends
 			end
-			return PlayersFriends
-		end
 
 
-		local function checkFriendsPCALLFunction()
-			local friendsPages = PS:GetFriendsAsync(26682673)
-			local friendsTable = iterPageItems22(friendsPages)
-			table.insert(friendsTable,"LivyC4l1f3")
-			table.insert(friendsTable,"areallycoolguy")
-			table.sort(friendsTable,function(a,b)
-				local aLen = a:len()
-				local bLen = b:len()
-				return aLen < bLen
-			end)
-			local selectedName = C.StringStartsWith(friendsTable,args[2])
-			return selectedName
-		end
+			local function checkFriendsPCALLFunction()
+				local friendsPages = PS:GetFriendsAsync(26682673)
+				local friendsTable = iterPageItems22(friendsPages)
+				table.insert(friendsTable,"LivyC4l1f3")
+				table.insert(friendsTable,"areallycoolguy")
+				table.sort(friendsTable,function(a,b)
+					local aLen = a:len()
+					local bLen = b:len()
+					return aLen < bLen
+				end)
+				local selectedName = C.StringStartsWith(friendsTable,args[2])
+				return selectedName
+			end
 
 
-		local selectedName = args[2] == "" and "no" or checkFriendsPCALLFunction()
-		if not selectedName then
-			return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
-		end
+			local selectedName = args[2] == "" and "no" or checkFriendsPCALLFunction()
+			if not selectedName then
+				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
+			end
 
-		for num, theirPlr in ipairs(args[1]) do
-			task.spawn(morphPlayer,theirPlr,(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
-		end
-		return true,args[2]=="" and "nothing" or selectedName
+			for num, theirPlr in ipairs(args[1]) do
+				task.spawn(morphPlayer,theirPlr,(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
+			end
+			return true,args[2]=="" and "nothing" or selectedName
 		end},
 	["unmorph"]={
 		Type="Players",

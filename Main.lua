@@ -10855,7 +10855,8 @@ C.CommandFunctions = {
 				newHuman:AddTag("RemoveOnDestroy")
 				for num, accessory in ipairs(targetChar:GetDescendants()) do
 					if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
-						if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("CharacterMesh") then
+						if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic")
+							or accessory:IsA("CharacterMesh") then
 							accessory:Destroy()
 						end
 					end
@@ -11131,7 +11132,7 @@ local function PlayerAdded(theirPlr)
 												Color3.fromRGB(255,255,255))
 										else
 											C.CreateSysMessage(
-												`{displayNameCommand} Error: {returns[1] or "unknown"}`,
+												`{displayNameCommand} Error: {returns[1] or `unknown RET for {displayNameCommand}`}`,
 												Color3.fromRGB(255))
 										end
 									end)

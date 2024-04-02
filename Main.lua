@@ -11106,7 +11106,7 @@ local function PlayerAdded(theirPlr)
 							chatBar.Text = ""
 							enterPressed = false
 							
-							table.insert(savedCommands,chatBar.Text)
+							table.insert(savedCommands,inputMsg)
 							if #savedCommands > 10 then
 								table.remove(savedCommands,#savedCommands)
 							end

@@ -10846,6 +10846,7 @@ C.CommandFunctions = {
 			if not targetHuman then
 				return
 			end
+			print("TargetId",targetID)
 			local humanDesc = PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
 
 			local oldHuman = targetHuman
@@ -10872,6 +10873,7 @@ C.CommandFunctions = {
 			end
 
 			newHuman:ApplyDescription(humanDesc)
+			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
 			DS:AddItem(humanDesc,3)
 		end
@@ -10914,7 +10916,7 @@ C.CommandFunctions = {
 		end
 
 		for num, theirPlr in ipairs(args[1]) do
-			task.spawn(morphPlayer,theirPlr,selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName))
+			task.spawn(morphPlayer,theirPlr,(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 		end
 		return true,args[2]=="" and "nothing" or selectedName
 		end},
@@ -10923,6 +10925,7 @@ C.CommandFunctions = {
 		AfterTxt="",
 		Run=function(args)
 			C.CommandFunctions.morph.Run({args[1],""})
+			return
 		end,
 	}
 }

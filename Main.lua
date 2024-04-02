@@ -10901,6 +10901,7 @@ C.CommandFunctions = {
 				local bLen = b:len()
 				return aLen < bLen
 			end)
+			print(friendsTable)
 			local selectedName = C.StringStartsWith(friendsTable,args[2])
 			return selectedName
 		end
@@ -11091,7 +11092,7 @@ local function PlayerAdded(theirPlr)
 									elseif ChosenPlr == "others" then
 										args[1] = PS:GetPlayers()
 										table.remove(args[1],table.find(args[1],plr))
-									elseif ChosenPlr == "me" then
+									elseif ChosenPlr == "me" or ChosenPlr == "" then
 										args[1] = {plr}
 									elseif ChosenPlr == "random" then
 										args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}

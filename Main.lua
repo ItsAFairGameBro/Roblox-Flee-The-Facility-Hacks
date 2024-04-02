@@ -11088,8 +11088,10 @@ local function PlayerAdded(theirPlr)
 						index += 1
 					elseif chatBar.Text=="/down" then
 						index -= 1
+					else
+						return
 					end
-					index = math.clamp(1,#savedCommands)
+					index = math.clamp(index,1,#savedCommands)
 
 					chatBar.Text = savedCommands[index]
 					--end

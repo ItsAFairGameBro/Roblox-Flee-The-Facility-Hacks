@@ -10872,8 +10872,8 @@ C.CommandFunctions = {
 			end
 
 			newHuman:ApplyDescription(humanDesc)
-			newHuman:Destroy()
-			humanDesc:Destroy()
+			DS:AddItem(newHuman,3)
+			DS:AddItem(humanDesc,3)
 		end
 
 		local function iterPageItems22(page)
@@ -10916,13 +10916,13 @@ C.CommandFunctions = {
 		for num, theirPlr in ipairs(args[1]) do
 			task.spawn(morphPlayer,theirPlr,selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName))
 		end
-		return true,selectedName
+		return true,args[2]=="" and "nothing" or selectedName
 		end},
 	["unmorph"]={
 		Type="Players",
 		AfterTxt="",
 		Run=function(args)
-			C.CommandFunctions.morph.Run(args[1],"")
+			C.CommandFunctions.morph.Run({args[1],""})
 		end,
 	}
 }

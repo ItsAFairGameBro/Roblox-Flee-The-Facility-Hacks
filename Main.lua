@@ -10850,7 +10850,7 @@ C.CommandFunctions = {
 				local humanDesc = PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
 
 				local oldHuman = targetHuman
-				local newHuman = oldHuman:Clone()
+				local newHuman = Instance.new("Humanoid")--oldHuman:Clone()
 				newHuman.Parent = targetChar
 				newHuman:AddTag("RemoveOnDestroy")
 				for num, accessory in ipairs(targetChar:GetDescendants()) do
@@ -10926,7 +10926,7 @@ C.CommandFunctions = {
 		AfterTxt="",
 		Run=function(args)
 			C.CommandFunctions.morph.Run({args[1],""})
-			return
+			return true
 		end,
 	}
 }

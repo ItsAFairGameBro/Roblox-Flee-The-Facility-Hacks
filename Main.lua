@@ -11075,9 +11075,10 @@ local function PlayerAdded(theirPlr)
 					chatBar.Text = savedCommands[index]
 					print("Set To",savedCommands[index])
 				end))--]]
-				local lastText 
+				local lastText
+				local lastUpd = -5
 				table.insert(C.functs,chatBar:GetPropertyChangedSignal("Text"):Connect(function()
-					if not chatBar or not chatBar:IsFocused() then
+					if not chatBar or not chatBar:IsFocused() or os.clock() - lastUpd < .5 then
 						return
 					end
 					--local WhatsNew = chatBar.Text:sub(lastText:len())
@@ -11092,6 +11093,7 @@ local function PlayerAdded(theirPlr)
 					else
 						return
 					end
+					lastUpd = os.clock()
 					index = math.clamp(index,0,#savedCommands)
 
 					local setTo = index==0 and "" or savedCommands[index]

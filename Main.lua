@@ -3855,7 +3855,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
-				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 6, 0)
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 2, 0)
 				newTag.Adornee=door:WaitForChild("WalkThru")
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay2")
@@ -8281,6 +8281,7 @@ C.AvailableHacks ={
 			["Shortcut"]="Blatant_RemoteHackPCs",
 			["Default"]=true,
 			["Funct"]=nil,
+			["Functs"] = {},
 			["Changed"]=nil,
 			["ActivateFunction"]=function(newValue)
 				local actionEvent = myTSM:WaitForChild("ActionEvent")
@@ -8327,7 +8328,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Runner[4].Changed=nil
 				end
 				--setChangedAttribute(currentAnimation,"Value",newValue and currentAnimationUpdate)
-				currentAnimationUpdate()
+				currentAnimationUpdate(actionEvent.Value)
 			end,
 		},
 

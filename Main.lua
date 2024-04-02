@@ -7719,7 +7719,7 @@ C.AvailableHacks ={
 						if VentBlock then
 							VentBlock:Destroy()
 						end
-					elseif instance.Name == "VentBlock" then
+					elseif instance.Name == "VentBlock" or instance.Name == "VentBlocks" then
 						instance:Destroy()
 					end
 					if num%100==0 then
@@ -10852,13 +10852,14 @@ C.CommandFunctions = {
 			local newHuman = oldHuman:Clone()
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
-			for num, accessory in ipairs(targetChar:GetChildren()) do
+			for num, accessory in ipairs(targetChar:GetDescendants()) do
 				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
 					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("CharacterMesh") then
 						accessory:Destroy()
 					end
 				end
 			end
+			targetChar.Head.face.Decal = 
 			for num, instanceName in ipairs({"Shirt","Pants"}) do
 				local instance = targetChar:FindFirstChild(instanceName)
 				if instance then

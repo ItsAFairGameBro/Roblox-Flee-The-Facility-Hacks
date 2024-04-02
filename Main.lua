@@ -11075,20 +11075,25 @@ local function PlayerAdded(theirPlr)
 					chatBar.Text = savedCommands[index]
 					print("Set To",savedCommands[index])
 				end))--]]
-				local lastText = chatBar.Text
 				table.insert(C.functs,chatBar:GetPropertyChangedSignal("Text"):Connect(function()
 					if not chatBar or not chatBar:IsFocused() then
-						lastText = chatBar.Text
 						return
 					end
-					local WhatsNew = chatBar.Text:sub(lastText:len())
-					print("This is what's new!",WhatsNew)
-					if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
-						if WhatsNew=="w" or WhatsNew=="s" then
-							print("EEE")
-						end
+					--local WhatsNew = chatBar.Text:sub(lastText:len())
+					--if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
+					if #savedCommands==0 then
+						return
 					end
-					lastText = chatBar.Text
+					if chatBar.Text=="/up" then
+						index += 1
+					elseif chatBar.Text=="/down" then
+						index -= 1
+					end
+					index = math.clamp(1,#savedCommands)
+
+					chatBar.Text = savedCommands[index]
+					--end
+					--lastText = chatBar.Text
 				end))
 				table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
 					index = 0

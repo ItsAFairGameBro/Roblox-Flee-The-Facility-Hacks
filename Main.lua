@@ -11091,10 +11091,11 @@ local function PlayerAdded(theirPlr)
 					else
 						return
 					end
-					index = math.clamp(index,1,#savedCommands)
+					index = math.clamp(index,0,#savedCommands)
 
-					chatBar.Text = savedCommands[index]
-					print("Set To",savedCommands[index])
+					local setTo = index==0 and "" or savedCommands[index]
+					chatBar.Text = setTo
+					print("Set To",setTo)
 					--end
 					--lastText = chatBar.Text
 				end))

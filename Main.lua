@@ -11035,11 +11035,12 @@ local function PlayerAdded(theirPlr)
 					connection:Disable()
 					table.insert(connectionsFuncts,connection)
 				end
-				table.insert(C.functs,chatBar.InputBegan:Connect(function(Key,GameProcessed)
+				table.insert(C.functs,chatBar.InputChanged:Connect(function(Key,GameProcessed)
 					print(Key.KeyCode.Name)
-					if not chatBar or not chatBar:IsFocused() then
-						return
-					end
+					--if not chatBar or not chatBar:IsFocused() then
+					--	return
+					--end
+					if true then return end
 					print("KeyCode",Key.KeyCode.Name)
 					if Key.KeyCode == Enum.KeyCode.Up then
 						index+=1

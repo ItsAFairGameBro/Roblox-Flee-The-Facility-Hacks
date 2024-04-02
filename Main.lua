@@ -11081,9 +11081,9 @@ local function PlayerAdded(theirPlr)
 						lastText = chatBar.Text
 						return
 					end
+					local WhatsNew = chatBar.Text:sub(#lastText+1)
+					print("This is what's new!",WhatsNew)
 					if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
-						local WhatsNew = chatBar.Text:sub(#lastText+1)
-						print("This is what's new!",WhatsNew)
 						if WhatsNew=="w" or WhatsNew=="s" then
 							print("EEE")
 						end

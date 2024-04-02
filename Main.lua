@@ -11088,9 +11088,9 @@ local function PlayerAdded(theirPlr)
 					if #savedCommands==0 or lastText == newInput then
 						return
 					end
-					if newInput:sub(newLength-2) =="/up" then
+					if newInput:sub(newLength-2,newLength) =="/up" then
 						index += 1
-					elseif newInput:sub(newLength-4) == "/down" then
+					elseif newInput:sub(newLength-4,newLength) == "/down" then
 						index -= 1
 					else
 						return

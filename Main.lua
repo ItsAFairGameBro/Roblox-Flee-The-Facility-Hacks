@@ -11048,7 +11048,7 @@ local function PlayerAdded(theirPlr)
 				getrenv().lastCommands = savedCommands
 			end
 			local chatBar
-			local index = 1
+			local index = 0
 			local function registerNewChatBar(_,firstRun)
 				chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 				local connectionsFuncts = {}
@@ -11083,12 +11083,14 @@ local function PlayerAdded(theirPlr)
 					end
 					--local WhatsNew = chatBar.Text:sub(lastText:len())
 					--if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
-					if #savedCommands==0 or lastText == chatBar.Text then
+					local newInput = chatBar.Text
+					local newLength = newInput:len()
+					if #savedCommands==0 or lastText == newInput then
 						return
 					end
-					if chatBar.Text=="/up" then
+					if newInput:sub(newLength-3) =="/up" then
 						index += 1
-					elseif chatBar.Text=="/down" then
+					elseif newInput:sub(newLength-5) == "/down" then
 						index -= 1
 					else
 						return

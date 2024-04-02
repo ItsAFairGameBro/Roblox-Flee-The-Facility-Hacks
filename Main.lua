@@ -10906,16 +10906,23 @@ C.CommandFunctions = {
 		end
 
 
-		local selectedName = checkFriendsPCALLFunction()
+		local selectedName = args[2] == "" and "no" or checkFriendsPCALLFunction()
 		if not selectedName then
 			return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
 		end
 
 		for num, theirPlr in ipairs(args[1]) do
-			morphPlayer(theirPlr,PS:GetUserIdFromNameAsync(selectedName))
+			task.spawn(morphPlayer,theirPlr,selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName))
 		end
 		return true,selectedName
-	end},
+		end},
+	["unmorph"]={
+		Type="Players",
+		AfterTxt="",
+		Run=function(args)
+			C.CommandFunctions.morph.Run(args[1],"")
+		end,
+	}
 }
 
 --HACK CONTROL

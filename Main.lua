@@ -11200,8 +11200,8 @@ local function PlayerAdded(theirPlr)
 				C.AvailableHacks.Basic[99].ActivateFunction()
 			elseif message:lower() == "/reset" then
 				C.AvailableHacks.Basic[99].ActivateFunction(true,true)
-			elseif message:sub(1,1) == ";" then
-				C.RunCommand(message,false)
+			elseif message:sub(1,1) == "/" then
+				C.RunCommand(";"..message:sub(2),false)
 			end
 		end))
 	end

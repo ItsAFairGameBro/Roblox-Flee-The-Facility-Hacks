@@ -9674,7 +9674,8 @@ C.AvailableHacks ={
 					return a.Name:lower()>b.Name:lower()
 				end
 				--table.sort(mapsToVoteFor,sortByNameFunction)
-				local selectedVote = mapsToVoteFor[Random.new(math.floor(os.time())):NextInteger(1,#mapsToVoteFor)]
+				local seed = tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
+				local selectedVote = mapsToVoteFor[Random.new(math.floor(seed)):NextInteger(1,#mapsToVoteFor)]
 
 				local Torso = C.char and C.char:FindFirstChild("Torso")
 				if selectedVote and selectedVote.Pad and Torso then

@@ -10452,7 +10452,7 @@ C.clear = function(isManualClear)
 			CS:RemoveTag(tagPart,tagName)
 		end--]]
 	end
-	for category, categoryList in pairs(C.AvailableHacks) do
+	for category, categoryList in pairs(C.AvailableHacks or {}) do
 		for index,tbl in pairs(categoryList) do
 			local funcList = tbl.Functs or {}
 			table.insert(funcList,tbl.Funct)
@@ -10468,7 +10468,7 @@ C.clear = function(isManualClear)
 		funct:Disconnect()
 		funct=nil
 	end
-	for name,data in pairs(C.CommandFunctions) do
+	for name,data in pairs(C.CommandFunctions or {}) do
 		for num, funct in ipairs(data.Functs or {}) do
 			funct:Disconnect()
 		end
@@ -10921,7 +10921,7 @@ C.CommandFunctions = {
 			if currentDesc and humanDesc~=currentDesc then
 				currentDesc:Destroy()
 			end
-
+			getgenv().currentDesc[targetChar.Name] = humanDesc
 			local oldHuman = targetHuman
 			local newHuman = Instance.new("Humanoid")--oldHuman:Clone()
 			newHuman.Parent = targetChar

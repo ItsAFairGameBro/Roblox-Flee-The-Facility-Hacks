@@ -193,7 +193,7 @@ function C.StringStartsWith(tbl,name)
 	for index, theirValue in pairs(tbl) do
 		local itsIndex = (typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index
 		if tostring(itsIndex):lower():sub(1,name:len()) == name then
-			return theirValue
+			return index,theirValue
 		end
 	end
 end
@@ -10577,7 +10577,7 @@ local function checkFriendsPCALLFunction(inputName)
 			local bLen = b.SortName:len()
 			return aLen < bLen
 		end)
-		local selectedName = C.StringStartsWith(friendsTable,inputName)
+		local index,selectedName = C.StringStartsWith(friendsTable,inputName)
 		return selectedName
 	else
 		return friendsTable
@@ -10959,11 +10959,11 @@ C.CommandFunctions = {
 				if tonumber(args[3]) then
 					args[3] = tonumber(args[3])
 				else
-					local didFind = C.StringStartsWith(getrenv().Outfits[selectedName.UserId], args[3])
+					local index,didFind = C.StringStartsWith(getrenv().Outfits[selectedName.UserId], args[3])
 					if not didFind then
 						return false, "Outfit Name Not Found ("..tostring(args[3])..")"
 					end
-					args[3] = didFind;
+					args[3] = index;
 				end
 				outfitData = getrenv().Outfits[selectedName.UserId][args[3]]
 			end
@@ -11221,7 +11221,7 @@ local function PlayerAdded(theirPlr)
 									elseif ChosenPlr == "random" then
 										args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
 									else
-										ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
+										_, ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
 										if ChosenPlr then
 											args[1] = {ChosenPlr}
 										else

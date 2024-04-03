@@ -951,7 +951,7 @@ function C.GetHardValue(instance,signal,Settings)
 		end
 	end
 end
-getrenv().GetHardValue = C.GetHardValue
+getgenv().GetHardValue = C.GetHardValue
 function C.FireSignal(instance,signal,Settings,...)
 	local elements = table.pack(...)
 	local fired = 0
@@ -1537,14 +1537,14 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	end
 	return str
 end
-local oldWarn = getrenv().oldWarn
+local oldWarn = getgenv().oldWarn
 if not oldWarn then
 	getgenv().oldWarn = warn
 	oldWarn = warn
 end
-local oldPrint = getrenv().oldPrint
+local oldPrint = getgenv().oldPrint
 if not oldPrint then
-	getrenv().oldPrint = print
+	getgenv().oldPrint = print
 	oldPrint = print
 end
 local function warn(...)
@@ -1750,7 +1750,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 			task.spawn(stopCurrentAction)
 		end
 	end
-	--[[local Torso = C.char and C.char:FindFirstChild("Torso")
+	local Torso = C.char and C.char:FindFirstChild("Torso")
 	if Torso then
 		local OLParams = OverlapParams.new()
 		OLParams.FilterType = Enum.RaycastFilterType.Include
@@ -1774,7 +1774,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end--]]
 end
 
-getrenv().setTriggers=trigger_setTriggers
+getgenv().setTriggers=trigger_setTriggers
 function stopCurrentAction(override)
 	if not override and myTSM.ActionEvent.Value and myTSM.ActionEvent.Value.Parent and 
 		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)] or -1) > 0 then
@@ -11072,10 +11072,10 @@ local function PlayerAdded(theirPlr)
 	if gameUniverse=="Flee" then
 		if isMe then
 			--MY PLAYER CHAT
-			local savedCommands = getrenv().lastCommands
+			local savedCommands = getgenv().lastCommands
 			if not savedCommands then
 				savedCommands = {}
-				getrenv().lastCommands = savedCommands
+				getgenv().lastCommands = savedCommands
 			end
 			local chatBar
 			local index = 0

@@ -10908,6 +10908,7 @@ end
 
 C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 
+getrenv().Outfits = getrenv().Outfits or {}
 getgenv().currentDesc = getgenv().currentDesc or {}
 --COMMANDS CONTROL
 C.CommandFunctions = {

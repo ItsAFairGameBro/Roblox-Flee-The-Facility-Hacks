@@ -190,7 +190,7 @@ function C.StringStartsWith(tbl,name)
 		return
 	end
 	name = name:lower()
-	local closestMatch, results = name:len()+1, {}
+	local closestMatch, results = math.huge, {}
 	for index, theirValue in pairs(tbl) do
 		local itsIndex = (typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index
 		if tostring(itsIndex):lower():sub(1,name:len()) == name then
@@ -11165,7 +11165,7 @@ local function PlayerAdded(theirPlr)
 				end))--]]
 				local lastText
 				local lastUpd = -5
-				table.insert(C.functs,chatBar:GetPropertyChangedSignal("Text"):Connect(function()
+				local function textUpd()
 					if not chatBar or not chatBar:IsFocused() or os.clock() - lastUpd < .5 then
 						return
 					end
@@ -11191,7 +11191,9 @@ local function PlayerAdded(theirPlr)
 					chatBar.Text = setTo
 					--end
 					--lastText = chatBar.Text
-				end))
+				end
+				table.insert(C.functs,chatBar:GetPropertyChangedSignal("Text"):Connect(textUpd))
+				textUpd()
 				table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
 					index = 0
 					local inputMsg = chatBar.Text

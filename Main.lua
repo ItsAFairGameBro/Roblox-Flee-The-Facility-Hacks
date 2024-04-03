@@ -10899,7 +10899,7 @@ C.CommandFunctions = {
 			end
 			task.wait(2)
 			print("Character Ref",theirPlr)
-			local currentChar = theirPlr.Backpack:FindFirstChild("CurrentChar")
+			local currentChar = theirPlr.Backpack:FindFirstChild("CharacterDesc")
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)
 			end
@@ -11123,7 +11123,6 @@ local function PlayerAdded(theirPlr)
 					local setTo = index==0 and "" or savedCommands[index]
 					lastText = setTo
 					chatBar.Text = setTo
-					print("Applied To",setTo)
 					--end
 					--lastText = chatBar.Text
 				end))
@@ -11165,7 +11164,7 @@ local function PlayerAdded(theirPlr)
 										if ChosenPlr then
 											args[1] = {ChosenPlr}
 										else
-											canRunFunction = C.CreateSysMessage(`Players Not Found: {command}; allowed: all, others, me, <plrName>`)
+											canRunFunction = C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
 										end
 									end
 								else

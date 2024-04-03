@@ -11282,11 +11282,11 @@ local function PlayerAdded(theirPlr)
 	end
 
 	--if gameUniverse=="Flee" then
-		if isMe then
-			--MY PLAYER CHAT
-			local chatBar
-			local index = 0
-			local function registerNewChatBar(_,firstRun)
+	if isMe then
+		--MY PLAYER CHAT
+		local chatBar
+		local index = 0
+		local function registerNewChatBar(_,firstRun)
 			chatBar = StringWaitForChild(gameUniverse=="Flee" and PlayerGui or game.CoreGui,gameUniverse=="Flee" and 
 				"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar" or "ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox")
 			local connectionsFuncts = {}
@@ -11364,8 +11364,8 @@ local function PlayerAdded(theirPlr)
 			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame").ChildAdded:Connect(function(child)
 				registerNewChatBar()
 			end))
-			registerNewChatBar(nil,true)
 		end
+		registerNewChatBar(nil,true)
 	end
 	if gameName == "FleeMain" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");

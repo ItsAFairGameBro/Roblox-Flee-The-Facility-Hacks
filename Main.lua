@@ -1756,18 +1756,18 @@ local function trigger_setTriggers(name,setTriggerParams)
 		OLParams.FilterType = Enum.RaycastFilterType.Include
 		OLParams.FilterDescendantsInstances = newTouch
 		local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
-		print(charEnv)
-		task.wait(2)
+		--print(charEnv)
+		--task.wait(2)
 		for _, obj in ipairs(workspace:GetPartsInPart(Torso,OLParams)) do
-			task.wait()
-			print("Trigger",obj,"True")
+			--task.wait()
+			--print("Trigger",obj,"True")
 			task.spawn(pcall,charEnv.TriggerTouch,obj,true,false)
 			--C.FireSignal(C.char.Torso,C.char.Torso.Touched,nil,obj)
 		end
 		OLParams.FilterDescendantsInstances = loseTouch
 		for _, obj in ipairs(workspace:GetPartBoundsInRadius(Torso.Position,10,OLParams)) do
-			task.wait()
-			print("Trigger",obj,"False")
+			--task.wait()
+			--print("Trigger",obj,"False")
 			task.spawn(pcall,charEnv.TriggerTouch,obj,false,false)
 			--C.FireSignal(C.char.Torso,C.char.Torso.TouchEnded,nil,obj)
 		end

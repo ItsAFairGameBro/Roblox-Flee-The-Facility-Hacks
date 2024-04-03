@@ -10463,6 +10463,11 @@ C.clear = function(isManualClear)
 		funct:Disconnect()
 		funct=nil
 	end
+	for name,data in pairs(C.CommandFunctions) do
+		for num, funct in ipairs(data.Functs or {}) do
+			funct:Disconnect()
+		end
+	end
 	hackChanged:Fire()
 	hackChanged:Destroy()
 	CAS:UnbindAction("hack_jump"..C.saveIndex)

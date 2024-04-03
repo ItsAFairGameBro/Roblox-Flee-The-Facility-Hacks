@@ -195,7 +195,7 @@ function C.StringStartsWith(tbl,name)
 		local itsIndex = (typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index
 		if tostring(itsIndex):lower():sub(1,name:len()) == name then
 			if itsIndex:len() < closestMatch then
-				closestMatch = theirValue
+				closestMatch = itsIndex:len()
 				results = {index,theirValue}
 			end
 		end

@@ -5628,10 +5628,10 @@ C.AvailableHacks ={
 							local inputPosition;
 							local TPFunction = C.AvailableHacks.Basic[12].TeleportFunction;
 							if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
-								local closestPC, closestDist = nil, 1000
+								local closestPC, closestDist = nil, 0
 								for num,pc in ipairs(CS:GetTagged("Computer")) do
 									local newDist = (pc:GetPivot().Position - C.char:GetPivot().Position).Magnitude;
-									if newDist < closestDist then
+									if newDist > closestDist then
 										closestPC,closestDist = pc, newDist;
 									end;
 								end;

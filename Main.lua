@@ -11180,9 +11180,9 @@ local function PlayerAdded(theirPlr)
 										if wasSuccess then
 											local length = #args[1]
 											local playersAffected = 
-												(typeof(ChosenPlr)=="Instance" and (ChosenPlr==plr and  ChosenPlr.Name) 
+												(typeof(ChosenPlr)=="Instance" and (ChosenPlr==plr and ChosenPlr.Name) or ChosenPlr.Name) 
 													or (ChosenPlr:sub(1,1):upper() .. 
-														ChosenPlr:sub(2,ChosenPlr:sub(ChosenPlr:len())=="s" and ChosenPlr:len()-1 or ChosenPlr:len())))
+														ChosenPlr:sub(2,ChosenPlr:sub(ChosenPlr:len())=="s" and ChosenPlr:len()-1 or ChosenPlr:len()))
 											if playersAffected == plr.Name then
 												playersAffected = "you"
 											end

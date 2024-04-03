@@ -11013,12 +11013,19 @@ C.CommandFunctions = {
 					return false, "Http Error "..result.StatusMessage
 				else
 					bodyResult = HS:JSONDecode(result.Body).data;
+					for num = #bodyResult,1,-1 do--for num, val in ipairs(bodyResult) do
+						local val = bodyResult[num];
+						if val.isEditable then
+							val.SortName = val.name 
+						else
+							table.remove(num)
+						end
+					end
 					getrenv().Outfits[selectedName.UserId] = bodyResult;
 				end
 			end
 			for num, val in ipairs(bodyResult) do
 				results..="\n"..num.."/"..val.name
-				bodyResult[num].SortName = bodyResult[num].name 
 			end
 			return true, results
 		end,

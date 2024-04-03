@@ -3636,7 +3636,7 @@ C.AvailableHacks ={
 				end
 				local ToggleButton = newTag.Toggle
 				ToggleButton.Text = "Teleport"
-				local function setToggleFunction()
+				function setToggleFunction()
 					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
 					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
 					if ActionEventVal and TriggerType=="Computer" then

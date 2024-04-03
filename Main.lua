@@ -10951,7 +10951,7 @@ C.CommandFunctions = {
 				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
 			end
 			local outfitData
-			if args[3] then
+			if args[3] and args[3] ~= "" then
 				if not getrenv().Outfits[selectedName.UserId] then
 					local wasSuccess,err = C.CommandFunctions.outfits.Run({selectedName.SortName})
 					if not wasSuccess then

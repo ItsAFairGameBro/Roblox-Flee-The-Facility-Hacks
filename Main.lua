@@ -10573,18 +10573,18 @@ local numOfFriends = (0)
 local savedFriendsCashe = {}
 
 function C.GetFriendsFunct(userID)
-	if savedFriendsCashe[userID] then
-		return savedFriendsCashe[userID]
-	else
-		local friendsPages = PS:GetFriendsAsync(userID)
-		savedFriendsCashe[userID] = friendsPages
-		return friendsPages
+	local friendsPages = savedFriendsCashe[userID]
+	if not friendsPages then
+		friendsPages = PS:GetFriendsAsync(userID)
 	end
+	local friendsTable = iterPageItems(friendsPages)
+	savedFriendsCashe[userID] = table.clone(friendsTable)
+	return friendsTable
 end
 
 local function checkFriendsPCALLFunction(inputName)
-	local friendsPages = C.GetFriendsFunct(inputName and 26682673 or plr.UserId)
-	local friendsTable = iterPageItems(friendsPages)
+	local friendsTable = C.GetFriendsFunct(inputName and 26682673 or plr.UserId)
+	
 	if inputName then
 		table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})
 		table.insert(friendsTable,{SortName = "areallycoolguy",UserId = 26682673})

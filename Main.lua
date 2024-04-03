@@ -10971,6 +10971,8 @@ C.CommandFunctions = {
 					args[3] = index;
 				end
 				outfitData = getrenv().Outfits[selectedName.UserId][args[3]]
+			else
+				args[3] = nil
 			end
 
 			for num, theirPlr in ipairs(args[1]) do

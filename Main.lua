@@ -11018,7 +11018,7 @@ C.CommandFunctions = {
 						if val.isEditable then
 							val.SortName = val.name 
 						else
-							table.remove(num)
+							table.remove(bodyResult,num)
 						end
 					end
 					getrenv().Outfits[selectedName.UserId] = bodyResult;

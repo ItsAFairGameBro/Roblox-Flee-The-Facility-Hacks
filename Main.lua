@@ -10573,12 +10573,12 @@ local numOfFriends = (0)
 local savedFriendsCashe = {}
 
 function C.GetFriendsFunct(userID)
-	local friendsPages = savedFriendsCashe[userID]
-	if not friendsPages then
-		friendsPages = PS:GetFriendsAsync(userID)
+	local friendsTable = savedFriendsCashe[userID]
+	if not friendsTable then
+		local friendsPages = PS:GetFriendsAsync(userID)
+		friendsTable = iterPageItems(friendsPages)
+		savedFriendsCashe[userID] = table.clone(friendsTable)
 	end
-	local friendsTable = iterPageItems(friendsPages)
-	savedFriendsCashe[userID] = table.clone(friendsTable)
 	return friendsTable
 end
 

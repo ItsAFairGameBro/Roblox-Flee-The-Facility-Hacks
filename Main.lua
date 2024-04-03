@@ -10567,7 +10567,7 @@ getgenv()["ActiveScript"..getID][C.saveIndex] = true
 local numOfFriends = (0) 
 
 local function checkFriendsPCALLFunction(inputName)
-	local friendsPages = PS:GetFriendsAsync(26682673)
+	local friendsPages = PS:GetFriendsAsync(inputName and 26682673 or C.plr.UserId)
 	local friendsTable = iterPageItems(friendsPages)
 	if inputName then
 		table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})

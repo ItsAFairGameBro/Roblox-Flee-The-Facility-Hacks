@@ -10962,7 +10962,7 @@ C.CommandFunctions = {
 		Functs={},
 		CapsuleAdded=function(capsule,noAddFunct)
 			local function childAdded(child)
-				if child:WaitForChild("Humanoid",5) then
+				if child:IsA("Model") and child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
 						task.wait(.4)
@@ -10983,7 +10983,7 @@ C.CommandFunctions = {
 			end
 			if not capsule:FindFirstChild("PodTrigger") then
 				for num, child in ipairs(capsule:GetChildren()) do
-					childAdded(child)
+					task.spawn(childAdded,child)
 				end
 			end
 		end,

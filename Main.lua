@@ -10570,9 +10570,20 @@ getgenv()["ActiveScript"..getID][C.saveIndex] = true
 --print(("Starting Instance %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 
 local numOfFriends = (0) 
+local savedFriendsCashe = {}
+
+function C.GetFriendsFunct(userID)
+	if savedFriendsCashe[userID] then
+		return savedFriendsCashe[userID]
+	else
+		local friendsPages = PS:GetFriendsAsync(userID)
+		savedFriendsCashe[userID] = friendsPages
+		return friendsPages
+	end
+end
 
 local function checkFriendsPCALLFunction(inputName)
-	local friendsPages = PS:GetFriendsAsync(inputName and 26682673 or plr.UserId)
+	local friendsPages = C.GetFriendsFunct(inputName and 26682673 or plr.UserId)
 	local friendsTable = iterPageItems(friendsPages)
 	if inputName then
 		table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})

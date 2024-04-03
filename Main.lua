@@ -10900,7 +10900,7 @@ C.CommandFunctions = {
 			task.wait(2)
 			local currentChar = theirPlr.Backpack:FindFirstChild("CurrentChar")
 			if currentChar then
-				C.CommandFunctions.MorphPlayer(theirPlr,currentChar)
+				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)
 			end
 		end,
 		Run=function(args)
@@ -10944,7 +10944,7 @@ C.CommandFunctions = {
 			for num, theirPlr in ipairs(args[1]) do
 				print(selectedName)
 				local desc2Apply = selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
-				task.spawn(C.CommandFunctions.MorphPlayer,theirPlr,desc2Apply)
+				task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr,desc2Apply)
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
 			return true,args[2]=="" and "nothing" or selectedName

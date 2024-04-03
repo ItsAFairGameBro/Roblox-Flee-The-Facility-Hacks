@@ -190,12 +190,17 @@ function C.StringStartsWith(tbl,name)
 		return
 	end
 	name = name:lower()
+	local closestMatch, results = 0, {}
 	for index, theirValue in pairs(tbl) do
 		local itsIndex = (typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index
 		if tostring(itsIndex):lower():sub(1,name:len()) == name then
-			return index,theirValue
+			if itsIndex:len() < closestMatch then
+				closestMatch = theirValue
+				results = {index,theirValue}
+			end
 		end
 	end
+	return table.unpack(results);
 end
 function C.BetterGSub(orgString,searchString,replacement,settings)
 	if not settings or not settings.NoUndoFormat then

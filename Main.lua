@@ -5630,7 +5630,7 @@ C.AvailableHacks ={
 							if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
 								local closestPC, closestDist = nil, 1000
 								for num,pc in ipairs(CS:GetTagged("Computer")) do
-									local newDist = (pc:GetPivot() - C.char:GetPivot());
+									local newDist = (pc:GetPivot().Position - C.char:GetPivot().Position).Magnitude;
 									if newDist < closestDist then
 										closestPC,closestDist = pc, newDist;
 									end;

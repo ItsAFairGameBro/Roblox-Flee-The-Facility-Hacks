@@ -11101,6 +11101,76 @@ local function CharacterRemoving(theirPlr,theirChar)
 	local inputFunctions = ({theirPlr,theirChar})
 	defaultFunction((isMyChar and "MyShutDown" or "OthersShutDown"),inputFunctions)
 end
+C.savedCommands = getgenv().lastCommands
+if not C.savedCommands then
+	C.savedCommands = {}
+	getgenv().lastCommands = C.savedCommands
+end
+function C.RunCommand(inputMsg,shouldSave)
+	table.insert(C.savedCommands,1,inputMsg)
+	if #C.savedCommands > 10 then
+		table.remove(C.savedCommands,#C.savedCommands)
+	end
+
+	local args = inputMsg:sub(2):split(" ")
+	local command = args[1]
+	table.remove(args,1)
+	for index = 1, 3, 1 do
+		args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
+	end
+	local CommandData = C.CommandFunctions[command]
+	if CommandData then
+		local canRunFunction = true
+		local ChosenPlr = args[1]
+		if CommandData.Type=="Players" then
+			if ChosenPlr=="all" then
+				args[1] = PS:GetPlayers()
+			elseif ChosenPlr == "others" then
+				args[1] = PS:GetPlayers()
+				table.remove(args[1],table.find(args[1],plr))
+			elseif ChosenPlr == "me" or ChosenPlr == "" then
+				args[1] = {plr}
+			elseif ChosenPlr == "random" then
+				args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
+			else
+				_, ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
+				if ChosenPlr then
+					args[1] = {ChosenPlr}
+				else
+					canRunFunction = C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
+				end
+			end
+		elseif CommandData.Type~=false then
+			canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}, {tostring(CommandData.Type)}`)
+		end
+		if canRunFunction then
+			task.spawn(function()
+				local returns = table.pack(C.CommandFunctions[command].Run(args))
+				local wasSuccess = returns[1]
+				table.remove(returns,1)
+				local displayNameCommand = command:sub(1,1):upper() .. command:sub(2)
+				if wasSuccess then
+					local length = #args[1]
+					local playersAffected = 
+						(typeof(ChosenPlr)=="Instance" and (ChosenPlr==plr and ChosenPlr.Name) or ChosenPlr.Name) 
+						or (ChosenPlr:sub(1,1):upper() .. 
+							ChosenPlr:sub(2,ChosenPlr:sub(ChosenPlr:len())=="s" and ChosenPlr:len()-1 or ChosenPlr:len()))
+					if playersAffected == plr.Name then
+						playersAffected = "you"
+					end
+					C.CreateSysMessage(`{displayNameCommand}ed {(playersAffected)}{(CommandData.AfterTxt or ""):format(table.unpack(returns)):gsub("  "," ")}`,
+						Color3.fromRGB(255,255,255))
+				else
+					C.CreateSysMessage(
+						`{displayNameCommand} Error: {returns[1] or `unknown RET for {displayNameCommand}`}`,
+						Color3.fromRGB(255))
+				end
+			end)
+		end
+	else
+		C.CreateSysMessage(`Command Not Found: {command}`)
+	end
+end
 local function PlayerAdded(theirPlr)
 	local isMe = (plr==theirPlr)
 	C.playerEvents[theirPlr.UserId] = {}
@@ -11130,6 +11200,8 @@ local function PlayerAdded(theirPlr)
 				C.AvailableHacks.Basic[99].ActivateFunction()
 			elseif message:lower() == "/reset" then
 				C.AvailableHacks.Basic[99].ActivateFunction(true,true)
+			elseif message:sub(1,1) == ";" then
+				C.RunCommand(message,false)
 			end
 		end))
 	end
@@ -11137,11 +11209,6 @@ local function PlayerAdded(theirPlr)
 	if gameUniverse=="Flee" then
 		if isMe then
 			--MY PLAYER CHAT
-			local savedCommands = getgenv().lastCommands
-			if not savedCommands then
-				savedCommands = {}
-				getgenv().lastCommands = savedCommands
-			end
 			local chatBar
 			local index = 0
 			local function registerNewChatBar(_,firstRun)
@@ -11180,7 +11247,7 @@ local function PlayerAdded(theirPlr)
 					--if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
 					local newInput = chatBar.Text
 					local newLength = newInput:len()
-					if #savedCommands==0 or lastText == newInput then
+					if #C.savedCommands==0 or lastText == newInput then
 						return
 					end
 					if newInput:match("/up") then --newInput:sub(chatBar.CursorPosition-2,chatBar.CursorPosition) =="/up" then
@@ -11191,9 +11258,9 @@ local function PlayerAdded(theirPlr)
 						return
 					end
 					lastUpd = os.clock()
-					index = math.clamp(index,0,#savedCommands)
+					index = math.clamp(index,0,#C.savedCommands)
 
-					local setTo = index==0 and "" or savedCommands[index]
+					local setTo = index==0 and "" or C.savedCommands[index]
 					lastText = setTo
 					chatBar.Text = setTo
 					--end
@@ -11208,70 +11275,7 @@ local function PlayerAdded(theirPlr)
 						if inputMsg:sub(1,1)==";" then
 							chatBar.Text = ""
 							enterPressed = false
-
-							table.insert(savedCommands,1,inputMsg)
-							if #savedCommands > 10 then
-								table.remove(savedCommands,#savedCommands)
-							end
-
-							local args = inputMsg:sub(2):split(" ")
-							local command = args[1]
-							table.remove(args,1)
-							for index = 1, 3, 1 do
-								args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
-							end
-							local CommandData = C.CommandFunctions[command]
-							if CommandData then
-								local canRunFunction = true
-								local ChosenPlr = args[1]
-								if CommandData.Type=="Players" then
-									if ChosenPlr=="all" then
-										args[1] = PS:GetPlayers()
-									elseif ChosenPlr == "others" then
-										args[1] = PS:GetPlayers()
-										table.remove(args[1],table.find(args[1],plr))
-									elseif ChosenPlr == "me" or ChosenPlr == "" then
-										args[1] = {plr}
-									elseif ChosenPlr == "random" then
-										args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
-									else
-										_, ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
-										if ChosenPlr then
-											args[1] = {ChosenPlr}
-										else
-											canRunFunction = C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
-										end
-									end
-								elseif CommandData.Type~=false then
-									canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}, {tostring(CommandData.Type)}`)
-								end
-								if canRunFunction then
-									task.spawn(function()
-										local returns = table.pack(C.CommandFunctions[command].Run(args))
-										local wasSuccess = returns[1]
-										table.remove(returns,1)
-										local displayNameCommand = command:sub(1,1):upper() .. command:sub(2)
-										if wasSuccess then
-											local length = #args[1]
-											local playersAffected = 
-												(typeof(ChosenPlr)=="Instance" and (ChosenPlr==plr and ChosenPlr.Name) or ChosenPlr.Name) 
-												or (ChosenPlr:sub(1,1):upper() .. 
-													ChosenPlr:sub(2,ChosenPlr:sub(ChosenPlr:len())=="s" and ChosenPlr:len()-1 or ChosenPlr:len()))
-											if playersAffected == plr.Name then
-												playersAffected = "you"
-											end
-											C.CreateSysMessage(`{displayNameCommand}ed {(playersAffected)}{(CommandData.AfterTxt or ""):format(table.unpack(returns)):gsub("  "," ")}`,
-												Color3.fromRGB(255,255,255))
-										else
-											C.CreateSysMessage(
-												`{displayNameCommand} Error: {returns[1] or `unknown RET for {displayNameCommand}`}`,
-												Color3.fromRGB(255))
-										end
-									end)
-								end
-							else
-								C.CreateSysMessage(`Command Not Found: {command}`)
-							end
+							C.RunCommand(inputMsg,true)
 						end
 					end
 					for num, connectionFunct in ipairs(connectionsFuncts) do

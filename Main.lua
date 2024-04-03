@@ -3435,7 +3435,6 @@ C.AvailableHacks ={
 				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
 				C.AvailableHacks.Render[30].SetEnabled(newTag)
 				local function setToggleFunction()
-					C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)--DISBLAE
 					if isBeast.Value then
 						local theirChar = C.Beast.CarriedTorso.Value.Parent
 						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
@@ -3454,7 +3453,7 @@ C.AvailableHacks ={
 					elseif not isBeast.Value and ActionSign.Value == 31 and CapturedTorso.Value then--31: FREE
 						ToggleButton.Visible = true
 					else
-						ToggleButton.Visible = true-- false // DISABLE
+						ToggleButton.Visible = false
 					end
 				end
 				C.objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
@@ -8440,7 +8439,7 @@ C.AvailableHacks ={
 				if not capsule or not capsule:FindFirstChild("PodTrigger")
 					or not capsule.PodTrigger.CapturedTorso.Value then return end
 				if not C.enHacks.AutoRescue and not override then return end
-				--if C.char:FindFirstChild("Hammer")~=nil and myTSM.Health.Value > 0 then return end
+				if C.char:FindFirstChild("Hammer")~=nil and myTSM.Health.Value > 0 then return end
 				local Trigger=capsule:FindFirstChild("PodTrigger")
 				if not Trigger then return end
 				for s=5,1,-1 do
@@ -10943,7 +10942,6 @@ C.CommandFunctions = {
 			end
 
 			for num, theirPlr in ipairs(args[1]) do
-				print(selectedName)
 				local desc2Apply = selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
 				task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr,desc2Apply)
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
@@ -11175,6 +11173,7 @@ local function PlayerAdded(theirPlr)
 								if canRunFunction then
 									task.spawn(function()
 										local returns = table.pack(C.CommandFunctions[command].Run(args))
+										print(returns)
 										local wasSuccess = returns[1]
 										table.remove(returns,1)
 										local displayNameCommand = command:sub(1,1):upper() .. command:sub(2)

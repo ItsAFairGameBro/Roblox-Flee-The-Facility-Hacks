@@ -17,6 +17,7 @@ local TS=game:GetService("TweenService")
 local LogS=game:GetService("LogService")
 local LS=game:GetService("Lighting")
 local SC=game:GetService("ScriptContext")
+local CP=game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
 
 
@@ -10897,8 +10898,8 @@ C.CommandFunctions = {
 			if firstRun then
 				return
 			end
-			task.wait(2)
-			print("Character Ref",theirPlr)
+			CP:PreloadAsync(theirChar)
+			--print("Character Ref",theirPlr)
 			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)

@@ -10996,6 +10996,9 @@ C.CommandFunctions = {
 		Run=function(args)
 			local selectedName = checkFriendsPCALLFunction(args[1])
 			getrenv().Outfits = getrenv().Outfits or {}
+			if not selectedName then
+				return false, "User Not Found ("..tostring(args[1])..")"
+			end
 			local results,bodyResult = "",getrenv().Outfits[selectedName.UserId]
 			if not getrenv().Outfits[selectedName.UserId] then
 				local success,result = pcall(request,{Url="https://avatar.roblox.com/v1/users/"..selectedName.UserId.."/outfits",Method="GET"})

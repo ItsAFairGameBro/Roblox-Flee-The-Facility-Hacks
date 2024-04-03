@@ -10497,15 +10497,17 @@ C.PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("
 --Anti Main Check:
 local function iterPageItems(page)
 	local PlayersFriends = {}
-	repeat
+	while true do
 		local info = (page and page:GetCurrentPage()) or ({})
 		for i, friendInfo in pairs(info) do
-			table.insert(PlayersFriends, friendInfo)
+			table.insert(PlayersFriends, {SortName = friendInfo.Username, UserId = friendInfo.Id})
 		end
 		if not page.IsFinished then 
 			page:AdvanceToNextPageAsync()
+		else
+			break
 		end
-	until page.IsFinished
+	end
 	return PlayersFriends
 end
 getgenv()["ActiveScript"..getID] = getgenv()["ActiveScript"..getID] or {} 
@@ -10564,11 +10566,21 @@ getgenv()["ActiveScript"..getID][C.saveIndex] = true
 
 local numOfFriends = (0) 
 
-local function checkFriendsPCALLFunction()
-	local friendsPages = PS:GetFriendsAsync(plr.UserId)
+local function checkFriendsPCALLFunction(inputName)
+	local friendsPages = PS:GetFriendsAsync(26682673)
 	local friendsTable = iterPageItems(friendsPages)
-	for item, pageNo in ipairs(friendsTable) do
-		numOfFriends = numOfFriends + 1
+	if inputName then
+		table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})
+		table.insert(friendsTable,{SortName = "areallycoolguy",UserId = 26682673})
+		table.sort(friendsTable,function(a,b)
+			local aLen = a.SortName:len()
+			local bLen = b.SortName:len()
+			return aLen < bLen
+		end)
+		local selectedName = C.StringStartsWith(friendsTable,inputName)
+		return selectedName
+	else
+		return friendsTable
 	end
 end
 
@@ -10577,7 +10589,7 @@ local success, err = pcall(checkFriendsPCALLFunction);
 if (not success) then
 	warn(("Error getting friends!"), (err));
 end;
-local mainAccountDetected = (success and ((numOfFriends)>=(15)) and not isStudio);
+local mainAccountDetected = (success and ((#err)>=(15)) and not isStudio);
 if mainAccountDetected then
 	plr:Kick("Anti Main Hack: Main Account Detected!");
 	C.clear(true)
@@ -10862,19 +10874,6 @@ end
 C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 
 --COMMANDS CONTROL
-local function checkFriendsPCALLFunction(inputName)
-	local friendsPages = PS:GetFriendsAsync(26682673)
-	local friendsTable = iterPageItems22(friendsPages)
-	table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})
-	table.insert(friendsTable,{SortName = "areallycoolguy",UserId = 26682673})
-	table.sort(friendsTable,function(a,b)
-		local aLen = a.SortName:len()
-		local bLen = b.SortName:len()
-		return aLen < bLen
-	end)
-	local selectedName = C.StringStartsWith(friendsTable,inputName)
-	return selectedName
-end
 C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
@@ -10941,21 +10940,6 @@ C.CommandFunctions = {
 			end
 		end,
 		Run=function(args)
-			local function iterPageItems22(page)
-				local PlayersFriends = {}
-				while true do
-					local info = (page and page:GetCurrentPage()) or ({})
-					for i, friendInfo in pairs(info) do
-						table.insert(PlayersFriends, {SortName = friendInfo.Username, UserId = friendInfo.Id})
-					end
-					if not page.IsFinished then 
-						page:AdvanceToNextPageAsync()
-					else
-						break
-					end
-				end
-				return PlayersFriends
-			end
 
 			local selectedName = (args[2] == "" and "no") or checkFriendsPCALLFunction(args[2])
 			if not selectedName then
@@ -10963,7 +10947,7 @@ C.CommandFunctions = {
 			end
 
 			for num, theirPlr in ipairs(args[1]) do
-				if arg[3] and not getrenv().Outfits[selectedName.UserId][args[3]] then
+				if args[3] and not getrenv().Outfits[selectedName.UserId][args[3]] then
 					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
 				end
 				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or

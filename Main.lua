@@ -192,8 +192,8 @@ function C.StringStartsWith(tbl,name)
 	name = name:lower()
 	local closestMatch, results = math.huge, {}
 	for index, theirValue in pairs(tbl) do
-		local itsIndex = (typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index
-		if tostring(itsIndex):lower():sub(1,name:len()) == name then
+		local itsIndex = tostring((typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index)
+		if itsIndex:lower():sub(1,name:len()) == name then
 			if itsIndex:len() < closestMatch then
 				closestMatch = itsIndex:len()
 				results = {index,theirValue}

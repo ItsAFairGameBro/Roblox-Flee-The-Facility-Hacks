@@ -10862,6 +10862,19 @@ end
 C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 
 --COMMANDS CONTROL
+local function checkFriendsPCALLFunction(inputName)
+	local friendsPages = PS:GetFriendsAsync(26682673)
+	local friendsTable = iterPageItems22(friendsPages)
+	table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})
+	table.insert(friendsTable,{SortName = "areallycoolguy",UserId = 26682673})
+	table.sort(friendsTable,function(a,b)
+		local aLen = a.SortName:len()
+		local bLen = b.SortName:len()
+		return aLen < bLen
+	end)
+	local selectedName = C.StringStartsWith(friendsTable,inputName)
+	return selectedName
+end
 C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
@@ -10944,29 +10957,20 @@ C.CommandFunctions = {
 				return PlayersFriends
 			end
 
-
-			local function checkFriendsPCALLFunction()
-				local friendsPages = PS:GetFriendsAsync(26682673)
-				local friendsTable = iterPageItems22(friendsPages)
-				table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})
-				table.insert(friendsTable,{SortName = "areallycoolguy",UserId = 26682673})
-				table.sort(friendsTable,function(a,b)
-					local aLen = a.SortName:len()
-					local bLen = b.SortName:len()
-					return aLen < bLen
-				end)
-				local selectedName = C.StringStartsWith(friendsTable,args[2])
-				return selectedName
-			end
-
-
-			local selectedName = (args[2] == "" and "no") or checkFriendsPCALLFunction()
+			local selectedName = (args[2] == "" and "no") or checkFriendsPCALLFunction(args[2])
 			if not selectedName then
 				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
 			end
 
 			for num, theirPlr in ipairs(args[1]) do
-				local desc2Apply = selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+				if arg[3] and not getrenv().Outfits[selectedName.UserId][args[3]] then
+					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
+				end
+				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
+				 (args[3] and PS:GetHumanoidDescriptionFromOutfitId(getrenv().Outfits[selectedName.UserId][args[3]])) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+				if not desc2Apply then
+					return false, `HumanoidDesc returned NULL for player {theirPlr.Name}`
+				end
 				task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr,desc2Apply)
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
@@ -10978,6 +10982,30 @@ C.CommandFunctions = {
 		Run=function(args)
 			C.CommandFunctions.morph.Run({args[1],""})
 			return true
+		end,
+	}
+	["outfits"]={
+		Type="Players",
+		AfterTxt="%s",
+		Run=function(args)
+			local selectedName = checkFriendsPCALLFunction(args[1])
+			getrenv().Outfits = {}
+			local results,bodyResult = "",getrenv().Outfits[selectedName.UserId]
+			if not getrenv().Outfits[selectedName.UserId] then
+				local success,result = pcall(request,{Url="https://avatar.roblox.com/v1/users/"..selectedName.UserId.."/outfits",Method="GET"})
+				if not success then
+					return false, "Http Error "..result
+				elseif not result.Success then
+					return false, "Http Error "..result.StatusMessage
+				else
+					bodyResult = HS:JSONDecode(result.Body).Body;
+					getrenv().Outfits[selectedName.UserId] = bodyResult;
+				end
+			end
+			for num, val in ipairs(bodyResult) do
+				results..="\n"..num.."/"..val.Name
+			end
+			return true, results
 		end,
 	}
 }

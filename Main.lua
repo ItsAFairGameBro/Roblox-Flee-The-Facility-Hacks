@@ -4688,9 +4688,12 @@ C.AvailableHacks ={
 				end
 				local musicSound
 				if gameName=="FleeMain" then
-					musicSound = C.char:WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
+					musicSound = StringWaitForChild(C.char,"BackgroundMusicLocalScript.Sound",15)
 				elseif gameName=="FleeTrade" then
-					musicSound = plr:WaitForChild("PlayerScripts"):WaitForChild("BackgroundMusicLocalScript"):WaitForChild("Sound")
+					musicSound = StringWaitForChild(C.char,"PlayerScripts.BackgroundMusicLocalScript.Sound",15)
+				end
+				if not musicSound then
+					return
 				end
 				C.AvailableHacks.Utility[9].MusicValue = musicSound
 				setChangedAttribute(musicSound,"Playing",C.AvailableHacks.Utility[9].ActivateFunction)
@@ -10898,7 +10901,7 @@ C.CommandFunctions = {
 			if firstRun then
 				return
 			end
-			CP:PreloadAsync(theirChar)
+			task.wait(1)
 			--print("Character Ref",theirPlr)
 			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then

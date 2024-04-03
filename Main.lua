@@ -9649,7 +9649,7 @@ C.AvailableHacks ={
 		},--]]
 		[28]={
 			["Type"]="ExTextButton",
-			["Title"]="Auto Vote For Random Maps",
+			["Title"]="Auto Vote For Random Map",
 			["Desc"]="Votes for maps synchronously",
 			["Shortcut"]="AutoVote/Random",
 			["Default"]=botModeEnabled,
@@ -9684,7 +9684,7 @@ C.AvailableHacks ={
 					print("seed not found!")
 					return
 				end
-				local selectedVote = mapsToVoteFor[Random.new(math.floor(seed.Value + (tonumber(RS.GameStatus.Value:match("%d+")) or 100) )):NextInteger(1,#mapsToVoteFor)]
+				local selectedVote = mapsToVoteFor[Random.new(math.floor(seed.Value)):NextInteger(1,#mapsToVoteFor)]
 
 				local Torso = C.char and C.char:FindFirstChild("Torso")
 				if selectedVote and selectedVote.Pad and Torso then

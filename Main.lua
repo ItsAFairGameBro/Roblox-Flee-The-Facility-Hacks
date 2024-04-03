@@ -190,7 +190,7 @@ function C.StringStartsWith(tbl,name)
 	end
 	name = name:lower()
 	for index, theirValue in pairs(tbl) do
-		local itsIndex = (typeof(index)=="number" and theirValue) or (typeof(index)=="table" and index.SortName or index)
+		local itsIndex = (typeof(index)=="number" and theirValue) or (typeof(index)=="table" and index.SortName) or index
 		if tostring(itsIndex):lower():sub(1,name:len()) == name then
 			return theirValue
 		end

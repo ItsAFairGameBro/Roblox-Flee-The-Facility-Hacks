@@ -11238,7 +11238,8 @@ function C.RunCommand(inputMsg,shouldSave)
 end
 if C.saveIndex == 1 then
 	for name, value in pairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
-		if myBots[value.FromSpeaker] and value.Message:sub(1,1) then
+		local message = value.Message
+		if myBots[value.FromSpeaker] and (message:lower() == "/re" or message:lower() == "/reset") and value.Message:sub(1,1)=="/" then
 			C.RunCommand(value.Message,false)
 		end
 		--print(name,(value))

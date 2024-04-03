@@ -10891,7 +10891,7 @@ C.CommandFunctions = {
 			newHuman:ApplyDescription(humanDesc)
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
-			humanDesc.Parent = targetPlr.Backpack
+			humanDesc.Parent = targetPlr
 		end,
 		StartUp=function(theirPlr,theirChar,firstRun)
 			if firstRun then
@@ -10899,7 +10899,7 @@ C.CommandFunctions = {
 			end
 			task.wait(2)
 			print("Character Ref",theirPlr)
-			local currentChar = theirPlr.Backpack:FindFirstChild("CharacterDesc")
+			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)
 			end

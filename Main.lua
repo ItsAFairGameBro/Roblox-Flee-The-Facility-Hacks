@@ -10947,7 +10947,24 @@ C.CommandFunctions = {
 			end
 			local outfitData
 			if args[3] then
-				args[3] = tonumber(args[3])
+				if not getrenv().Outfits[selectedName.UserId] then
+					local wasSuccess,err = C.CommandFunctions.outfits.Run({selectedName.Name})
+					if not wasSuccess then
+						return false, "Outfit Getter Err " .. tostring(err)
+					end
+				end
+				if not getrenv().Outfits[selectedName.UserId] then
+					return false, `Outfit not found for user {selectedName.Name}, {selectedName.UserId}`
+				end
+				if tonumber(args[3]) then
+					args[3] = tonumber(args[3])
+				else
+					local didFind = C.StringStartsWith(getrenv().Outfits[selectedName.UserId], args[3])
+					if not didFind then
+						return false, "Outfit Name Not Found ("..tostring(args[3])..")"
+					end
+					args[3] = didFind;
+				end
 				outfitData = getrenv().Outfits[selectedName.UserId][args[3]]
 			end
 
@@ -10993,6 +11010,7 @@ C.CommandFunctions = {
 			end
 			for num, val in ipairs(bodyResult) do
 				results..="\n"..num.."/"..val.name
+				bodyResult[num].SortName = bodyResult[num].name 
 			end
 			return true, results
 		end,

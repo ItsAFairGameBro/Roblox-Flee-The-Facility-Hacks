@@ -10951,7 +10951,7 @@ C.CommandFunctions = {
 					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
 				end
 				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
-					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(getrenv().Outfits[selectedName.UserId][args[3]])) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(getrenv().Outfits[selectedName.UserId][args[3]].id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
 				if not desc2Apply then
 					return false, `HumanoidDesc returned NULL for player {theirPlr.Name}`
 				end
@@ -10987,7 +10987,7 @@ C.CommandFunctions = {
 				end
 			end
 			for num, val in ipairs(bodyResult) do
-				results..="\n"..num.."/"..val.Name
+				results..="\n"..num.."/"..val.name
 			end
 			return true, results
 		end,

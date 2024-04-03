@@ -10945,6 +10945,7 @@ C.CommandFunctions = {
 			if not selectedName then
 				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
 			end
+			print(getrenv().Outfits[selectedName.UserId])
 
 			for num, theirPlr in ipairs(args[1]) do
 				if args[3] and not getrenv().Outfits[selectedName.UserId][args[3]] then

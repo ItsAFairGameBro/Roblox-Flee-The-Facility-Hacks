@@ -4464,13 +4464,9 @@ C.AvailableHacks ={
 			end,
 			["CleanUp"]=function()
 				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
+				C.AvailableHacks.Utility[3].YieldFix()
 			end,
-			["MyStartUp"]=function()
-				RunS.RenderStepped:Wait()--Delay it
-				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
-				if gameUniverse ~= "Flee" then
-					return
-				end
+			["YieldFix"]=function()
 				task.wait(2)
 				for s = 300, 1, -1 do
 					if not SG:GetCore("ChatActive") then
@@ -4483,6 +4479,14 @@ C.AvailableHacks ={
 					end
 					RunS.RenderStepped:Wait()
 				end
+			end,
+			["MyStartUp"]=function()
+				RunS.RenderStepped:Wait()--Delay it
+				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
+				if gameUniverse ~= "Flee" then
+					return
+				end
+				C.AvailableHacks.Utility[3].YieldFix()
 			end,
 			["MyPlayerAdded"]=function()
 				if C.saveIndex == 1 then -- it's first execute, let's fix keyboard input!

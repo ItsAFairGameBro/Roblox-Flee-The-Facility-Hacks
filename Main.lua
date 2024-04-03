@@ -10914,18 +10914,19 @@ C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",
-		MorphPlayer=function(targetChar, targetDesc)
+		MorphPlayer=function(targetChar, humanDesc, dontUpdate)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			if not targetHuman then
 				return
 			end
-			local humanDesc = targetDesc--PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
 			humanDesc.Name = "CharacterDesc"
-			local currentDesc = getgenv().currentDesc[targetChar.Name]
-			if currentDesc and humanDesc~=currentDesc then
-				currentDesc:Destroy()
+			if not dontUpdate then
+				local currentDesc = getgenv().currentDesc[targetChar.Name]
+				if currentDesc and humanDesc~=currentDesc then
+					currentDesc:Destroy()
+				end
+				getgenv().currentDesc[targetChar.Name] = humanDesc
 			end
-			getgenv().currentDesc[targetChar.Name] = humanDesc
 			local oldHuman = targetHuman
 			local newHuman = Instance.new("Humanoid")--oldHuman:Clone()
 			newHuman.Parent = targetChar
@@ -10961,9 +10962,15 @@ C.CommandFunctions = {
 				if child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
-						task.wait(3)
-						print("Froze",child.Name)
+						task.wait(1)
+						local orgColor = child:WaitForChild("Head").Color
+						local myClone = humanDesc:Clone()
+						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
+							myClone[prop] = orgColor
+						end
+						print(orgColor)
 						C.CommandFunctions.morph.MorphPlayer(child,humanDesc)
+						DS:AddItem(myClone,15)
 					else
 						warn("Humanoid But No Desc Found For",child.Name,":",getgenv().currentDesc)
 					end

@@ -47,7 +47,7 @@ C.hackGUIParent = isStudio and plr:WaitForChild("PlayerGui") or gethui();
 
 local lastRunningEnv = getfenv()
 local reloadFunction = lastRunningEnv.ReloadFunction--function()
-	--loadstring(game:HttpGet("https://raw.githubusercontent.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/main/Load.lua",false))()
+--loadstring(game:HttpGet("https://raw.githubusercontent.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/main/Load.lua",false))()
 --end--
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
@@ -3413,7 +3413,7 @@ C.AvailableHacks ={
 				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
 				if not carriedTorso then
 					--if C.Map then
-						print("uh oh! not found: CarriedTorsoChanged.Event")
+					print("uh oh! not found: CarriedTorsoChanged.Event")
 					--end
 					return
 				end
@@ -3521,7 +3521,7 @@ C.AvailableHacks ={
 					print("Ragdoll Not Found For",theirPlr)
 					return
 				end
-				
+
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "Player"
@@ -3566,7 +3566,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Render[29].StartUp(...)
 			end,
 			["BeastAdded"]=function(beastPlr,beastChar)
-				
+
 			end,
 			["MyBeastAdded"]=function(...)
 				C.AvailableHacks.Render[29].BeastAdded(...)
@@ -3992,7 +3992,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[18].ActivateFunction()
 			end,
 		},
-		
+
 		[25]={
 			["Type"]="ExTextButton",
 			["Title"]="Walk Through Doors",
@@ -4013,7 +4013,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[20].ActivateFunction(C.enHacks.Basic_InviWalls)
 			end,
 		},
-		
+
 	},
 	["Utility"]={
 		[1]={
@@ -4161,7 +4161,7 @@ C.AvailableHacks ={
 
 					return NormalFunction(valName)
 				end or NormalFunction
-				
+
 				for num, theirPlr in ipairs(PS:GetPlayers()) do
 					if theirPlr ~= plr then
 						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule")
@@ -7255,7 +7255,7 @@ C.AvailableHacks ={
 						attachment:AddTag("RemoveOnDestroy")
 						attachment.Name = "FloatAttachment"
 						attachment.Parent = orgChar.PrimaryPart
-						
+
 						human.PlatformStand = true
 
 						--orgChar.PrimaryPart.Anchored = true
@@ -7264,12 +7264,12 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Basic[30].LastTeleportLocation = saveLoc + C.AvailableHacks.Basic[30].HiddenLocation
 				teleportMyself(C.AvailableHacks.Basic[30].LastTeleportLocation)
-				
+
 				task.spawn(teleportMyCharacterAway,saveLoc)
-				
+
 
 				clonedChar.Parent = workspace
-				
+
 				local TPDelay = os.clock()
 
 				local function doCFrameChanged()
@@ -7476,7 +7476,7 @@ C.AvailableHacks ={
 								C.char.PrimaryPart.FloatAttachment:Destroy()
 							end	
 						end
-						
+
 						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
 							for num, animTrack in ipairs(C.char.Humanoid.Animator:GetPlayingAnimationTracks()) do
 								if animTrack.Animation.AnimationId~="rbxassetid://961932719"
@@ -8352,7 +8352,7 @@ C.AvailableHacks ={
 			end,
 		},
 
-		
+
 		[71]={
 			["Type"]="ExTextButton",
 			["Title"]="Panic When Hit",
@@ -10399,7 +10399,7 @@ C.clear = function(isManualClear)
 		end
 		C.AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		C.AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
-		
+
 		if gameUniverse == "Flee" then
 			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 			for num, chatConnection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
@@ -10967,7 +10967,7 @@ C.CommandFunctions = {
 					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
 				end
 				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
-				 (args[3] and PS:GetHumanoidDescriptionFromOutfitId(getrenv().Outfits[selectedName.UserId][args[3]])) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(getrenv().Outfits[selectedName.UserId][args[3]])) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
 				if not desc2Apply then
 					return false, `HumanoidDesc returned NULL for player {theirPlr.Name}`
 				end
@@ -10983,13 +10983,13 @@ C.CommandFunctions = {
 			C.CommandFunctions.morph.Run({args[1],""})
 			return true
 		end,
-	}
+	},
 	["outfits"]={
 		Type="Players",
 		AfterTxt="%s",
 		Run=function(args)
 			local selectedName = checkFriendsPCALLFunction(args[1])
-			getrenv().Outfits = {}
+			getrenv().Outfits = getrenv().Outfits or {}
 			local results,bodyResult = "",getrenv().Outfits[selectedName.UserId]
 			if not getrenv().Outfits[selectedName.UserId] then
 				local success,result = pcall(request,{Url="https://avatar.roblox.com/v1/users/"..selectedName.UserId.."/outfits",Method="GET"})
@@ -11111,7 +11111,7 @@ local function PlayerAdded(theirPlr)
 			end
 		end))
 	end
-	
+
 	if gameUniverse=="Flee" then
 		if isMe then
 			--MY PLAYER CHAT
@@ -11184,7 +11184,7 @@ local function PlayerAdded(theirPlr)
 						if inputMsg:sub(1,1)==";" then
 							chatBar.Text = ""
 							enterPressed = false
-							
+
 							table.insert(savedCommands,1,inputMsg)
 							if #savedCommands > 10 then
 								table.remove(savedCommands,#savedCommands)
@@ -11231,8 +11231,8 @@ local function PlayerAdded(theirPlr)
 											local length = #args[1]
 											local playersAffected = 
 												(typeof(ChosenPlr)=="Instance" and (ChosenPlr==plr and ChosenPlr.Name) or ChosenPlr.Name) 
-													or (ChosenPlr:sub(1,1):upper() .. 
-														ChosenPlr:sub(2,ChosenPlr:sub(ChosenPlr:len())=="s" and ChosenPlr:len()-1 or ChosenPlr:len()))
+												or (ChosenPlr:sub(1,1):upper() .. 
+													ChosenPlr:sub(2,ChosenPlr:sub(ChosenPlr:len())=="s" and ChosenPlr:len()-1 or ChosenPlr:len()))
 											if playersAffected == plr.Name then
 												playersAffected = "you"
 											end

@@ -10956,6 +10956,8 @@ C.CommandFunctions = {
 				if child:FindFirstChild("Humanoid") then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
+						task.wait(3)
+						print("Froze",child.Name)
 						C.CommandFunctions.morph.MorphPlayer(child,humanDesc)
 					end
 				end

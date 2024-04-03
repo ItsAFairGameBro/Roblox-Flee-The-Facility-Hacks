@@ -10998,7 +10998,7 @@ C.CommandFunctions = {
 				task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr,desc2Apply)
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
-			return true,args[2]=="" and "nothing" or selectedName.SortName," " ..outfitData.name
+			return true,args[2]=="" and "nothing" or selectedName.SortName,outfitData and (" " ..outfitData.name) or ""
 		end},
 	["unmorph"]={
 		Type="Players",

@@ -11281,89 +11281,93 @@ local function PlayerAdded(theirPlr)
 		end))
 	end
 
-	if gameUniverse=="Flee" then
+	--if gameUniverse=="Flee" then
 		if isMe then
 			--MY PLAYER CHAT
 			local chatBar
 			local index = 0
 			local function registerNewChatBar(_,firstRun)
-				chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
-				local connectionsFuncts = {}
-				for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
-					connection:Disable()
-					table.insert(connectionsFuncts,connection)
-				end
-				--[[table.insert(C.functs,chatBar.InputChanged:Connect(function(Key,GameProcessed)
-					print(Key.KeyCode.Name)
-					--if not chatBar or not chatBar:IsFocused() then
-					--	return
-					--end
-					if true then return end
-					print("KeyCode",Key.KeyCode.Name)
-					if Key.KeyCode == Enum.KeyCode.Up then
-						index+=1
-					elseif Key.KeyCode == Enum.KeyCode.Down then
-						index-=1
-					else
-						return
-					end
-					index = math.clamp(1,#savedCommands)
-
-					chatBar.Text = savedCommands[index]
-					print("Set To",savedCommands[index])
-				end))--]]
-				local lastText
-				local lastUpd = -5
-				local function textUpd()
-					if not chatBar or not chatBar:IsFocused() or os.clock() - lastUpd < .5 then
-						return
-					end
-					--local WhatsNew = chatBar.Text:sub(lastText:len())
-					--if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
-					local newInput = chatBar.Text
-					local newLength = newInput:len()
-					if #C.savedCommands==0 or lastText == newInput then
-						return
-					end
-					if newInput:match("/up") then --newInput:sub(chatBar.CursorPosition-2,chatBar.CursorPosition) =="/up" then
-						index += 1
-					elseif newInput:match("/down") then--newInput:sub(chatBar.CursorPosition-4,chatBar.CursorPosition) == "/down" then
-						index -= 1
-					else
-						return
-					end
-					lastUpd = os.clock()
-					index = math.clamp(index,0,#C.savedCommands)
-
-					local setTo = index==0 and "" or C.savedCommands[index]
-					lastText = setTo
-					chatBar.Text = setTo
-					--end
-					--lastText = chatBar.Text
-				end
-				table.insert(C.functs,chatBar:GetPropertyChangedSignal("Text"):Connect(textUpd))
-				textUpd()
-				table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
-					index = 0
-					local inputMsg = chatBar.Text
-					if enterPressed then
-						if inputMsg:sub(1,1)==";" then
-							chatBar.Text = ""
-							enterPressed = false
-							C.RunCommand(inputMsg,true)
-						end
-					end
-					for num, connectionFunct in ipairs(connectionsFuncts) do
-						connectionFunct.Function(enterPressed)
-					end
-				end))
-				defaultFunction("ChatBarAdded",{chatBar,firstRun})
+			chatBar = StringWaitForChild(gameUniverse=="Flee" and PlayerGui or game.CoreGui,gameUniverse=="Flee" and 
+				"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar" or "ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox")
+			local connectionsFuncts = {}
+			for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
+				connection:Disable()
+				table.insert(connectionsFuncts,connection)
 			end
+			--[[table.insert(C.functs,chatBar.InputChanged:Connect(function(Key,GameProcessed)
+				print(Key.KeyCode.Name)
+				--if not chatBar or not chatBar:IsFocused() then
+				--	return
+				--end
+				if true then return end
+				print("KeyCode",Key.KeyCode.Name)
+				if Key.KeyCode == Enum.KeyCode.Up then
+					index+=1
+				elseif Key.KeyCode == Enum.KeyCode.Down then
+					index-=1
+				else
+					return
+				end
+				index = math.clamp(1,#savedCommands)
+
+				chatBar.Text = savedCommands[index]
+				print("Set To",savedCommands[index])
+			end))--]]
+			local lastText
+			local lastUpd = -5
+			local function textUpd()
+				if not chatBar or not chatBar:IsFocused() or os.clock() - lastUpd < .5 then
+					return
+				end
+				--local WhatsNew = chatBar.Text:sub(lastText:len())
+				--if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
+				local newInput = chatBar.Text
+				local newLength = newInput:len()
+				if #C.savedCommands==0 or lastText == newInput then
+					return
+				end
+				if newInput:match("/up") then --newInput:sub(chatBar.CursorPosition-2,chatBar.CursorPosition) =="/up" then
+					index += 1
+				elseif newInput:match("/down") then--newInput:sub(chatBar.CursorPosition-4,chatBar.CursorPosition) == "/down" then
+					index -= 1
+				else
+					return
+				end
+				lastUpd = os.clock()
+				index = math.clamp(index,0,#C.savedCommands)
+
+				local setTo = index==0 and "" or C.savedCommands[index]
+				lastText = setTo
+				chatBar.Text = setTo
+				--end
+				--lastText = chatBar.Text
+			end
+			table.insert(C.functs,chatBar:GetPropertyChangedSignal("Text"):Connect(textUpd))
+			textUpd()
+			table.insert(C.functs,chatBar.FocusLost:Connect(function(enterPressed)
+				index = 0
+				local inputMsg = chatBar.Text
+				if enterPressed then
+					if inputMsg:sub(1,1)==";" then
+						chatBar.Text = ""
+						enterPressed = false
+						C.RunCommand(inputMsg,true)
+					end
+				end
+				for num, connectionFunct in ipairs(connectionsFuncts) do
+					connectionFunct.Function(enterPressed)
+				end
+			end))
+			defaultFunction("ChatBarAdded",{chatBar,firstRun})
+		end
+		if gameUniverse == "Flee" then
 			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame").ChildAdded:Connect(function(child)
 				registerNewChatBar()
 			end))
 			registerNewChatBar(nil,true)
 		end
+	end
+	if gameName == "FleeMain" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		if theirTSM then
 			local isBeastValue = theirTSM:WaitForChild("IsBeast");
@@ -11379,6 +11383,7 @@ local function PlayerAdded(theirPlr)
 			end;
 		end;
 	end
+	--end
 end;
 local function DescendantRemoving(child)
 	if string.sub(child.Name,1,13)=="ComputerTable" then

@@ -3658,7 +3658,7 @@ C.AvailableHacks ={
 					end
 				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
-				ComputerTeleportFunctions[Computer] = setToggleFunction
+				C.AvailableHacks.Render[28].ComputerTeleportFunctions[Computer] = setToggleFunction
 				C.AvailableHacks.Render[28].SetEnabled(newTag)
 				setChangedAttribute(Screen, "Color", hackedTeleportFunction)
 				hackedTeleportFunction()

@@ -10952,8 +10952,10 @@ C.CommandFunctions = {
 			end
 			---local orgDesc = Instance.new("HumanoidDescription")
 			--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
-			for num, capsule in ipairs(CS:GetTagged("Capsule")) do
-				C.CommandFunctions.morph.CapsuleAdded(capsule,true)
+			if not dontUpdate then
+				for num, capsule in ipairs(CS:GetTagged("Capsule")) do
+					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
+				end
 			end
 			newHuman:ApplyDescription(humanDesc)
 			newHuman.Parent = nil

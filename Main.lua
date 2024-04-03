@@ -10877,7 +10877,7 @@ C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
-		AfterTxt=" to %s",
+		AfterTxt=" to %s%s",
 		MorphPlayer=function(targetPlr, targetDesc)
 			local targetChar = targetPlr.Character
 			if not targetChar then
@@ -10945,21 +10945,25 @@ C.CommandFunctions = {
 			if not selectedName then
 				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
 			end
-			args[3] = tonumber(args[3])
+			local outfitData
+			if args[3] then
+				args[3] = tonumber(args[3])
+				outfitData = getrenv().Outfits[selectedName.UserId][args[3]]
+			end
 
 			for num, theirPlr in ipairs(args[1]) do
-				if args[3] and not getrenv().Outfits[selectedName.UserId][args[3]] then
+				if args[3] and not outfitData then
 					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
 				end
 				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
-					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(getrenv().Outfits[selectedName.UserId][args[3]].id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
 				if not desc2Apply then
 					return false, `HumanoidDesc returned NULL for player {theirPlr.Name}`
 				end
 				task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr,desc2Apply)
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
-			return true,args[2]=="" and "nothing" or selectedName.SortName
+			return true,args[2]=="" and "nothing" or selectedName.SortName," " ..outfitData.name
 		end},
 	["unmorph"]={
 		Type="Players",

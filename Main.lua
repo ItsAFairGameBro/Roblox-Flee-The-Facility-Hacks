@@ -11236,6 +11236,14 @@ function C.RunCommand(inputMsg,shouldSave)
 		C.CreateSysMessage(`Command Not Found: {command}`)
 	end
 end
+if C.saveIndex == 1 or true then
+	for name, value in pairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
+		if myBots[value.FromSpeaker] then
+			C.RunMessage(value.Message,false)
+		end
+		--print(name,(value))
+	end
+end
 local function PlayerAdded(theirPlr)
 	local isMe = (plr==theirPlr)
 	C.playerEvents[theirPlr.UserId] = {}

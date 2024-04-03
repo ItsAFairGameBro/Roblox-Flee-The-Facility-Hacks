@@ -5636,7 +5636,7 @@ C.AvailableHacks ={
 						if key == "t" then
 							local inputPosition;
 							local TPFunction = C.AvailableHacks.Basic[12].TeleportFunction;
-							if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
+							if UIS:IsKeyDown(Enum.KeyCode.LeftControl) and gameName == "FleeMain" then
 								local closestPC, closestDist = nil, 0
 								for num,pc in ipairs(CS:GetTagged("Computer")) do
 									local newDist = (pc:GetPivot().Position - C.char:GetPivot().Position).Magnitude;
@@ -11237,7 +11237,7 @@ function C.RunCommand(inputMsg,shouldSave)
 		C.CreateSysMessage(`Command Not Found: {command}`)
 	end
 end
-if C.saveIndex == 1 then
+if C.saveIndex == 1 and gameUniverse == "Flee" then
 	for name, value in pairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
 		local message = value.Message
 		if myBots[value.FromSpeaker] and (message:lower() == "/re" or message:lower() == "/reset") and value.Message:sub(1,1)=="/" then

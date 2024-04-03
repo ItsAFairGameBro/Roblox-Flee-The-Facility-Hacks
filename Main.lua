@@ -10985,7 +10985,7 @@ C.CommandFunctions = {
 		end,
 	},
 	["outfits"]={
-		Type="Players",
+		Type=false,
 		AfterTxt="%s",
 		Run=function(args)
 			local selectedName = checkFriendsPCALLFunction(args[1])
@@ -11218,8 +11218,8 @@ local function PlayerAdded(theirPlr)
 											canRunFunction = C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
 										end
 									end
-								else
-									canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}`)
+								elseif CommandData.Type~=false then
+									canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}, {tostring(CommandData.Type)}`)
 								end
 								if canRunFunction then
 									task.spawn(function()

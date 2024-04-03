@@ -10982,7 +10982,7 @@ C.CommandFunctions = {
 				elseif not result.Success then
 					return false, "Http Error "..result.StatusMessage
 				else
-					bodyResult = HS:JSONDecode(result.Body).Body;
+					bodyResult = HS:JSONDecode(result.Body);
 					getrenv().Outfits[selectedName.UserId] = bodyResult;
 				end
 			end

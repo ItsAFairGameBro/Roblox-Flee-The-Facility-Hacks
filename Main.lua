@@ -3474,7 +3474,7 @@ C.AvailableHacks ={
 				repeat
 					RunS.RenderStepped:Wait()
 				until C.AvailableHacks.Render[30].Event
-				if not C.Beast then return end
+				if not C.Beast then error("Where the dog go") return end
 				C.objectFuncts[C.AvailableHacks.Render[30].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function(newValue)
 					C.AvailableHacks.Render[30].Event:Fire(newValue)
 				end)}
@@ -10902,9 +10902,11 @@ C.CommandFunctions = {
 				return
 			end
 			local theirHuman = theirChar:WaitForChild("Humanoid")
-			theirChar:WaitForChild(theirHuman.RigType == Enum.HumanoidRigType.R6 and "Torso" or "UpperTorso")
-			task.wait()
-			--print("Character Ref",theirPlr)
+			local PrimPart = theirChar:WaitForChild(theirHuman.RigType == Enum.HumanoidRigType.R6 and "Torso" or "UpperTorso", 15)
+			if not PrimPart then
+				return
+			end
+			RunS.RenderStepped:Wait()
 			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)

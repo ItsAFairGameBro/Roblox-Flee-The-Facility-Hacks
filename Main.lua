@@ -10893,23 +10893,20 @@ end
 
 C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 
+getgenv().currentDesc = getgenv().currentDesc or {}
 --COMMANDS CONTROL
 C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",
-		MorphPlayer=function(targetPlr, targetDesc)
-			local targetChar = targetPlr.Character
-			if not targetChar then
-				return
-			end
+		MorphPlayer=function(targetChar, targetDesc)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			if not targetHuman then
 				return
 			end
 			local humanDesc = targetDesc--PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
 			humanDesc.Name = "CharacterDesc"
-			local currentDesc = targetPlr.Backpack:FindFirstChild("CharacterDesc")
+			local currentDesc = getgenv().currentDesc[targetChar.Name]
 			if currentDesc and humanDesc~=currentDesc then
 				currentDesc:Destroy()
 			end
@@ -10942,7 +10939,22 @@ C.CommandFunctions = {
 			newHuman:ApplyDescription(humanDesc)
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
-			humanDesc.Parent = targetPlr
+		end,
+		Functs={},
+		CapsuleAdded=function(capsule)
+			local function childAdded(child)
+				if child:FindFirstChild("Humanoid") then
+					local humanDesc = getgenv().currentDesc[child.Name]
+					if humanDesc then
+						C.CommandFunctions.morph.MorphPlayer(child,humanDesc)
+					end
+				end
+			end
+			
+			table.insert(C.CommandFunctions.morph.Functs,capsule.ChildAdded:Connect(childAdded))
+			for num, child in ipairs(capsule:GetChildren()) do
+				childAdded(child)
+			end
 		end,
 		StartUp=function(theirPlr,theirChar,firstRun)
 			if firstRun then
@@ -10956,7 +10968,7 @@ C.CommandFunctions = {
 			task.wait(.5)
 			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then
-				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)
+				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar)
 			end
 		end,
 		Run=function(args)
@@ -10999,7 +11011,11 @@ C.CommandFunctions = {
 				if not desc2Apply then
 					return false, `HumanoidDesc returned NULL for player {theirPlr.Name}`
 				end
-				task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr,desc2Apply)
+				if theirPlr.Character then
+					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply)
+				else
+					getgenv().currentDesc[theirPlr.Name] = desc2Apply
+				end
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
 			return true,args[2]=="" and "nothing" or selectedName.SortName,outfitData and (" " ..outfitData.name) or ""

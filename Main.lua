@@ -3597,10 +3597,12 @@ C.AvailableHacks ={
 			end,
 			["CleanUp"]=function()
 				DestroyAllTaggedObjects("HackDisplay4")
+				C.AvailableHacks.Render[28].ComputerTeleportFunctions={}
 			end,
 			["UpdateDisplays"]=function()
 				C.AvailableHacks.Render[28].ActivateFunction(C.enHacks.Render_HackComputers)
 			end,
+			["ComputerTeleportFunctions"]={},
 			--CHECKED UNDER REMOTE DOORS HACK!
 			["ComputerAdded"]=function(Computer)
 				local Screen = Computer:WaitForChild("Screen")
@@ -3656,6 +3658,7 @@ C.AvailableHacks ={
 					end
 				end
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
+				ComputerTeleportFunctions[Computer] = setToggleFunction
 				C.AvailableHacks.Render[28].SetEnabled(newTag)
 				setChangedAttribute(Screen, "Color", hackedTeleportFunction)
 				hackedTeleportFunction()
@@ -5621,10 +5624,21 @@ C.AvailableHacks ={
 				end;
 				if newValue then
 					local function keyDownFunction(key)
-						print(key)
 						if key == "t" then
-							local inputPosition = mouse.Hit.Position;
+							local inputPosition;
 							local TPFunction = C.AvailableHacks.Basic[12].TeleportFunction;
+							if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
+								local closestPC, closestDist = nil, 1000
+								for num,pc in ipairs(CS:GetTagged("Computer")) do
+									local newDist = (pc:GetPivot() - C.char:GetPivot());
+									if newDist < closestDist then
+										closestPC,closestDist = pc, newDist;
+									end;
+								end;
+								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[pc]() -- TODO HERE
+							else
+								inputPosition = mouse.Hit.Position;
+							end
 							TPFunction(inputPosition);
 						end;
 					end;
@@ -10907,7 +10921,7 @@ C.CommandFunctions = {
 			if not PrimPart then
 				return
 			end
-			task.wait(.1)
+			task.wait(.5)
 			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)

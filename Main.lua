@@ -10952,34 +10952,39 @@ C.CommandFunctions = {
 			end
 			---local orgDesc = Instance.new("HumanoidDescription")
 			--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
+			for num, capsule in ipairs(CS:GetTagged("Capsule")) do
+				C.CommandFunctions.morph.CapsuleAdded(capsule,true)
+			end
 			newHuman:ApplyDescription(humanDesc)
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
 		end,
 		Functs={},
-		CapsuleAdded=function(capsule)
+		CapsuleAdded=function(capsule,noAddFunct)
 			local function childAdded(child)
 				if child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
-						task.wait(1)
+						task.wait(.4)
 						local orgColor = child:WaitForChild("Head").Color
 						local myClone = humanDesc:Clone()
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
 							myClone[prop] = orgColor
 						end
-						print(orgColor.R*255,orgColor.G*255,orgColor.B*255)
 						C.CommandFunctions.morph.MorphPlayer(child,myClone,true)
+						CS:AddItem(child)
 						DS:AddItem(myClone,15)
-					else
-						warn("Humanoid But No Desc Found For",child.Name,":",getgenv().currentDesc)
 					end
 				end
 			end
 			
-			table.insert(C.CommandFunctions.morph.Functs,capsule.ChildAdded:Connect(childAdded))
-			for num, child in ipairs(capsule:GetChildren()) do
-				childAdded(child)
+			if not noAddFunct then
+				table.insert(C.CommandFunctions.morph.Functs,capsule.ChildAdded:Connect(childAdded))
+			end
+			if not capsule:FindFirstChild("PodTrigger") then
+				for num, child in ipairs(capsule:GetChildren()) do
+					childAdded(child)
+				end
 			end
 		end,
 		StartUp=function(theirPlr,theirChar,firstRun)

@@ -190,7 +190,7 @@ function C.StringStartsWith(tbl,name)
 	end
 	name = name:lower()
 	for index, theirValue in pairs(tbl) do
-		local itsIndex = typeof(index)=="number" and theirValue or index
+		local itsIndex = (typeof(index)=="number" and theirValue) or (typeof(index)=="table" and index.SortName or index)
 		if tostring(itsIndex):lower():sub(1,name:len()) == name then
 			return theirValue
 		end
@@ -3388,9 +3388,9 @@ C.AvailableHacks ={
 			end,
 			["CleanUp"]=function()
 				DestroyAllTaggedObjects("HackDisplay3")
-				if C.AvailableHacks.Render[30].Event then
-					C.AvailableHacks.Render[30].Event:Destroy()
-				end
+				--if C.AvailableHacks.Render[30].Event then
+				--	C.AvailableHacks.Render[30].Event:Destroy()
+				--end
 				C.AvailableHacks.Render[30].Event=nil
 				if C.objectFuncts[C.AvailableHacks.Render[30].Event] then
 					C.objectFuncts[C.AvailableHacks.Render[30].Event][1]:Disconnect()
@@ -3463,7 +3463,7 @@ C.AvailableHacks ={
 				}
 				setVisible()
 			end,
-			["MapAdded"]=function()
+			["MyPlayerAdded"]=function()
 				C.AvailableHacks.Render[30].Event = C.AvailableHacks.Render[30].Event or Instance.new("BindableEvent")
 				C.AvailableHacks.Render[30].Event:AddTag("RemoveOnDestroy")
 				C.AvailableHacks.Render[30].Event.Name="CarriedTorsoChanged"
@@ -3474,8 +3474,8 @@ C.AvailableHacks ={
 					RunS.RenderStepped:Wait()
 				until C.AvailableHacks.Render[30].Event
 				if not C.Beast then return end
-				C.objectFuncts[C.AvailableHacks.Render[30].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function()
-					C.AvailableHacks.Render[30].Event:Fire()
+				C.objectFuncts[C.AvailableHacks.Render[30].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function(newValue)
+					C.AvailableHacks.Render[30].Event:Fire(newValue)
 				end)}
 			end,
 			["OthersBeastAdded"]=function()
@@ -10891,7 +10891,7 @@ C.CommandFunctions = {
 				while true do
 					local info = (page and page:GetCurrentPage()) or ({})
 					for i, friendInfo in pairs(info) do
-						table.insert(PlayersFriends, friendInfo.Username)
+						table.insert(PlayersFriends, {SortName = friendInfo.Username, UserId = friendInfo.UserId})
 					end
 					if not page.IsFinished then 
 						page:AdvanceToNextPageAsync()
@@ -10924,7 +10924,9 @@ C.CommandFunctions = {
 			end
 
 			for num, theirPlr in ipairs(args[1]) do
-				task.spawn(morphPlayer,theirPlr,(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
+				task.spawn(morphPlayer,theirPlr, selectedName =="no" and theirPlr.UserId
+						or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
+				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
 			return true,args[2]=="" and "nothing" or selectedName
 		end},
@@ -11088,9 +11090,9 @@ local function PlayerAdded(theirPlr)
 					if #savedCommands==0 or lastText == newInput then
 						return
 					end
-					if newInput:sub(chatBar.CursorPosition-2,chatBar.CursorPosition) =="/up" then
+					if newInput:match("/up") then --newInput:sub(chatBar.CursorPosition-2,chatBar.CursorPosition) =="/up" then
 						index += 1
-					elseif newInput:sub(chatBar.CursorPosition-4,chatBar.CursorPosition) == "/down" then
+					elseif newInput:match("/down") then--newInput:sub(chatBar.CursorPosition-4,chatBar.CursorPosition) == "/down" then
 						index -= 1
 					else
 						return

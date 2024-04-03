@@ -10909,7 +10909,7 @@ C.CommandFunctions = {
 				while true do
 					local info = (page and page:GetCurrentPage()) or ({})
 					for i, friendInfo in pairs(info) do
-						table.insert(PlayersFriends, {SortName = friendInfo.Username, UserId = friendInfo.UserId})
+						table.insert(PlayersFriends, {SortName = friendInfo.Username, UserId = friendInfo.Id})
 					end
 					if not page.IsFinished then 
 						page:AdvanceToNextPageAsync()

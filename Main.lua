@@ -9674,8 +9674,12 @@ C.AvailableHacks ={
 					return a.Name:lower()>b.Name:lower()
 				end
 				--table.sort(mapsToVoteFor,sortByNameFunction)
-				local seed = tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
-				local selectedVote = mapsToVoteFor[Random.new(math.floor(seed)):NextInteger(1,#mapsToVoteFor)]
+				local seed = StringWaitForChild(PS:GetPlayers()[1],"SavedPlayerStatsModule.Xp",.2)--tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
+				if not seed then
+					print("seed not found!")
+					return
+				end
+				local selectedVote = mapsToVoteFor[Random.new(math.floor(seed.Value)):NextInteger(1,#mapsToVoteFor)]
 
 				local Torso = C.char and C.char:FindFirstChild("Torso")
 				if selectedVote and selectedVote.Pad and Torso then

@@ -609,7 +609,7 @@ local function StartBetterConsole()
 			if not searchingONE then
 				SearchConsoleResults.Text = "Loading..."--In Case Still Visible
 				BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
-				SearchConsoleResults.Text = includeALL and `Displaying Messages"\n({current}/{total})`
+				SearchConsoleResults.Text = includeALL and `Displaying Messages({current}/{total})`
 					or `Filtering "{currentText}" ({current}/{total})`
 				lastText = SearchConsoleResults.Text
 			end
@@ -5621,6 +5621,7 @@ C.AvailableHacks ={
 				end;
 				if newValue then
 					local function keyDownFunction(key)
+						print(key)
 						if key == "t" then
 							local inputPosition = mouse.Hit.Position;
 							local TPFunction = C.AvailableHacks.Basic[12].TeleportFunction;
@@ -11520,6 +11521,5 @@ local function CloseMenu(actionName, inputState, inputObject)
 	end
 end
 CAS:BindActionAtPriority("CloseMenu"..C.saveIndex,CloseMenu,true,1e5,Enum.KeyCode.V)
-
 
 return "Hack Successfully Executed V1.02!"

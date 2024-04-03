@@ -10901,7 +10901,9 @@ C.CommandFunctions = {
 			if firstRun then
 				return
 			end
-			task.wait(1)
+			local theirHuman = theirChar:WaitForChild("Humanoid")
+			theirChar:WaitForChild(theirHuman.RigType == Enum.HumanoidRigType.R6 and "Torso" or "UpperTorso")
+			task.wait()
 			--print("Character Ref",theirPlr)
 			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then

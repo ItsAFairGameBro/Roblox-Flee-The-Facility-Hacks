@@ -10968,8 +10968,8 @@ C.CommandFunctions = {
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
 							myClone[prop] = orgColor
 						end
-						print(orgColor)
-						C.CommandFunctions.morph.MorphPlayer(child,humanDesc)
+						print(orgColor.R*255,orgColor.G*255,orgColor.B*255)
+						C.CommandFunctions.morph.MorphPlayer(child,myClone,true)
 						DS:AddItem(myClone,15)
 					else
 						warn("Humanoid But No Desc Found For",child.Name,":",getgenv().currentDesc)

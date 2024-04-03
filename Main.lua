@@ -10232,18 +10232,22 @@ C.AvailableHacks ={
 }
 local function defaultFunction(functName,args)
 	if not C.AvailableHacks then
-		return
+		return;
 	end
 	for hackType,hackList in pairs(C.AvailableHacks) do
 		for num,hackInfo in pairs(hackList) do
-			local shouldPass = hackInfo[functName] ~= nil
-			if shouldPass then
-				local arg1, arg2, arg3, arg4, arg5 = table.unpack(args);
-				local functToSpawn = hackInfo[functName];
-				task.spawn(functToSpawn, arg1, arg2, arg3, arg4, arg5);
+			local funct2Run = hackInfo[functName];
+			if funct2Run then
+				task.spawn(funct2Run, table.unpack(args));
 			end;
 		end;
 	end;
+	for commandIndex, data in pairs(C.CommandFunctions) do
+		local funct2Run = data[functName];
+		if funct2Run then
+			task.spawn(funct2Run, table.unpack(args));
+		end;
+	end
 end;
 --BOT TRADE SYS--
 if gameName=="FleeTrade" then
@@ -10843,49 +10847,63 @@ C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s",
-		Run=function(args)
-			local function morphPlayer(targetPlr, targetID)
-				local targetChar = targetPlr.Character
-				if not targetChar then
-					return
-				end
-				local targetHuman = targetChar:FindFirstChild("Humanoid")
-				if not targetHuman then
-					return
-				end
-				local humanDesc = PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
-
-				local oldHuman = targetHuman
-				local newHuman = Instance.new("Humanoid")--oldHuman:Clone()
-				newHuman.Parent = targetChar
-				newHuman:AddTag("RemoveOnDestroy")
-				for num, accessory in ipairs(targetChar:GetDescendants()) do
-					if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
-						if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic")
-							or accessory:IsA("CharacterMesh") then
-							accessory:Destroy()
-						end
-					end
-				end
-				--targetChar.Head.face.Decal = 
-				for num, instanceName in ipairs({"Shirt","Pants"}) do
-					local instance = targetChar:FindFirstChild(instanceName)
-					if instance then
-						if instanceName=="Shirt" then
-							instance.ShirtTemplate = humanDesc.Shirt
-						elseif instanceName=="Pants" then
-							instance.PantsTemplate = humanDesc.Pants
-						end
-					end
-				end
-				---local orgDesc = Instance.new("HumanoidDescription")
-				--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
-				newHuman:ApplyDescription(humanDesc)
-				newHuman.Parent = nil
-				DS:AddItem(newHuman,3)
-				DS:AddItem(humanDesc,3)
+		MorphPlayer=function(targetPlr, targetDesc)
+			local targetChar = targetPlr.Character
+			if not targetChar then
+				return
+			end
+			local targetHuman = targetChar:FindFirstChild("Humanoid")
+			if not targetHuman then
+				return
+			end
+			local humanDesc = targetDesc--PS:GetHumanoidDescriptionFromUserId(targetID)--C.plr.UserId)
+			humanDesc.Name = "CharacterDesc"
+			local currentDesc = targetPlr.Backpack:FindFirstChild("CharacterDesc")
+			if currentDesc and humanDesc~=currentDesc then
+				currentDesc:Destroy()
 			end
 
+			local oldHuman = targetHuman
+			local newHuman = Instance.new("Humanoid")--oldHuman:Clone()
+			newHuman.Parent = targetChar
+			newHuman:AddTag("RemoveOnDestroy")
+			for num, accessory in ipairs(targetChar:GetDescendants()) do
+				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
+					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic")
+						or accessory:IsA("CharacterMesh") then
+						accessory:Destroy()
+					end
+				end
+			end
+			--targetChar.Head.face.Decal = 
+			for num, instanceName in ipairs({"Shirt","Pants"}) do
+				local instance = targetChar:FindFirstChild(instanceName)
+				if instance then
+					if instanceName=="Shirt" then
+						instance.ShirtTemplate = humanDesc.Shirt
+					elseif instanceName=="Pants" then
+						instance.PantsTemplate = humanDesc.Pants
+					end
+				end
+			end
+			---local orgDesc = Instance.new("HumanoidDescription")
+			--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
+			newHuman:ApplyDescription(humanDesc)
+			newHuman.Parent = nil
+			DS:AddItem(newHuman,3)
+			humanDesc.Parent = targetPlr.Backpack
+		end,
+		StartUp=function(theirPlr,theirChar,firstRun)
+			if firstRun then
+				return
+			end
+			task.wait(2)
+			local currentChar = theirPlr.Backpack:FindFirstChild("CurrentChar")
+			if currentChar then
+				C.CommandFunctions.MorphPlayer(theirPlr,currentChar)
+			end
+		end,
+		Run=function(args)
 			local function iterPageItems22(page)
 				local PlayersFriends = {}
 				while true do
@@ -10918,13 +10936,13 @@ C.CommandFunctions = {
 			end
 
 
-			local selectedName = args[2] == "" and "no" or checkFriendsPCALLFunction()
+			local selectedName = (args[2] == "" and "no") or checkFriendsPCALLFunction()
 			if not selectedName then
 				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
 			end
 
 			for num, theirPlr in ipairs(args[1]) do
-				task.spawn(morphPlayer,theirPlr, selectedName =="no" and theirPlr.UserId
+				task.spawn(C.CommandFunctions.MorphPlayer,theirPlr, selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)
 						or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
@@ -10978,6 +10996,7 @@ local function CharacterAdded(theirChar,firstRun)
 	end
 	local inputFunctions = ({theirPlr,theirChar,firstRun})
 	defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
+	defaultFunction("StartUp",inputFunctions)
 	C.objectFuncts[theirHumanoid] = C.objectFuncts[theirHumanoid] or {}
 	C.objectFuncts[theirHumanoid]["Died"] = theirHumanoid.Died:Connect(function()
 		defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)

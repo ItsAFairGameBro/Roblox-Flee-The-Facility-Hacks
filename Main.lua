@@ -8440,7 +8440,7 @@ C.AvailableHacks ={
 				if not capsule or not capsule:FindFirstChild("PodTrigger")
 					or not capsule.PodTrigger.CapturedTorso.Value then return end
 				if not C.enHacks.AutoRescue and not override then return end
-				if C.char:FindFirstChild("Hammer")~=nil and myTSM.Health.Value > 0 then return end
+				--if C.char:FindFirstChild("Hammer")~=nil and myTSM.Health.Value > 0 then return end
 				local Trigger=capsule:FindFirstChild("PodTrigger")
 				if not Trigger then return end
 				for s=5,1,-1 do

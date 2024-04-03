@@ -3412,9 +3412,9 @@ C.AvailableHacks ={
 				local ActionSign = Capsule:WaitForChild("PodTrigger"):WaitForChild("ActionSign")
 				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
 				if not carriedTorso then
-					if C.Map then
-						print("uh oh! not found")
-					end
+					--if C.Map then
+						print("uh oh! not found: CarriedTorsoChanged.Event")
+					--end
 					return
 				end
 				local isBeast = myTSM:WaitForChild("IsBeast")
@@ -3507,8 +3507,8 @@ C.AvailableHacks ={
 				C.AvailableHacks.Render[29].ActivateFunction(C.enHacks.Render_DownedRunner)
 			end,
 			["StartUp"]=function(theirPlr,theirChar)
+				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",math.huge)
 				local theirPrimPart = theirChar:WaitForChild("Torso",30)
-				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",30)
 				if not carriedTorso or not theirPrimPart then
 					if C.Map and not isCleared then
 						print("uh oh! CarriedTorsoChanged.Event found")
@@ -11058,9 +11058,9 @@ local function PlayerAdded(theirPlr)
 	local PlayerAddedConnection = theirPlr.CharacterRemoving:Connect(characterRemovingFunction);
 	table.insert(C.playerEvents[theirPlr.UserId], PlayerAddedConnection);
 	if myBots[theirPlr.Name:lower()] and botModeEnabled then
-		--print("Listening For",theirPlr.Name)
+		print("Listening Chat Messages",theirPlr.Name)
 		table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
-			--print(theirPlr.Name,"Messaged:!",message)
+			print(theirPlr.Name,"Messaged:!",message)
 			if message:lower() == "/re" then
 				C.AvailableHacks.Basic[99].ActivateFunction()
 			elseif message:lower() == "/reset" then

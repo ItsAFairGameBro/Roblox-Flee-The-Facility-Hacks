@@ -5439,7 +5439,7 @@ C.AvailableHacks ={
 				local isR6=human.RigType==Enum.HumanoidRigType.R6
 				local function update(new,saveHeight)
 					local blackListTable = {"Blacklist",C.char}
-					local directionPosition1 = C.char.PrimaryPart.Size.Y/2+(isR6 and C.char["Right Leg"] or C.char["LeftLowerLeg"]).Size.Y/2+3.03
+					local directionPosition1 = C.char.PrimaryPart.Size.Y/2+(isR6 and C.char["Right Leg"] or C.char["LowerLeftLeg"]).Size.Y/2+3.03
 					local directionPosition2 = getHumanoidHeight(C.char)
 					local directionPosition
 					if isR6 then

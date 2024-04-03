@@ -10906,7 +10906,7 @@ C.CommandFunctions = {
 			if not PrimPart then
 				return
 			end
-			task.wait(1)
+			task.wait(.1)
 			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)

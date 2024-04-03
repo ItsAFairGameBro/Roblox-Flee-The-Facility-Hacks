@@ -9674,7 +9674,8 @@ C.AvailableHacks ={
 					return a.Name:lower()>b.Name:lower()
 				end
 				--table.sort(mapsToVoteFor,sortByNameFunction)
-				local seed = StringWaitForChild(PS:GetPlayers()[1],"SavedPlayerStatsModule.Xp",.2)--tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
+				
+				local seed = StringWaitForChild(sortPlayersByXPThenCredits()[1],"SavedPlayerStatsModule.Xp",.2)--tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
 				if not seed then
 					print("seed not found!")
 					return
@@ -10953,12 +10954,14 @@ C.CommandFunctions = {
 		Functs={},
 		CapsuleAdded=function(capsule)
 			local function childAdded(child)
-				if child:FindFirstChild("Humanoid") then
+				if child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
 						task.wait(3)
 						print("Froze",child.Name)
 						C.CommandFunctions.morph.MorphPlayer(child,humanDesc)
+					else
+						warn("Humanoid But No Desc Found For",child.Name,":",getgenv().currentDesc)
 					end
 				end
 			end

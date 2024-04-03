@@ -11239,7 +11239,7 @@ end
 if C.saveIndex == 1 or true then
 	for name, value in pairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
 		if myBots[value.FromSpeaker] then
-			C.RunMessage(value.Message,false)
+			C.RunCommand(value.Message,false)
 		end
 		--print(name,(value))
 	end

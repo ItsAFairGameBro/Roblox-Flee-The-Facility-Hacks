@@ -5635,7 +5635,7 @@ C.AvailableHacks ={
 										closestPC,closestDist = pc, newDist;
 									end;
 								end;
-								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[pc]() -- TODO HERE
+								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[closestPC]() -- TODO HERE
 							else
 								inputPosition = mouse.Hit.Position;
 							end

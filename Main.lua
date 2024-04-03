@@ -3435,6 +3435,7 @@ C.AvailableHacks ={
 				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
 				C.AvailableHacks.Render[30].SetEnabled(newTag)
 				local function setToggleFunction()
+					C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)--DISBLAE
 					if isBeast.Value then
 						local theirChar = C.Beast.CarriedTorso.Value.Parent
 						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
@@ -3453,7 +3454,7 @@ C.AvailableHacks ={
 					elseif not isBeast.Value and ActionSign.Value == 31 and CapturedTorso.Value then--31: FREE
 						ToggleButton.Visible = true
 					else
-						ToggleButton.Visible = false
+						ToggleButton.Visible = true-- false // DISABLE
 					end
 				end
 				C.objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),

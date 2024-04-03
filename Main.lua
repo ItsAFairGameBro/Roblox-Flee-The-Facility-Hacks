@@ -10942,8 +10942,9 @@ C.CommandFunctions = {
 			end
 
 			for num, theirPlr in ipairs(args[1]) do
-				task.spawn(C.CommandFunctions.MorphPlayer,theirPlr, selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)
-						or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
+				print(selectedName)
+				local desc2Apply = selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+				task.spawn(C.CommandFunctions.MorphPlayer,theirPlr,desc2Apply)
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
 			return true,args[2]=="" and "nothing" or selectedName

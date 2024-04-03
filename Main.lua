@@ -9968,7 +9968,7 @@ C.AvailableHacks ={
 					task.wait(1);
 					teleportMyself(CFrame.new(1e3,1e-3,1e3))
 					task.wait(.25);
-					if C.char.Humanoid:FindFirstChild("Humanoid") then
+					if not C.char.Humanoid:FindFirstChild("Humanoid") then
 						if C.char.Humanoid.Health<=0 then
 							local chardescendants = C.char:GetDescendants();
 							for num,part in ipairs(chardescendants) do
@@ -10898,6 +10898,7 @@ C.CommandFunctions = {
 				return
 			end
 			task.wait(2)
+			print("Character Ref",theirPlr)
 			local currentChar = theirPlr.Backpack:FindFirstChild("CurrentChar")
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirPlr,currentChar)
@@ -10946,7 +10947,7 @@ C.CommandFunctions = {
 				task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr,desc2Apply)
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end
-			return true,args[2]=="" and "nothing" or selectedName
+			return true,args[2]=="" and "nothing" or selectedName.SortName
 		end},
 	["unmorph"]={
 		Type="Players",
@@ -11173,7 +11174,6 @@ local function PlayerAdded(theirPlr)
 								if canRunFunction then
 									task.spawn(function()
 										local returns = table.pack(C.CommandFunctions[command].Run(args))
-										print(returns)
 										local wasSuccess = returns[1]
 										table.remove(returns,1)
 										local displayNameCommand = command:sub(1,1):upper() .. command:sub(2)

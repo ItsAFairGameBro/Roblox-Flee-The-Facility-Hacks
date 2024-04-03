@@ -186,7 +186,7 @@ function C.ApplyRichTextEscapeCharacters(str,toEscaped,escapelist)
 	return str
 end
 function C.StringStartsWith(tbl,name)
-	if name == "" then
+	if name == "" or not name then
 		return
 	end
 	name = name:lower()
@@ -10948,13 +10948,13 @@ C.CommandFunctions = {
 			local outfitData
 			if args[3] then
 				if not getrenv().Outfits[selectedName.UserId] then
-					local wasSuccess,err = C.CommandFunctions.outfits.Run({selectedName.Name})
+					local wasSuccess,err = C.CommandFunctions.outfits.Run({selectedName.SortName})
 					if not wasSuccess then
 						return false, "Outfit Getter Err " .. tostring(err)
 					end
 				end
 				if not getrenv().Outfits[selectedName.UserId] then
-					return false, `Outfit not found for user {selectedName.Name}, {selectedName.UserId}`
+					return false, `Outfit not found for user {selectedName.SortName}, {selectedName.UserId}`
 				end
 				if tonumber(args[3]) then
 					args[3] = tonumber(args[3])

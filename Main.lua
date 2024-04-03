@@ -10974,7 +10974,6 @@ C.CommandFunctions = {
 							myClone[prop] = orgColor
 						end
 						C.CommandFunctions.morph.MorphPlayer(child,myClone,true)
-						CS:AddItem(child)
 						DS:AddItem(myClone,15)
 					end
 				end

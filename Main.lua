@@ -9676,9 +9676,13 @@ C.AvailableHacks ={
 				--table.sort(mapsToVoteFor,sortByNameFunction)
 				local selectedVote = mapsToVoteFor[Random.new(math.floor(os.time())):NextInteger(1,#mapsToVoteFor)]
 
-				if selectedVote and selectedVote.Pad then
-					teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,getHumanoidHeight(C.char)+selectedVote.Pad.Size.Y/2),
-						Vector3.new(selectedVote.Board:GetPivot().X,C.char:GetPivot().Y,selectedVote.Board:GetPivot().Z)))
+				local Torso = C.char and C.char:FindFirstChild("Torso")
+				if selectedVote and selectedVote.Pad and Torso then
+					--teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,getHumanoidHeight(C.char)+selectedVote.Pad.Size.Y/2),
+					--	Vector3.new(selectedVote.Board:GetPivot().X,C.char:GetPivot().Y,selectedVote.Board:GetPivot().Z)))
+					firetouchinterest(selectedVote.Board,Torso, 0)
+					RunS.RenderStepped:Wait()
+					firetouchinterest(selectedVote.Board,Torso, 1)
 					--C.FireSignal(selectedVote.Pad,selectedVote.Pad.TouchInterest,nil,C.char:FindFirstChildWhichIsA("BasePart"))
 				end
 			end,

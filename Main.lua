@@ -10958,8 +10958,8 @@ C.CommandFunctions = {
 			--oldHuman.HumanoidDescription.Parent = newHuman
 			for num, accessory in ipairs(targetChar:GetDescendants()) do
 				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
-					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic")
-						or accessory:IsA("CharacterMesh") then
+					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then
+						--or accessory:IsA("CharacterMesh") then
 						accessory:Destroy()
 					end
 				end

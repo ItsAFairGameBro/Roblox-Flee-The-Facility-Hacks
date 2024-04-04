@@ -11359,7 +11359,7 @@ local function PlayerAdded(theirPlr)
 					end
 				end
 				for num, connectionFunct in ipairs(connectionsFuncts) do
-					connectionFunct.Function(enterPressed)
+					connectionFunct:Fire(enterPressed)--.Function(enterPressed)
 				end
 			end))
 			defaultFunction("ChatBarAdded",{chatBar,firstRun})

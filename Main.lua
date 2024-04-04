@@ -11309,7 +11309,15 @@ local function PlayerAdded(theirPlr)
 					local targetChannelTB = chatBar.Parent.Parent.TargetChannelChip
 					if targetChannelTB.Visible then
 						local theirUser = targetChannelTB.Text:sub(5,targetChannelTB.Text:len()-1)
-						local theirPlr = PS:FindFirstChild(theirUser)
+						local theirPlr
+						for num, thisPlr in ipairs(PS:GetPlayers()) do
+							if thisPlr.Name == theirUser or thisPlr.DisplayName == theirUser then
+								if theirPlr then
+									warn(`(SendMessage) DUPLICATE Players Found For Display Name "{theirUser}"`)
+								end
+								theirPlr = thisPlr
+							end
+						end
 						if theirPlr then
 							myChannel = channels:FindFirstChild("RBXWhiser:"..plr.UserId.."_"..theirPlr.UserId) or channels:FindFirstChild("RBXWhiser:"..theirPlr.UserId.."_"..plr.UserId)
 							if not myChannel then

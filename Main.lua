@@ -11243,35 +11243,31 @@ function C.RunCommand(inputMsg,shouldSave)
 		C.CreateSysMessage(`Command Not Found: {command}`)
 	end
 end
+local function processPlayerMessage(data)
+	if data.MessageType == "Message" then
+		local message = data.Message
+		local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
+		if theirPlr then
+			if theirPlr ~= plr and myBots[theirPlr.Name:lower()] then
+				if message:sub(1,1) == "/" then
+					C.RunCommand(message,false)--message:sub(2),theirPlr == plr)
+				end
+			end
+		else
+			warn("Player Not Found!")
+		end
+	end
+end
 if gameUniverse=="Flee" then--C.saveIndex == 1 and gameUniverse == "Flee" then
 	task.delay(3,function()
-		for name, value in pairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
-			print(value)
-			local message = value.Message
-			if botModeEnabled 
-				and myBots[value.FromSpeaker] and (message:lower() == "/re" or message:lower() == "/reset") and value.Message:sub(1,1)=="/" then
-				C.RunCommand(value.Message,false)
-			end
+		for num, value in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
+			processPlayerMessage(value)
 			--print(name,(value))
 		end
 	end)
 end
 if gameUniverse == "Flee" and botModeEnabled then
-	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(function(data)
-		if data.MessageType == "Message" then
-			local message = data.Message
-			local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
-			if theirPlr then
-				if theirPlr ~= plr and myBots[theirPlr.Name:lower()] then
-					if message:sub(1,1) == "/" then
-						C.RunCommand(message,false)--message:sub(2),theirPlr == plr)
-					end
-				end
-			else
-				warn("Player Not Found!")
-			end
-		end
-	end))
+	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(processPlayerMessage))
 end
 local function PlayerAdded(theirPlr)
 	local isMe = (plr==theirPlr)

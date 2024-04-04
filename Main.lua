@@ -11365,9 +11365,9 @@ local function PlayerAdded(theirPlr)
 					end
 				elseif enterPressed then
 					print("Enter Pressed!")
-					for num, connection in ipairs(C.GetHardValue(sendButton,"MouseButton1Up",{yield=true})) do
+					for num, connection in ipairs(C.GetHardValue(sendButton,"InputEnded",{yield=true})) do
 						print("Connection Fired")
-						connection:Fire(sendButton.AbsolutePosition.X,sendButton.AbsolutePosition.Y)
+						connection:Fire({UserInputType = Enum.UserInputType.MouseButton1})
 					end
 				end
 			end))

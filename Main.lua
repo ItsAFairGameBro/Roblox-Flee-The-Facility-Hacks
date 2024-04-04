@@ -11253,8 +11253,8 @@ if C.saveIndex == 1 and gameUniverse == "Flee" then
 	end
 end
 if gameUniverse == "Flee" then
-	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(function(data,messageType)
-		print(data.SpeakerUserId,data.Message,messageType.Name)
+	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(function(data)
+		print(data.SpeakerUserId,data.Message,data.MessageType,typeof(data.MessageType))
 	end))
 end
 local function PlayerAdded(theirPlr)

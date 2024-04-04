@@ -11303,7 +11303,11 @@ local function PlayerAdded(theirPlr)
 				mySendButton.Visible = true
 				mySendButton.Name = "MySendButton"
 				mySendButton:AddTag("RemoveOnDestroy")
-				sendTheMessage = function(message)
+				sendTheMessage = function(message,dontSetTB)
+					message = typeof(message)=="string" and message or chatBar.Text
+					if message == "" then
+						return
+					end
 					local channels = TCS:WaitForChild("TextChannels")
 					local myChannel = channels.RBXGeneral
 					local targetChannelTB = chatBar.Parent.Parent.TargetChannelChip
@@ -11327,7 +11331,10 @@ local function PlayerAdded(theirPlr)
 							return warn(`(SendMessage) Could Not Find Private Message User {theirUser} from "{targetChannelTB.Text}"`)
 						end
 					end
-					myChannel:SendAsync(typeof(message)=="string" and message or chatBar.Text)
+					myChannel:SendAsync(message)
+					if dontSetTB~=false then
+						chatBar.Text = ""
+					end
 				end
 				table.insert(C.functs,mySendButton.MouseButton1Up:Connect(sendTheMessage))
 				mySendButton.AncestryChanged:Connect(function()

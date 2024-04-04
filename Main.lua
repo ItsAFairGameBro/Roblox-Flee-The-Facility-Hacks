@@ -11316,7 +11316,7 @@ local function PlayerAdded(theirPlr)
 								return warn("(SendMessage) Could Not Find MyChannel")
 							end
 						else
-							return warn("(SendMessage) Could Not Find Private Message User")
+							return warn(`(SendMessage) Could Not Find Private Message User {theirUser} from "{targetChannelTB.Text}"`)
 						end
 					end
 					myChannel:SendAsync(typeof(message)=="string" and message or chatBar.Text)

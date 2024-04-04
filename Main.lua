@@ -11243,14 +11243,17 @@ function C.RunCommand(inputMsg,shouldSave)
 		C.CreateSysMessage(`Command Not Found: {command}`)
 	end
 end
-if C.saveIndex == 1 and gameUniverse == "Flee" then
-	for name, value in pairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
-		local message = value.Message
-		if myBots[value.FromSpeaker] and (message:lower() == "/re" or message:lower() == "/reset") and value.Message:sub(1,1)=="/" then
-			C.RunCommand(value.Message,false)
+if gameUniverse=="Flee" then--C.saveIndex == 1 and gameUniverse == "Flee" then
+	task.delay(3,function()
+		for name, value in pairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
+			local message = value.Message
+			if botModeEnabled 
+				and myBots[value.FromSpeaker] and (message:lower() == "/re" or message:lower() == "/reset") and value.Message:sub(1,1)=="/" then
+				C.RunCommand(value.Message,false)
+			end
+			--print(name,(value))
 		end
-		--print(name,(value))
-	end
+	end)
 end
 if gameUniverse == "Flee" and botModeEnabled then
 	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(function(data)
@@ -11258,9 +11261,9 @@ if gameUniverse == "Flee" and botModeEnabled then
 			local message = data.Message
 			local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
 			if theirPlr then
-				if myBots[theirPlr.Name:lower()] then
+				if theirPlr ~= plr and myBots[theirPlr.Name:lower()] then
 					if message:sub(1,1) == "/" then
-						C.RunCommand(";"..message:sub(2),theirPlr == plr)
+						C.RunCommand(message,false)--message:sub(2),theirPlr == plr)
 					end
 				end
 			else
@@ -11300,7 +11303,7 @@ local function PlayerAdded(theirPlr)
 				elseif message:lower() == "/reset" then
 					C.AvailableHacks.Basic[99].ActivateFunction(true,true)
 				elseif message:sub(1,1) == "/" then
-					C.RunCommand(";"..message:sub(2),false)
+					C.RunCommand(message,false)--";"..message:sub(2),false)
 				end
 			end))
 		end
@@ -11423,7 +11426,7 @@ local function PlayerAdded(theirPlr)
 				index = 0
 				local inputMsg = chatBar.Text
 				if enterPressed then
-					if inputMsg:sub(1,1)==";" then
+					if inputMsg:sub(1,1)==";" or inputMsg:sub(1,1)=="/" then
 						chatBar.Text = ""
 						enterPressed = false
 						C.RunCommand(inputMsg,true)

@@ -19,7 +19,7 @@ local LS=game:GetService("Lighting")
 local SC=game:GetService("ScriptContext")
 local CP=game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
-
+local TCS=game:GetService("TextChatService")
 
 
 local gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") or "Unknown")
@@ -11294,6 +11294,40 @@ local function PlayerAdded(theirPlr)
 			local sendButton = gameUniverse ~= "Flee" and StringWaitForChild(game.CoreGui,"ExperienceChat.appLayout.chatInputBar.Background.Container.SendButton")
 			chatBar = StringWaitForChild(gameUniverse=="Flee" and PlayerGui or game.CoreGui,gameUniverse=="Flee" and 
 				"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar" or "ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox")
+			
+			local sendTheMessage
+			if gameUniverse ~= "Flee" then
+				sendButton.Visible = false
+				local mySendButton = sendButton:Clone()
+				mySendButton.Parent = sendButton.Parent
+				mySendButton.Visible = true
+				mySendButton.Name = "MySendButton"
+				mySendButton:AddTag("RemoveOnDestroy")
+				sendTheMessage = function(message)
+					local channels = TCS:WaitForChild("TextChannels")
+					local myChannel = channels.RBXGeneral
+					local targetChannelTB = sendButton.Parent.TargetChannelClip
+					if targetChannelTB.Visible then
+						local theirUser = targetChannelTB.Text:sub(4,targetChannelTB.Text:len()-1)
+						local theirPlr = PS:FindFirstChild(theirUser)
+						if theirPlr then
+							myChannel = channels:FindFirstChild("RBXWhiser:"..plr.UserId.."_"..theirPlr.UserId) or channels:FindFirstChild("RBXWhiser:"..theirPlr.UserId.."_"..plr.UserId)
+							if not myChannel then
+								return warn("(SendMessage) Could Not Find MyChannel")
+							end
+						else
+							return warn("(SendMessage) Could Not Find Private Message User")
+						end
+					end
+					myChannel:SendAsync(typeof(message)=="string" and message or chatBar.Text)
+				end
+				table.insert(C.functs,mySendButton.MouseButton1Up:Connect(sendTheMessage))
+				mySendButton.AncestryChanged:Connect(function()
+					if sendButton then
+						sendButton.Visible = true
+					end
+				end)
+			end
 			local connectionsFuncts = {}
 			for num, connection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
 				connection:Disable()
@@ -11359,18 +11393,24 @@ local function PlayerAdded(theirPlr)
 						C.RunCommand(inputMsg,true)
 					end
 				end
-				--[[for num, connectionFunct in ipairs(connectionsFuncts) do
-					if connectionFunct.Function then
-						connectionFunct:Fire(enterPressed)--.Function(enterPressed)
-					else
-						warn("NO Function Found For "..num)
-					end
-				end--]]
-				local yield = C.GetHardValue(sendButton,"Activated",{yield=true})
+				if gameUniverse=="Flee" then
+					for num, connectionFunct in ipairs(connectionsFuncts) do
+						if connectionFunct.Function then
+							connectionFunct:Fire(enterPressed)--.Function(enterPressed)
+						else
+							warn("NO Function Found For "..num)
+						end
+					end--]]
+				else
+					sendTheMessage(inputMsg)
+				end
+				--[[local yield = C.GetHardValue(sendButton,"Activated",{yield=true})
 				print("Yield",yield)
 				for num, connectionFunct in ipairs(yield) do
 					connectionFunct:Fire()
-				end
+				end--]]
+				
+				
 				
 				
 			end))

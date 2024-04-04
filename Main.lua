@@ -10962,11 +10962,11 @@ C.CommandFunctions = {
 				end
 			end
 			newHuman:ApplyDescription(humanDesc)
+			if camera.CameraSubject == newHuman then
+				camera.CameraSubject = oldHuman
+			end
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
-			if camera.CameraSubject == newHuman then
-				camera.CameraSubject = newHuman
-			end
 		end,
 		Functs={},
 		CapsuleAdded=function(capsule,noAddFunct)

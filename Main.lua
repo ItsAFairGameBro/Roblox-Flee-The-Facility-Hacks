@@ -10913,6 +10913,22 @@ getrenv().Outfits = getrenv().Outfits or {}
 getgenv().currentDesc = getgenv().currentDesc or {}
 --COMMANDS CONTROL
 C.CommandFunctions = {
+	["refresh"]={
+		Type=false,
+		AfterTxt="%s",
+		Run=function(args)
+			C.AvailableHacks.Basic[99].ActivateFunction()
+			return true
+		end,
+	},
+	["reset"]={
+		Type=false,
+		AfterTxt="%s",
+		Run=function(args)
+			C.AvailableHacks.Basic[99].ActivateFunction(true, true)
+			return true
+		end,
+	},
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",
@@ -11296,11 +11312,7 @@ local function PlayerAdded(theirPlr)
 			print("Listening Chat Messages",theirPlr.Name)
 			table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
 				print(theirPlr.Name,"Messaged:!",message)
-				if message:lower() == "/re" then
-					C.AvailableHacks.Basic[99].ActivateFunction()
-				elseif message:lower() == "/reset" then
-					C.AvailableHacks.Basic[99].ActivateFunction(true,true)
-				elseif message:sub(1,1) == "/" then
+				if message:sub(1,1) == "/" then
 					C.RunCommand(message,false)--";"..message:sub(2),false)
 				end
 			end))

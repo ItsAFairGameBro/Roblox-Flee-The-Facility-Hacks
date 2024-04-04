@@ -10970,7 +10970,7 @@ C.CommandFunctions = {
 				--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
 			else
 				for num, accessory in ipairs(targetChar:GetDescendants()) do
-					if accessory:IsA("Accessory") then--or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") or accessory:IsA("CharacterMesh") then
+					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") or accessory:IsA("CharacterMesh") then
 						accessory:Destroy()
 					end
 				end

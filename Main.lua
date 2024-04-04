@@ -11246,6 +11246,7 @@ end
 if gameUniverse=="Flee" then--C.saveIndex == 1 and gameUniverse == "Flee" then
 	task.delay(3,function()
 		for name, value in pairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
+			print(value)
 			local message = value.Message
 			if botModeEnabled 
 				and myBots[value.FromSpeaker] and (message:lower() == "/re" or message:lower() == "/reset") and value.Message:sub(1,1)=="/" then

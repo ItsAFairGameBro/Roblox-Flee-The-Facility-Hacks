@@ -11260,6 +11260,7 @@ if gameUniverse == "Flee" and botModeEnabled then
 			if theirPlr then
 				if theirPlr ~= C.plr and myBots[theirPlr.Name:lower()] then
 					if message:sub(1,1) == "/" then
+						print("Ran Cmd")
 						C.RunCommand(";"..message:sub(2),false)
 					end
 				else
@@ -11293,8 +11294,8 @@ local function PlayerAdded(theirPlr)
 	local PlayerAddedConnection = theirPlr.CharacterRemoving:Connect(characterRemovingFunction);
 	table.insert(C.playerEvents[theirPlr.UserId], PlayerAddedConnection);
 	if myBots[theirPlr.Name:lower()] and botModeEnabled then
-		--print("Listening Chat Messages",theirPlr.Name)
 		if gameUniverse~="Flee" then
+			print("Listening Chat Messages",theirPlr.Name)
 			table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
 				print(theirPlr.Name,"Messaged:!",message)
 				if message:lower() == "/re" then

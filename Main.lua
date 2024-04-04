@@ -9022,7 +9022,7 @@ C.AvailableHacks ={
 						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
 					local i = 0
-					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<4)) do
+					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<7)) do
 						-- or TSM.Ragdoll.Value))  do
 						i+=1
 						if i==10 then

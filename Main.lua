@@ -11341,9 +11341,10 @@ local function PlayerAdded(theirPlr)
 		--MY PLAYER CHAT
 		local chatBar
 		local index = 0
+		local hasNewChat = TCS.ChatVersion == Enum.ChatVersion.TextChatService
 		local function registerNewChatBar(_,firstRun)
-			local sendButton = gameUniverse ~= "Flee" and StringWaitForChild(game.CoreGui,"ExperienceChat.appLayout.chatInputBar.Background.Container.SendButton")
-			chatBar = StringWaitForChild(gameUniverse=="Flee" and PlayerGui or game.CoreGui,gameUniverse=="Flee" and 
+			local sendButton = hasNewChat and StringWaitForChild(game.CoreGui,"ExperienceChat.appLayout.chatInputBar.Background.Container.SendButton")
+			chatBar = StringWaitForChild(not hasNewChat and PlayerGui or game.CoreGui,gameUniverse=="Flee" and 
 				"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar" or "ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox")
 			
 			local sendTheMessage
@@ -11459,7 +11460,7 @@ local function PlayerAdded(theirPlr)
 						C.RunCommand(inputMsg,true)
 					end
 				end
-				if gameUniverse=="Flee" then
+				if not hasNewChat then
 					for num, connectionFunct in ipairs(connectionsFuncts) do
 						if connectionFunct.Function then
 							connectionFunct:Fire(enterPressed)--.Function(enterPressed)
@@ -11482,7 +11483,7 @@ local function PlayerAdded(theirPlr)
 			end))
 			defaultFunction("ChatBarAdded",{chatBar,firstRun})
 		end
-		if gameUniverse == "Flee" then
+		if not hasNewChat then
 			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame").ChildAdded:Connect(function(child)
 				registerNewChatBar()
 			end))

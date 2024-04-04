@@ -10955,27 +10955,26 @@ C.CommandFunctions = {
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
-			oldHuman.HumanoidDescription.Parent = newHuman
-			if isR6 then
-				for num, accessory in ipairs(targetChar:GetDescendants()) do
-					if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
-						if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic")
-							or accessory:IsA("CharacterMesh") then
-							accessory:Destroy()
-						end
+			--oldHuman.HumanoidDescription.Parent = newHuman
+			for num, accessory in ipairs(targetChar:GetDescendants()) do
+				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
+					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic")
+						or accessory:IsA("CharacterMesh") then
+						accessory:Destroy()
 					end
 				end
+			end
 				--targetChar.Head.face.Decal = 
 				--for name, data in pairs({Head={"Head"},Torso={"Torso"}})
 				---local orgDesc = Instance.new("HumanoidDescription")
 				--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
-			else
+			--[[else
 				for num, accessory in ipairs(targetChar:GetDescendants()) do
 					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") or accessory:IsA("CharacterMesh") then
 						accessory:Destroy()
 					end
 				end
-			end
+			end--]]
 			for num, instanceName in ipairs({"Shirt","Pants"}) do
 				local instance = targetChar:FindFirstChild(instanceName)
 				if instance then
@@ -10992,10 +10991,10 @@ C.CommandFunctions = {
 				end
 			end
 			newHuman:ApplyDescription(humanDesc)
-			if oldHuman:FindFirstChild("HumanoidDescription") then
-				oldHuman.HumanoidDescription:Destroy()
-			end
-			humanDesc:Clone().Parent = oldHuman
+			--if oldHuman:FindFirstChild("HumanoidDescription") then
+			--	oldHuman.HumanoidDescription:Destroy()
+			--end
+			--humanDesc:Clone().Parent = oldHuman
 			if camera.CameraSubject == newHuman then
 				camera.CameraSubject = oldHuman
 			end

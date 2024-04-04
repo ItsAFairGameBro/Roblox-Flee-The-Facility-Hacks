@@ -11308,7 +11308,7 @@ local function PlayerAdded(theirPlr)
 					local myChannel = channels.RBXGeneral
 					local targetChannelTB = chatBar.Parent.Parent.TargetChannelChip
 					if targetChannelTB.Visible then
-						local theirUser = targetChannelTB.Text:sub(4,targetChannelTB.Text:len()-1)
+						local theirUser = targetChannelTB.Text:sub(5,targetChannelTB.Text:len()-1)
 						local theirPlr = PS:FindFirstChild(theirUser)
 						if theirPlr then
 							myChannel = channels:FindFirstChild("RBXWhiser:"..plr.UserId.."_"..theirPlr.UserId) or channels:FindFirstChild("RBXWhiser:"..theirPlr.UserId.."_"..plr.UserId)

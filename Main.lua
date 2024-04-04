@@ -11291,6 +11291,7 @@ local function PlayerAdded(theirPlr)
 		local chatBar
 		local index = 0
 		local function registerNewChatBar(_,firstRun)
+			local sendButton = gameUniverse ~= "Flee" and StringWaitForChild(game.CoreGui,"ExperienceChat.appLayout.chatInputBar.Background.Container.SendButton")
 			chatBar = StringWaitForChild(gameUniverse=="Flee" and PlayerGui or game.CoreGui,gameUniverse=="Flee" and 
 				"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar" or "ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox")
 			local connectionsFuncts = {}
@@ -11358,8 +11359,14 @@ local function PlayerAdded(theirPlr)
 						C.RunCommand(inputMsg,true)
 					end
 				end
-				for num, connectionFunct in ipairs(connectionsFuncts) do
-					connectionFunct:Fire(enterPressed)--.Function(enterPressed)
+				if gameUniverse == "Flee" then
+					for num, connectionFunct in ipairs(connectionsFuncts) do
+						connectionFunct:Fire(enterPressed)--.Function(enterPressed)
+					end
+				elseif enterPressed then
+					for num, connection in ipairs(C.GetHardValue(sendButton,"MouseButton1Up",{yield=true})) do
+						connection:Fire(sendButton.AbsolutePosition.X,sendButton.AbsolutePosition.Y)
+					end
 				end
 			end))
 			defaultFunction("ChatBarAdded",{chatBar,firstRun})

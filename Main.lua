@@ -11321,7 +11321,7 @@ local function PlayerAdded(theirPlr)
 						if theirPlr then
 							myChannel = channels:FindFirstChild("RBXWhiser:"..plr.UserId.."_"..theirPlr.UserId) or channels:FindFirstChild("RBXWhiser:"..theirPlr.UserId.."_"..plr.UserId)
 							if not myChannel then
-								return warn("(SendMessage) Could Not Find MyChannel")
+								return warn(`(SendMessage) Could Not Find MyChannel {"RBXWhiser:"..plr.UserId.."_"..theirPlr.UserId} or {"RBXWhiser:"..theirPlr.UserId.."_"..plr.UserId}`)
 							end
 						else
 							return warn(`(SendMessage) Could Not Find Private Message User {theirUser} from "{targetChannelTB.Text}"`)

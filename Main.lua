@@ -9679,13 +9679,15 @@ C.AvailableHacks ={
 				end
 				--table.sort(mapsToVoteFor,sortByNameFunction)
 				
-				local seed = StringWaitForChild(sortPlayersByXPThenCredits()[1],"SavedPlayerStatsModule.Xp",.2)--tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
+				local seed = StringWaitForChild(sortPlayersByXPThenCredits()[1],"SavedPlayerStatsModule.Credits",.2)--tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
 				if not seed then
 					print("seed not found!")
 					return
+				elseif #mapsToVoteFor == 0 then
+					return
 				end
 				math.randomseed(math.floor(seed.Value))
-				print("RandomSeed:",math.floor(seed.Value),"Maps#",#mapsToVoteFor)
+				--print("RandomSeed:",math.floor(seed.Value),"Maps#",#mapsToVoteFor)
 				local selectedVote = mapsToVoteFor[math.random(1,#mapsToVoteFor)]
 
 				local Torso = C.char and C.char:FindFirstChild("Torso")
@@ -10948,7 +10950,7 @@ C.CommandFunctions = {
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
-			local newHuman = true and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+			local newHuman = isR6 and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")

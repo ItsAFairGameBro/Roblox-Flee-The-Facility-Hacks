@@ -10992,9 +10992,9 @@ C.CommandFunctions = {
 			end
 			newHuman:ApplyDescription(humanDesc)
 			if oldHuman:FindFirstChild("HumanoidDescription") then
-				oldHuman.HumanoidDescription:Destroy()
+				--oldHuman.HumanoidDescription:Destroy()
 			end
-			humanDesc:Clone().Parent = oldHuman
+			--humanDesc:Clone().Parent = oldHuman
 			if camera.CameraSubject == newHuman then
 				camera.CameraSubject = oldHuman
 			end

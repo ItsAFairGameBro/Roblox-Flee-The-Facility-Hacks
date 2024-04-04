@@ -11252,9 +11252,20 @@ if C.saveIndex == 1 and gameUniverse == "Flee" then
 		--print(name,(value))
 	end
 end
-if gameUniverse == "Flee" then
+if gameUniverse == "Flee" and botModeEnabled then
 	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(function(data)
-		print(data.SpeakerUserId,data.Message,data.MessageType,typeof(data.MessageType))
+		if data.MessageType == "Message" then
+			local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
+			if theirPlr then
+				if theirPlr ~= C.plr and myBots[theirPlr.Name:lower()] then
+					C.RunCommand(data.Message,false)
+				else
+					warn("It's either Not A bot or me")
+				end
+			else
+				warn("Player Not Found!")
+			end
+		end
 	end))
 end
 local function PlayerAdded(theirPlr)
@@ -11279,7 +11290,7 @@ local function PlayerAdded(theirPlr)
 	local PlayerAddedConnection = theirPlr.CharacterRemoving:Connect(characterRemovingFunction);
 	table.insert(C.playerEvents[theirPlr.UserId], PlayerAddedConnection);
 	if myBots[theirPlr.Name:lower()] and botModeEnabled then
-		print("Listening Chat Messages",theirPlr.Name)
+		--print("Listening Chat Messages",theirPlr.Name)
 		if gameUniverse~="Flee" then
 			table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
 				print(theirPlr.Name,"Messaged:!",message)

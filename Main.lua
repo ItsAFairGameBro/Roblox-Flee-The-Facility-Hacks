@@ -9685,6 +9685,7 @@ C.AvailableHacks ={
 					return
 				end
 				math.randomseed(math.floor(seed.Value))
+				print("RandomSeed:",math.floor(seed.Value),"Maps#",#mapsToVoteFor)
 				local selectedVote = mapsToVoteFor[math.random(1,#mapsToVoteFor)]
 
 				local Torso = C.char and C.char:FindFirstChild("Torso")
@@ -10947,7 +10948,7 @@ C.CommandFunctions = {
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
-			local newHuman = false and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+			local newHuman = true and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")

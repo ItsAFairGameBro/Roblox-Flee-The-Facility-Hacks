@@ -11257,6 +11257,7 @@ function C.RunCommand(inputMsg,shouldSave)
 					if playersAffected == plr.Name then
 						playersAffected = "you"
 					end
+					returns[1] = returns[1] or ""
 					C.CreateSysMessage(`{displayNameCommand}ed {(playersAffected)}{(CommandData.AfterTxt or ""):format(table.unpack(returns)):gsub("  "," ")}`,
 						Color3.fromRGB(255,255,255))
 				else

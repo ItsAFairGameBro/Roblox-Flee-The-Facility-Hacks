@@ -11369,7 +11369,7 @@ local function PlayerAdded(theirPlr)
 				local yield = C.GetHardValue(sendButton,"Activated",{yield=true})
 				print("Yield",yield)
 				for num, connectionFunct in ipairs(yield) do
-					connectionFunct.Function()
+					connectionFunct:Fire()
 				end
 				
 				

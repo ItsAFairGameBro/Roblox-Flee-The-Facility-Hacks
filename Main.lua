@@ -11344,7 +11344,7 @@ local function PlayerAdded(theirPlr)
 		local hasNewChat = TCS.ChatVersion == Enum.ChatVersion.TextChatService
 		local function registerNewChatBar(_,firstRun)
 			local sendButton = hasNewChat and StringWaitForChild(game.CoreGui,"ExperienceChat.appLayout.chatInputBar.Background.Container.SendButton")
-			chatBar = StringWaitForChild(not hasNewChat and PlayerGui or game.CoreGui,gameUniverse=="Flee" and 
+			chatBar = StringWaitForChild(not hasNewChat and PlayerGui or game.CoreGui,not hasNewChat and 
 				"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar" or "ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox")
 			
 			local sendTheMessage

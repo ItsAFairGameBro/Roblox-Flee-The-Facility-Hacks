@@ -10961,6 +10961,9 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
 			end
+			if camera.CameraSubject == newHuman then
+				camera.CameraSubject = newHuman
+			end
 			newHuman:ApplyDescription(humanDesc)
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)

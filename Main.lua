@@ -10928,7 +10928,9 @@ C.CommandFunctions = {
 				end
 				getgenv().currentDesc[targetChar.Name] = humanDesc
 			end
+			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
+			oldHuman.Parent = nil
 			local newHuman = Instance.new("Humanoid")--oldHuman:Clone()
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
@@ -10951,15 +10953,17 @@ C.CommandFunctions = {
 					end
 				end
 			end
+			--for name, data in pairs({Head={"Head"},Torso={"Torso"}})
 			---local orgDesc = Instance.new("HumanoidDescription")
 			--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
-			if not dontUpdate then
+			if not dontUpdate and gameName == "Flee" then
 				for num, capsule in ipairs(CS:GetTagged("Capsule")) do
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
 			end
 			newHuman:ApplyDescription(humanDesc)
 			newHuman.Parent = nil
+			oldHuman.Parent = targetChar
 			DS:AddItem(newHuman,3)
 		end,
 		Functs={},

@@ -11359,9 +11359,13 @@ local function PlayerAdded(theirPlr)
 						C.RunCommand(inputMsg,true)
 					end
 				end
-				if gameUniverse == "Flee" then
+				if gameUniverse == "Flee" or true then
 					for num, connectionFunct in ipairs(connectionsFuncts) do
-						connectionFunct:Fire(enterPressed)--.Function(enterPressed)
+						if connectionFunct.Function then
+							connectionFunct:Fire(enterPressed)--.Function(enterPressed)
+						else
+							warn("NO Function!?")
+						end
 					end
 				elseif enterPressed then
 					print("Enter Pressed!")

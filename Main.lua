@@ -10956,7 +10956,7 @@ C.CommandFunctions = {
 			--for name, data in pairs({Head={"Head"},Torso={"Torso"}})
 			---local orgDesc = Instance.new("HumanoidDescription")
 			--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
-			if not dontUpdate and gameName == "Flee" then
+			if not dontUpdate and gameName == "FleeMain" then
 				for num, capsule in ipairs(CS:GetTagged("Capsule")) do
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
@@ -11260,7 +11260,7 @@ if gameUniverse == "Flee" and botModeEnabled then
 			if theirPlr then
 				if myBots[theirPlr.Name:lower()] then
 					if message:sub(1,1) == "/" then
-						C.RunCommand(";"..message:sub(2),false)
+						C.RunCommand(";"..message:sub(2),theirPlr == plr)
 					end
 				end
 			else

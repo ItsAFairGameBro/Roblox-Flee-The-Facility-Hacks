@@ -1542,14 +1542,14 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	end
 	return str
 end
-local oldWarn = getgenv().oldWarn
+local oldWarn = getrenv().oldWarn
 if not oldWarn then
-	getgenv().oldWarn = warn
+	getrenv().oldWarn = warn
 	oldWarn = warn
 end
-local oldPrint = getgenv().oldPrint
+local oldPrint = getrenv().oldPrint
 if not oldPrint then
-	getgenv().oldPrint = print
+	getrenv().oldPrint = print
 	oldPrint = print
 end
 local function warn(...)
@@ -1559,8 +1559,8 @@ local function print(...)
 	oldPrint(recurseLoopPrint({...},"",0))
 end
 if not isStudio then
-	getrenv().warn = warn
-	getrenv().print = print
+	getgenv().warn = warn
+	getgenv().print = print
 end
 local RemoteEvent
 if gameUniverse=="Flee" then

@@ -10930,8 +10930,7 @@ C.CommandFunctions = {
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
-			oldHuman.Parent = nil
-			local newHuman = Instance.new("Humanoid")--oldHuman:Clone()
+			local newHuman = oldHuman:Clone()--Instance.new("Humanoid")--oldHuman:Clone()
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
 			for num, accessory in ipairs(targetChar:GetDescendants()) do
@@ -10963,7 +10962,6 @@ C.CommandFunctions = {
 			end
 			newHuman:ApplyDescription(humanDesc)
 			newHuman.Parent = nil
-			oldHuman.Parent = targetChar
 			DS:AddItem(newHuman,3)
 		end,
 		Functs={},

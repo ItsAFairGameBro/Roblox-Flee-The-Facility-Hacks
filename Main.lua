@@ -4326,7 +4326,7 @@ C.AvailableHacks ={
 
 				local chatTextLabel = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
 
-				if (UIS.TouchEnabled and newValue) and not C.AvailableHacks.Utility[3].Active and gameUniverse=="Flee" then
+				if (UIS.TouchEnabled and newValue) and not C.AvailableHacks.Utility[3].Active and TCS.ChatVersion == Enum.ChatVersion.LegacyChatService then
 					local chatButton = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
 					--local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
@@ -11348,7 +11348,7 @@ local function PlayerAdded(theirPlr)
 				"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar" or "ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox")
 			
 			local sendTheMessage
-			if gameUniverse ~= "Flee" then
+			if hasNewChat then
 				sendButton.Visible = false
 				local mySendButton = sendButton:Clone()
 				mySendButton.Parent = sendButton.Parent

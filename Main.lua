@@ -11258,7 +11258,7 @@ if gameUniverse == "Flee" and botModeEnabled then
 			local message = data.Message
 			local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
 			if theirPlr then
-				if theirPlr ~= plr and myBots[theirPlr.Name:lower()] then
+				if myBots[theirPlr.Name:lower()] then
 					if message:sub(1,1) == "/" then
 						C.RunCommand(";"..message:sub(2),false)
 					end

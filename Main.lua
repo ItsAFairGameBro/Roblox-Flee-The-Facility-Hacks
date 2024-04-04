@@ -10913,7 +10913,7 @@ getrenv().Outfits = getrenv().Outfits or {}
 getgenv().currentDesc = getgenv().currentDesc or {}
 --COMMANDS CONTROL
 C.CommandFunctions = {
-	["refresh"]={
+	["re"]={
 		Type=false,
 		AfterTxt="%s",
 		Run=function(args)
@@ -11062,6 +11062,7 @@ C.CommandFunctions = {
 				if args[3] and not outfitData then
 					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
 				end
+				print(selectedName == "no")
 				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
 					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
 				if not desc2Apply then
@@ -11438,7 +11439,7 @@ local function PlayerAdded(theirPlr)
 				if enterPressed then
 					if inputMsg:sub(1,1)==";" or inputMsg:sub(1,1)=="/" then
 						chatBar.Text = ""
-						enterPressed = false
+						enterPressed = inputMsg:sub(1,1)=="/" -- only send the message if it's a /
 						C.RunCommand(inputMsg,true)
 					end
 				end

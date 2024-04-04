@@ -9059,9 +9059,9 @@ C.AvailableHacks ={
 						--task.wait(1/6)
 					end
 					RunS.RenderStepped:Wait()
-					while myTSM.DisableCrawl.Value do
-						myTSM.DisableCrawl.Changed:Wait()
-					end
+					--while myTSM.DisableCrawl.Value do
+						--myTSM.DisableCrawl.Changed:Wait()
+					--end
 				end
 			end,
 			["ActivateFunction"]=function()
@@ -11252,6 +11252,11 @@ if C.saveIndex == 1 and gameUniverse == "Flee" then
 		--print(name,(value))
 	end
 end
+if gameUniverse == "Flee" then
+	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(function(data,messageType)
+		print(data.SpeakerUserId,data.Message,messageType.Name)
+	end))
+end
 local function PlayerAdded(theirPlr)
 	local isMe = (plr==theirPlr)
 	C.playerEvents[theirPlr.UserId] = {}
@@ -11275,16 +11280,18 @@ local function PlayerAdded(theirPlr)
 	table.insert(C.playerEvents[theirPlr.UserId], PlayerAddedConnection);
 	if myBots[theirPlr.Name:lower()] and botModeEnabled then
 		print("Listening Chat Messages",theirPlr.Name)
-		table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
-			print(theirPlr.Name,"Messaged:!",message)
-			if message:lower() == "/re" then
-				C.AvailableHacks.Basic[99].ActivateFunction()
-			elseif message:lower() == "/reset" then
-				C.AvailableHacks.Basic[99].ActivateFunction(true,true)
-			elseif message:sub(1,1) == "/" then
-				C.RunCommand(";"..message:sub(2),false)
-			end
-		end))
+		if gameUniverse~="Flee" then
+			table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
+				print(theirPlr.Name,"Messaged:!",message)
+				if message:lower() == "/re" then
+					C.AvailableHacks.Basic[99].ActivateFunction()
+				elseif message:lower() == "/reset" then
+					C.AvailableHacks.Basic[99].ActivateFunction(true,true)
+				elseif message:sub(1,1) == "/" then
+					C.RunCommand(";"..message:sub(2),false)
+				end
+			end))
+		end
 	end
 
 	--if gameUniverse=="Flee" then

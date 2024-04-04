@@ -10935,12 +10935,13 @@ C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",
-		MorphPlayer=function(targetChar, humanDesc, dontUpdate)
+		MorphPlayer=function(targetChar, humanDesc, isSame, dontUpdate)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			if not targetHuman then
 				return
 			end
 			humanDesc.Name = "CharacterDesc"
+			humanDesc:GetAttribute("IsSame",isSame)
 			if not dontUpdate then
 				local currentDesc = getgenv().currentDesc[targetChar.Name]
 				if currentDesc and humanDesc~=currentDesc then
@@ -10950,7 +10951,7 @@ C.CommandFunctions = {
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
-			local newHuman = isR6 and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+			local newHuman = (isR6 or isSame) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
@@ -11000,7 +11001,7 @@ C.CommandFunctions = {
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
 							myClone[prop] = orgColor
 						end
-						C.CommandFunctions.morph.MorphPlayer(child,myClone,true)
+						C.CommandFunctions.morph.MorphPlayer(child,myClone,humanDesc:GetAttribute("IsSame"),true)
 						DS:AddItem(myClone,15)
 					end
 				end
@@ -11027,7 +11028,7 @@ C.CommandFunctions = {
 			task.wait(.5)
 			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
 			if currentChar then
-				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar)
+				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,currentChar:GetAttribute("IsSame"))
 			end
 		end,
 		Run=function(args)
@@ -11065,14 +11066,13 @@ C.CommandFunctions = {
 				if args[3] and not outfitData then
 					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
 				end
-				print(selectedName == "no")
 				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
 					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
 				if not desc2Apply then
 					return false, `HumanoidDesc returned NULL for player {theirPlr.Name}`
 				end
 				if theirPlr.Character then
-					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply)
+					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,selectedName=="no")
 				else
 					getgenv().currentDesc[theirPlr.Name] = desc2Apply
 				end

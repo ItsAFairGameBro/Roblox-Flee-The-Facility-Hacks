@@ -11359,22 +11359,20 @@ local function PlayerAdded(theirPlr)
 						C.RunCommand(inputMsg,true)
 					end
 				end
-				if gameUniverse == "Flee" or true then
-					for num, connectionFunct in ipairs(connectionsFuncts) do
-						if connectionFunct.Function then
-							connectionFunct:Fire(enterPressed)--.Function(enterPressed)
-						else
-							warn("NO Function!?")
-							connectionFunct:Defer(enterPressed)
-						end
+				--[[for num, connectionFunct in ipairs(connectionsFuncts) do
+					if connectionFunct.Function then
+						connectionFunct:Fire(enterPressed)--.Function(enterPressed)
+					else
+						warn("NO Function Found For "..num)
 					end
-				elseif enterPressed then
-					print("Enter Pressed!")
-					for num, connection in ipairs(C.GetHardValue(sendButton,"InputEnded",{yield=true})) do
-						print("Connection Fired")
-						connection:Fire({UserInputType = Enum.UserInputType.MouseButton1})
-					end
+				end--]]
+				local yield = C.GetHardValue(sendButton,"Activated",{yield=true})
+				print("Yield",yield)
+				for num, connectionFunct in ipairs(yield) do
+					connectionFunct.Function()
 				end
+				
+				
 			end))
 			defaultFunction("ChatBarAdded",{chatBar,firstRun})
 		end

@@ -11406,7 +11406,7 @@ local function PlayerAdded(theirPlr)
 			local lastText
 			local lastUpd = -5
 			local function textUpd()
-				if not chatBar or not chatBar:IsFocused() or os.clock() - lastUpd < .5 then
+				if not chatBar or not chatBar:IsFocused() then--or os.clock() - lastUpd < .1 then
 					return
 				end
 				--local WhatsNew = chatBar.Text:sub(lastText:len())

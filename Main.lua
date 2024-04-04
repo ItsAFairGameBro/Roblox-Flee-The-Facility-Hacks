@@ -10951,7 +10951,7 @@ C.CommandFunctions = {
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
-			local newHuman = (isR6 or isSame) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+			local newHuman = (isR6) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
@@ -10988,7 +10988,7 @@ C.CommandFunctions = {
 			if oldHuman:FindFirstChild("HumanoidDescription") then
 				oldHuman.HumanoidDescription:Destroy()
 			end
-			newHuman.HumanoidDescription:Clone().Parent = oldHuman
+			humanDesc:Clone().Parent = oldHuman
 			if camera.CameraSubject == newHuman then
 				camera.CameraSubject = oldHuman
 			end

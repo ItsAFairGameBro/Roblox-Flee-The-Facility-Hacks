@@ -9684,7 +9684,8 @@ C.AvailableHacks ={
 					print("seed not found!")
 					return
 				end
-				local selectedVote = mapsToVoteFor[Random.new(math.floor(seed.Value)):NextInteger(1,#mapsToVoteFor)]
+				math.randomseed(math.floor(seed.Value))
+				local selectedVote = mapsToVoteFor[math.random(1,#mapsToVoteFor)]
 
 				local Torso = C.char and C.char:FindFirstChild("Torso")
 				if selectedVote and selectedVote.Pad and Torso then

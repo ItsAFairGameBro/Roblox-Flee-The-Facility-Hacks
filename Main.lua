@@ -11255,10 +11255,13 @@ end
 if gameUniverse == "Flee" and botModeEnabled then
 	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(function(data)
 		if data.MessageType == "Message" then
+			local message = data.Message
 			local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
 			if theirPlr then
 				if theirPlr ~= C.plr and myBots[theirPlr.Name:lower()] then
-					C.RunCommand(data.Message,false)
+					if message:sub(1,1) == "/" then
+						C.RunCommand(";"..message:sub(2),false)
+					end
 				else
 					warn("It's either Not A bot or me")
 				end

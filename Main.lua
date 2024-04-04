@@ -11258,8 +11258,8 @@ local function processPlayerMessage(data)
 		end
 	end
 end
-if gameUniverse=="Flee" then--C.saveIndex == 1 and gameUniverse == "Flee" then
-	task.delay(3,function()
+if C.saveIndex == 1 and gameUniverse=="Flee" then--C.saveIndex == 1 and gameUniverse == "Flee" then
+	task.delay(1,function()
 		for num, value in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
 			processPlayerMessage(value)
 			--print(name,(value))

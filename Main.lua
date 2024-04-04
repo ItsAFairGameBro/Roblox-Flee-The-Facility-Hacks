@@ -11258,13 +11258,10 @@ if gameUniverse == "Flee" and botModeEnabled then
 			local message = data.Message
 			local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
 			if theirPlr then
-				if theirPlr ~= C.plr and myBots[theirPlr.Name:lower()] then
+				if theirPlr ~= plr and myBots[theirPlr.Name:lower()] then
 					if message:sub(1,1) == "/" then
-						print("Ran Cmd")
 						C.RunCommand(";"..message:sub(2),false)
 					end
-				else
-					warn("It's either Not A bot or me")
 				end
 			else
 				warn("Player Not Found!")

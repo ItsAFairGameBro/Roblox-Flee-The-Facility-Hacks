@@ -11365,6 +11365,7 @@ local function PlayerAdded(theirPlr)
 							connectionFunct:Fire(enterPressed)--.Function(enterPressed)
 						else
 							warn("NO Function!?")
+							connectionFunct:Defer(enterPressed)
 						end
 					end
 				elseif enterPressed then

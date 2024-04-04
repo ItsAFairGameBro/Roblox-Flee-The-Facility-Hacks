@@ -10951,10 +10951,11 @@ C.CommandFunctions = {
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
-			local newHuman = (isR6) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+			local newHuman = (isR6 or true) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
+			oldHuman.HumanoidDescription.Parent = newHuman
 			if isR6 then
 				for num, accessory in ipairs(targetChar:GetDescendants()) do
 					if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
@@ -10992,9 +10993,9 @@ C.CommandFunctions = {
 			end
 			newHuman:ApplyDescription(humanDesc)
 			if oldHuman:FindFirstChild("HumanoidDescription") then
-				--oldHuman.HumanoidDescription:Destroy()
+				oldHuman.HumanoidDescription:Destroy()
 			end
-			--humanDesc:Clone().Parent = oldHuman
+			humanDesc:Clone().Parent = oldHuman
 			if camera.CameraSubject == newHuman then
 				camera.CameraSubject = oldHuman
 			end

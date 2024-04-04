@@ -11416,7 +11416,7 @@ local function PlayerAdded(theirPlr)
 							warn("NO Function Found For "..num)
 						end
 					end--]]
-				else
+				elseif enterPressed then
 					sendTheMessage(inputMsg)
 				end
 				--[[local yield = C.GetHardValue(sendButton,"Activated",{yield=true})

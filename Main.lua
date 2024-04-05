@@ -4647,11 +4647,11 @@ C.AvailableHacks ={
 				["Beast"] = (gameName=="FleeMain" and {
 					["Title"] = "BEAST",
 					["TextColor"] = newColor3(0,255,255),
-				}),
+				} or nil),
 				["Both"]=(gameName=="FleeMain" and {
 					["Title"] = "BOTH",
 					["TextColor"] = newColor3(255,255,0),
-				}),
+				} or nil),
 			},
 			["Universes"]={"Flee"},
 			["Funct"]=nil,

@@ -2964,16 +2964,15 @@ C.AvailableHacks ={
 				end
 			end),
 			["OthersStartUp"]=(function(theirPlr,theirChar)
-				local Head=theirChar:WaitForChild("Head",1e5) 
-				if not Head then
+				local HRP=theirChar:WaitForChild("HumanoidRootPart",1e5) 
+				if not HRP then
 					return
 				end
 				local newTag=NameTagEx:Clone()
 				newTag.Name = "PlayerTag"
 				newTag.Username.Text=theirPlr.Name
 				newTag.Distance.Visible=C.enHacks.ESP_Distance
-				newTag.Adornee = theirChar.HumanoidRootPart
-				newTag.Parent=theirChar.HumanoidRootPart
+				newTag.Parent=HRP
 				newTag.Enabled=C.enHacks.ESP_Players
 				theirChar.Humanoid.DisplayDistanceType=(C.enHacks.ESP_Players and Enum.HumanoidDisplayDistanceType.None or Enum.HumanoidDisplayDistanceType.Viewer)
 				CS:AddTag(newTag,"HackDisplays")
@@ -3290,17 +3289,17 @@ C.AvailableHacks ={
 					if not theirChar then
 						return
 					end
-					local Head=theirChar:FindFirstChild("Head") 
-					if not Head then 
+					local HRP=theirChar:FindFirstChild("HumanoidRootPart") 
+					if not HRP then 
 						return
 					end
-					local nameTag=Head:WaitForChild("NameTagEx", waitForChildTimout)
+					local nameTag=HRP:WaitForChild("PlayerTag", waitForChildTimout)
 					if not nameTag then
 						return
 					end
 					nameTag.ExpandingBar.Visible=(C.enHacks.ESP_PlayerProg and ActionProgress.Value~=0 and TSM.CurrentAnimation.Value~="Typing")
 					if TSM.CurrentAnimation.Value=="Typing" then
-						C.AvailableHacks.Render[7].RefreshBar(theirPlr,Head,ActionProgress)
+						C.AvailableHacks.Render[7].RefreshBar(theirPlr,HRP,ActionProgress)
 					else
 						nameTag.ExpandingBar.AmtFinished.Size=UDim2.new(ActionProgress.Value, 0, 1, 0)
 					end
@@ -3368,13 +3367,13 @@ C.AvailableHacks ={
 					if theirChar==nil then
 						return
 					end
-					local Head=theirChar:FindFirstChild("Head")
-					if Head==nil then
+					local HRP=theirChar:FindFirstChild("HumanoidRootPart")
+					if not HRP then
 						return
 					end
 					if TSM.CurrentAnimation.Value=="Typing" then
 						--lastEvent = ActionEvent.Value or lastEvent
-						C.AvailableHacks.Render[7].RefreshBar(plr,Head,ActionProgress,ActionEvent.Value)
+						C.AvailableHacks.Render[7].RefreshBar(plr,HRP,ActionProgress,ActionEvent.Value)
 					end
 					--[[local function SetMiniGameResultFunction()
 						for s=1,1,-1 do
@@ -10991,6 +10990,7 @@ C.CommandFunctions = {
 					currentDesc:Destroy()
 				end
 				if not isDefault then
+					print("Saved",targetChar.Name,getgenv().currentDesc)
 					getgenv().currentDesc[targetChar.Name] = humanDesc
 				end
 			end
@@ -11087,8 +11087,8 @@ C.CommandFunctions = {
 		end,
 		StartUp=function(theirPlr,theirChar,firstRun)
 			local theirHuman = theirChar:WaitForChild("Humanoid")
-			local PrimPart = theirChar:WaitForChild(theirHuman.RigType == Enum.HumanoidRigType.R6 and "Torso" or "UpperTorso", 15)
-			if not PrimPart then
+			local PrimPart = theirHuman and theirChar:WaitForChild("HumanoidRootPart", 15)
+			if not theirHuman or not PrimPart then
 				return
 			end
 			task.wait(.5) --Avatar loaded wait!
@@ -11099,6 +11099,7 @@ C.CommandFunctions = {
 				end
 			end
 			local currentChar = getgenv().currentDesc[theirPlr.Name]
+			print("CurrentChar",currentChar)
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true)
 			end
@@ -11151,7 +11152,7 @@ C.CommandFunctions = {
 				end
 				if theirPlr.Character then
 					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
-				else
+				elseif selectedName ~= "no" then
 					getgenv().currentDesc[theirPlr.Name] = desc2Apply
 				end
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))

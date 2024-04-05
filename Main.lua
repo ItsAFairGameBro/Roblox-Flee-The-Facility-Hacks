@@ -11052,13 +11052,12 @@ C.CommandFunctions = {
 				end
 			end
 		end,
-		JoinPlayerMorphId = nil,
 		StartUp=function(theirPlr,theirChar,firstRun)
 			if firstRun then
-				local JoinPlayerMorphId = C.CommandFunctions.morph.JoinPlayerMorphId
+				local JoinPlayerMorphId = getrenv().JoinPlayerMorphId
 				if JoinPlayerMorphId then
 					print("JoinPlayerMorphId Found:",JoinPlayerMorphId)
-					C.CommandFunctions.morph.Run({theirPlr.Name,JoinPlayerMorphId})
+					C.CommandFunctions.morph.Run({{theirPlr},theirPlr.Name,JoinPlayerMorphId})
 				else
 					print(`Join Morph Not Found For {theirPlr.Name}`)
 				end
@@ -11115,7 +11114,7 @@ C.CommandFunctions = {
 			end
 			if #args[1] == #PS:GetPlayers() then
 				print("Set JoinPlayerMorphId to",selectedName.SortName)
-				C.CommandFunctions.morph.JoinPlayerMorphId = selectedName.SortName
+				getrenv().JoinPlayerMorphId = selectedName.SortName
 			end
 			for num, theirPlr in ipairs(args[1]) do
 				if args[3] and not outfitData then

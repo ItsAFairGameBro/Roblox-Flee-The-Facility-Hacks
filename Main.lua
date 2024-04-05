@@ -2972,7 +2972,7 @@ C.AvailableHacks ={
 				newTag.Name = "PlayerTag"
 				newTag.Username.Text=theirPlr.Name
 				newTag.Distance.Visible=C.enHacks.ESP_Distance
-				newTag.Adornee = theirChar.Head
+				newTag.Adornee = theirChar.HumanoidRootPart
 				newTag.Parent=theirChar.HumanoidRootPart
 				newTag.Enabled=C.enHacks.ESP_Players
 				theirChar.Humanoid.DisplayDistanceType=(C.enHacks.ESP_Players and Enum.HumanoidDisplayDistanceType.None or Enum.HumanoidDisplayDistanceType.Viewer)
@@ -2990,7 +2990,9 @@ C.AvailableHacks ={
 				end
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildAdded:Connect(childChanged)))
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildRemoved:Connect(childChanged)))
-				table.insert(C.playerEvents[theirPlr.UserId],(RS.IsGameActive.Changed:Connect(childChanged)))
+				if gameName=="FleeMain" then
+					table.insert(C.playerEvents[theirPlr.UserId],(RS.IsGameActive.Changed:Connect(childChanged)))
+				end
 				childChanged()
 			end),
 		},

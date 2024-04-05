@@ -11518,16 +11518,16 @@ local function PlayerAdded(theirPlr)
 				local inputMsg = chatBar.Text
 				if enterPressed then
 					if inputMsg:sub(1,1)==";" or inputMsg:sub(1,1)=="/" then
-						chatBar.Text = ""
 						enterPressed = inputMsg:sub(1,1)=="/" -- only send the message if it's a /
-						print("FirstLetter",inputMsg:sub(1,1),enterPressed)
+						if not enterPressed then
+							chatBar.Text = ""
+						end
 						task.spawn(C.RunCommand,inputMsg,true)
 					end
 				end
 				if not hasNewChat then
 					for num, connectionFunct in ipairs(connectionsFuncts) do
 						if connectionFunct.Function then
-							print("function fired for",num)
 							connectionFunct.Function(enterPressed)
 						else
 							warn("NO Function Found For "..num)

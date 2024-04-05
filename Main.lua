@@ -806,7 +806,7 @@ local function StartBetterConsole()
 	local function printFunction(message,messageType,isFromMe)
 		if isCleared then return end
 		allMessages += 1
-		local wasAtBottom = forceAtBottom or BetterConsoleList.CanvasPosition.Y+40 >= BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y
+		local wasAtBottom = forceAtBottom or BetterConsoleList.CanvasPosition.Y+5 >= BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y
 		local MessageLabel = BetterConsoleTextEx:Clone()
 		if not isFromMe then
 			MessageLabel:SetAttribute("IsGame",true)
@@ -818,7 +818,7 @@ local function StartBetterConsole()
 		MessageLabel.Name = allMessages
 		MessageLabel.Parent = BetterConsoleList
 		BetterConsole_SetMessagesVisibility(MessageLabel)
-		if wasAtBottom then
+		if wasAtBottom then -- and MessageLabel.Visible
 			BetterConsole_DoCmd("/bottom",true)
 		end
 	end
@@ -5821,6 +5821,59 @@ C.AvailableHacks ={
 				end
 				--print(("search completed after %.2f"):format(os.clock()-start))
 			end,
+			["MapAdded"]=function(newMap)
+				if not C.AvailableHacks.Basic[20].FirstClean then
+					C.AvailableHacks.Basic[20].FirstClean=true
+					C.AvailableHacks.Basic[20].ActivateFunction(false)
+					if C.enHacks.Basic_InviWalls then
+						C.AvailableHacks.Basic[20].ActivateFunction(C.enHacks.Basic_InviWalls)
+					end
+				end
+				local GameStatus = RS:WaitForChild("GameStatus")
+				while GameStatus.Value:find("LOADING:") do
+					GameStatus.Changed:Wait()
+					task.wait(1/2)--wait a bit!
+				end
+				if not C.enHacks.Basic_InviWalls or not newMap.Parent then
+					return
+				end
+				C.AvailableHacks.Basic[20].ApplyInvi(newMap)
+			end,
+			["ActivateFunction"]=function(newValue)
+				local BasePlate = workspace:FindFirstChild("MapBaseplate")
+				if BasePlate then
+					BasePlate.CanCollide = newValue
+				end
+				if newValue then
+					C.AvailableHacks.Basic[20].ApplyInvi(workspace)
+				else
+					for num, object in ipairs(CS:GetTagged("InviWalls")) do
+						C.AvailableHacks.Basic[20].InstanceRemoved(object)
+					end
+				end
+			end,
+		},
+		[25]={
+			["Type"]="ExTextButton",
+			["Title"]="Disable Touch Transmitters",
+			["Desc"]="Disable Touch Transmitters",
+			["Shortcut"]="Basic_DisableTouchTransmitters",
+			["Default"]=false,
+			["Options"]={
+				[false]={
+					["Title"]="DISABLED",
+					["TextColor"]=newColor3(255, 0, 0),
+				},
+				["Humanoids"]={
+					["Title"]="HUMNAOIDS",
+					["TextColor"]=newColor3(0,170,170),
+				},
+				["All"]={
+					["Title"]="ALL",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
+			},
+			["Universes"]={"Global"},
 			["MapAdded"]=function(newMap)
 				if not C.AvailableHacks.Basic[20].FirstClean then
 					C.AvailableHacks.Basic[20].FirstClean=true
@@ -10982,7 +11035,7 @@ C.CommandFunctions = {
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
-			if not targetHuman or not targetHRP then
+			if not targetHuman or targetHuman.Health <=0 or not targetHRP then
 				return
 			end
 			--local wasAnchored = targetHRP.Anchored
@@ -11153,7 +11206,8 @@ C.CommandFunctions = {
 				if theirPlr.Character then
 					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
 				elseif selectedName ~= "no" then
-					if getgenv().currentDesc[theirPlr.Name] ~= desc2Apply then
+					if getgenv().currentDesc[theirPlr.Name] 
+						and getgenv().currentDesc[theirPlr.Name] ~= desc2Apply then
 						getgenv().currentDesc[theirPlr.Name]:Destroy()
 					end
 					getgenv().currentDesc[theirPlr.Name] = desc2Apply

@@ -1523,7 +1523,7 @@ local function recurseLoopPrint(leftTbl,str,depth)
 		str..=string.rep("\t",depth)
 		local isTable = typeof(val)=="table"
 		if isTable then
-			str..=("tbl "..printInstances(num)..":	{\n")
+			str..=("tbl "..num..":	{\n")
 			str..=recurseLoopPrint(val,"",depth+1)
 			str..=("\n	}")
 		else
@@ -1542,14 +1542,14 @@ local function recurseLoopPrint(leftTbl,str,depth)
 	end
 	return str
 end
-local oldWarn = getrenv().oldWarn
+local oldWarn = getgenv().oldWarn
 if not oldWarn then
-	getrenv().oldWarn = warn
+	getgenv().oldWarn = warn
 	oldWarn = warn
 end
-local oldPrint = getrenv().oldPrint
+local oldPrint = getgenv().oldPrint
 if not oldPrint then
-	getrenv().oldPrint = print
+	getgenv().oldPrint = print
 	oldPrint = print
 end
 local function warn(...)
@@ -1559,8 +1559,8 @@ local function print(...)
 	oldPrint(recurseLoopPrint({...},"",0))
 end
 if not isStudio then
-	getgenv().warn = warn
-	getgenv().print = print
+	getrenv().warn = warn
+	getrenv().print = print
 end
 local RemoteEvent
 if gameUniverse=="Flee" then

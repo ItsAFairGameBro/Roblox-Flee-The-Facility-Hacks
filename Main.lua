@@ -5865,44 +5865,85 @@ C.AvailableHacks ={
 					["TextColor"]=newColor3(255, 0, 0),
 				},
 				["Humanoids"]={
-					["Title"]="HUMNAOIDS",
+					["Title"]="HUMANOIDS",
 					["TextColor"]=newColor3(0,170,170),
 				},
-				["All"]={
+				[true]={
 					["Title"]="ALL",
 					["TextColor"]=newColor3(255, 255, 255),
 				},
 			},
 			["Universes"]={"Global"},
+			["TouchTransmitters"]={},
 			["MapAdded"]=function(newMap)
-				if not C.AvailableHacks.Basic[20].FirstClean then
-					C.AvailableHacks.Basic[20].FirstClean=true
-					C.AvailableHacks.Basic[20].ActivateFunction(false)
-					if C.enHacks.Basic_InviWalls then
-						C.AvailableHacks.Basic[20].ActivateFunction(C.enHacks.Basic_InviWalls)
-					end
-				end
 				local GameStatus = RS:WaitForChild("GameStatus")
 				while GameStatus.Value:find("LOADING:") do
 					GameStatus.Changed:Wait()
 					task.wait(1/2)--wait a bit!
 				end
-				if not C.enHacks.Basic_InviWalls or not newMap.Parent then
+				if not C.enHacks.Basic_DisableTouchTransmitters or not newMap.Parent then
 					return
 				end
-				C.AvailableHacks.Basic[20].ApplyInvi(newMap)
+				C.AvailableHacks.Basic[25].ApplyTransmitters(newMap)
+			end,
+			["GetType"]=function(instance)
+				if instance.Parent.Parent:FindFirstChild("Humanoid") then
+					return "Humanoid"
+				else
+					return "Part"
+				end
+			end,
+			["CanBeEnabled"]=function(instance,Type)
+				Type = Type or C.AvailableHacks.Basic[25].GetType(instance)
+				if isCleared then
+					return false, Type
+				end
+				if C.enHacks.Basic_DisableTouchTransmitters=="Humanoids" and Type=="Humanoid" then
+					return true, Type
+				elseif C.enHacks.Basic_DisableTouchTransmitters==true then
+					return true, Type
+				elseif not C.enHacks.Basic_DisableTouchTransmitters then
+					return false, Type
+				end
+			end,
+			["UndoTransmitters"]=function(saveEn)
+				for index = #C.AvailableHacks.Basic[25].TouchTransmitters,1,-1 do --for parent, object in pairs(C.AvailableHacks.Basic[25].TouchTransmitters) do
+					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters and not isCleared then
+						return
+					end
+					local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
+					local object, parent, Type = table.unpack(data)
+					if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
+						object.Parent = object
+						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
+					end
+					if index%50==0 then
+						RunS.RenderStepped:Wait()
+					end
+				end
+			end,
+			["ApplyTransmitters"]=function(location)
+				local saveEn = C.enHacks.Basic_DisableTouchTransmitters
+				for num, instance in ipairs(location:GetDescendants()) do
+					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters then
+						return
+					end
+					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
+						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
+						if canBeEn then
+							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,instance.Parent,Type})
+							instance.Parent = nil
+						end
+					end
+					if num%50==0 then
+						RunS.RenderStepped:Wait()
+					end
+				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				local BasePlate = workspace:FindFirstChild("MapBaseplate")
-				if BasePlate then
-					BasePlate.CanCollide = newValue
-				end
+				C.AvailableHacks.Basic[25].UndoTransmitters(newValue)
 				if newValue then
-					C.AvailableHacks.Basic[20].ApplyInvi(workspace)
-				else
-					for num, object in ipairs(CS:GetTagged("InviWalls")) do
-						C.AvailableHacks.Basic[20].InstanceRemoved(object)
-					end
+					C.AvailableHacks.Basic[25].ApplyTransmitters(workspace)
 				end
 			end,
 		},
@@ -10450,6 +10491,9 @@ C.clear = function(isManualClear)
 	end
 	if C.AvailableHacks.Basic and C.AvailableHacks.Basic[30]  then
 		C.AvailableHacks.Basic[30].ActivateFunction(false);--disable char invisibility
+	end
+	if C.AvailableHacks.Basic and C.AvailableHacks.Basic[25] then
+		C.AvailableHacks.Basic[25].ActivateFunction(false);--re-enable transmitter
 	end
 	--[[for num,obj in ipairs(CS:GetTagged("RemoveOnDestroy")) do
 		if obj~=nil then

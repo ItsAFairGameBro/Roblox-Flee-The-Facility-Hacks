@@ -10949,13 +10949,12 @@ C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",
-		MorphPlayer=function(targetChar, humanDesc, isSame, dontUpdate)
+		MorphPlayer=function(targetChar, humanDesc, dontUpdate)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			if not targetHuman then
 				return
 			end
 			humanDesc.Name = "CharacterDesc"
-			humanDesc:GetAttribute("IsSame",isSame)
 			if not dontUpdate then
 				local currentDesc = getgenv().currentDesc[targetChar.Name]
 				if currentDesc and humanDesc~=currentDesc then
@@ -10965,10 +10964,10 @@ C.CommandFunctions = {
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
-			local newHuman = (isR6 and false) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+			local newHuman = oldHuman:Clone()--(isR6 and false) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			local newHuman_Animator = newHuman:FindFirstChild("Animator")
 			if newHuman_Animator then
-				newHuman_Animator:Destroy()
+				newHuman_Animator:Destroy() -- Prevents LoadAnimation error spams
 			end
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
@@ -11031,7 +11030,7 @@ C.CommandFunctions = {
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
 							myClone[prop] = orgColor
 						end
-						C.CommandFunctions.morph.MorphPlayer(child,myClone,humanDesc:GetAttribute("IsSame"),true)
+						C.CommandFunctions.morph.MorphPlayer(child,myClone,true)
 						DS:AddItem(myClone,15)
 					end
 				end
@@ -11056,9 +11055,10 @@ C.CommandFunctions = {
 				return
 			end
 			task.wait(.5)
-			local currentChar = theirPlr:FindFirstChild("CharacterDesc")
+			local currentChar = getgenv().currentDesc[theirPlr.Name]--theirPlr:FindFirstChild("CharacterDesc")
+			--print(currentChar)
 			if currentChar then
-				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,currentChar:GetAttribute("IsSame"))
+				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true)
 			end
 		end,
 		Run=function(args)

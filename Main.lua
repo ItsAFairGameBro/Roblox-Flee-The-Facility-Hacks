@@ -9717,9 +9717,9 @@ C.AvailableHacks ={
 				elseif #mapsToVoteFor == 0 then
 					return
 				end
-				math.randomseed(math.floor(seed.Value))
+				--math.randomseed(math.floor(seed.Value))
 				--print("RandomSeed:",math.floor(seed.Value),"Maps#",#mapsToVoteFor)
-				local selectedVote = mapsToVoteFor[math.random(1,#mapsToVoteFor)]
+				local selectedVote = mapsToVoteFor[seed.Value%#mapsToVoteFor+1]--math.random(1,#mapsToVoteFor)]
 
 				local Torso = C.char and C.char:FindFirstChild("Torso")
 				if selectedVote and selectedVote.Pad and Torso then
@@ -11064,7 +11064,8 @@ C.CommandFunctions = {
 				if child:IsA("Model") and child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
-						task.wait(.4)
+						task.wait(1)
+						print("Applying Freezer")
 						local orgColor = child:WaitForChild("Head").Color
 						local myClone = humanDesc:Clone()
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do

@@ -2968,6 +2968,7 @@ C.AvailableHacks ={
 					return
 				end
 				local newTag=NameTagEx:Clone()
+				newTag.Name = "PlayerTag"
 				newTag.Username.Text=theirPlr.Name
 				newTag.Distance.Visible=C.enHacks.ESP_Distance
 				newTag.Parent=Head
@@ -10966,6 +10967,7 @@ C.CommandFunctions = {
 				getgenv().currentDesc[targetChar.Name] = humanDesc
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
+			local oldHead = targetChar.Head
 			local oldHuman = targetHuman
 			local newHuman = oldHuman:Clone()--(isR6 and false) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			
@@ -10986,9 +10988,6 @@ C.CommandFunctions = {
 					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then
 						--or accessory:IsA("CharacterMesh") then
 						accessory:Destroy()
-					elseif accessory:HasTag("RemoveOnDestroy") then
-						--TODO HERE
-						hackDisplay = accessory
 					end
 				end
 			end
@@ -11029,9 +11028,12 @@ C.CommandFunctions = {
 			if oldChar_ForceField then
 				oldChar_ForceField.Parent = targetChar.PrimaryPart
 			end
-			if hackDisplay then
-				hackDisplay.Parent = targetChar:FindFirstChild("Head")
-			end
+			task.delay(1,function()
+				local display = oldHead:FindFirstChild("PlayerTag")--TODO HERE
+				if display then
+					display.Parent = targetChar:FindFirstChild("Head")
+				end
+			end)
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
 		end,

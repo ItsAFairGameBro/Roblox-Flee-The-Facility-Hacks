@@ -11352,7 +11352,7 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh)
 	end
 end
 local function processPlayerMessage(data,noRefresh)
-	print("message finished filtering:",data.Message)
+	print("message finished filtering:",noRefresh)
 	if data.MessageType == "Message" then
 		local message = data.Message
 		local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)

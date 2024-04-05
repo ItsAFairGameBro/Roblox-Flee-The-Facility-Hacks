@@ -10960,7 +10960,7 @@ C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",
-		MorphPlayer=function(targetChar, humanDesc, dontUpdate)
+		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			if not targetHuman then
 				return
@@ -10971,7 +10971,9 @@ C.CommandFunctions = {
 				if currentDesc and humanDesc~=currentDesc then
 					currentDesc:Destroy()
 				end
-				getgenv().currentDesc[targetChar.Name] = humanDesc
+				if not isDefault then
+					getgenv().currentDesc[targetChar.Name] = humanDesc
+				end
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHead = targetChar.Head
@@ -11141,7 +11143,7 @@ C.CommandFunctions = {
 					return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
 				end
 				if theirPlr.Character then
-					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply)
+					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,true)
 				else
 					getgenv().currentDesc[theirPlr.Name] = desc2Apply
 				end

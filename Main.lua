@@ -11520,7 +11520,7 @@ local function PlayerAdded(theirPlr)
 					if inputMsg:sub(1,1)==";" or inputMsg:sub(1,1)=="/" then
 						chatBar.Text = ""
 						enterPressed = inputMsg:sub(1,1)=="/" -- only send the message if it's a /
-						print("FirstLetter",inputMsg:sub(1,1))
+						print("FirstLetter",inputMsg:sub(1,1),enterPressed)
 						task.spawn(C.RunCommand,inputMsg,true)
 					end
 				end

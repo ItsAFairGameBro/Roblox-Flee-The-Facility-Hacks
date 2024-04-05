@@ -5914,7 +5914,7 @@ C.AvailableHacks ={
 					local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
 					local object, parent, Type = table.unpack(data)
 					if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
-						object.Parent.Parent = object
+						object.Parent.Parent = parent
 						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
 					end
 					if index%50==0 then

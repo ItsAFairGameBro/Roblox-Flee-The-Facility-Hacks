@@ -10627,7 +10627,14 @@ local savedFriendsCashe = {}
 function C.GetFriendsFunct(userID)
 	local friendsTable = savedFriendsCashe[userID]
 	if not friendsTable then
-		local friendsPages = PS:GetFriendsAsync(userID)
+		local canExit,friendsPages
+		while true do
+			canExit,friendsPages = pcall(PS.GetFriendsAsync,PS,userID) -- it complains if we get it too much!
+			if canExit then
+				break
+			end
+			task.wait(3)
+		end
 		friendsTable = iterPageItems(friendsPages)
 		savedFriendsCashe[userID] = table.clone(friendsTable)
 	end

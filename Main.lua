@@ -3012,6 +3012,7 @@ C.AvailableHacks ={
 				local function leFunction()
 					local DistanceTag = NameTag:WaitForChild("Distance",10)
 					if not DistanceTag then
+						print("Distance Not Found")
 						return
 					end
 					while (NameTag~=nil and NameTag.Parent~=nil and NameTag.Parent.Parent~=nil and DistanceTag~=nil and not isCleared) do
@@ -3025,6 +3026,7 @@ C.AvailableHacks ={
 						end
 						RunS.RenderStepped:Wait()
 					end
+					print(NameTag~=nil and NameTag.Parent~=nil)
 				end
 				task.spawn(leFunction)
 			end),

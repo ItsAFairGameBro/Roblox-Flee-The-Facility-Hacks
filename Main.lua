@@ -5765,7 +5765,7 @@ C.AvailableHacks ={
 				object.Color = object:GetAttribute("OrgColor") or object.Color
 				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency
 				object.CastShadow = true
-				--[[if structure == "Door" then
+				if structure == "Door" then
 					setChangedAttribute(object,"CanCollide",false)
 				end--]]
 			end,
@@ -5798,7 +5798,7 @@ C.AvailableHacks ={
 					object.CastShadow = false
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					object.Color = Color3.fromRGB(0,0,200)
-					--[[if isDoor then
+					if isDoor then
 						setChangedAttribute(object,"CanCollide",function()
 							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)
@@ -10409,7 +10409,7 @@ C.AvailableHacks ={
 			["SaveDeb"] = 0,
 			["ActivateFunction"]=function(newValue)
 				C.AvailableHacks.Commands[22].SaveDeb += 1
-				trigger_setTriggers("GetFrozen",{Exit = not newValue})
+				trigger_setTriggers("Commands_GetFrozen",{Exit = not newValue})
 				if newValue == false then
 					return
 				end

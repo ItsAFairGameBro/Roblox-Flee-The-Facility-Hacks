@@ -3012,13 +3012,11 @@ C.AvailableHacks ={
 				local function leFunction()
 					local DistanceTag = NameTag:WaitForChild("Distance",10)
 					if not DistanceTag then
-						print("Distance Not Found")
 						return
 					end
 					while (NameTag~=nil and NameTag.Parent~=nil and NameTag.Parent.Parent~=nil and DistanceTag~=nil and not isCleared) do
 						local dist=math.round((camera.CFrame.p-(CenterObject.Position+NameTag.StudsOffset)).Magnitude)
 						DistanceTag.Text=(dist.."m")
-						print(isInGame(NameTag.Parent.Parent),isInGame(camera.CameraSubject.Parent))
 						if isInGame(NameTag.Parent.Parent)==isInGame(camera.CameraSubject.Parent) then
 							NameTag.PlayerToHideFrom=nil
 						else
@@ -3026,21 +3024,20 @@ C.AvailableHacks ={
 						end
 						RunS.RenderStepped:Wait()
 					end
-					print(NameTag~=nil and NameTag.Parent~=nil)
 				end
 				task.spawn(leFunction)
 			end),
 			["OthersStartUp"]=function(theirPlr,theirChar)
-				local Head=theirChar:WaitForChild("Head",1e5) 
-				if not Head then 
+				local HRP=theirChar:WaitForChild("HumanoidRootPart",1e5) 
+				if not HRP then 
 					return 
 				end
-				local NameTag=Head:WaitForChild("NameTagEx",1e5) 
+				local NameTag=HRP:WaitForChild("NameTagEx",1e5) 
 				if not NameTag then 
 					return 
 				end
 				NameTag.Distance.Visible=C.enHacks.ESP_Distance
-				C.AvailableHacks.Render[2].UpdateDistFunct(NameTag,Head)
+				C.AvailableHacks.Render[2].UpdateDistFunct(NameTag,HRP)
 			end,
 			["ComputerAdded"]=function(computer)
 				local PrimPart=computer.PrimaryPart

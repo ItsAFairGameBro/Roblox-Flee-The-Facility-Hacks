@@ -11049,7 +11049,7 @@ C.CommandFunctions = {
 				if child:IsA("Model") and child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
-						task.wait(.4)
+						task.wait(.3)
 						local orgColor = child:WaitForChild("Head").Color
 						local myClone = humanDesc:Clone()
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
@@ -11388,9 +11388,13 @@ local function PlayerAdded(theirPlr)
 			print("Listening Chat Messages",theirPlr.Name)
 			table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
 				print(theirPlr.Name,"Messaged:!",message)
-				if message:sub(1,1) == "/" then
+				--[[if message:sub(1,1) == "/" then
 					C.RunCommand(message,false)--";"..message:sub(2),false)
-				end
+				end--]]
+				processPlayerMessage({
+						MessageType = "Message", 
+						SpeakerUserId = theirPlr.UserId, 
+						Message = message})
 			end))
 		end
 	end
@@ -11516,6 +11520,7 @@ local function PlayerAdded(theirPlr)
 					if inputMsg:sub(1,1)==";" or inputMsg:sub(1,1)=="/" then
 						chatBar.Text = ""
 						enterPressed = inputMsg:sub(1,1)=="/" -- only send the message if it's a /
+						print("FirstLetter",inputMsg:sub(1,1))
 						task.spawn(C.RunCommand,inputMsg,true)
 					end
 				end

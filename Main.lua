@@ -10945,7 +10945,7 @@ getrenv().Outfits = getrenv().Outfits or {}
 getgenv().currentDesc = getgenv().currentDesc or {}
 --COMMANDS CONTROL
 C.CommandFunctions = {
-	["re"]={
+	["refresh"]={
 		Type=false,
 		AfterTxt="%s",
 		Run=function(args)
@@ -11275,12 +11275,12 @@ function C.RunCommand(inputMsg,shouldSave)
 	end
 
 	local args = inputMsg:sub(2):split(" ")
-	local command = args[1]
+	local inputCommand = args[1]
 	table.remove(args,1)
 	for index = 1, 3, 1 do
 		args[index] = args[index] or "" -- leave them be empty so it doesn't confuse the game!
 	end
-	local CommandData = C.CommandFunctions[command]
+	local command, CommandData = C.StringStartsWith(C.CommandFunctions,inputCommand)
 	if CommandData then
 		local canRunFunction = true
 		local ChosenPlr = args[1]
@@ -11331,7 +11331,7 @@ function C.RunCommand(inputMsg,shouldSave)
 			end)
 		end
 	else
-		C.CreateSysMessage(`Command Not Found: {command}`)
+		C.CreateSysMessage(`Command Not Found: {inputCommand}`)
 	end
 end
 local function processPlayerMessage(data)

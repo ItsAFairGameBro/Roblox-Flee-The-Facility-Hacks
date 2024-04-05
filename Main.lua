@@ -10994,6 +10994,8 @@ C.CommandFunctions = {
 				end
 				if not isDefault then
 					getgenv().currentDesc[targetChar.Name] = humanDesc
+				else
+					getgenv().currentDesc[targetChar.Name] = nil
 				end
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
@@ -11151,7 +11153,15 @@ C.CommandFunctions = {
 				if theirPlr.Character then
 					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
 				elseif selectedName ~= "no" then
+					if getgenv().currentDesc[theirPlr.Name] ~= desc2Apply then
+						getgenv().currentDesc[theirPlr.Name]:Destroy()
+					end
 					getgenv().currentDesc[theirPlr.Name] = desc2Apply
+				else
+					if getgenv().currentDesc[theirPlr.Name] then
+						getgenv().currentDesc[theirPlr.Name]:Destroy()
+					end
+					getgenv().currentDesc[theirPlr.Name] = nil
 				end
 				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
 			end

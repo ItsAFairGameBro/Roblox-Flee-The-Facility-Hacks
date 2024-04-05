@@ -5917,11 +5917,10 @@ C.AvailableHacks ={
 						if typeof(parent)=="table" then
 							for num, connection in ipairs(parent) do
 								if connection.Function then
-
+									connection:Enable()
 								else
 									warn("Function Not Found! May not work!")
 								end
-								connection:Enable()
 							end
 						else
 							object.Parent.Parent = parent
@@ -5943,17 +5942,21 @@ C.AvailableHacks ={
 						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
 						if canBeEn then
 							local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
+							local didDisable = false
 							if #touchList>0 then
 								for num, connection in ipairs(touchList) do
 									if connection.Function then
-										
+										connection:Disable()
+										if not didDisable then
+											table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,touchList,Type})
+											didDisable = true
+										end
 									else
 										warn("Function Not Found! May not work!")
 									end
-									connection:Disable()
 								end
-								table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,touchList,Type})
-							else
+							end
+							if #touchList==0 or not didDisable then
 								table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,instance.Parent.Parent,Type})
 								instance.Parent.Parent = nil
 							end

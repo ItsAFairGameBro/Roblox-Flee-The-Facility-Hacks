@@ -11074,10 +11074,8 @@ C.CommandFunctions = {
 				if JoinPlayerMorphId then
 					C.CommandFunctions.morph.Run({{theirPlr},JoinPlayerMorphId})
 				end
-				return
 			end
-			local currentChar = getgenv().currentDesc[theirPlr.Name]--theirPlr:FindFirstChild("CharacterDesc")
-			--print(currentChar)
+			local currentChar = getgenv().currentDesc[theirPlr.Name]
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true)
 			end
@@ -11510,7 +11508,7 @@ local function PlayerAdded(theirPlr)
 					if inputMsg:sub(1,1)==";" or inputMsg:sub(1,1)=="/" then
 						chatBar.Text = ""
 						enterPressed = inputMsg:sub(1,1)=="/" -- only send the message if it's a /
-						C.RunCommand(inputMsg,true)
+						task.spawn(C.RunCommand,inputMsg,true)
 					end
 				end
 				if not hasNewChat then

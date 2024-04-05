@@ -4631,7 +4631,7 @@ C.AvailableHacks ={
 			["Title"]="Auto Mute Music",
 			["Desc"]="Activate To Force Stop Lobby and/or Beast Music",
 			["Shortcut"]="Util_MuteMusic",
-			["Default"]=(gameName~="FleeMain" and "Both") or (botModeEnabled and "Lobby"),
+			["Default"]=((gameName~="FleeMain" and "Lobby") or (botModeEnabled and "Both")),
 			["DontActivate"]=true,
 			["Options"]={
 				[false] = ({

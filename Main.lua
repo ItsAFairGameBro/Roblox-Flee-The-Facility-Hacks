@@ -4306,14 +4306,16 @@ C.AvailableHacks ={
 					local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
 					local BeastPowerMenuFrame = gameName=="FleeMain" and ScreenGui:WaitForChild("BeastPowerMenuFrame")
 					local SurvivorStartFrame = gameName=="FleeMain" and  ScreenGui:WaitForChild("SurvivorStartFrame")
-					local IsCheckingLoadData = plr:WaitForChild("IsCheckingLoadData");
-					local function changedFunct()
-						if C.enHacks.Util_Fix then
-							MenusTabFrame.Visible=not IsCheckingLoadData.Value;
+					local IsCheckingLoadData = gameName=="FleeMain" and plr:WaitForChild("IsCheckingLoadData");
+					if IsCheckingLoadData then
+						local function changedFunct()
+							if C.enHacks.Util_Fix then
+								MenusTabFrame.Visible=not IsCheckingLoadData.Value;
+							end
 						end
+						setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
+						changedFunct()
 					end
-					setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
-					changedFunct()
 					if BeastPowerMenuFrame then
 						local function beastScreen()
 							if C.enHacks.Util_Fix then

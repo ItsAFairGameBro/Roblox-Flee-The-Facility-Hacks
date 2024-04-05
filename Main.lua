@@ -5658,7 +5658,7 @@ C.AvailableHacks ={
 										closestPC,closestDist = pc, newDist;
 									end;
 								end;
-								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[closestPC]() -- TODO HERE
+								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[closestPC]()
 							else
 								inputPosition = mouse.Hit.Position;
 							end
@@ -10401,7 +10401,8 @@ C.clear = function(isManualClear)
 		getrenv().warn = oldWarn
 		getrenv().print = oldPrint
 		getgenv().currentDesc = nil -- clear the cashe
---TODO HERE
+		getgenv().JoinPlayerMorphId = nil -- clear the join player id
+
 		local LocalPlayerScript = gameUniverse=="Flee" and C.char:WaitForChild("LocalPlayerScript")
 		if LocalPlayerScript then
 			LocalPlayerScript.Disabled = true
@@ -10979,11 +10980,15 @@ C.CommandFunctions = {
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
 			--oldHuman.HumanoidDescription.Parent = newHuman
+			local hackDisplay
 			for num, accessory in ipairs(targetChar:GetDescendants()) do
 				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
 					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then
 						--or accessory:IsA("CharacterMesh") then
 						accessory:Destroy()
+					elseif accessory:HasTag("RemoveOnDestroy") then
+						--TODO HERE
+						hackDisplay = accessory
 					end
 				end
 			end
@@ -11023,6 +11028,9 @@ C.CommandFunctions = {
 			end
 			if oldChar_ForceField then
 				oldChar_ForceField.Parent = targetChar.PrimaryPart
+			end
+			if hackDisplay then
+				hackDisplay.Parent = targetChar:FindFirstChild("Head")
 			end
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)

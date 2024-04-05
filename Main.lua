@@ -1470,7 +1470,8 @@ local function isInGame(theirChar,noDefactoAllowed)
 			(theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
 			< (theirChar:GetPivot().Position-workspace.LobbyMusicBox.Position).Magnitude
 			and (theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
-			< (theirChar:GetPivot().Position-workspace.BeastCaveMusicBox.Position).Magnitude) then
+			< (theirChar:GetPivot().Position-workspace.BeastCaveMusicBox.Position).Magnitude
+			and RS.IsGameActive.Value) then
 		return true,"Runner"
 	end
 	--print("runner ", theirChar.Name, "true")
@@ -2971,8 +2972,8 @@ C.AvailableHacks ={
 				newTag.Name = "PlayerTag"
 				newTag.Username.Text=theirPlr.Name
 				newTag.Distance.Visible=C.enHacks.ESP_Distance
+				newTag.Adornee = theirChar.Head
 				newTag.Parent=theirChar.HumanoidRootPart
-				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 6, 0);
 				newTag.Enabled=C.enHacks.ESP_Players
 				theirChar.Humanoid.DisplayDistanceType=(C.enHacks.ESP_Players and Enum.HumanoidDisplayDistanceType.None or Enum.HumanoidDisplayDistanceType.Viewer)
 				CS:AddTag(newTag,"HackDisplays")
@@ -2981,10 +2982,15 @@ C.AvailableHacks ={
 					if not newTag:FindFirstChild("Username") then
 						return
 					end
-					newTag.Username.TextColor3=(theirChar:FindFirstChild("Hammer")~=nil and newColor3(255) or newColor3(0,0,255))
+					local setColor3 = select(2,isInGame(theirChar))
+					newTag.Username.TextColor3=(setColor3=="Beast" and newColor3(255)) or (setColor3=="Runner" and newColor3(0,0,255)) or newColor3(255,255,255)
+					if typeof(child)=="Instance" and child.Name == "Head" then
+						--local newHead = 
+					end
 				end
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildAdded:Connect(childChanged)))
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildRemoved:Connect(childChanged)))
+				table.insert(C.playerEvents[theirPlr.UserId],(RS.IsGameActive.Changed:Connect(childChanged)))
 				childChanged()
 			end),
 		},

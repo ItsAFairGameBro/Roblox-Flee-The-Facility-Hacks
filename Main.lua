@@ -8353,7 +8353,7 @@ C.AvailableHacks ={
 										RunS.RenderStepped:Wait()
 									end
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
-									while canRun(true) and canRunPlr(theirPlr) and theirTSM.Ragdoll.Value and CarriedTorso.Value and CarriedTorso.Value.Parent == theirChar.Parent and not theirTSM.Captured.Value do
+									while canRun(true) and canRunPlr(theirPlr) and theirTSM.Ragdoll.Value and CarriedTorso.Value and CarriedTorso.Value.Parent == theirChar and not theirTSM.Captured.Value do
 										C.AvailableHacks.Beast[60].CaptureSurvivor(theirPlr,theirChar,true)
 										print("Capturing")
 										RunS.RenderStepped:Wait()

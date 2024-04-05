@@ -10991,7 +10991,6 @@ C.CommandFunctions = {
 					currentDesc:Destroy()
 				end
 				if not isDefault then
-					print("Saved",targetChar.Name,getgenv().currentDesc)
 					getgenv().currentDesc[targetChar.Name] = humanDesc
 				end
 			end
@@ -11525,6 +11524,7 @@ local function PlayerAdded(theirPlr)
 
 				local setTo = C.savedCommands[index] or ""
 				lastText = setTo
+				RunS.RenderStepped:wait()
 				chatBar.Text = setTo
 				--end
 				--lastText = chatBar.Text

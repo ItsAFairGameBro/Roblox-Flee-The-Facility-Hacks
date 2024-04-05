@@ -10965,7 +10965,7 @@ C.CommandFunctions = {
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
-			local newHuman = (isR6 or true) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+			local newHuman = (isR6) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")

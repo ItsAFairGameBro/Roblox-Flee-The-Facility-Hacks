@@ -2983,10 +2983,7 @@ C.AvailableHacks ={
 						return
 					end
 					local setColor3 = select(2,isInGame(theirChar))
-					newTag.Username.TextColor3=(setColor3=="Beast" and newColor3(255)) or (setColor3=="Runner" and newColor3(0,0,255)) or newColor3(255,255,255)
-					if typeof(child)=="Instance" and child.Name == "Head" then
-						--local newHead = 
-					end
+					newTag.Username.TextColor3=(setColor3=="Beast" and newColor3(255)) or (setColor3=="Runner" and newColor3(0,0,255)) or newColor3(255,255,0)
 				end
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildAdded:Connect(childChanged)))
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildRemoved:Connect(childChanged)))
@@ -3020,6 +3017,7 @@ C.AvailableHacks ={
 					while (NameTag~=nil and NameTag.Parent~=nil and NameTag.Parent.Parent~=nil and DistanceTag~=nil and not isCleared) do
 						local dist=math.round((camera.CFrame.p-(CenterObject.Position+NameTag.StudsOffset)).Magnitude)
 						DistanceTag.Text=(dist.."m")
+						print(isInGame(NameTag.Parent.Parent),isInGame(camera.CameraSubject.Parent))
 						if isInGame(NameTag.Parent.Parent)==isInGame(camera.CameraSubject.Parent) then
 							NameTag.PlayerToHideFrom=nil
 						else
@@ -10993,7 +10991,6 @@ C.CommandFunctions = {
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
 			--oldHuman.HumanoidDescription.Parent = newHuman
-			local hackDisplay
 			for num, accessory in ipairs(targetChar:GetDescendants()) do
 				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
 					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then
@@ -11039,16 +11036,6 @@ C.CommandFunctions = {
 			if oldChar_ForceField then
 				oldChar_ForceField.Parent = targetChar.PrimaryPart
 			end
-			task.delay(1,function()
-				local display = oldHead:FindFirstChild("PlayerTag")--TODO HERE
-				print("display",display)
-				if display then
-					local newHead = targetChar:WaitForChild("Head")
-					display.Parent = newHead
-					task.wait(3)
-					print("Newhead",newHead.Parent)
-				end
-			end)
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
 		end,

@@ -757,6 +757,7 @@ local function StartBetterConsole()
 				local duration = math.clamp(math.abs(targetPosition.Y - BetterConsoleList.CanvasPosition.Y)/1200,.2,1)
 				BetterConsole_TweenList = TS:Create(BetterConsoleList,TweenInfo.new(duration),{["CanvasPosition"] = targetPosition})
 				BetterConsole_TweenList:Play()
+				BetterConsole_TweenList:SetAttribute("NoChange",nil)
 				if msg == "/bottom" then
 					BetterConsole_TweenList.Completed:Connect(function(state)
 						if not BetterConsole_TweenList:GetAttribute("NoChange") then

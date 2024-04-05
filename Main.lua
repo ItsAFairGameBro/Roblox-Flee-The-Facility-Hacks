@@ -10965,10 +10965,14 @@ C.CommandFunctions = {
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 			local oldHuman = targetHuman
 			local newHuman = oldHuman:Clone()--(isR6 and false) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+			
+			
 			local newHuman_Animator = newHuman:FindFirstChild("Animator")
 			if newHuman_Animator then
 				newHuman_Animator:Destroy() -- Prevents LoadAnimation error spams
 			end
+			local oldChar_ForceField = targetChar:FindFirstChild("ForceField",true)
+			
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
@@ -11015,6 +11019,9 @@ C.CommandFunctions = {
 			if camera.CameraSubject == newHuman then
 				camera.CameraSubject = oldHuman
 			end
+			if oldChar_ForceField then
+				oldChar_ForceField.Parent = targetChar.PrimaryPart
+			end
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
 		end,
@@ -11045,8 +11052,13 @@ C.CommandFunctions = {
 				end
 			end
 		end,
+		JoinPlayerMorphId = nil,
 		StartUp=function(theirPlr,theirChar,firstRun)
 			if firstRun then
+				local JoinPlayerMorphId = C.CommandFunctions.morph.JoinPlayerMorphId
+				if JoinPlayerMorphId then
+					C.CommandFunctions.morph({theirPlr.Name,JoinPlayerMorphId})
+				end
 				return
 			end
 			local theirHuman = theirChar:WaitForChild("Humanoid")
@@ -11091,7 +11103,9 @@ C.CommandFunctions = {
 			else
 				args[3] = nil
 			end
-
+			if #args[1] == #PS:GetPlayers() then
+				C.CommandFunctions.morph.JoinPlayerMorphId = args[2]
+			end
 			for num, theirPlr in ipairs(args[1]) do
 				if args[3] and not outfitData then
 					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
@@ -11102,7 +11116,7 @@ C.CommandFunctions = {
 					return false, `HumanoidDesc returned NULL for player {theirPlr.Name}`
 				end
 				if theirPlr.Character then
-					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,selectedName=="no")
+					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply)
 				else
 					getgenv().currentDesc[theirPlr.Name] = desc2Apply
 				end

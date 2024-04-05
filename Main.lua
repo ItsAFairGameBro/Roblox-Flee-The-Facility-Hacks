@@ -3115,7 +3115,7 @@ C.AvailableHacks ={
 				if not nameTag then
 					return
 				end
-				local nameTag_UserName = HRP:WaitForChild("Username",1e5)
+				local nameTag_UserName = nameTag:WaitForChild("Username",1e5)
 				if not nameTag_UserName then
 					return
 				end

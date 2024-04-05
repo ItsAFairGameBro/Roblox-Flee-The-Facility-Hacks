@@ -3032,7 +3032,7 @@ C.AvailableHacks ={
 				if not HRP then 
 					return 
 				end
-				local NameTag=HRP:WaitForChild("NameTagEx",1e5) 
+				local NameTag=HRP:WaitForChild("PlayerTag",1e5) 
 				if not NameTag then 
 					return 
 				end
@@ -3107,12 +3107,12 @@ C.AvailableHacks ={
 				end
 			end,
 			["OthersStartUp"]=function(theirPlr,theirChar)
-				local Head=theirChar:WaitForChild("Head",1e5)
-				if not Head then
+				local HRP=theirChar:WaitForChild("HumanoidRootPart",1e5)
+				if not HRP then
 					return
 				end
-				local nameTag=Head:WaitForChild("NameTagEx",1e5) 
-				if not Head then
+				local nameTag=HRP:WaitForChild("PlayerTag",1e5) 
+				if not nameTag then
 					return
 				end
 				local function changeVisibility(Place,Trans,Color)
@@ -3136,9 +3136,9 @@ C.AvailableHacks ={
 						--if C.enHacks.ESP_Highlight then
 						--key=#C.objectFuncts[theirChar]+1
 						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
-							if (Head.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({isInGame(theirChar)})[1])==({isInGame(camera.CameraSubject.Parent)})[1] then
+							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({isInGame(theirChar)})[1])==({isInGame(camera.CameraSubject.Parent)})[1] then
 								--local didHit,instance=true,theirChar.PrimaryPart
-								local didHit,instance=raycast(camera.CFrame.p, Head.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001)
+								local didHit,instance=raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001)
 								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,(C.Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
 								--myRenderer:step(0)
 							else

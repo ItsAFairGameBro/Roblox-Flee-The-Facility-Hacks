@@ -11058,7 +11058,7 @@ C.CommandFunctions = {
 				local JoinPlayerMorphId = C.CommandFunctions.morph.JoinPlayerMorphId
 				if JoinPlayerMorphId then
 					print("JoinPlayerMorphId Found:",JoinPlayerMorphId)
-					C.CommandFunctions.morph({theirPlr.Name,JoinPlayerMorphId})
+					C.CommandFunctions.morph.Run({theirPlr.Name,JoinPlayerMorphId})
 				else
 					print(`Join Morph Not Found For {theirPlr.Name}`)
 				end

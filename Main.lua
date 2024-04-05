@@ -5914,8 +5914,19 @@ C.AvailableHacks ={
 					local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
 					local object, parent, Type = table.unpack(data)
 					if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
-						object.Parent.Parent = parent
-						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
+						if typeof(parent)=="table" then
+							for num, connection in ipairs(parent) do
+								if connection.Function then
+
+								else
+									warn("Function Not Found! May not work!")
+								end
+								connection:Enable()
+							end
+						else
+							object.Parent.Parent = parent
+							table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
+						end
 					end
 					if index%50==0 then
 						RunS.RenderStepped:Wait()
@@ -5931,8 +5942,21 @@ C.AvailableHacks ={
 					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
 						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
 						if canBeEn then
-							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,instance.Parent.Parent,Type})
-							instance.Parent.Parent = nil
+							local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
+							if #touchList>0 then
+								for num, connection in ipairs(touchList) do
+									if connection.Function then
+										
+									else
+										warn("Function Not Found! May not work!")
+									end
+									connection:Disable()
+								end
+								table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,touchList,Type})
+							else
+								table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,instance.Parent.Parent,Type})
+								instance.Parent.Parent = nil
+							end
 						end
 					end
 					if num%50==0 then
@@ -5945,6 +5969,14 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Basic[25].ApplyTransmitters(workspace)
 				end
+			end,
+			["StartUp"]=function(theirPlr,theirChar)
+				local theirHRP = theirChar:WaitForChild("HumanoidRootPart",30)-- wait for it to be loaded!
+				if not theirHRP then
+					return
+				end
+				task.wait(.5)
+				C.AvailableHacks.Basic[25].ApplyTransmitters(theirChar)
 			end,
 		},
 		[30]={

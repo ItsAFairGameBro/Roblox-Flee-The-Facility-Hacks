@@ -11527,7 +11527,8 @@ local function PlayerAdded(theirPlr)
 				if not hasNewChat then
 					for num, connectionFunct in ipairs(connectionsFuncts) do
 						if connectionFunct.Function then
-							connectionFunct:Fire(enterPressed)--.Function(enterPressed)
+							print("function fired for",num)
+							connectionFunct.Function(enterPressed)
 						else
 							warn("NO Function Found For "..num)
 						end

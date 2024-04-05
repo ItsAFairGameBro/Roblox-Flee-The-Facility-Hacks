@@ -7273,10 +7273,7 @@ C.AvailableHacks ={
 					CLONEDHammer:Destroy()
 				end
 				local function teleportMyCharacterAway()
-					for s = 5, 1, -1 do
-						--RunS.RenderStepped:Wait()
-					end
-					if orgChar and orgChar.PrimaryPart then
+					if orgChar and orgChar:FindFirstChild("HumanoidRootPart") then
 						--local bodyForce = Instance.new("BodyForce")
 						local mass = 0
 						for num, part in ipairs(orgChar:GetDescendants()) do
@@ -7288,12 +7285,12 @@ C.AvailableHacks ={
 						local attachment = Instance.new("Attachment")
 						vectorForce.RelativeTo = "World"
 						vectorForce.ApplyAtCenterOfMass = true;
-						vectorForce.Parent = orgChar.PrimaryPart
+						vectorForce.Parent = orgChar.HumanoidRootPart
 						vectorForce.Attachment0 = attachment
 						vectorForce.Force = Vector3.new(0, mass * workspace.Gravity, 0)
 						attachment:AddTag("RemoveOnDestroy")
 						attachment.Name = "FloatAttachment"
-						attachment.Parent = orgChar.PrimaryPart
+						attachment.Parent = orgChar.HumanoidRootPart
 
 						human.PlatformStand = true
 
@@ -7510,11 +7507,11 @@ C.AvailableHacks ={
 						if human then
 							human.PlatformStand = false
 						end
-						if C.char.PrimaryPart then
+						if C.char:FindFirstChild("HumanoidRootPart") then
 							C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPrimaryPartCFrame())
 							--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
-							if C.char.PrimaryPart:FindFirstChild("FloatAttachment") then
-								C.char.PrimaryPart.FloatAttachment:Destroy()
+							if C.char.HumanoidRootPart:FindFirstChild("FloatAttachment") then
+								C.char.HumanoidRootPart.FloatAttachment:Destroy()
 							end	
 						end
 
@@ -8450,7 +8447,8 @@ C.AvailableHacks ={
 				["Default"]=false,
 				["OthersBeastAdded"] = function(myBeastPlr,myBeast)
 					local TSM=plr:WaitForChild("TempPlayerStatsModule")
-					while (myBeast~=nil and workspace:IsAncestorOf(myBeast) and myBeast.PrimaryPart and not isCleared and myBeast==C.Beast and C.char~=myBeast) do
+					while (myBeast~=nil and workspace:IsAncestorOf(myBeast) and myBeast:FindFirstChild("HumanoidRootPart") 
+						and not isCleared and myBeast==C.Beast and C.char~=myBeast) do
 						if (not TSM.Ragdoll.Value and C.enHacks.RespawnBeforeHit and not TSM.Captured.Value) then
 							local whieList = {"Whitelist",C.Map,myBeast}
 							local didHit,instance=raycast(C.char.PrimaryPart.Position,myBeast:GetPivot().Position,whieList,18,nil,true)
@@ -8556,7 +8554,7 @@ C.AvailableHacks ={
 				end
 					C.AvailableHacks.Runner[86].IsRunning=true
 					while C.AvailableHacks.Runner[86].IsRunning and C.Beast~=nil and workspace:IsAncestorOf(C.Beast) and C.enHacks.AutoTroll do
-					local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),C.Beast.PrimaryPart.Position,20,1.5)
+					local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),C.Beast.HumanoidRootPart.Position,20,1.5)
 					if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
 						and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
 						--print("closed door")
@@ -8737,8 +8735,8 @@ C.AvailableHacks ={
 				isWaiting=false
 
 				if not canRun and C.char.Parent then
-					if C.char.PrimaryPart then
-						human:MoveTo(C.char.PrimaryPart.Position)
+					if C.char.HumanoidRootPart then
+						human:MoveTo(C.char.HumanoidRootPart.Position)
 					end
 					return false
 				elseif result then
@@ -8746,7 +8744,7 @@ C.AvailableHacks ={
 					--human:MoveTo(updatedTarget)
 					C.AvailableHacks.Bot[20].Funct(path,updatedTarget)
 				end
-				return result or ((updatedTarget-C.char.PrimaryPart.Position)/newVector3(1,4,1)).magnitude<2
+				return result or ((updatedTarget-C.char.HumanoidRootPart.Position)/newVector3(1,4,1)).magnitude<2
 			end),
 			["UnlockDoor"]=function(shouldWait)
 				if isActionProgress then
@@ -8853,7 +8851,7 @@ C.AvailableHacks ={
 				local canRun;
 				function canRun(fullLoop)
 					local Check1 = C.enHacks.BotRunner=="Hack" and C.char~=nil and human~=nil and human.Health>0 and camera.CameraSubject==human;
-					local Check2 = savedDeb==C.AvailableHacks.Bot[15].CurrentNum and C.char.PrimaryPart;
+					local Check2 = savedDeb==C.AvailableHacks.Bot[15].CurrentNum and C.char:FindFirstChild("HumanoidRootPart");
 					local Check3 = select(2,isInGame(C.char,true))=="Runner" and not isCleared;--(not fullLoop or select(2,isInGame(C.char,true))=="Runner") and not isCleared;
 					return Check1 and Check2 and Check3;
 				end
@@ -8902,7 +8900,7 @@ C.AvailableHacks ={
 					end
 					--print(#CS:GetTagged("Computer"),string.sub(RS.GameStatus.Value,1,2),string.sub(RS.GameStatus.Value,1,2)=="15")
 					if RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15") then--hack time :D
-						local closestTrigger,dist=findClosestObj(getComputerTriggers(),C.char.PrimaryPart.Position,3000,6)
+						local closestTrigger,dist=findClosestObj(getComputerTriggers(),C.char:FindFirstChild("HumanoidRootPart").Position,3000,6)
 						while canRun() and closestTrigger~=nil and (RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15")) do --print("found trigger")
 							local ActionSign=closestTrigger:FindFirstChild("ActionSign")
 							local function walkPathFunct()
@@ -8911,12 +8909,12 @@ C.AvailableHacks ={
 							local didReach=TSM.CurrentAnimation.Value=="Typing" or C.AvailableHacks.Bot[15].WalkPath(currentPath, closestTrigger, walkPathFunct)
 							local distance=(closestTrigger.Position-C.char.Torso.Position).magnitude
 							human:SetAttribute("OverrideSpeed",distance<13 and 35 or nil)
-							if didReach or (closestTrigger.Position-C.char.Torso.Position).magnitude<2 or (TSM.ActionEvent.Value~=nil and closestTrigger:IsAncestorOf(TSM.ActionEvent.Value)) and ActionSign~=nil and ActionSign.Value==20 then--and table.find(closestTrigger:GetTouchingParts(),C.char.PrimaryPart) ~=nil then
+							if didReach or (closestTrigger.Position-C.char.Torso.Position).magnitude<2 or (TSM.ActionEvent.Value~=nil and closestTrigger:IsAncestorOf(TSM.ActionEvent.Value)) and ActionSign~=nil and ActionSign.Value==20 then--and table.find(closestTrigger:GetTouchingParts(),C.char:FindFirstChild("HumanoidRootPart")) ~=nil then
 								--print(TSM.ActionEvent.Value,TSM.CurrentAnimation.Value)
 								--effective way of making the server wait!
 								task.wait(.45)
 								if TSM.CurrentAnimation.Value~="Typing" and (TSM.ActionEvent.Value==nil or plr.PlayerGui:WaitForChild("ScreenGui"):WaitForChild("ActionBox").Text~="Hack")and closestTrigger.ActionSign.Value==20 then
-									--C.AvailableHacks.Basic[12].TeleportFunction(CFrame.new(closestTrigger.Position-newVector3(0,human.HipHeight+C.char.Torso.Size.Y/2,0),closestTrigger.Parent.PrimaryPart.Position))
+									--C.AvailableHacks.Basic[12].TeleportFunction(CFrame.new(closestTrigger.Position-newVector3(0,human.HipHeight+C.char.Torso.Size.Y/2,0),closestTrigger.Parent:FindFirstChild("HumanoidRootPart").Position))
 									human:MoveTo(closestTrigger.Position)
 									human:ChangeState(Enum.HumanoidStateType.Jumping)
 									task.wait(.6)
@@ -8947,15 +8945,15 @@ C.AvailableHacks ={
 								end
 
 							end
-							if C.char.PrimaryPart~=nil then
-								closestTrigger,dist=findClosestObj(C.AvailableHacks.Bot[15].getGoodTriggers(closestTrigger.Parent),C.char.PrimaryPart.Position,3000,1)
+							if C.char:FindFirstChild("HumanoidRootPart")~=nil then
+								closestTrigger,dist=findClosestObj(C.AvailableHacks.Bot[15].getGoodTriggers(closestTrigger.Parent),C.char:FindFirstChild("HumanoidRootPart").Position,3000,1)
 							end
 							task.wait(0)
 						end
 						--print(C.AvailableHacks.Bot[15].WalkPath(currentPath,
-						--	C.char.PrimaryPart.CFrame*newVector3(0,0,-15)))
+						--	C.char:FindFirstChild("HumanoidRootPart").CFrame*newVector3(0,0,-15)))
 					else--escape time :D
-						local closestExitArea,dist=findClosestObj(getExitDoors(),(C.char.PrimaryPart and C.char.PrimaryPart.Position or newVector3()),3000,1)
+						local closestExitArea,dist=findClosestObj(getExitDoors(),(C.char:FindFirstChild("HumanoidRootPart") and C.char:FindFirstChild("HumanoidRootPart").Position or newVector3()),3000,1)
 						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..C.saveIndex) do
 							local exitDoor = closestExitArea.Parent
 							if exitDoor:FindFirstChild("ExitDoorTrigger") and (exitDoor.ExitDoorTrigger.ActionSign.Value == 12 or exitDoor.ExitDoorTrigger.ActionSign.Value == 10)
@@ -8996,13 +8994,13 @@ C.AvailableHacks ={
 					runnerPlrs = sortPlayersByXPThenCredits(plrs)
 					myRunerPlrKey = table.find(runnerPlrs,plr)
 					--if Random.new():NextInteger(1,18)==1 then
-					--	print(C.enHacks.BotRunner,savedDeb==C.AvailableHacks.Bot[15].CurrentNum,camera.CameraSubject==human,TSM.Escaped.Value,C.char.PrimaryPart)
+					--	print(C.enHacks.BotRunner,savedDeb==C.AvailableHacks.Bot[15].CurrentNum,camera.CameraSubject==human,TSM.Escaped.Value,C.char:FindFirstChild("HumanoidRootPart"))
 					--end
 					--if true then
 					--error("CanRunBro")
 					--end
 
-					local Ret1 = (C.enHacks.BotRunner=="Freeze" and C.char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==C.AvailableHacks.Bot[15].CurrentNum and C.char.PrimaryPart and C.Beast and C.Beast.PrimaryPart)
+					local Ret1 = (C.enHacks.BotRunner=="Freeze" and C.char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==C.AvailableHacks.Bot[15].CurrentNum and C.char:FindFirstChild("HumanoidRootPart") and C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))
 					local Ret2 = ((select(2,isInGame(C.char,true))=="Runner") and not isCleared)
 					local Ret3 = C.Beast and myBots[C.Beast.Name:lower()]
 					if not Ret3 and C.Beast and warningPrint then
@@ -9054,7 +9052,7 @@ C.AvailableHacks ={
 						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
 					local i = 0
-					while (canRun(true) and (C.Beast and C.Beast.PrimaryPart) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<7)) do
+					while (canRun(true) and (C.Beast and C.Beast:FindFirstChild("HumanoidRootPart")) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<7)) do
 						-- or TSM.Ragdoll.Value))  do
 						i+=1
 						if i==10 then
@@ -9122,7 +9120,7 @@ C.AvailableHacks ={
 					end
 					local inGame,role = isInGame(C.char)
 					--print(role,C.enHacks.BotRunner,C.Beast,myTSM.Health.Value)
-					if role=="Runner" and (saveValue~="Freeze" or (C.Beast and C.Beast.PrimaryPart)) then
+					if role=="Runner" and (saveValue~="Freeze" or (C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))) then
 						--print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
 						break
 					elseif maxDurationLeft <= 0 then 
@@ -9180,7 +9178,7 @@ C.AvailableHacks ={
 				end))
 				local function waypointReached(agent,lastWayPoint,nextWayPoint)
 					Errors=math.max(0,Errors-.2);
-					if isActionProgress or not C.char.PrimaryPart then
+					if isActionProgress or not C.char:FindFirstChild("HumanoidRootPart") then
 						return false;
 					end;
 					local from=Torso.Position;
@@ -9192,7 +9190,7 @@ C.AvailableHacks ={
 						return C.AvailableHacks.Bot[15].UnlockDoor(true);
 					elseif (nextWayPoint.Label=="Vent" or (didHit2 and instance2.Name~="VentPartWalkThru") ) then
 						return C.AvailableHacks.Bot[(15)].CrawlVent(true);
-					elseif (to.Y>C.char.PrimaryPart.Position.Y and human.FloorMaterial~=Enum.Material.Air and not C.AvailableHacks.Blatant[(2)].IsCrawling and not isActionProgress) or nextWayPoint.Label=="Window" or (instance2~=nil and instance2.Name=="WindowWalkThru") then
+					elseif (to.Y>C.char:FindFirstChild("HumanoidRootPart").Position.Y and human.FloorMaterial~=Enum.Material.Air and not C.AvailableHacks.Blatant[(2)].IsCrawling and not isActionProgress) or nextWayPoint.Label=="Window" or (instance2~=nil and instance2.Name=="WindowWalkThru") then
 						human:ChangeState(Enum.HumanoidStateType.Jumping);
 						return true;
 					end;
@@ -9249,7 +9247,7 @@ C.AvailableHacks ={
 						Errors = Errors + 1;
 						if Errors==3 then
 							print("LEFT / err bruh",Errors);
-							human:MoveTo(C.char.PrimaryPart.CFrame*newVector3(-4,0,0));
+							human:MoveTo(C.char:FindFirstChild("HumanoidRootPart").CFrame*newVector3(-4,0,0));
 						elseif Errors>=10 then
 							print("RESET / err bruh",Errors);
 							C.AvailableHacks.Commands[24].ActivateFunction();
@@ -10028,7 +10026,7 @@ C.AvailableHacks ={
 			end,
 			["ActivateFunction"]=function(newValue)
 				if C.char~=nil and human~=nil and C.char.Parent~=nil and human.Health > 0 then 
-					--(not C.char.PrimaryPart or not C.char.PrimaryPart.Anchored) then
+					--(not C.char:FindFirstChild("HumanoidRootPart") or not C.char:FindFirstChild("HumanoidRootPart").Anchored) then
 					local saveChar = C.char
 					C.AvailableHacks.Commands[24].BeforeReset()
 					if C.char.PrimaryPart then
@@ -11048,7 +11046,7 @@ C.CommandFunctions = {
 				camera.CameraSubject = oldHuman
 			end
 			if oldChar_ForceField then
-				oldChar_ForceField.Parent = targetChar.PrimaryPart
+				oldChar_ForceField.Parent = targetChar:FindFirstChild("HumanoidRootPart")
 			end
 			for num, instance in ipairs(Instances2Restore) do
 				instance.Parent = targetChar

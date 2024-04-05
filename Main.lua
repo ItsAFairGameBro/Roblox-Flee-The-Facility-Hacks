@@ -10983,9 +10983,11 @@ C.CommandFunctions = {
 		RestoreInstances={["Hammer"]=true,["Gemstone"]=true,["PackedGemstone"]=true,["PackedHammer"]=true},
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
-			if not targetHuman then
+			local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
+			if not targetHuman or not targetHRP then
 				return
 			end
+			local wasAnchored = targetHRP.Anchored
 			humanDesc.Name = "CharacterDesc"
 			if not dontUpdate then
 				local currentDesc = getgenv().currentDesc[targetChar.Name]
@@ -10997,10 +10999,7 @@ C.CommandFunctions = {
 				end
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
-			local oldHead = targetChar:WaitForChild("Head",20)
-			if not oldHead then
-				return
-			end
+
 			local oldHuman = targetHuman
 			local newHuman = oldHuman:Clone()--(isR6 and false) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			
@@ -11044,6 +11043,7 @@ C.CommandFunctions = {
 			--	oldHuman.HumanoidDescription:Destroy()
 			--end
 			--humanDesc:Clone().Parent = oldHuman
+			targetHRP.Anchored = wasAnchored
 			if camera.CameraSubject == newHuman then
 				camera.CameraSubject = oldHuman
 			end

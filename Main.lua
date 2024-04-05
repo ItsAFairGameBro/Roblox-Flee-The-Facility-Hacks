@@ -5914,7 +5914,7 @@ C.AvailableHacks ={
 					local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
 					local object, parent, Type = table.unpack(data)
 					if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
-						object.Parent = object
+						object.Parent.Parent = object
 						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
 					end
 					if index%50==0 then
@@ -5931,8 +5931,8 @@ C.AvailableHacks ={
 					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
 						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
 						if canBeEn then
-							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,instance.Parent,Type})
-							instance.Parent = nil
+							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,instance.Parent.Parent,Type})
+							instance.Parent.Parent = nil
 						end
 					end
 					if num%50==0 then

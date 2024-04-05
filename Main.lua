@@ -1425,6 +1425,9 @@ local function StringWaitForChild(instance,str2Parse,duration)
 	if str2Parse ~= "" then -- return the instance if the tree is empty!
 		for num, stringLeft in ipairs(str2Parse:split(".")) do
 			instance = instance:WaitForChild(stringLeft,duration)
+			if not instance then
+				return
+			end
 		end
 	end
 	return instance
@@ -1438,6 +1441,9 @@ local function isInGame(theirChar,noDefactoAllowed)
 	return (point.X >= a.X and point.X <= b.X) and (point.Z >= a.Z and point.Z <= b.Z)--]]
 	if theirChar.Name == "InviClone" then
 		theirChar = C.char
+	end
+	if gameName~="FleeMain" then
+		return false,"Lobby"
 	end
 	if theirChar~=nil and
 		theirChar:FindFirstChild("Hammer")~=nil or (C.Map~=nil and C.Map:IsAncestorOf(theirChar)) then
@@ -4298,8 +4304,8 @@ C.AvailableHacks ={
 				if gameUniverse=="Flee" then
 					local ScreenGui = PlayerGui:WaitForChild("ScreenGui");
 					local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
-					local BeastPowerMenuFrame = ScreenGui:WaitForChild("BeastPowerMenuFrame")
-					local SurvivorStartFrame = ScreenGui:WaitForChild("SurvivorStartFrame")
+					local BeastPowerMenuFrame = gameName=="FleeMain" and ScreenGui:WaitForChild("BeastPowerMenuFrame")
+					local SurvivorStartFrame = gameName=="FleeMain" and  ScreenGui:WaitForChild("SurvivorStartFrame")
 					local IsCheckingLoadData = plr:WaitForChild("IsCheckingLoadData");
 					local function changedFunct()
 						if C.enHacks.Util_Fix then
@@ -4308,20 +4314,24 @@ C.AvailableHacks ={
 					end
 					setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
 					changedFunct()
-					local function beastScreen()
-						if C.enHacks.Util_Fix then
-							BeastPowerMenuFrame.Visible=false;
+					if BeastPowerMenuFrame then
+						local function beastScreen()
+							if C.enHacks.Util_Fix then
+								BeastPowerMenuFrame.Visible=false;
+							end
 						end
+						setChangedAttribute(BeastPowerMenuFrame, "Visible", (newValue and beastScreen or nil));
+						beastScreen()
 					end
-					setChangedAttribute(BeastPowerMenuFrame, "Visible", (newValue and beastScreen or nil));
-					beastScreen()
-					local function survivorScreen()
-						if C.enHacks.Util_Fix then
-							SurvivorStartFrame.Visible=false;
+					if SurvivorStartFrame then
+						local function survivorScreen()
+							if C.enHacks.Util_Fix then
+								SurvivorStartFrame.Visible=false;
+							end
 						end
+						setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
+						survivorScreen()
 					end
-					setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
-					survivorScreen()
 				end
 
 				local chatTextLabel = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
@@ -4621,7 +4631,7 @@ C.AvailableHacks ={
 			["Title"]="Auto Mute Music",
 			["Desc"]="Activate To Force Stop Lobby and/or Beast Music",
 			["Shortcut"]="Util_MuteMusic",
-			["Default"]=botModeEnabled and "Both",
+			["Default"]=(gameName~="FleeMain" and "Both") or (botModeEnabled and "Lobby"),
 			["DontActivate"]=true,
 			["Options"]={
 				[false] = ({
@@ -4632,14 +4642,14 @@ C.AvailableHacks ={
 					["Title"] = "LOBBY",
 					["TextColor"] = newColor3(0,0,255),
 				}),
-				["Beast"] = ({
+				["Beast"] = (gameName=="FleeMain" and {
 					["Title"] = "BEAST",
 					["TextColor"] = newColor3(0,255,255),
 				}),
-				["Both"]={
+				["Both"]=(gameName=="FleeMain" and {
 					["Title"] = "BOTH",
 					["TextColor"] = newColor3(255,255,0),
-				},
+				}),
 			},
 			["Universes"]={"Flee"},
 			["Funct"]=nil,
@@ -4689,8 +4699,10 @@ C.AvailableHacks ={
 					return
 				end
 				local hammerHandle = theirHammer:WaitForChild("Handle")
-				C.AvailableHacks.Utility[9].MusicValue2 = hammerHandle:WaitForChild("SoundHeartBeat")
-				C.AvailableHacks.Utility[9].MusicValue3 = hammerHandle:WaitForChild("SoundChaseMusic")
+				if gameName == "FleeMain" then
+					C.AvailableHacks.Utility[9].MusicValue2 = hammerHandle:WaitForChild("SoundHeartBeat")
+					C.AvailableHacks.Utility[9].MusicValue3 = hammerHandle:WaitForChild("SoundChaseMusic")
+				end
 				C.AvailableHacks.Utility[9].ActivateFunction()
 			end,
 

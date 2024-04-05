@@ -11059,6 +11059,8 @@ C.CommandFunctions = {
 				if JoinPlayerMorphId then
 					print("JoinPlayerMorphId Found:",JoinPlayerMorphId)
 					C.CommandFunctions.morph({theirPlr.Name,JoinPlayerMorphId})
+				else
+					print(`Join Morph Not Found For {theirPlr.Name}`)
 				end
 				return
 			end
@@ -11110,8 +11112,8 @@ C.CommandFunctions = {
 				return false, "HumanoidDesc returned NULL for all players!"
 			end
 			if #args[1] == #PS:GetPlayers() then
-				print("Set JoinPlayerMorphId to",args[2])
-				C.CommandFunctions.morph.JoinPlayerMorphId = args[2]
+				print("Set JoinPlayerMorphId to",selectedName.SortName)
+				C.CommandFunctions.morph.JoinPlayerMorphId = selectedName.SortName
 			end
 			for num, theirPlr in ipairs(args[1]) do
 				if args[3] and not outfitData then

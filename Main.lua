@@ -11030,6 +11030,7 @@ C.CommandFunctions = {
 			end
 			task.delay(1,function()
 				local display = oldHead:FindFirstChild("PlayerTag")--TODO HERE
+				print("display",display)
 				if display then
 					display.Parent = targetChar:FindFirstChild("Head")
 				end

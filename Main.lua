@@ -11057,6 +11057,7 @@ C.CommandFunctions = {
 				local JoinPlayerMorphId = getrenv().JoinPlayerMorphId
 				if JoinPlayerMorphId then
 					print("JoinPlayerMorphId Found:",JoinPlayerMorphId)
+					task.wait(2)
 					C.CommandFunctions.morph.Run({{theirPlr},theirPlr.Name,JoinPlayerMorphId})
 				else
 					print(`Join Morph Not Found For {theirPlr.Name}`)

@@ -5923,7 +5923,7 @@ C.AvailableHacks ={
 								end
 							end
 						else
-							object.Parent.Parent = parent
+							object.Parent = parent
 							table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
 						end
 					end
@@ -5941,7 +5941,7 @@ C.AvailableHacks ={
 					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
 						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
 						if canBeEn then
-							local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
+							--[[local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
 							local didDisable = false
 							if #touchList>0 then
 								for num, connection in ipairs(touchList) do
@@ -5956,10 +5956,10 @@ C.AvailableHacks ={
 									end
 								end
 							end
-							if #touchList==0 or not didDisable then
-								table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,instance.Parent.Parent,Type})
-								instance.Parent.Parent = nil
-							end
+							if #touchList==0 or not didDisable then--]]
+								table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{cloneref(instance),instance.Parent,Type})
+								instance:Destroy()
+							--end
 						end
 					end
 					if num%50==0 then

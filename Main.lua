@@ -10990,7 +10990,7 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
 			end
-			newHuman:ApplyDescription(humanDesc)
+			newHuman:ApplyDescriptionReset(humanDesc)
 			--if oldHuman:FindFirstChild("HumanoidDescription") then
 			--	oldHuman.HumanoidDescription:Destroy()
 			--end

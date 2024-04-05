@@ -11063,6 +11063,8 @@ C.CommandFunctions = {
 					print(`Join Morph Not Found For {theirPlr.Name}`)
 				end
 				return
+			else
+				print("It's not their first rodo!")
 			end
 			local theirHuman = theirChar:WaitForChild("Humanoid")
 			local PrimPart = theirChar:WaitForChild(theirHuman.RigType == Enum.HumanoidRigType.R6 and "Torso" or "UpperTorso", 15)

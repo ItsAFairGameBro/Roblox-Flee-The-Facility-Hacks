@@ -2988,7 +2988,12 @@ C.AvailableHacks ={
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildAdded:Connect(childChanged)))
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildRemoved:Connect(childChanged)))
 				if gameName=="FleeMain" then
+					local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule",60)
+					if not theirTSM then
+						return
+					end
 					table.insert(C.playerEvents[theirPlr.UserId],(RS.IsGameActive.Changed:Connect(childChanged)))
+					table.insert(C.playerEvents[theirPlr.UserId],(theirTSM.Health.Changed:Connect(childChanged)))
 				end
 				childChanged()
 			end),
@@ -11059,7 +11064,7 @@ C.CommandFunctions = {
 				if child:IsA("Model") and child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
-						task.wait(.3)
+						task.wait(.4)
 						local orgColor = child:WaitForChild("Head").Color
 						local myClone = humanDesc:Clone()
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
@@ -11133,7 +11138,6 @@ C.CommandFunctions = {
 				return false, "HumanoidDesc returned NULL for all players!"
 			end
 			if #args[1] == #PS:GetPlayers() then
-				print("Set JoinPlayerMorphId to",selectedName.SortName)
 				getgenv().JoinPlayerMorphId = selectedName.SortName
 			end
 			for num, theirPlr in ipairs(args[1]) do

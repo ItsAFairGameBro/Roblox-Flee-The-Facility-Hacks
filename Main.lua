@@ -10985,7 +10985,7 @@ C.CommandFunctions = {
 			if not targetHuman or not targetHRP then
 				return
 			end
-			local wasAnchored = targetHRP.Anchored
+			--local wasAnchored = targetHRP.Anchored
 			humanDesc.Name = "CharacterDesc"
 			if not dontUpdate then
 				local currentDesc = getgenv().currentDesc[targetChar.Name]
@@ -11041,7 +11041,7 @@ C.CommandFunctions = {
 			--	oldHuman.HumanoidDescription:Destroy()
 			--end
 			--humanDesc:Clone().Parent = oldHuman
-			targetHRP.Anchored = wasAnchored
+			--targetHRP.Anchored = wasAnchored
 			if camera.CameraSubject == newHuman then
 				camera.CameraSubject = oldHuman
 			end

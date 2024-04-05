@@ -3115,6 +3115,10 @@ C.AvailableHacks ={
 				if not nameTag then
 					return
 				end
+				local nameTag_UserName = HRP:WaitForChild("Username",1e5)
+				if not nameTag_UserName then
+					return
+				end
 				local function changeVisibility(Place,Trans,Color)
 					Place.FillTransparency = Trans
 					Place.OutlineTransparency = Trans>.99 and 1 or 0
@@ -3139,7 +3143,8 @@ C.AvailableHacks ={
 							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({isInGame(theirChar)})[1])==({isInGame(camera.CameraSubject.Parent)})[1] then
 								--local didHit,instance=true,theirChar.PrimaryPart
 								local didHit,instance=raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001)
-								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,(C.Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
+								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,nameTag_UserName.TextColor3)
+									--(C.Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
 								--myRenderer:step(0)
 							else
 								changeVisibility(robloxHighlight,1)

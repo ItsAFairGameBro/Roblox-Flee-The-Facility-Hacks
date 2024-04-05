@@ -11352,21 +11352,17 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh)
 	end
 end
 local function processPlayerMessage(data,noRefresh)
-	print("message finished filtering:",noRefresh)
 	if data.MessageType == "Message" then
 		local message = data.Message
 		local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
 		if theirPlr then
 			if theirPlr ~= plr and myBots[theirPlr.Name:lower()] and botModeEnabled then
 				if message:sub(1,1) == "/" then
-					print("Running Cmd")
-					C.RunCommand(message,false,noRefresh)--message:sub(2),theirPlr == plr)
+					C.RunCommand(message,false,noRefresh==true)--message:sub(2),theirPlr == plr)
 				end
-			else
-				print("invalid access")
 			end
 		else
-			warn("Player Not Found!")
+			warn("(ChatMessage) Player Not Found!")
 		end
 	end
 end
@@ -11374,7 +11370,6 @@ if C.saveIndex == 1 and gameUniverse=="Flee" and botModeEnabled then--C.saveInde
 	task.delay(1,function()
 		for num, value in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
 			processPlayerMessage(value,true)
-			--print(name,(value))
 		end
 	end)
 end

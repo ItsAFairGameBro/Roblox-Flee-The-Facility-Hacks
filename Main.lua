@@ -11036,7 +11036,7 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
 			end
-			while not pcall(newHuman.ApplyDescription,newHuman,humanDesc) do
+			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)
 			end
 			--if oldHuman:FindFirstChild("HumanoidDescription") then

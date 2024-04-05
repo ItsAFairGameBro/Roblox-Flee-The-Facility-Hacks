@@ -5046,8 +5046,8 @@ C.AvailableHacks ={
 				local i = 0
 				C.AvailableHacks.Basic[4].ToggleFunct=function(flying)
 					C.AvailableHacks.Basic[4].IsActive = flying
-					bodyGyro.Parent = C.AvailableHacks.Basic[4].IsActive and C.char.Head or nil
-					bodyVel.Parent = C.AvailableHacks.Basic[4].IsActive and C.char.Head or nil
+					bodyGyro.Parent = C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil
+					bodyVel.Parent = C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil
 					bodyGyro.CFrame = hrp.CFrame
 					bodyVel.Velocity = newVector3()
 					--setCollisionGroupRecursive(character,flying and groupName or "Original")
@@ -5176,8 +5176,8 @@ C.AvailableHacks ={
 						setCollisionGroupRecursive(workspace, false)
 					end
 					C.AvailableHacks.Basic[4].IsActive = flying
-					bodyGyro.Parent = (C.AvailableHacks.Basic[4].IsActive and C.char.Head or nil)
-					bodyVel.Parent = (C.AvailableHacks.Basic[4].IsActive and C.char.Head or nil)
+					bodyGyro.Parent = (C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil)
+					bodyVel.Parent = (C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil)
 					bodyGyro.CFrame = hrp.CFrame
 					bodyVel.Velocity = newVector3()
 					--setCollisionGroupRecursive(character,flying and groupName or "Original")
@@ -5321,7 +5321,7 @@ C.AvailableHacks ={
 				};
 				local v5 = C.char:WaitForChild("HumanoidRootPart")
 				local v7 = game:GetService("UserInputService")
-				local v14 = Instance.new("BodyVelocity", v5.Parent.Head)
+				local v14 = Instance.new("BodyVelocity", v5.Parent.HumanoidRootPart)
 				v14.MaxForce = newVector3(0, 0, 0)
 				v14.Name="JetpackVelocity"
 				local v32 = 7
@@ -5462,7 +5462,7 @@ C.AvailableHacks ={
 				task.spawn(taskSpawnJetpackUpdateVelFunction)
 			end,
 			["FloatScript"]=function()
-				local v14 = Instance.new("BodyPosition", C.char:WaitForChild("Head"))
+				local v14 = Instance.new("BodyPosition", C.char:WaitForChild("HumanoidRootPart"))
 				v14.MaxForce = newVector3(0, 0, 0) v14.Name="JetpackVelocity"
 				local height=0
 				local baseHeight=0
@@ -5559,8 +5559,8 @@ C.AvailableHacks ={
 				if JetpackGUI~=nil then 
 					JetpackGUI:Destroy()
 				end
-				if C.char:FindFirstChild("Head") then
-					local JetpackVelocity = C.char.Head:FindFirstChild("JetpackVelocity")
+				if C.char:FindFirstChild("HumanoidRootPart") then
+					local JetpackVelocity = C.char.HumanoidRootPart:FindFirstChild("JetpackVelocity")
 					if JetpackVelocity then 
 						JetpackVelocity:Destroy()
 					end
@@ -7336,7 +7336,7 @@ C.AvailableHacks ={
 				local Head = orgChar:FindFirstChild("Head")
 				local CenterPart = orgChar:FindFirstChild(clonedHuman.RigType == Enum.HumanoidRigType.R6 and "Torso" or "UpperTorso")
 				local HRP = orgChar:FindFirstChild("HumanoidRootPart")
-				if not Head or not CenterPart then
+				if not Head or not CenterPart or not HRP then
 					return
 				end
 
@@ -7351,13 +7351,15 @@ C.AvailableHacks ={
 				end
 				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(updateCamera))
 				updateCamera()
-				local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
-				table.insert(connections,clonedChar.Torso.Touched:Connect(function(instance)
-					charEnv.TriggerTouch(instance,true)
-				end))
-				table.insert(connections,clonedChar.Torso.TouchEnded:Connect(function(instance)
-					charEnv.TriggerTouch(instance,false)
-				end))
+				if gameName == "FleeMain" then
+					local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
+					table.insert(connections,clonedChar.Torso.Touched:Connect(function(instance)
+						charEnv.TriggerTouch(instance,true)
+					end))
+					table.insert(connections,clonedChar.Torso.TouchEnded:Connect(function(instance)
+						charEnv.TriggerTouch(instance,false)
+					end))
+				end
 				--[[table.insert(connections,RemoteEvent.OnClientEvent:Connect(function(thing)
 					if thing=="FadeBlackTransition" then
 						local lastPosition = clonedChar:GetPrimaryPartCFrame().Position
@@ -8400,10 +8402,10 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Triggered"]=function()
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				if not C.enHacks.Panic or C.char:FindFirstChild("Head")==nil or not TSM.Ragdoll.Value then
+				if not C.enHacks.Panic or C.char:FindFirstChild("HumanoidRootPart")==nil or not TSM.Ragdoll.Value then
 					return
 				end
-				local newVel=Instance.new("BodyVelocity",C.char.Head)
+				local newVel=Instance.new("BodyVelocity",C.char.HumanoidRootPart)
 				newVel.MaxForce = (newVector3(3000,3000,3000)*2.25)
 				newVel.P = 3e3
 				CS:AddTag(newVel,"RemoveOnDestroy")
@@ -9066,7 +9068,7 @@ C.AvailableHacks ={
 								return
 							end
 							local HammerEvent = StringWaitForChild(C.Beast,"Hammer.HammerEvent",25)
-							if not myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent then
+							if not myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent and C.char:FindFirstChild("Head") then
 								HammerEvent:FireServer("HammerHit", C.char.Head)
 								--task.wait(1/4)
 							end
@@ -11096,7 +11098,6 @@ C.CommandFunctions = {
 				end
 			end
 			local currentChar = getgenv().currentDesc[theirPlr.Name]
-			print("CurrentChar",currentChar)
 			if currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true)
 			end

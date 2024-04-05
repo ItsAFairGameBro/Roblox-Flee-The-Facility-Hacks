@@ -10400,6 +10400,8 @@ C.clear = function(isManualClear)
 	if isManualClear then
 		getrenv().warn = oldWarn
 		getrenv().print = oldPrint
+		getgenv().currentDesc = nil -- clear the cashe
+--TODO HERE
 		local LocalPlayerScript = gameUniverse=="Flee" and C.char:WaitForChild("LocalPlayerScript")
 		if LocalPlayerScript then
 			LocalPlayerScript.Disabled = true
@@ -11053,25 +11055,19 @@ C.CommandFunctions = {
 			end
 		end,
 		StartUp=function(theirPlr,theirChar,firstRun)
-			if firstRun then
-				local JoinPlayerMorphId = getrenv().JoinPlayerMorphId
-				if JoinPlayerMorphId then
-					print("JoinPlayerMorphId Found:",JoinPlayerMorphId)
-					task.wait(2)
-					C.CommandFunctions.morph.Run({{theirPlr},theirPlr.Name,JoinPlayerMorphId})
-				else
-					print(`Join Morph Not Found For {theirPlr.Name}`)
-				end
-				return
-			else
-				print("It's not their first rodo!")
-			end
 			local theirHuman = theirChar:WaitForChild("Humanoid")
 			local PrimPart = theirChar:WaitForChild(theirHuman.RigType == Enum.HumanoidRigType.R6 and "Torso" or "UpperTorso", 15)
 			if not PrimPart then
 				return
 			end
-			task.wait(.5)
+			task.wait(.5) --Avatar loaded wait!
+			if firstRun then
+				local JoinPlayerMorphId = getgenv().JoinPlayerMorphId
+				if JoinPlayerMorphId then
+					C.CommandFunctions.morph.Run({{theirPlr},JoinPlayerMorphId})
+				end
+				return
+			end
 			local currentChar = getgenv().currentDesc[theirPlr.Name]--theirPlr:FindFirstChild("CharacterDesc")
 			--print(currentChar)
 			if currentChar then
@@ -11079,7 +11075,6 @@ C.CommandFunctions = {
 			end
 		end,
 		Run=function(args)
-			print(args)
 			local selectedName = (args[2] == "" and "no") or checkFriendsPCALLFunction(args[2])
 			if not selectedName then
 				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
@@ -11115,7 +11110,7 @@ C.CommandFunctions = {
 			end
 			if #args[1] == #PS:GetPlayers() then
 				print("Set JoinPlayerMorphId to",selectedName.SortName)
-				getrenv().JoinPlayerMorphId = selectedName.SortName
+				getgenv().JoinPlayerMorphId = selectedName.SortName
 			end
 			for num, theirPlr in ipairs(args[1]) do
 				if args[3] and not outfitData then

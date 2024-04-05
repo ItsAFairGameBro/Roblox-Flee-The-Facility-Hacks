@@ -11016,7 +11016,7 @@ C.CommandFunctions = {
 			local Instances2Restore = {}
 			for num, accessory in ipairs(targetChar:GetDescendants()) do
 				if C.CommandFunctions.morph.RestoreInstances[accessory.Name] then
-					accessory.Parent = nil
+					accessory.Parent = workspace
 					accessory:AddTag("RemoveOnDestroy")
 					table.insert(Instances2Restore,accessory)
 				elseif accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then

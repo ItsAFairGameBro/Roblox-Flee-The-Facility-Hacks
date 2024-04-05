@@ -10953,12 +10953,12 @@ C.CommandFunctions = {
 			return true
 		end,
 	},
-	["reset"]={
+	["resetsettings"]={
 		Type=false,
 		AfterTxt="%s",
 		Run=function(args)
 			C.AvailableHacks.Basic[99].ActivateFunction(true, true)
-			return true
+			return true,"Successful"
 		end,
 	},
 	["morph"]={

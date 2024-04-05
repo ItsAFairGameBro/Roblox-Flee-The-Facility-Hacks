@@ -1439,7 +1439,7 @@ local function isInGame(theirChar,noDefactoAllowed)
 	--[[local a=Vector3.new(410.495, 59.4767, -197.00)
 	local b=Vector3.new(-54.505, 59.4767, -547.007)
 	return (point.X >= a.X and point.X <= b.X) and (point.Z >= a.Z and point.Z <= b.Z)--]]
-	if theirChar.Name == "InviClone" then
+	if theirChar and theirChar.Name == "InviClone" then
 		theirChar = C.char
 	end
 	if gameName~="FleeMain" then
@@ -10995,7 +10995,10 @@ C.CommandFunctions = {
 				end
 			end
 			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
-			local oldHead = targetChar.Head
+			local oldHead = targetChar:WaitForChild("Head",20)
+			if not oldHead then
+				return
+			end
 			local oldHuman = targetHuman
 			local newHuman = oldHuman:Clone()--(isR6 and false) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
 			
@@ -11284,9 +11287,11 @@ if not C.savedCommands then
 	getgenv().lastCommands = C.savedCommands
 end
 function C.RunCommand(inputMsg,shouldSave,noRefresh)
-	table.insert(C.savedCommands,1,inputMsg)
-	if #C.savedCommands > 10 then
-		table.remove(C.savedCommands,#C.savedCommands)
+	if shouldSave then
+		table.insert(C.savedCommands,1,inputMsg)
+		if #C.savedCommands > 10 then
+			table.remove(C.savedCommands,#C.savedCommands)
+		end
 	end
 
 	local args = inputMsg:sub(2):split(" ")
@@ -11521,9 +11526,9 @@ local function PlayerAdded(theirPlr)
 					return
 				end
 				lastUpd = os.clock()
-				index = math.clamp(index,0,#C.savedCommands)
+				index = math.clamp(index,0,#C.savedCommands+1)
 
-				local setTo = index==0 and "" or C.savedCommands[index]
+				local setTo = C.savedCommands[index] or ""
 				lastText = setTo
 				chatBar.Text = setTo
 				--end

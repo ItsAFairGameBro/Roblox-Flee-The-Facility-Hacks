@@ -11210,13 +11210,18 @@ local function CharacterAdded(theirChar,firstRun)
 	task.wait()
 	local theirPlr=PS:GetPlayerFromCharacter(theirChar)
 	local theirHumanoid=theirChar:WaitForChild("Humanoid")
+	
+	if not firstRun and theirPlr:GetAttribute("CharacterNotInit") then
+		firstRun = true
+		theirPlr:SetAttribute("CharacterNotInit",nil)
+	end
 
 	local isMyChar=theirPlr==plr
 	if isMyChar then
 		C.char=theirChar
 		human=theirHumanoid
 	end
-	local inputFunctions = ({theirPlr,theirChar,firstRun})
+	local inputFunctions = {theirPlr,theirChar,firstRun}
 	defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
 	defaultFunction("StartUp",inputFunctions)
 	C.objectFuncts[theirHumanoid] = C.objectFuncts[theirHumanoid] or {}
@@ -11351,6 +11356,8 @@ local function PlayerAdded(theirPlr)
 	C.playerEvents[theirPlr.UserId] = {}
 	if theirPlr.Character~=nil then
 		task.spawn(CharacterAdded,theirPlr.Character,true)
+	else
+		theirPlr:SetAttribute("CharacterNotInit",true)
 	end
 	local myPlayerAddedInputArray = {theirPlr}
 	local characterFunctionName = "OthersPlayerAdded";

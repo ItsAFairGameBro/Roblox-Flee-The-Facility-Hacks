@@ -195,7 +195,7 @@ function C.StringStartsWith(tbl,name)
 		local itsIndex = tostring((typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index)
 		if itsIndex:lower():sub(1,name:len()) == name then
 			if itsIndex:len() < closestMatch then
-				closestMatch = itsIndex:len()
+				closestMatch = itsIndex:len() / (typeof(theirValue)=="table" and theirValue.Priority or 1)
 				results = {index,theirValue}
 			end
 		end
@@ -10948,12 +10948,13 @@ C.CommandFunctions = {
 	["refresh"]={
 		Type=false,
 		AfterTxt="%s",
+		Priority=10,
 		Run=function(args)
 			C.AvailableHacks.Basic[99].ActivateFunction()
 			return true
 		end,
 	},
-	["resetsettings"]={
+	["reset_settings"]={
 		Type=false,
 		AfterTxt="%s",
 		Run=function(args)

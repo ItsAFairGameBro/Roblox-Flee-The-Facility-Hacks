@@ -2971,7 +2971,8 @@ C.AvailableHacks ={
 				newTag.Name = "PlayerTag"
 				newTag.Username.Text=theirPlr.Name
 				newTag.Distance.Visible=C.enHacks.ESP_Distance
-				newTag.Parent=Head
+				newTag.Parent=theirChar.PrimaryPart
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 6, 0);
 				newTag.Enabled=C.enHacks.ESP_Players
 				theirChar.Humanoid.DisplayDistanceType=(C.enHacks.ESP_Players and Enum.HumanoidDisplayDistanceType.None or Enum.HumanoidDisplayDistanceType.Viewer)
 				CS:AddTag(newTag,"HackDisplays")

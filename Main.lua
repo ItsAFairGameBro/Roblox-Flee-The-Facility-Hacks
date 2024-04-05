@@ -8187,10 +8187,10 @@ C.AvailableHacks ={
 					and (C.enHacks.AutoBeastHit=="All" 
 						or (C.enHacks.AutoBeastHit=="Me" and beast==C.char)) do
 					for num,theirPlr in pairs(PS:GetPlayers()) do
-						if theirPlr~=nil and theirPlr.Character~=nil and theirPlr ~= plr then
+						if theirPlr~=nil and theirPlr.Character~=nil then
 							local theirChar=theirPlr.Character
 							local theirTSM=theirPlr:FindFirstChild("TempPlayerStatsModule")
-							if theirTSM and not theirTSM.Captured.Value and not theirTSM.Ragdoll.Value then
+							if theirTSM and not theirTSM.Captured.Value and not theirTSM.Ragdoll.Value and theirChar ~= C.Beast then
 								C.AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar)
 							end
 						end

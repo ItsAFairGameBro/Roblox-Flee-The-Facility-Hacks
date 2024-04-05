@@ -10978,6 +10978,7 @@ C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",
+		RestoreInstances={["Hammer"]=true,["Gemstone"]=true,["PackedGemstone"]=true,["PackedHammer"]=true},
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			if not targetHuman then
@@ -11012,26 +11013,16 @@ C.CommandFunctions = {
 			newHuman.Name = "FakeHuman"
 			newHuman.Parent = targetChar
 			newHuman:AddTag("RemoveOnDestroy")
-			--oldHuman.HumanoidDescription.Parent = newHuman
+			local Instances2Restore = {}
 			for num, accessory in ipairs(targetChar:GetDescendants()) do
-				if accessory.Name ~= "PackedHammer" and accessory.Name ~= "PackedGemstone" and accessory.Name~="Hammer" and accessory.Name ~= "Gemstone" then
-					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then
-						--or accessory:IsA("CharacterMesh") then
-						accessory:Destroy()
-					end
+				if C.CommandFunctions.morph.RestoreInstances[accessory.Name] then
+					accessory.Parent = nil
+					accessory:AddTag("RemoveOnDestroy")
+					table.insert(Instances2Restore,accessory)
+				elseif accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then
+					accessory:Destroy()
 				end
 			end
-				--targetChar.Head.face.Decal = 
-				--for name, data in pairs({Head={"Head"},Torso={"Torso"}})
-				---local orgDesc = Instance.new("HumanoidDescription")
-				--newHuman:ApplyDescription(oldHuman:GetAppliedDescription())
-			--[[else
-				for num, accessory in ipairs(targetChar:GetDescendants()) do
-					if accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") or accessory:IsA("CharacterMesh") then
-						accessory:Destroy()
-					end
-				end
-			end--]]
 			for num, instanceName in ipairs({"Shirt","Pants"}) do
 				local instance = targetChar:FindFirstChild(instanceName)
 				if instance then
@@ -11057,6 +11048,10 @@ C.CommandFunctions = {
 			end
 			if oldChar_ForceField then
 				oldChar_ForceField.Parent = targetChar.PrimaryPart
+			end
+			for num, instance in ipairs(Instances2Restore) do
+				instance.Parent = targetChar
+				instance:RemoveTag("RemoveOnDestroy")
 			end
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)

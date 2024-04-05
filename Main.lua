@@ -11057,6 +11057,7 @@ C.CommandFunctions = {
 			if firstRun then
 				local JoinPlayerMorphId = C.CommandFunctions.morph.JoinPlayerMorphId
 				if JoinPlayerMorphId then
+					print("JoinPlayerMorphId Found:",JoinPlayerMorphId)
 					C.CommandFunctions.morph({theirPlr.Name,JoinPlayerMorphId})
 				end
 				return
@@ -11103,7 +11104,13 @@ C.CommandFunctions = {
 			else
 				args[3] = nil
 			end
+			local defaultHumanDesc = selectedName~="no" and
+				(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
+			if defaultHumanDesc == nil then
+				return false, "HumanoidDesc returned NULL for all players!"
+			end
 			if #args[1] == #PS:GetPlayers() then
+				print("Set JoinPlayerMorphId to",args[2])
 				C.CommandFunctions.morph.JoinPlayerMorphId = args[2]
 			end
 			for num, theirPlr in ipairs(args[1]) do
@@ -11113,7 +11120,7 @@ C.CommandFunctions = {
 				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
 					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
 				if not desc2Apply then
-					return false, `HumanoidDesc returned NULL for player {theirPlr.Name}`
+					return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
 				end
 				if theirPlr.Character then
 					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply)

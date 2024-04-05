@@ -11032,7 +11032,10 @@ C.CommandFunctions = {
 				local display = oldHead:FindFirstChild("PlayerTag")--TODO HERE
 				print("display",display)
 				if display then
-					display.Parent = targetChar:FindFirstChild("Head")
+					local newHead = targetChar:WaitForChild("Head")
+					display.Parent = newHead
+					task.wait(3)
+					print("Newhead",newHead.Parent)
 				end
 			end)
 			newHuman.Parent = nil

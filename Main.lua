@@ -11152,7 +11152,7 @@ C.CommandFunctions = {
 					return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
 				end
 				if theirPlr.Character then
-					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,true)
+					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
 				else
 					getgenv().currentDesc[theirPlr.Name] = desc2Apply
 				end

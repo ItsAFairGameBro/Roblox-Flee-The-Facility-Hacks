@@ -10949,6 +10949,7 @@ C.CommandFunctions = {
 		Type=false,
 		AfterTxt="%s",
 		Priority=10,
+		RequiresRefresh=true,
 		Run=function(args)
 			C.AvailableHacks.Basic[99].ActivateFunction()
 			return true
@@ -10957,6 +10958,7 @@ C.CommandFunctions = {
 	["reset_settings"]={
 		Type=false,
 		AfterTxt="%s",
+		RequiresRefresh=true,
 		Run=function(args)
 			C.AvailableHacks.Basic[99].ActivateFunction(true, true)
 			return true,"Successful"
@@ -11269,7 +11271,7 @@ if not C.savedCommands then
 	C.savedCommands = {}
 	getgenv().lastCommands = C.savedCommands
 end
-function C.RunCommand(inputMsg,shouldSave)
+function C.RunCommand(inputMsg,shouldSave,noRefresh)
 	table.insert(C.savedCommands,1,inputMsg)
 	if #C.savedCommands > 10 then
 		table.remove(C.savedCommands,#C.savedCommands)
@@ -11283,6 +11285,9 @@ function C.RunCommand(inputMsg,shouldSave)
 	end
 	local command, CommandData = C.StringStartsWith(C.CommandFunctions,inputCommand)
 	if CommandData then
+		if CommandData.RequiresRefresh and noRefresh then
+			return
+		end
 		local canRunFunction = true
 		local ChosenPlr = args[1]
 		if CommandData.Type=="Players" then
@@ -11331,18 +11336,18 @@ function C.RunCommand(inputMsg,shouldSave)
 				end
 			end)
 		end
-	else
+	elseif inputCommand~="c" and inputCommand~="whisper" and inputCommand~="mute" and inputCommand~="unmute" then
 		C.CreateSysMessage(`Command Not Found: {inputCommand}`)
 	end
 end
-local function processPlayerMessage(data)
+local function processPlayerMessage(data,noRefresh)
 	if data.MessageType == "Message" then
 		local message = data.Message
 		local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
 		if theirPlr then
 			if theirPlr ~= plr and myBots[theirPlr.Name:lower()] then
 				if message:sub(1,1) == "/" then
-					C.RunCommand(message,false)--message:sub(2),theirPlr == plr)
+					C.RunCommand(message,false,noRefresh)--message:sub(2),theirPlr == plr)
 				end
 			end
 		else
@@ -11353,7 +11358,7 @@ end
 if C.saveIndex == 1 and gameUniverse=="Flee" then--C.saveIndex == 1 and gameUniverse == "Flee" then
 	task.delay(1,function()
 		for num, value in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
-			processPlayerMessage(value)
+			processPlayerMessage(value,true)
 			--print(name,(value))
 		end
 	end)

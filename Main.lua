@@ -11079,7 +11079,7 @@ C.CommandFunctions = {
 			end
 		end,
 		Run=function(args)
-
+			print(args)
 			local selectedName = (args[2] == "" and "no") or checkFriendsPCALLFunction(args[2])
 			if not selectedName then
 				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)

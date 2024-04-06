@@ -6045,6 +6045,7 @@ C.AvailableHacks ={
 										return
 									end
 									parent.CanTouch = true
+									RunS.RenderStepped:Wait()
 									--task.wait(1)
 									firetouchinterest(parent,HRP, 0)
 									RunS.RenderStepped:Wait()

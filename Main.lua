@@ -6041,7 +6041,7 @@ C.AvailableHacks ={
 								warn("RUNNING",parent)
 
 
-								parent.CanTouch = false
+								parent.CanTouch = true
 								RunS.RenderStepped:Wait()
 								parent.CanTouch = true
 								RunS.RenderStepped:Wait()

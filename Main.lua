@@ -601,10 +601,12 @@ local function StartBetterConsole()
 	noMessagesFound.Visible = false
 	noMessagesFound.Name = "NoMessagesFound"
 	noMessagesFound:AddTag("RemoveOnDestroy")
+	local SearchCasesFound = 0
 	local function BetterConsole_SetMessagesVisibility(MessageLabel)
 		if isCleared then return end
 		if not MessageLabel then
 			visibleMessages = 0
+			SearchCasesFound = 0
 		end
 		local searchingONE = MessageLabel~=nil -- if MessageLabel is specified, we're not searching much of anyone
 		local currentText = SearchConsoleTextBox.Text:lower()
@@ -633,7 +635,6 @@ local function StartBetterConsole()
 				object.Visible = false
 			end
 		end
-		local numFound = 0
 		for _, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if SearchConsoleResults.Text ~= lastText and not searchingONE then
 				return -- out of order!
@@ -653,7 +654,7 @@ local function StartBetterConsole()
 						local lastChars = ""
 						object.Text=newText
 						willBeVisible = newText ~= theirText--make sure we found an ACTUAL occurance!
-						numFound += newFound
+						SearchCasesFound += newFound
 					end
 				end
 				object.Visible = willBeVisible
@@ -688,7 +689,7 @@ local function StartBetterConsole()
 			noMessagesFound.Visible = false
 		end
 		SearchConsoleResults.Text = (includeALL or total==0) and "" 
-			or '<font color="rgb(0,255,0)">'..comma_value(numFound) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
+			or '<font color="rgb(0,255,0)">'..comma_value(SearchCasesFound) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
 		local BoxFrame = BetterConsoleFilterBox:Clone()

@@ -5924,7 +5924,7 @@ C.AvailableHacks ={
 					local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
 					local object, parent, Type = table.unpack(data)
 					if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
-						if typeof(parent)=="table" then
+						--[[if typeof(parent)=="table" then
 							for num, connection in ipairs(parent) do
 								if connection.Function then
 									connection:Enable()
@@ -5932,10 +5932,14 @@ C.AvailableHacks ={
 									warn("Function Not Found! May not work!")
 								end
 							end
-						else
-							object.Parent = parent
-							table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
+						else--]]
+						parent.CanTouch = true--object.Parent = parent
+						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
+						local TouchToggle = parent:FindFirstChild("TouchToggle")
+						if TouchToggle then
+							TouchToggle:Destroy()
 						end
+						--end
 					end
 					if index%50==0 then
 						RunS.RenderStepped:Wait()
@@ -5948,7 +5952,8 @@ C.AvailableHacks ={
 					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters then
 						return
 					end
-					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
+					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent and instance.Parent.CanTouch then
+						local parent = instance.Parent
 						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
 						if canBeEn then
 							--[[local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
@@ -5967,8 +5972,28 @@ C.AvailableHacks ={
 								end
 							end
 							if #touchList==0 or not didDisable then--]]
-							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{cloneref(instance),instance.Parent,Type})
-							instance:Destroy()
+							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type})
+							parent.CanTouch = false
+							--TODO HERE
+							local TouchToggle=C.ToggleTag:Clone()
+							TouchToggle.Name = "TouchToggle"
+							TouchToggle.Parent=parent
+							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
+							TouchToggle.Toggle.Text = "Activate"
+							TouchToggle.TextColor3 = Color3.fromRGB(0,170)
+							CS:AddTag(TouchToggle,"RemoveOnDestroy")
+							CS:AddTag(TouchToggle,"TouchToggleTag")
+							TouchToggle.MouseButton1Up:Connect(function()
+								local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
+								if not HRP then
+									return
+								end
+								firetouchinterest(HRP,parent, 0)
+								RunS.RenderStepped:Wait()
+								firetouchinterest(HRP,parent, 1)
+							end)
+
+							--instance:Destroy()
 							--end
 						end
 					end

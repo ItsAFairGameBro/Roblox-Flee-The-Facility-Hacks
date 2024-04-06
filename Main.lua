@@ -6039,7 +6039,7 @@ C.AvailableHacks ={
 							end
 							TouchToggle.Toggle.MouseButton1Up:Connect(function()
 								if Type=="Part" then
-									local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
+									local HRP = C.char and C.char:FindFirstChild("Torso")
 									if not HRP then
 										return
 									end

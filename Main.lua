@@ -6031,11 +6031,11 @@ C.AvailableHacks ={
 							CS:AddTag(parent,"TouchDisabled")
 							
 							if Type=="Part" then
-								TouchToggle.Toggle.Text = "Enable"
-								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
-							else
 								TouchToggle.Toggle.Text = "Activate"
 								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
+							else
+								TouchToggle.Toggle.Text = "Enable"
+								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 							end
 							TouchToggle.Toggle.MouseButton1Up:Connect(function()
 								if Type=="Part" then
@@ -6043,9 +6043,9 @@ C.AvailableHacks ={
 									if not HRP then
 										return
 									end
-									firetouchinterest(HRP,parent, 0)
+									firetouchinterest(parent,HRP, 0)
 									RunS.RenderStepped:Wait()
-									firetouchinterest(HRP,parent, 1)--]]
+									firetouchinterest(parent,HRP, 1)--]]
 								else
 									if parent.CanTouch then
 										TouchToggle.Toggle.Text = "Enable"

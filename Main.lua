@@ -277,12 +277,12 @@ function C.Hook(root,method,functName,functData)
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
 				for functName, functData in pairs(myData) do
-					local theirCheck = getTblVal(functName,"Check")
+					local theirCheck = getTblVal(functData,"Check")
 					if true then
 						return OldFunction(...)
 					end
 					if (theirCheck and theirCheck(method,...)) or method == functName then
-						local theirRun = getTblVal(functName, "Run")
+						local theirRun = getTblVal(functData, "Run")
 						local results = tblPack(theirRun(method,...))
 						if not getTblVal(results,1) then
 							print("Spoofing")

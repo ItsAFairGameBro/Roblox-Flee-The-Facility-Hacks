@@ -273,12 +273,12 @@ function C.Hook(root,method,functName,functData)
 					if method == functName then
 						local results = tblPack(theirRun(method,...))
 						for key, val in ipairs(results) do
-							if not val then
+							--if not val then
 								print("Spoofing")
 								return select(2,tblUnpack(results))
-							else
-								break
-							end
+							--else
+							--	break
+							--end
 						end
 					end
 				end

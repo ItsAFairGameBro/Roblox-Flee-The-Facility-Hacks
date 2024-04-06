@@ -6087,7 +6087,7 @@ C.AvailableHacks ={
 				C.Hook(game,"__namecall","kick",newValue and (function()
 					print("The script has successfully intercepted an attempted kick.")
 					return false, nil
-				end,))
+				end))
 			end),
 		},
 		

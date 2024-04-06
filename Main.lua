@@ -4185,6 +4185,8 @@ C.AvailableHacks ={
 								return false
 							end
 						end
+					elseif valName == "Credits" then
+						return 69696969
 					end
 
 					return NormalFunction(valName)
@@ -4199,6 +4201,7 @@ C.AvailableHacks ={
 						end
 						theirTSMMod.GetValue = newValue and function(valName)
 							local caller = getcallingscript()
+							--print(caller,valName)
 							if caller.Name == "LocalGuiScript" then
 								local canContinue = false
 								if not canContinue and C.enHacks.Util_ForceAllowSpectate then

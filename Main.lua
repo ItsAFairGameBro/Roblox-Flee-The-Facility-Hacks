@@ -8104,8 +8104,9 @@ C.AvailableHacks ={
 									and cap.PodTrigger:FindFirstChild("CapturedTorso") and not cap.PodTrigger.CapturedTorso.Value then
 									hasValid = true
 									break
-								else
-									warn("Invalid Capsule At",cap)
+								--else
+								--CAPSULE IS STILL LOADING, SO WAIT!
+									--warn("Invalid Capsule At",cap)
 								end
 							end
 							if hasValid then

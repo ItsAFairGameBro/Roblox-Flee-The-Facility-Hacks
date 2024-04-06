@@ -11289,7 +11289,7 @@ C.CommandFunctions = {
 				return false, "HumanoidDesc returned NULL for all players!"
 			end
 			local savedDescription = selectedName~="no" 
-				and (args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+				and ((args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
 			if args[1]=="new" then
 				if getgenv().JoinPlayerMorphDesc and getgenv().JoinPlayerMorphDesc ~= savedDescription then
 					getgenv().JoinPlayerMorphDesc:Destroy()
@@ -11299,7 +11299,6 @@ C.CommandFunctions = {
 				else
 					getgenv().JoinPlayerMorphDesc = savedDescription
 				end
-				return true, selectedName.SortName, ""
 			else
 				for num, theirPlr in ipairs(args[1]) do
 					if args[3] and not outfitData then

@@ -267,33 +267,16 @@ function C.Hook(root,method,functName,functData)
 		local OldFunction
 		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
 			local canDefault = checkcaller()
-			local dont = false
-			if not canDefault or true then
+			if not canDefault then
 				local method = stringlower(getnamecallmethod())
-				if method ~= "isa" and method~="getstate" and method~="findpartonraywithignorelist" and method~="getcamerayinvertvalue" and method~="viewportpointtoray" then
-					--print(method)
-				end
-				if method=="kick" then
-					dont = true
-				end
 				for functName, theirRun in pairs(myData) do
 					if method == functName then
-						print("Method")
 						local results = tblPack(theirRun(method,...))
-						print("Got Results")
 						for key, val in ipairs(results) do
-							--if not val then
-								print("Spoofing")
-								return select(2,tblUnpack(results))
-							--else
-							--	break
-							--end
+							return select(2,tblUnpack(results))
 						end
 					end
 				end
-			end
-			if dont then
-				return nil
 			end
 
 			return OldFunction(...)
@@ -6094,7 +6077,7 @@ C.AvailableHacks ={
 			["Desc"] = ("Works in most cases"),
 			["Shortcut"] = "Basic_AntiKick",
 			["Universes"]={"Global"},
-			["Default"]=not botModeEnabled,
+			["Default"]=true,
 			["ActivateFunction"]=(function(newValue)
 				C.Hook(game,"__namecall","kick",newValue and (function()
 					print("The script has successfully intercepted an attempted kick.")

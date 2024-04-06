@@ -6044,7 +6044,9 @@ C.AvailableHacks ={
 									if not HRP then
 										return
 									end
-									warn("RUNNING")
+									warn("RUNNING",parent)
+									
+									
 									parent.CanTouch = false
 									RunS.RenderStepped:Wait()
 									parent.CanTouch = true

@@ -5757,6 +5757,9 @@ C.AvailableHacks ={
 					object.CanCollide = DoorTrigger and DoorTrigger.Value == 10
 				else--]]
 				if structure == "Door" then
+					setChangedAttribute(object,"CanCollide",false)--Disable this first!
+				end
+				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
 				else
 					object.CanCollide = not object:GetAttribute("WeirdCanCollide")
@@ -5766,9 +5769,6 @@ C.AvailableHacks ={
 				object.Color = object:GetAttribute("OrgColor") or object.Color
 				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency
 				object.CastShadow = true
-				if structure == "Door" then
-					setChangedAttribute(object,"CanCollide",false)
-				end--]]
 			end,
 			["InstanceAdded"]=function(object)
 				if not object:IsA("BasePart") or not object.Parent or not object.Parent.Parent then 
@@ -11067,6 +11067,9 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			task.spawn(initilizationType_FUNCTION,hack);
 			local update_Function = refreshTypes[hack.Type]
 			C.refreshEnHack[hack.Shortcut] = function(new)
+				if C.enHacks[hack.Shortcut] == new then
+					return
+				end
 				C.enHacks[hack.Shortcut] = new
 				update_Function(miniHackFrame,hack)
 			end

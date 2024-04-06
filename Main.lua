@@ -5977,8 +5977,10 @@ C.AvailableHacks ={
 
 							local TouchToggle=C.ToggleTag:Clone()
 							TouchToggle.Name = "TouchToggle"
-							TouchToggle.Parent=parent
-							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
+							TouchToggle.Parent=HackGUI
+							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 1, 0)
+							TouchToggle.Adornee=parent
+							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 0, 0)
 							TouchToggle.Toggle.Text = "Enable"
 							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 							TouchToggle.Enabled = true

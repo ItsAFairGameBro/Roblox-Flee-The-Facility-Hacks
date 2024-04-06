@@ -263,6 +263,13 @@ function C.Hook(root,method,functName,functData)
 	if not getgenv().Hooks[root][method] then
 		local myData = {}
 		getgenv().Hooks[root][method] = myData
+		local function getTblVal(tbl,needle)
+			for key, val in pairs(tbl) do
+				if key == needle then
+					return val
+				end
+			end
+		end
 		local OldFunction
 		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
 			local canDefault = checkcaller()
@@ -272,7 +279,8 @@ function C.Hook(root,method,functName,functData)
 					return OldFunction(...)
 				end
 				for functName, functData in pairs(myData) do
-					if (functData.Check and functData.Check(method,...)) or method == functName then
+					local theirCheck = getTblVal(functName,"Check")
+					if (theirCheck and theirCheck(method,...)) or method == functName then
 						local results = table.pack(functData.Run(method,...))
 						if not results[1] then
 							print("Spoofing")

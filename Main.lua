@@ -8358,7 +8358,6 @@ C.AvailableHacks ={
 										print("Capturing")
 										RunS.RenderStepped:Wait()
 									end
-									print("Ragodll",theirTSM.Ragdoll.Value,CarriedTorso.Value,theirTSM.Captured.Value,canRun(true),canRunPlr(theirPlr),CarriedTorso.Value.Parent == theirChar)
 									if loopInstance > 1 then
 										warn("<font color='rgb(255,255,0)'>[INSTA CAPTURE]: LOOP INSTANCE = "..loopInstance.."!</font>")
 										task.wait()
@@ -8530,7 +8529,7 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Triggered"]=function()
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				print("Triggersed",C.enHacks.Panic,C.char:FindFirstChild("HumanoidRootPart"),TSM.Ragdoll.Value)
+				--print("Triggersed",C.enHacks.Panic,C.char:FindFirstChild("HumanoidRootPart"),TSM.Ragdoll.Value)
 				if not C.enHacks.Panic or C.char:FindFirstChild("HumanoidRootPart")==nil or not TSM.Ragdoll.Value then
 					return
 				end

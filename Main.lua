@@ -5876,6 +5876,7 @@ C.AvailableHacks ={
 			["Desc"]="Disable Touch Transmitters",
 			["Shortcut"]="Basic_DisableTouchTransmitters",
 			["Default"]=false,
+			["DontStartUp"]=true,
 			["Options"]={
 				[false]={
 					["Title"]="DISABLED",
@@ -6024,7 +6025,7 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-		["ActivateFunction"]=function(newValue)
+			["ActivateFunction"]=function(newValue)
 				C.AvailableHacks.Basic[25].UndoTransmitters(newValue)
 				if newValue then
 					C.AvailableHacks.Basic[25].ApplyTransmitters(workspace)

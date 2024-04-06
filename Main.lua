@@ -261,7 +261,7 @@ function C.Hook(root,method,functName,functData)
 		getgenv().Hooks[root] = {}
 	end
 	if not getgenv().Hooks[root][method] then
-		local myData = getgenv().Hooks[root][method]
+		local myData = {}
 		getgenv().Hooks[root][method] = myData
 		local OldFunction
 		OldFunction = hookmetamethod(root,method, newcclosure(function(...)

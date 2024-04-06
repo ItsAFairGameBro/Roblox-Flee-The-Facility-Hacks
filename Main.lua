@@ -269,7 +269,8 @@ function C.Hook(root,method,functName,functData)
 					if (functData.Check and functData.Check(method,...)) or method == functName then
 						local results = table.pack(functData.Run(method,...))
 						if not results[1] then
-							return select(2,table.unpack(results))
+							print("Spoofing")
+							--return select(2,table.unpack(results))
 						end
 					end
 				end

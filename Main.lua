@@ -5988,7 +5988,7 @@ C.AvailableHacks ={
 						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
 						--end
 					end
-					if index%150==0 then
+					if index%15==0 then
 						RunS.RenderStepped:Wait()
 					end
 				end

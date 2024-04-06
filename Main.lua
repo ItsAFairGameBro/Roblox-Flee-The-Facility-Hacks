@@ -265,6 +265,7 @@ function C.Hook(root,method,functName,functData)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
+				return OldFunction(...)
 				for functName, functData in pairs(getgenv().Hooks[root][method]) do
 					if (functData.Check and functData.Check(method,...)) or method == functName then
 						local results = table.pack(functData.Run(method,...))

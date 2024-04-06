@@ -5961,7 +5961,7 @@ C.AvailableHacks ={
 					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
 						local parent = instance.Parent
 						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
-						if canBeEn and not CS:HasTag(parent) then
+						if canBeEn and not parent:HasTag("TouchDisabled") then
 							--[[local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
 							local didDisable = false
 							if #touchList>0 then

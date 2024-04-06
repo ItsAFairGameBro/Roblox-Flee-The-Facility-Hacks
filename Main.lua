@@ -293,7 +293,7 @@ function C.Hook(root,method,functName,functData)
 				end
 			end
 			if dont then
-				return
+				return nil
 			end
 
 			return OldFunction(...)

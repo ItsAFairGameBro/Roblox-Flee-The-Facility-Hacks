@@ -633,6 +633,7 @@ local function StartBetterConsole()
 				object.Visible = false
 			end
 		end
+		local numFound = 0
 		for _, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
 			if SearchConsoleResults.Text ~= lastText and not searchingONE then
 				return -- out of order!
@@ -648,9 +649,10 @@ local function StartBetterConsole()
 
 					else
 						local lastChars = ""
-						local newText = C.BetterGSub(theirText,currentText,{'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">','</stroke>'},{IgnoreRichText = true, IgnoreCase = true})
+						local newText,newFound = C.BetterGSub(theirText,currentText,{'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">','</stroke>'},{IgnoreRichText = true, IgnoreCase = true})
 						object.Text=newText
 						willBeVisible = newText ~= theirText--make sure we found an ACTUAL occurance!
+						numFound += newFound
 					end
 				end
 				object.Visible = willBeVisible
@@ -685,7 +687,7 @@ local function StartBetterConsole()
 			noMessagesFound.Visible = false
 		end
 		SearchConsoleResults.Text = (includeALL or total==0) and "" 
-			or '<font color="rgb(0,255,0)">'..comma_value(visibleMessages) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
+			or '<font color="rgb(0,255,0)">'..comma_value(newFound) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
 		local BoxFrame = BetterConsoleFilterBox:Clone()

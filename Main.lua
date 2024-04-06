@@ -6056,7 +6056,7 @@ C.AvailableHacks ={
 									firetouchinterest(parent,HRP, 1)
 									task.wait(1)
 									if TouchToggle.Parent then
-										parent.CanTouch = false
+										--parent.CanTouch = false
 									end
 								else
 									if parent.CanTouch then

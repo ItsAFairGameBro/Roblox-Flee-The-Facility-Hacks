@@ -6020,7 +6020,7 @@ C.AvailableHacks ={
 							if #touchList==0 or not didDisable then--]]
 							local TouchToggle=C.ToggleTag:Clone()
 							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type,TouchToggle})
-							parent.CanTouch = false
+							--parent.CanTouch = false
 
 							TouchToggle.Name = "TouchToggle"
 							TouchToggle.Parent=HackGUI
@@ -6043,15 +6043,15 @@ C.AvailableHacks ={
 									if not HRP then
 										return
 									end
-									parent.CanTouch = true
-									task.wait(1)
+									--parent.CanTouch = true
+									--task.wait(1)
 									firetouchinterest(parent,HRP, 0)
 									RunS.RenderStepped:Wait()
 									firetouchinterest(parent,HRP, 1)
-									task.wait(1)
-									if TouchToggle.Parent then
-										parent.CanTouch = false
-									end
+									--task.wait(1)
+									--if TouchToggle.Parent then
+									--	parent.CanTouch = false
+									--end
 								else
 									if parent.CanTouch then
 										TouchToggle.Toggle.Text = "Enable"

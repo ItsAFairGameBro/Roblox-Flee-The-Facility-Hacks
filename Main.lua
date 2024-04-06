@@ -5952,10 +5952,10 @@ C.AvailableHacks ={
 					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters then
 						return
 					end
-					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent and instance.Parent.CanTouch then
+					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
 						local parent = instance.Parent
 						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
-						if canBeEn then
+						if canBeEn and parent.CanTouch then
 							--[[local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
 							local didDisable = false
 							if #touchList>0 then
@@ -6004,6 +6004,9 @@ C.AvailableHacks ={
 								end
 								parent.CanTouch = not parent.CanTouch
 							end)
+							C.objectFuncts[parent]={parent.Destroying:Connect(function()
+								DS:AddItem(TouchToggle,1)--Delay it so that 1) no crashes and 2) no lag!
+							end)}
 
 							--instance:Destroy()
 							--end

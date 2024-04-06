@@ -22,8 +22,9 @@ local PathfindingService = game:GetService("PathfindingService")
 local TCS=game:GetService("TextChatService")
 
 
-local gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") or "Unknown")
-local gameUniverse=gameName:find("Flee") and "Flee" or "Unknown"
+local gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") 
+	or (game.PlaceId==1962086868 and "TowerMain") or (game.PlaceId==3582763398 and "TowerPro") or "Unknown")
+local gameUniverse=(gameName:find("Tower") and "Tower") or (gameName:find("Flee") and "Flee") or "Unknown"
 newVector3, newColor3 = Vector3.new, Color3.fromRGB
 isStudio=RunS:IsStudio()
 --C.functs,C.refreshEnHack = {}, {}
@@ -6081,8 +6082,12 @@ C.AvailableHacks ={
 			["ActivateFunction"]=(function(newValue)
 				local waitForChild = workspace.WaitForChild
 				C.Hook(game,"__namecall","kick",newValue and (function()
-					print("22The script has successfully intercepted an attempted kick.")
-					return false, workspace.WaitForChild
+					if gameUniverse == "Tower" then
+						error("Purposeful Error!")
+					else
+						print("22The script has successfully intercepted an attempted kick.")
+					end
+					return false, nil
 				end) or nil)
 			end),
 		},

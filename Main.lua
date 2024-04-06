@@ -261,7 +261,8 @@ local function StartBetterConsole()
 	--BETTERCONSOLE LOGGING
 	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load ",
 		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:","MeshContentProvider failed to process ",
-		"invisible is not a valid member of Model","player is not a valid member of TextButton "
+		"invisible is not a valid member of Model","player is not a valid member of TextButton ",
+		"set scale to ",
 	}
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",

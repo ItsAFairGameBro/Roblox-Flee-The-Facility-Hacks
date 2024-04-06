@@ -8015,39 +8015,38 @@ C.AvailableHacks ={
 				C.AvailableHacks.Beast[55].PlayerAdded(theirPlr)
 			end,
 		},
-		[60] = 
-			{
-				["Type"] = "ExTextButton",
-				["Title"] = "Auto Capture",
-				["Desc"] = "Instantly capture other survivors",
-				["Shortcut"] = "AutoCapture",
-				["Default"] = botModeEnabled,
-				["ActivateFunction"] = (function(newValue)
+		[60] = {
+			["Type"] = "ExTextButton",
+			["Title"] = "Auto Capture",
+			["Desc"] = "Instantly capture other survivors",
+			["Shortcut"] = "AutoCapture",
+			["Default"] = botModeEnabled,
+			["ActivateFunction"] = (function(newValue)
 
-					local TSM = plr:WaitForChild("TempPlayerStatsModule");
-					local TSM_IsBeast = TSM:WaitForChild("IsBeast");
+				local TSM = plr:WaitForChild("TempPlayerStatsModule");
+				local TSM_IsBeast = TSM:WaitForChild("IsBeast");
 
-					local function BlatantChangedFunction()
-						C.AvailableHacks.Beast[60].ChangedFunction();
-					end
-					local inputChangedAttribute_INPUT = (newValue and BlatantChangedFunction);
-					setChangedAttribute(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
+				local function BlatantChangedFunction()
 					C.AvailableHacks.Beast[60].ChangedFunction();
-				end),
-				["CaptureSurvivor"] = function(theirPlr,theirChar,override)
-					local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
-					if not TSM:WaitForChild("IsBeast") or not C.Beast then
+				end
+				local inputChangedAttribute_INPUT = (newValue and BlatantChangedFunction);
+				setChangedAttribute(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
+				C.AvailableHacks.Beast[60].ChangedFunction();
+			end),
+			["CaptureSurvivor"] = function(theirPlr,theirChar,override)
+				local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
+				if not TSM:WaitForChild("IsBeast") or not C.Beast then
 					return
 				end
-					if C.Beast.CarriedTorso.Value==nil then
+				if C.Beast.CarriedTorso.Value==nil then
 					return
 				end
-					if not C.enHacks.AutoCapture and not override then
+				if not C.enHacks.AutoCapture and not override then
 					return
 				end
-					--if C.enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
-					local capsule,closestDist=nil,10000
-					for num,cap in pairs(CS:GetTagged("Capsule")) do
+				--if C.enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
+				local capsule,closestDist=nil,10000
+				for num,cap in pairs(CS:GetTagged("Capsule")) do
 					if cap.PrimaryPart~=nil then
 						local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
 						if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
@@ -8055,14 +8054,14 @@ C.AvailableHacks ={
 						end
 					end
 				end
-					--print("Capturing survivor!")
-					if not capsule then
+				--print("Capturing survivor!")
+				if not capsule then
 					warn("Capsule Not Found For",theirPlr,theirChar)
 					return false, "Capsule Not Found"
 				end
-					local Trigger = capsule:WaitForChild("PodTrigger",5)
-					local ActionSign = Trigger and Trigger:FindFirstChild("ActionSign")
-					for s=1,3,1 do
+				local Trigger = capsule:WaitForChild("PodTrigger",5)
+				local ActionSign = Trigger and Trigger:FindFirstChild("ActionSign")
+				for s=1,3,1 do
 					local isOpened = ActionSign and (ActionSign.Value==11)
 					if not Trigger or not ActionSign or not Trigger:FindFirstChild("CapturedTorso") then
 						return
@@ -8081,34 +8080,39 @@ C.AvailableHacks ={
 						end
 					end
 				end
-					return true
-				end,
-				["ChangedFunction"]=function()
-					local TSM=plr:WaitForChild("TempPlayerStatsModule")
-					if not TSM:WaitForChild("IsBeast").Value then
+				return true
+			end,
+			["ChangedFunction"]=function()
+				local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				if not TSM:WaitForChild("IsBeast").Value then
 					return
 				end
-					local CarriedTorso=C.char:WaitForChild("CarriedTorso",20)
-					if CarriedTorso~=nil then
+				local CarriedTorso=C.char:WaitForChild("CarriedTorso",20)
+				if CarriedTorso~=nil then
 					local function canRun(saveTorso)
 						return C.char == C.Beast and CarriedTorso.Parent and not isCleared and saveTorso==CarriedTorso.Value
 					end
 					local function captureSurvivorFunction()
 						local saveTorso = CarriedTorso.Value
 						while canRun(saveTorso) do
+							local capsuleList = CS:GetTagged("Capsule")
 							local hasValid = false
-							for _, capsule in ipairs(CS:GetTagged("Capsule")) do
-								if capsule and capsule.Parent and capsule.Parent.Parent then
+							for _, cap in ipairs(capsuleList) do
+								if cap and cap.Parent and cap.Parent.Parent 
+									and cap.PrimaryPart 
+									and cap:FindFirstChild("PodTrigger")
+									and cap.PodTrigger:FindFirstChild("CapturedTorso") and not cap.PodTrigger.CapturedTorso.Value then
 									hasValid = true
 									break
 								else
-									warn("Invalid Capsule At",capsule)
+									warn("Invalid Capsule At",cap)
 								end
 							end
 							if hasValid then
 								break
+							elseif #capsuleList==0 then
+								CS:GetInstanceAddedSignal("Capsule"):Wait()
 							end
-							CS:GetInstanceAddedSignal("Capsule"):Wait()
 							task.wait(.75)
 						end
 						if not canRun(saveTorso) then
@@ -8122,27 +8126,27 @@ C.AvailableHacks ={
 				elseif C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
 					warn("rope not found!!!! hackssss bro!", C.char:GetFullName())
 				end
-				end,
+			end,
 
 
-				--["MyStartUp"]=function()
-			--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
-			setChangedAttribute(
-				TSM:WaitForChild("IsBeast"),
-				"Value",C.enHacks.AutoCapture and function()
-					C.AvailableHacks.Beast[60].ChangedFunction()
-				end or false)--]]
-				--C.AvailableHacks.Beast[60].ChangedFunction()
-				--end,
+			--["MyStartUp"]=function()
+	--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
+	setChangedAttribute(
+		TSM:WaitForChild("IsBeast"),
+		"Value",C.enHacks.AutoCapture and function()
+			C.AvailableHacks.Beast[60].ChangedFunction()
+		end or false)--]]
+			--C.AvailableHacks.Beast[60].ChangedFunction()
+			--end,
 
 
-				["MyBeastAdded"]=function(theirPlr,theirChar)
-					C.AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
-				end,
-				--["OthersBeastAdded"]=function(theirPlr,theirChar)
-				--	C.AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
-				--end,
-			},
+			["MyBeastAdded"]=function(theirPlr,theirChar)
+				C.AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
+			end,
+			--["OthersBeastAdded"]=function(theirPlr,theirChar)
+			--	C.AvailableHacks.Beast[60].ChangedFunction(theirPlr,theirChar)
+			--end,
+		},
 		[66]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto Beast Hit",
@@ -9243,7 +9247,7 @@ C.AvailableHacks ={
 				currentPath:Stop()
 				C.AvailableHacks.Bot[15].ChangedEvent:Fire(false,false) 
 				if not C.enHacks.BotRunner then
-					print("b1")
+					--print("b1")
 					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
 					return 
 				end
@@ -9254,9 +9258,9 @@ C.AvailableHacks ={
 						return false 
 					end
 					local inGame,role = isInGame(C.char)
-					print(role,C.enHacks.BotRunner,C.Beast,myTSM.Health.Value)
+					--print(role,C.enHacks.BotRunner,C.Beast,myTSM.Health.Value)
 					if role=="Runner" and (saveValue~="Freeze" or (C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))) then
-						print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s=")
+						--print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s=")
 						break
 					elseif maxDurationLeft <= 0 then 
 						return false
@@ -9264,14 +9268,14 @@ C.AvailableHacks ={
 					maxDurationLeft-=RunS.RenderStepped:Wait() --task.wait(.25)
 				end
 				if C.enHacks.BotRunner ~= saveValue then
-					print("no save")
+					--print("no save")
 					return false
 				end
 				local savedValue=C.AvailableHacks.Bot[15].CurrentNum + 1
 				C.AvailableHacks.Bot[15].CurrentNum = savedValue
 				RunS.RenderStepped:Wait()--maybe wait a frame just in case, yk?
 				if C.enHacks.BotRunner ~= saveValue then
-					print("no save2")
+					--print("no save2")
 					return false
 				end
 				C.AvailableHacks.Bot[15]["RUNNER"..saveValue](TSM,currentPath,savedValue)
@@ -11785,10 +11789,10 @@ local function MapChildAdded(child,shouldntWait)
 		defaultFunction("ComputerAdded",{child});
 	elseif string.sub(child.Name,1,9)=="FreezePod" then
 		local PodTrigger=child:WaitForChild("PodTrigger",3);
-		CS:AddTag(child,"Capsule");
 		if PodTrigger~=nil then
 			CS:AddTag(PodTrigger,"Trigger");
 		end;
+		CS:AddTag(child,"Capsule");
 		defaultFunction("CapsuleAdded",({child}));
 		table.insert(C.functs,child.AncestryChanged:Connect(DescendantRemoving));
 	elseif child.Parent~=workspace and (child.Name=="SingleDoor" or child.Name=="DoubleDoor" or child.Name=="ExitDoor") then

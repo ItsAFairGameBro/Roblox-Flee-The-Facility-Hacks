@@ -5974,13 +5974,14 @@ C.AvailableHacks ={
 							if #touchList==0 or not didDisable then--]]
 							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type})
 							parent.CanTouch = false
-							--TODO HERE
+
 							local TouchToggle=C.ToggleTag:Clone()
 							TouchToggle.Name = "TouchToggle"
 							TouchToggle.Parent=parent
 							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
 							TouchToggle.Toggle.Text = "Activate"
 							TouchToggle.Toggle.TextColor3 = Color3.fromRGB(0,170)
+							TouchToggle.Enabled = true
 							CS:AddTag(TouchToggle,"RemoveOnDestroy")
 							CS:AddTag(TouchToggle,"TouchToggleTag")
 							TouchToggle.Toggle.MouseButton1Up:Connect(function()

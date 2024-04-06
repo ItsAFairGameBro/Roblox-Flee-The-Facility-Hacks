@@ -268,7 +268,7 @@ function C.Hook(root,method,functName,functData)
 		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
 			local canDefault = checkcaller()
 			local dont = false
-			if not canDefault then
+			if not canDefault or true then
 				local method = stringlower(getnamecallmethod())
 				if method ~= "isa" and method~="getstate" and method~="findpartonraywithignorelist" and method~="getcamerayinvertvalue" and method~="viewportpointtoray" then
 					--print(method)

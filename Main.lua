@@ -264,7 +264,7 @@ function C.Hook(root,method,functName,functData)
 	if not getgenv().Hooks[root][method] then
 		local myData = {}
 		getgenv().Hooks[root][method] = myData
-		local function getTblVal(tbl,needle)
+		local getTblVal = function(tbl,needle)
 			for key, val in pairs(tbl) do
 				if key == needle then
 					return val

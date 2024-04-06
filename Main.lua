@@ -10571,21 +10571,33 @@ C.clear = function(isManualClear)
 		getrenv().print = oldPrint
 		getgenv().currentDesc = nil -- clear the cashe
 		getgenv().JoinPlayerMorphId = nil -- clear the join player id
-
-		local LocalPlayerScript = gameUniverse=="Flee" and C.char:WaitForChild("LocalPlayerScript")
-		if LocalPlayerScript then
-			LocalPlayerScript.Disabled = true
-			LocalPlayerScript.Disabled = false
-		end
-		if C.Beast == C.char then
-			task.delay(0,CAS.UnbindAction,CAS,"Crawl")
-
-			task.spawn(function()
-				local LocalClubScript = C.char:FindFirstChild("LocalClubScript",true)
-				if LocalClubScript then
-					LocalClubScript.Disabled = false
+		
+		if gameUniverse == "Flee" then
+			if gameUniverse=="FleeMain" then
+				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName",.5)
+				if spectatorName then
+					spectatorName.TextColor3 = Color3.fromRGB(255,255,255)
 				end
-			end)
+			end
+			local LocalPlayerScript = C.char:WaitForChild("LocalPlayerScript")
+			if LocalPlayerScript then
+				LocalPlayerScript.Disabled = true
+				LocalPlayerScript.Disabled = false
+			end
+			if C.Beast == C.char then
+				task.delay(0,CAS.UnbindAction,CAS,"Crawl")
+
+				task.spawn(function()
+					local LocalClubScript = C.char:FindFirstChild("LocalClubScript",true)
+					if LocalClubScript then
+						LocalClubScript.Disabled = false
+					end
+				end)
+			end
+			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
+			for num, chatConnection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
+				chatConnection:Enable()
+			end
 		end
 		--local CrawlScript=C.char:WaitForChild("CrawlScript") 
 		--if CrawlScript then
@@ -10608,13 +10620,6 @@ C.clear = function(isManualClear)
 		end
 		C.AvailableHacks.Basic[40].ActivateFunction(false)--disable reset button again!
 		C.AvailableHacks.Basic[20].ActivateFunction(false)--make invisible walls unable to walk through again!
-
-		if gameUniverse == "Flee" then
-			local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
-			for num, chatConnection in ipairs(C.GetHardValue(chatBar,"FocusLost",{yield=true})) do
-				chatConnection:Enable()
-			end
-		end
 	else
 		getgenv().enHacks = table.clone(C.enHacks)
 	end

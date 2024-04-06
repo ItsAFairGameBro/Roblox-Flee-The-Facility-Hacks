@@ -6052,10 +6052,11 @@ C.AvailableHacks ={
 							--end
 						end
 					end
-					if num%5==0 then
+					if num%50==0 then
 						RunS.RenderStepped:Wait()
 					end
 				end
+				print("Transmitters Applied!")
 			end,
 			["ActivateFunction"]=function(newValue)
 				C.AvailableHacks.Basic[25].UndoTransmitters(newValue)

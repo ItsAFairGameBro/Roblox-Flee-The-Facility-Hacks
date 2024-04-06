@@ -3567,7 +3567,7 @@ C.AvailableHacks ={
 				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
 				C.AvailableHacks.Render[29].SetEnabled(newTag)
 				local function setToggleFunction()
-					if C.Beast.CarriedTorso.Value ~= theirPrimPart then
+					if C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value ~= theirPrimPart then
 						C.AvailableHacks.Beast[55].RopeSurvivor(theirTSM,theirPlr,true) -- Rope the survivor
 					else
 						C.AvailableHacks.Runner[3].ChangedFunction(theirPrimPart,true) -- Unrope him!
@@ -11370,7 +11370,11 @@ local function BeastAdded(theirPlr,theirChar)
 	local function2Input = theirPlr==plr and "MyBeastAdded" or "OthersBeastAdded";
 	defaultFunction(function2Input,inputArray);
 	defaultFunction("BeastAdded",inputArray);
-	table.insert(C.functs,Hammer.AncestryChanged:Connect(function(newParent)
+	table.insert(C.functs,Hammer.Destroying:Connect(function(newParent)
+		--if newParent then
+			--return
+		--end
+		warn("Hammer Destroying!")
 		C.Beast=nil
 		local inputArray = {theirPlr,theirChar}
 		defaultFunction((theirPlr==plr and "MyBeastRemoved" or "OthersBeastRemoved"),(inputArray))

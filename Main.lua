@@ -6094,7 +6094,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Basic[25].ApplyTransmitters(workspace)
 				end
 			end,
-			["StartUp"]=function(theirPlr,theirChar,firstRun)
+			["MyStartUp"]=function(theirPlr,theirChar,firstRun)
 				local theirHRP = theirChar:WaitForChild("HumanoidRootPart",30)-- wait for it to be loaded!
 				if not theirHRP then
 					return
@@ -6104,7 +6104,7 @@ C.AvailableHacks ={
 					task.wait(5)
 					C.AvailableHacks.Basic[25].ActivateFunction(C.enHacks.Basic_DisableTouchTransmitters)
 				else
-					C.AvailableHacks.Basic[25].ApplyTransmitters(theirChar)
+					--C.AvailableHacks.Basic[25].ApplyTransmitters(theirChar)
 				end
 			end,
 		},

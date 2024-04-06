@@ -262,7 +262,7 @@ function C.Hook(root,method,functName,functData)
 		getgenv().Hooks[root][method] = {}
 		local OldFunction
 		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
-			local canDefault = not checkcaller()
+			local canDefault = checkcaller()
 			if not canDefault then
 				local method = getnamecallmethod():lower()
 				for functName, functData in pairs(getgenv().Hooks[root][method]) do
@@ -273,12 +273,6 @@ function C.Hook(root,method,functName,functData)
 						end
 					end
 				end
-			end
-			if method == "kick" then
-
-				error("idk man")
-
-				return nil
 			end
 
 			return OldFunction(...)

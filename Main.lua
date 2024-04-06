@@ -253,6 +253,39 @@ function C.CreateSysMessage(message,color)
 	SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
 		Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
 end
+getgenv().Hooks = getgenv().Hooks or {}
+function C.Hook(root,method,functName,functData)
+	if not getgenv().Hooks[root] then
+		getgenv().Hooks[root] = {}
+	end
+	if not getgenv().Hooks[root][method] then
+		getgenv().Hooks[root][method] = {}
+		local OldFunction
+		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
+			local canDefault = not checkcaller()
+			if not canDefault then
+				local method = getnamecallmethod():lower()
+				for functName, functData in pairs(getgenv().Hooks[root][method]) do
+					if (functData.Check and functData.Check(method,...)) or method == functName then
+						local results = table.pack(functData.Run(method,...))
+						if not results[1] then
+							return select(2,table.unpack(results))
+						end
+					end
+				end
+			end
+			if method == "kick" then
+
+				error("idk man")
+
+				return nil
+			end
+
+			return OldFunction(...)
+		end))
+	end
+	getgenv().Hooks[root][method][functName] = functData
+end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()
 	--GUI CREATION FOR BETTER CONSOLE:
@@ -6040,6 +6073,22 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[25].ApplyTransmitters(theirChar)
 			end,
 		},
+		[27]={
+			["Type"] = "ExTextButton",
+			["Title"] = ("Anti Kick"),
+			["Desc"] = ("Works in most cases"),
+			["Shortcut"] = "Basic_AntiKick",
+			["Universes"]={"Global"},
+			["Default"]=not botModeEnabled,
+			["ActivateFunction"]=(function(newValue)
+				C.Hook(game,"__namecall","kick",newValue and ({Run=function()
+					print("The script has successfully intercepted an attempted kick.")
+					return false, nil
+				end,}))
+			end),
+		},
+		
+
 		[30]={
 			["Type"]="ExTextButton",
 			["Title"]="Invisible Character",

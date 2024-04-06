@@ -5979,19 +5979,28 @@ C.AvailableHacks ={
 							TouchToggle.Name = "TouchToggle"
 							TouchToggle.Parent=parent
 							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
-							TouchToggle.Toggle.Text = "Activate"
-							TouchToggle.Toggle.TextColor3 = Color3.fromRGB(0,170)
+							TouchToggle.Toggle.Text = "Enable"
+							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 							TouchToggle.Enabled = true
 							CS:AddTag(TouchToggle,"RemoveOnDestroy")
 							CS:AddTag(TouchToggle,"TouchToggleTag")
 							TouchToggle.Toggle.MouseButton1Up:Connect(function()
-								local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
+								--[[local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
 								if not HRP then
 									return
 								end
 								firetouchinterest(HRP,parent, 0)
 								RunS.RenderStepped:Wait()
-								firetouchinterest(HRP,parent, 1)
+								firetouchinterest(HRP,parent, 1)--]]
+								
+								if parent.CanTouch then
+									TouchToggle.Toggle.Text = "Enable"
+									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
+								else
+									TouchToggle.Toggle.Text = "Disable"
+									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(170)
+								end
+								parent.CanTouch = not parent.CanTouch
 							end)
 
 							--instance:Destroy()

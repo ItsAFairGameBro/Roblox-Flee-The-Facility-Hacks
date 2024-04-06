@@ -10684,8 +10684,10 @@ C.clear = function(isManualClear)
 			C.AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
 			C.AvailableHacks.Beast[2].Crawl(false);--disable crawl
 		end
+		if gameName=="FleeMain" then
+			trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
+		end
 	end
-	trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
 	for num,tagPart in ipairs(CS:GetTagged("Trigger_AllowException")) do
 		tagPart:SetAttribute("Trigger_AllowException",nil)
 	end
@@ -11467,6 +11469,9 @@ local function CharacterAdded(theirChar,firstRun)
 	isTeleporting = false--if its still teleporting then stap it!
 	local HRP=theirChar:WaitForChild("HumanoidRootPart",1) or theirChar.PrimaryPart
 	task.wait()
+	if not theirPlr then
+		return
+	end
 	local theirPlr=PS:GetPlayerFromCharacter(theirChar)
 	local theirHumanoid=theirChar:WaitForChild("Humanoid")
 

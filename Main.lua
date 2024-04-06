@@ -267,12 +267,20 @@ function C.Hook(root,method,functName,functData)
 		local OldFunction
 		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
 			local canDefault = checkcaller()
+			local dont = false
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
-				print(method)
+				if method ~= "isa" and method~="getstate" and method~="findpartonraywithignorelist" and method~="getcamerayinvertvalue" and method~="viewportpointtoray" then
+					--print(method)
+				end
+				if method=="kick" then
+					dont = true
+				end
 				for functName, theirRun in pairs(myData) do
 					if method == functName then
+						print("Method")
 						local results = tblPack(theirRun(method,...))
+						print("Got Results")
 						for key, val in ipairs(results) do
 							--if not val then
 								print("Spoofing")
@@ -283,6 +291,9 @@ function C.Hook(root,method,functName,functData)
 						end
 					end
 				end
+			end
+			if dont then
+				return
 			end
 
 			return OldFunction(...)

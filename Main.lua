@@ -269,6 +269,7 @@ function C.Hook(root,method,functName,functData)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
+				print(method)
 				for functName, theirRun in pairs(myData) do
 					if method == functName then
 						local results = tblPack(theirRun(method,...))

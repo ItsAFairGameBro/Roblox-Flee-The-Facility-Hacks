@@ -6039,13 +6039,15 @@ C.AvailableHacks ={
 							end
 							TouchToggle.Toggle.MouseButton1Up:Connect(function()
 								if Type=="Part" then
-									local HRP = C.char and C.char:FindFirstChild("Weight")
+									local HRP = C.char and C.char:FindFirstChild("HumnaoidRootPart")
 									if not HRP then
 										return
 									end
+									parent.CanTouch = true
 									firetouchinterest(parent,HRP, 0)
 									RunS.RenderStepped:Wait()
 									firetouchinterest(parent,HRP, 1)--]]
+									parent.CanTouch = false
 								else
 									if parent.CanTouch then
 										TouchToggle.Toggle.Text = "Enable"

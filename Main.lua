@@ -11125,6 +11125,7 @@ C.CommandFunctions = {
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",
+		SupportsNew=true,
 		RestoreInstances={["Hammer"]=true,["Gemstone"]=true,["PackedGemstone"]=true,["PackedHammer"]=true},
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
@@ -11240,14 +11241,16 @@ C.CommandFunctions = {
 				return
 			end
 			task.wait(.5) --Avatar loaded wait!
-			if firstRun then
-				local JoinPlayerMorphId = getgenv().JoinPlayerMorphId
-				if JoinPlayerMorphId then
-					C.CommandFunctions.morph.Run({{theirPlr},JoinPlayerMorphId})
-				end
-			end
 			local currentChar = getgenv().currentDesc[theirPlr.Name]
-			if currentChar then
+			if firstRun and not currentChar then
+				local JoinPlayerMorphDesc = getgenv().JoinPlayerMorphDesc
+				if JoinPlayerMorphDesc then
+					JoinPlayerMorphDesc = JoinPlayerMorphDesc:Clone()
+					getgenv().currentDesc[theirPlr.Name] = JoinPlayerMorphDesc
+					C.CommandFunctions.morph.MorphPlayer(theirChar,JoinPlayerMorphDesc,true)
+					--C.CommandFunctions.morph.Run({{theirPlr},JoinPlayerMorphId})
+				end
+			elseif currentChar then
 				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true)
 			end
 		end,
@@ -11285,33 +11288,43 @@ C.CommandFunctions = {
 			if defaultHumanDesc == nil then
 				return false, "HumanoidDesc returned NULL for all players!"
 			end
-			if #args[1] == #PS:GetPlayers() then
-				getgenv().JoinPlayerMorphId = selectedName.SortName
-			end
-			for num, theirPlr in ipairs(args[1]) do
-				if args[3] and not outfitData then
-					return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
+			local savedDescription = selectedName~="no" 
+				and (args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+			if args[1]=="new" then
+				if getgenv().JoinPlayerMorphDesc ~= savedDescription then
+					getgenv().JoinPlayerMorphDesc:Destroy()
 				end
-				local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
-					(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
-				if not desc2Apply then
-					return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
-				end
-				if theirPlr.Character then
-					task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
-				elseif selectedName ~= "no" then
-					if getgenv().currentDesc[theirPlr.Name] 
-						and getgenv().currentDesc[theirPlr.Name] ~= desc2Apply then
-						getgenv().currentDesc[theirPlr.Name]:Destroy()
-					end
-					getgenv().currentDesc[theirPlr.Name] = desc2Apply
+				if selectedName=="no" then
+					getgenv().JoinPlayerMorphDesc = nil
 				else
-					if getgenv().currentDesc[theirPlr.Name] then
-						getgenv().currentDesc[theirPlr.Name]:Destroy()
-					end
-					getgenv().currentDesc[theirPlr.Name] = nil
+					getgenv().JoinPlayerMorphDesc = savedDescription
 				end
-				--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
+			else
+				for num, theirPlr in ipairs(args[1]) do
+					if args[3] and not outfitData then
+						return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
+					end
+					local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
+						(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+					if not desc2Apply then
+						return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
+					end
+					if theirPlr.Character then
+						task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
+					elseif selectedName ~= "no" then
+						if getgenv().currentDesc[theirPlr.Name] 
+							and getgenv().currentDesc[theirPlr.Name] ~= desc2Apply then
+							getgenv().currentDesc[theirPlr.Name]:Destroy()
+						end
+						getgenv().currentDesc[theirPlr.Name] = desc2Apply
+					else
+						if getgenv().currentDesc[theirPlr.Name] then
+							getgenv().currentDesc[theirPlr.Name]:Destroy()
+						end
+						getgenv().currentDesc[theirPlr.Name] = nil
+					end
+					--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
+				end
 			end
 			return true,args[2]=="" and "nothing" or selectedName.SortName,outfitData and (" " ..outfitData.name) or ""
 		end},
@@ -11378,7 +11391,7 @@ local function BeastAdded(theirPlr,theirChar)
 		--if newParent then
 			--return
 		--end
-		warn("Hammer Destroying!")
+		--warn("Hammer Destroying!")
 		C.Beast=nil
 		local inputArray = {theirPlr,theirChar}
 		defaultFunction((theirPlr==plr and "MyBeastRemoved" or "OthersBeastRemoved"),(inputArray))
@@ -11443,7 +11456,7 @@ if not C.savedCommands then
 	C.savedCommands = {}
 	getgenv().lastCommands = C.savedCommands
 end
-function C.RunCommand(inputMsg,shouldSave,noRefresh)
+function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 	if shouldSave then
 		table.insert(C.savedCommands,1,inputMsg)
 		if #C.savedCommands > 10 then
@@ -11474,6 +11487,11 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh)
 				args[1] = {plr}
 			elseif ChosenPlr == "random" then
 				args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
+			elseif ChosenPlr == "new" then
+				if not CommandData.SupportsNew then
+					canRunFunction = C.CreateSysMessage(`{command} doesn't support "new" players`)
+				end
+				args[1] = "new"
 			else
 				_, ChosenPlr = C.StringStartsWith(PS:GetPlayers(),args[1])
 				if ChosenPlr then
@@ -11486,7 +11504,7 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh)
 			canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}, {tostring(CommandData.Type)}`)
 		end
 		if canRunFunction then
-			task.spawn(function()
+			local function yieldFunction()
 				local returns = table.pack(C.CommandFunctions[command].Run(args))
 				local wasSuccess = returns[1]
 				table.remove(returns,1)
@@ -11508,20 +11526,25 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh)
 						`{displayNameCommand} Error: {returns[1] or `unknown RET for {displayNameCommand}`}`,
 						Color3.fromRGB(255))
 				end
-			end)
+			end
+			if canYield then
+				yieldFunction()
+			else
+				task.spawn(yieldFunction)
+			end
 		end
 	elseif inputCommand~="c" and inputCommand~="whisper" and inputCommand~="mute" and inputCommand~="unmute" then
 		C.CreateSysMessage(`Command Not Found: {inputCommand}`)
 	end
 end
-local function processPlayerMessage(data,noRefresh)
+local function processPlayerMessage(data,noRefresh,shouldYield)
 	if data.MessageType == "Message" then
 		local message = data.Message
 		local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
 		if theirPlr then
 			if theirPlr ~= plr and myBots[theirPlr.Name:lower()] and botModeEnabled then
 				if message:sub(1,1) == "/" then
-					C.RunCommand(message,false,noRefresh==true)--message:sub(2),theirPlr == plr)
+					C.RunCommand(message,false,noRefresh==true,shouldYield)--message:sub(2),theirPlr == plr)
 				end
 			end
 		else
@@ -11532,7 +11555,7 @@ end
 if C.saveIndex == 1 and gameUniverse=="Flee" and botModeEnabled then--C.saveIndex == 1 and gameUniverse == "Flee" then
 	task.delay(1,function()
 		for num, value in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
-			processPlayerMessage(value,true)
+			processPlayerMessage(value,true,true)
 		end
 	end)
 end
@@ -11631,7 +11654,7 @@ local function PlayerAdded(theirPlr)
 					end
 				end
 				table.insert(C.functs,mySendButton.MouseButton1Up:Connect(sendTheMessage))
-				mySendButton.AncestryChanged:Connect(function()
+				mySendButton.Destroying:Connect(function()
 					if sendButton then
 						sendButton.Visible = true
 					end
@@ -11794,7 +11817,7 @@ local function MapChildAdded(child,shouldntWait)
 		end;
 		CS:AddTag(child,"Capsule");
 		defaultFunction("CapsuleAdded",({child}));
-		table.insert(C.functs,child.AncestryChanged:Connect(DescendantRemoving));
+		table.insert(C.functs,child.Destroying:Connect(DescendantRemoving));
 	elseif child.Parent~=workspace and (child.Name=="SingleDoor" or child.Name=="DoubleDoor" or child.Name=="ExitDoor") then
 		local inputArray = {child, child.Name};
 		local maximum_wait_time = (18 * 60);
@@ -11824,7 +11847,7 @@ local function registerObject(object,registerfunct,shouldntWait)
 		local function IntermediateDescendantRemovingFunction(newParent)
 			DescendantRemoving(child);
 		end;
-		table.insert(C.functs,child.AncestryChanged:Connect(IntermediateDescendantRemovingFunction));
+		table.insert(C.functs,child.Destroying:Connect(IntermediateDescendantRemovingFunction));
 		registerfunct(child,false)
 	end))
 	for num, lowerobject in ipairs(object:GetChildren()) do
@@ -11835,7 +11858,7 @@ local function registerObject(object,registerfunct,shouldntWait)
 			DescendantRemoving(lowerobject);
 		end;
 		task.spawn(registerfunct,lowerobject,shouldntWait)
-		table.insert(C.functs,lowerobject.AncestryChanged:Connect(IntermediateDescendantRemovingFunction));
+		table.insert(C.functs,lowerobject.Destroying:Connect(IntermediateDescendantRemovingFunction));
 		if num%100 == 0 then
 			RunS.RenderStepped:Wait()
 		end
@@ -11849,7 +11872,7 @@ local function updateCurrentMap(newMap,firstRun)
 		local inputArray = {newMap};
 		defaultFunction("MapAdded",{newMap,firstRun});
 		task.spawn(registerObject,newMap,MapChildAdded)
-		table.insert(C.functs,newMap.AncestryChanged:Connect(function(newParent)
+		table.insert(C.functs,newMap.Destroying:Connect(function(newParent)
 			task.wait(2)--give a hefty wait time before deleting components, so that individual children can be erased first!
 			updateCurrentMap(nil)
 		end))

@@ -261,7 +261,8 @@ function C.Hook(root,method,functName,functData)
 		getgenv().Hooks[root] = {}
 	end
 	if not getgenv().Hooks[root][method] then
-		getgenv().Hooks[root][method] = {}
+		local myData = getgenv().Hooks[root][method]
+		getgenv().Hooks[root][method] = myData
 		local OldFunction
 		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
 			local canDefault = checkcaller()
@@ -270,7 +271,7 @@ function C.Hook(root,method,functName,functData)
 				if true then
 					return OldFunction(...)
 				end
-				for functName, functData in pairs(getgenv().Hooks[root][method]) do
+				for functName, functData in pairs(myData) do
 					if (functData.Check and functData.Check(method,...)) or method == functName then
 						local results = table.pack(functData.Run(method,...))
 						if not results[1] then

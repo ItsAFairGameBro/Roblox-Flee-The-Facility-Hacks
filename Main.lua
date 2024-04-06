@@ -256,12 +256,18 @@ end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()
 	--GUI CREATION FOR BETTER CONSOLE:
+	--ERROR LOGGING
+	--CONSOLE LOGGING
+	--BETTERCONSOLE LOGGING
 	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load ",
-		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:","MeshContentProvider failed to process "
+		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:","MeshContentProvider failed to process ",
+		"invisible is not a valid member of Model","player is not a valid member of TextButton "
 	}
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
-		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done"
+		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done",
+		
+		"attempt to index nil with 'Name'"
 	}
 
 	local BetterConsole = Instance.new("Frame")
@@ -2972,7 +2978,7 @@ C.AvailableHacks ={
 			end),
 			["OthersStartUp"]=(function(theirPlr,theirChar)
 				local HRP=theirChar:WaitForChild("HumanoidRootPart",1e5) 
-				if not HRP then
+				if not HRP or not theirPlr then
 					return
 				end
 				local newTag=NameTagEx:Clone()
@@ -11294,6 +11300,9 @@ C.CommandFunctions = {
 				return
 			end
 			task.wait(.5) --Avatar loaded wait!
+			if not theirPlr or not theirChar or not theirChar.Parent then
+				return
+			end
 			local currentChar = getgenv().currentDesc[theirPlr.Name]
 			if firstRun and not currentChar then
 				local JoinPlayerMorphDesc = getgenv().JoinPlayerMorphDesc

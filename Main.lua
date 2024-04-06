@@ -256,6 +256,7 @@ end
 getgenv().Hooks = getgenv().Hooks or {}
 function C.Hook(root,method,functName,functData)
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+	local tblPack = table.pack
 
 	if not getgenv().Hooks[root] then
 		getgenv().Hooks[root] = {}
@@ -275,14 +276,12 @@ function C.Hook(root,method,functName,functData)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
-				if true then
-					return OldFunction(...)
-				end
 				for functName, functData in pairs(myData) do
 					local theirCheck = getTblVal(functName,"Check")
 					if (theirCheck and theirCheck(method,...)) or method == functName then
-						local results = table.pack(functData.Run(method,...))
-						if not results[1] then
+						local theirRun = getTblVal(functName, "Run")
+						local results = tblPack(theirRun(method,...))
+						if not getTblVal(results,1) then
 							print("Spoofing")
 							--return select(2,table.unpack(results))
 						end

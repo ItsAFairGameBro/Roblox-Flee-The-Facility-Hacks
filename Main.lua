@@ -640,7 +640,9 @@ local function StartBetterConsole()
 			end
 			if object:IsA("TextLabel") then
 				local theirText=object:GetAttribute("OrgText")
-				local willBeVisible = includeALL or object.ContentText:lower():match(C.ApplyRichTextEscapeCharacters(currentText,true,C.DefaultStringEscapeCharacters))
+				local newText,newFound = C.BetterGSub(theirText,currentText,{'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">','</stroke>'},{IgnoreRichText = true, IgnoreCase = true})
+				local willBeVisible = newFound > 0
+				--local willBeVisible = includeALL or object.ContentText:lower():match(C.ApplyRichTextEscapeCharacters(currentText,true,C.DefaultStringEscapeCharacters))
 				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
 					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
 				if willBeVisible then
@@ -649,7 +651,6 @@ local function StartBetterConsole()
 
 					else
 						local lastChars = ""
-						local newText,newFound = C.BetterGSub(theirText,currentText,{'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">','</stroke>'},{IgnoreRichText = true, IgnoreCase = true})
 						object.Text=newText
 						willBeVisible = newText ~= theirText--make sure we found an ACTUAL occurance!
 						numFound += newFound

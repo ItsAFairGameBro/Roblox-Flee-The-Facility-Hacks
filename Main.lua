@@ -5980,10 +5980,10 @@ C.AvailableHacks ={
 							TouchToggle.Parent=parent
 							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
 							TouchToggle.Toggle.Text = "Activate"
-							TouchToggle.TextColor3 = Color3.fromRGB(0,170)
+							TouchToggle.Toggle.TextColor3 = Color3.fromRGB(0,170)
 							CS:AddTag(TouchToggle,"RemoveOnDestroy")
 							CS:AddTag(TouchToggle,"TouchToggleTag")
-							TouchToggle.MouseButton1Up:Connect(function()
+							TouchToggle.Toggle.MouseButton1Up:Connect(function()
 								local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
 								if not HRP then
 									return

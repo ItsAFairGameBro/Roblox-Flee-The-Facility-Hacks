@@ -3800,7 +3800,7 @@ C.AvailableHacks ={
 
 				[12] = {
 					"Exit",
-					newColor3(255,255)
+					newColor3(255,170)
 				},
 				[11] = {
 					"Close",
@@ -9243,7 +9243,7 @@ C.AvailableHacks ={
 				currentPath:Stop()
 				C.AvailableHacks.Bot[15].ChangedEvent:Fire(false,false) 
 				if not C.enHacks.BotRunner then
-					--print("b1")
+					print("b1")
 					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
 					return 
 				end
@@ -9254,9 +9254,9 @@ C.AvailableHacks ={
 						return false 
 					end
 					local inGame,role = isInGame(C.char)
-					--print(role,C.enHacks.BotRunner,C.Beast,myTSM.Health.Value)
+					print(role,C.enHacks.BotRunner,C.Beast,myTSM.Health.Value)
 					if role=="Runner" and (saveValue~="Freeze" or (C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))) then
-						--print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
+						print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
 						break
 					elseif maxDurationLeft <= 0 then 
 						return false
@@ -9264,12 +9264,14 @@ C.AvailableHacks ={
 					maxDurationLeft-=RunS.RenderStepped:Wait() --task.wait(.25)
 				end
 				if C.enHacks.BotRunner ~= saveValue then
+					print("no save")
 					return false
 				end
 				local savedValue=C.AvailableHacks.Bot[15].CurrentNum + 1
 				C.AvailableHacks.Bot[15].CurrentNum = savedValue
 				RunS.RenderStepped:Wait()--maybe wait a frame just in case, yk?
 				if C.enHacks.BotRunner ~= saveValue then
+					print("no save2")
 					return false
 				end
 				C.AvailableHacks.Bot[15]["RUNNER"..saveValue](TSM,currentPath,savedValue)

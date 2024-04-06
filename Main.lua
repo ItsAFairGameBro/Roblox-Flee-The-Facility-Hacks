@@ -687,7 +687,7 @@ local function StartBetterConsole()
 			noMessagesFound.Visible = false
 		end
 		SearchConsoleResults.Text = (includeALL or total==0) and "" 
-			or '<font color="rgb(0,255,0)">'..comma_value(newFound) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
+			or '<font color="rgb(0,255,0)">'..comma_value(numFound) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
 	end
 	for messageType, messageData in pairs(MessageTypeSettings) do
 		local BoxFrame = BetterConsoleFilterBox:Clone()

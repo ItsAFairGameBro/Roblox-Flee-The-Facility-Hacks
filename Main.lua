@@ -9256,7 +9256,7 @@ C.AvailableHacks ={
 					local inGame,role = isInGame(C.char)
 					print(role,C.enHacks.BotRunner,C.Beast,myTSM.Health.Value)
 					if role=="Runner" and (saveValue~="Freeze" or (C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))) then
-						print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s="..s)
+						print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s=")
 						break
 					elseif maxDurationLeft <= 0 then 
 						return false

@@ -11299,7 +11299,7 @@ C.CommandFunctions = {
 				else
 					getgenv().JoinPlayerMorphDesc = savedDescription
 				end
-				return true, "new"
+				return true, "new", ""
 			else
 				for num, theirPlr in ipairs(args[1]) do
 					if args[3] and not outfitData then
@@ -11818,7 +11818,9 @@ local function MapChildAdded(child,shouldntWait)
 		end;
 		CS:AddTag(child,"Capsule");
 		defaultFunction("CapsuleAdded",({child}));
-		table.insert(C.functs,child.Destroying:Connect(DescendantRemoving));
+		table.insert(C.functs,child.Destroying:Connect(function()
+			DescendantRemoving(child)
+		end));
 	elseif child.Parent~=workspace and (child.Name=="SingleDoor" or child.Name=="DoubleDoor" or child.Name=="ExitDoor") then
 		local inputArray = {child, child.Name};
 		local maximum_wait_time = (18 * 60);

@@ -5922,7 +5922,7 @@ C.AvailableHacks ={
 						return
 					end
 					local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
-					local object, parent, Type = table.unpack(data)
+					local object, parent, Type, TouchToggle = table.unpack(data)
 					if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
 						--[[if typeof(parent)=="table" then
 							for num, connection in ipairs(parent) do
@@ -5934,11 +5934,10 @@ C.AvailableHacks ={
 							end
 						else--]]
 						parent.CanTouch = true--object.Parent = parent
-						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
-						local TouchToggle = parent:FindFirstChild("TouchToggle")
 						if TouchToggle then
 							TouchToggle:Destroy()
 						end
+						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
 						--end
 					end
 					if index%50==0 then
@@ -5972,10 +5971,10 @@ C.AvailableHacks ={
 								end
 							end
 							if #touchList==0 or not didDisable then--]]
-							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type})
+							local TouchToggle=C.ToggleTag:Clone()
+							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type,TouchToggle})
 							parent.CanTouch = false
 
-							local TouchToggle=C.ToggleTag:Clone()
 							TouchToggle.Name = "TouchToggle"
 							TouchToggle.Parent=HackGUI
 							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 1, 0)
@@ -6012,7 +6011,7 @@ C.AvailableHacks ={
 							--end
 						end
 					end
-					if num%50==0 then
+					if num%5==0 then
 						RunS.RenderStepped:Wait()
 					end
 				end

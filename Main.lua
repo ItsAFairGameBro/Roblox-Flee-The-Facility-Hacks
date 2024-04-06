@@ -208,6 +208,7 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 	end
 	local lastChars = ""
 	local newText = ""
+	local totalReplacements = 0
 	local canReplace = true
 	for s = 1, orgString:len(),1 do
 		local char = orgString:sub(s,s)
@@ -230,6 +231,7 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 					error("Unknown Replacement '"..replacement.."' for gsub function!");
 				end
 				lastChars=""
+				totalReplacements+=1
 			end
 		else
 			newText..=combined
@@ -245,7 +247,7 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 	if not settings or not settings.NoUndoFormat then
 		newText = C.ApplyRichTextEscapeCharacters(newText,true)
 	end
-	return newText
+	return newText, totalReplacements
 end
 function C.CreateSysMessage(message,color)
 	SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
@@ -637,7 +639,7 @@ local function StartBetterConsole()
 			end
 			if object:IsA("TextLabel") then
 				local theirText=object:GetAttribute("OrgText")
-				local willBeVisible = includeALL or theirText:lower():match(C.ApplyRichTextEscapeCharacters(currentText,true,C.DefaultStringEscapeCharacters))
+				local willBeVisible = includeALL or object.ContentText:lower():match(C.ApplyRichTextEscapeCharacters(currentText,true,C.DefaultStringEscapeCharacters))
 				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
 					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
 				if willBeVisible then

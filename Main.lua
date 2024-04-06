@@ -8554,8 +8554,8 @@ C.AvailableHacks ={
 				local function theFunction()
 					C.AvailableHacks.Runner[71].Triggered()
 				end
-				local theArg = ((C.enHacks.Panic and (theFunction)) or false)
-				setChangedAttribute(TSM:WaitForChild("Ragdoll"),"Value",theArg)
+				--local theArg = ((C.enHacks.Panic and (theFunction)) or false)
+				--setChangedAttribute(TSM:WaitForChild("Ragdoll"),"Value",theArg)
 				if shouldntTrigger~=true then
 					C.AvailableHacks.Runner[71].Triggered()
 				end
@@ -8565,6 +8565,7 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				C.AvailableHacks.Runner[71].SetChanged(true)
+				table.insert(C.functs,myTSM:WaitForChild("Ragdoll").Changed:Connect(C.AvailableHacks.Runner[71].Triggered))
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Runner[71].Triggered()

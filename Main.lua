@@ -255,6 +255,8 @@ function C.CreateSysMessage(message,color)
 end
 getgenv().Hooks = getgenv().Hooks or {}
 function C.Hook(root,method,functName,functData)
+	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+
 	if not getgenv().Hooks[root] then
 		getgenv().Hooks[root] = {}
 	end

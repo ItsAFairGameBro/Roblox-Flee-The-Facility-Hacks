@@ -6044,10 +6044,14 @@ C.AvailableHacks ={
 										return
 									end
 									parent.CanTouch = true
+									RunS.RenderStepped:Wait()
 									firetouchinterest(parent,HRP, 0)
 									RunS.RenderStepped:Wait()
 									firetouchinterest(parent,HRP, 1)--]]
-									parent.CanTouch = false
+									RunS.RenderStepped:Wait()
+									if TouchToggle.Parent then
+										parent.CanTouch = false
+									end
 								else
 									if parent.CanTouch then
 										TouchToggle.Toggle.Text = "Enable"

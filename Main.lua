@@ -5943,10 +5943,11 @@ C.AvailableHacks ={
 						if TouchToggle then
 							TouchToggle:Destroy()
 						end
+						parent:RemoveTag("TouchDisabled")
 						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
 						--end
 					end
-					if index%50==0 then
+					if index%150==0 then
 						RunS.RenderStepped:Wait()
 					end
 				end
@@ -5960,7 +5961,7 @@ C.AvailableHacks ={
 					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
 						local parent = instance.Parent
 						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
-						if canBeEn and parent.CanTouch then
+						if canBeEn and not CS:HasTag(parent) then
 							--[[local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
 							local didDisable = false
 							if #touchList>0 then
@@ -5990,7 +5991,7 @@ C.AvailableHacks ={
 							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 							TouchToggle.Enabled = true
 							CS:AddTag(TouchToggle,"RemoveOnDestroy")
-							CS:AddTag(TouchToggle,"TouchToggleTag")
+							CS:AddTag(parent,"TouchDisabled")
 							TouchToggle.Toggle.MouseButton1Up:Connect(function()
 								--[[local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
 								if not HRP then
@@ -6022,7 +6023,7 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-			["ActivateFunction"]=function(newValue)
+		["ActivateFunction"]=function(newValue)
 				C.AvailableHacks.Basic[25].UndoTransmitters(newValue)
 				if newValue then
 					C.AvailableHacks.Basic[25].ApplyTransmitters(workspace)
@@ -11469,10 +11470,10 @@ local function CharacterAdded(theirChar,firstRun)
 	isTeleporting = false--if its still teleporting then stap it!
 	local HRP=theirChar:WaitForChild("HumanoidRootPart",1) or theirChar.PrimaryPart
 	task.wait()
+	local theirPlr=PS:GetPlayerFromCharacter(theirChar)
 	if not theirPlr then
 		return
 	end
-	local theirPlr=PS:GetPlayerFromCharacter(theirChar)
 	local theirHumanoid=theirChar:WaitForChild("Humanoid")
 
 	if not firstRun and theirPlr:GetAttribute("CharacterNotInit") then

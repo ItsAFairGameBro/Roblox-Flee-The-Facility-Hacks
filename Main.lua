@@ -11300,6 +11300,7 @@ C.CommandFunctions = {
 				else
 					getgenv().JoinPlayerMorphDesc = savedDescription
 				end
+				print(getgenv().JoinPlayerMorphDesc)
 			else
 				for num, theirPlr in ipairs(args[1]) do
 					if args[3] and not outfitData then

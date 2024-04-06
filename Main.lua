@@ -3420,7 +3420,7 @@ C.AvailableHacks ={
 				--if C.AvailableHacks.Render[30].Event then
 				--	C.AvailableHacks.Render[30].Event:Destroy()
 				--end
-				C.AvailableHacks.Render[30].Event=nil
+				--C.AvailableHacks.Render[30].Event=nil
 				if C.objectFuncts[C.AvailableHacks.Render[30].Event] then
 					C.objectFuncts[C.AvailableHacks.Render[30].Event][1]:Disconnect()
 					C.objectFuncts[C.AvailableHacks.Render[30].Event] = nil
@@ -8306,7 +8306,7 @@ C.AvailableHacks ={
 				local CarriedTorso = Hammer and C.char:WaitForChild("CarriedTorso",30)
 				if not Hammer or not CarriedTorso then return end
 				local Handle = Hammer:WaitForChild("Handle")
-
+				
 				local function canRun(noReset)
 					local retValue = savedDeb == C.AvailableHacks.Beast[77].SaveDeb and not isCleared and C.char == C.Beast
 
@@ -8358,11 +8358,12 @@ C.AvailableHacks ={
 										print("Capturing")
 										RunS.RenderStepped:Wait()
 									end
-									print("Ragodll",theirTSM.Ragdoll.Value,CarriedTorso.Value,theirTSM.Captured.Value,canRun(true),canRunPlr(theirPlr),CarriedTorso.Value.Parent == theirChar.Parent)
+									print("Ragodll",theirTSM.Ragdoll.Value,CarriedTorso.Value,theirTSM.Captured.Value,canRun(true),canRunPlr(theirPlr),CarriedTorso.Value.Parent == theirChar)
 									if loopInstance > 1 then
 										warn("<font color='rgb(255,255,0)'>[INSTA CAPTURE]: LOOP INSTANCE = "..loopInstance.."!</font>")
 										task.wait()
 									end
+									RunS.RenderStepped:Wait()
 									loopInstance+=1
 								end
 							end

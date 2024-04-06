@@ -5914,6 +5914,10 @@ C.AvailableHacks ={
 					["Title"]="DISABLED",
 					["TextColor"]=newColor3(255, 0, 0),
 				},
+				["Parts"]={
+					["Title"]="PARTS",
+					["TextColor"]=newColor3(170,170,170),
+				},
 				["Humanoids"]={
 					["Title"]="HUMANOIDS",
 					["TextColor"]=newColor3(0,170,170),
@@ -5949,6 +5953,8 @@ C.AvailableHacks ={
 					return false, Type
 				end
 				if C.enHacks.Basic_DisableTouchTransmitters=="Humanoids" and Type=="Humanoid" then
+					return true, Type
+				elseif C.enHacks.Basic_DisableTouchTransmitters=="Parts" and Type=="Part" then
 					return true, Type
 				elseif C.enHacks.Basic_DisableTouchTransmitters==true then
 					return true, Type
@@ -6018,31 +6024,38 @@ C.AvailableHacks ={
 
 							TouchToggle.Name = "TouchToggle"
 							TouchToggle.Parent=HackGUI
-							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 1, 0)
 							TouchToggle.Adornee=parent
 							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 0, 0)
-							TouchToggle.Toggle.Text = "Enable"
-							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 							TouchToggle.Enabled = true
 							CS:AddTag(TouchToggle,"RemoveOnDestroy")
 							CS:AddTag(parent,"TouchDisabled")
+							
+							if Type=="Part" then
+								TouchToggle.Toggle.Text = "Enable"
+								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
+							else
+								TouchToggle.Toggle.Text = "Activate"
+								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
+							end
 							TouchToggle.Toggle.MouseButton1Up:Connect(function()
-								--[[local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
-								if not HRP then
-									return
-								end
-								firetouchinterest(HRP,parent, 0)
-								RunS.RenderStepped:Wait()
-								firetouchinterest(HRP,parent, 1)--]]
-								
-								if parent.CanTouch then
-									TouchToggle.Toggle.Text = "Enable"
-									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
+								if Type=="Part" then
+									local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
+									if not HRP then
+										return
+									end
+									firetouchinterest(HRP,parent, 0)
+									RunS.RenderStepped:Wait()
+									firetouchinterest(HRP,parent, 1)--]]
 								else
-									TouchToggle.Toggle.Text = "Disable"
-									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(170)
+									if parent.CanTouch then
+										TouchToggle.Toggle.Text = "Enable"
+										TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
+									else
+										TouchToggle.Toggle.Text = "Disable"
+										TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(170)
+									end
+									parent.CanTouch = not parent.CanTouch
 								end
-								parent.CanTouch = not parent.CanTouch
 							end)
 							C.objectFuncts[parent]={parent.Destroying:Connect(function()
 								DS:AddItem(TouchToggle,1)--Delay it so that 1) no crashes and 2) no lag!

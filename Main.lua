@@ -748,7 +748,7 @@ local function StartBetterConsole()
 				BetterConsole_TweenList:Cancel()
 				BetterConsole_TweenList:Destroy()
 			end
-			forceAtBottom = msg == "/bottom"
+			forceAtBottom = msg == "/bottom" and not instant
 			local targetPosition = msg=="/top" and Vector2.new(0,0) 
 				or Vector2.new(0,math.max(0,BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y+10))
 			if instant then
@@ -11300,7 +11300,6 @@ C.CommandFunctions = {
 				else
 					getgenv().JoinPlayerMorphDesc = savedDescription
 				end
-				print(getgenv().JoinPlayerMorphDesc)
 			else
 				for num, theirPlr in ipairs(args[1]) do
 					if args[3] and not outfitData then

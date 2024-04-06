@@ -6045,13 +6045,14 @@ C.AvailableHacks ={
 										return
 									end
 									warn("RUNNING")
+									parent.CanTouch = false
+									RunS.RenderStepped:Wait()
 									parent.CanTouch = true
 									RunS.RenderStepped:Wait()
-									task.wait(1)
 									firetouchinterest(parent,HRP, 0)
-									task.wait(1)--RunS.RenderStepped:Wait()
+									RunS.RenderStepped:Wait()
 									firetouchinterest(parent,HRP, 1)
-									--task.wait(1)
+									task.wait(1)
 									if TouchToggle.Parent then
 										parent.CanTouch = false
 									end

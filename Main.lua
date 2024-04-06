@@ -6079,9 +6079,10 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=true,
 			["ActivateFunction"]=(function(newValue)
+				local waitForChild = workspace.WaitForChild
 				C.Hook(game,"__namecall","kick",newValue and (function()
-					print("The script has successfully intercepted an attempted kick.")
-					return false, nil
+					print("22The script has successfully intercepted an attempted kick.")
+					return false, workspace.WaitForChild
 				end) or nil)
 			end),
 		},

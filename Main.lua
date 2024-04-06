@@ -6021,7 +6021,6 @@ C.AvailableHacks ={
 							if #touchList==0 or not didDisable then--]]
 							local TouchToggle=C.ToggleTag:Clone()
 							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type,TouchToggle})
-							--parent.CanTouch = false
 
 							TouchToggle.Name = "TouchToggle"
 							TouchToggle.Parent=HackGUI
@@ -6072,7 +6071,7 @@ C.AvailableHacks ={
 							C.objectFuncts[parent]={parent.Destroying:Connect(function()
 								DS:AddItem(TouchToggle,1)--Delay it so that 1) no crashes and 2) no lag!
 							end)}
-
+							parent.CanTouch = false
 							--instance:Destroy()
 							--end
 						end

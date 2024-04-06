@@ -6055,7 +6055,7 @@ C.AvailableHacks ={
 									firetouchinterest(parent,HRP, 1)
 									task.wait(1)
 									if TouchToggle.Parent then
-										--parent.CanTouch = false
+										parent.CanTouch = false
 									end
 								else
 									if parent.CanTouch then
@@ -6094,6 +6094,7 @@ C.AvailableHacks ={
 				end
 				task.wait(.5)
 				if firstRun then
+					task.wait(5)
 					C.AvailableHacks.Basic[25].ActivateFunction(C.enHacks.Basic_DisableTouchTransmitters)
 				else
 					C.AvailableHacks.Basic[25].ApplyTransmitters(theirChar)

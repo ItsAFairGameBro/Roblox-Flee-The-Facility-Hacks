@@ -256,7 +256,7 @@ end
 getgenv().Hooks = getgenv().Hooks or {}
 function C.Hook(root,method,functName,functData)
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
-	local tblPack = table.pack
+	local tblPack,tblUnpack = table.pack,table.unpack
 
 	if not getgenv().Hooks[root] then
 		getgenv().Hooks[root] = {}
@@ -264,29 +264,21 @@ function C.Hook(root,method,functName,functData)
 	if not getgenv().Hooks[root][method] then
 		local myData = {}
 		getgenv().Hooks[root][method] = myData
-		local getTblVal = function(tbl,needle)
-			for key, val in pairs(tbl) do
-				if key == needle then
-					return val
-				end
-			end
-		end
 		local OldFunction
 		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
-				for functName, functData in pairs(myData) do
-					local theirCheck = getTblVal(functData,"Check")
-					if true then
-						return OldFunction(...)
-					end
-					if (theirCheck and theirCheck(method,...)) or method == functName then
-						local theirRun = getTblVal(functData, "Run")
+				for functName, theirRun in pairs(myData) do
+					if method == functName then
 						local results = tblPack(theirRun(method,...))
-						if not getTblVal(results,1) then
-							print("Spoofing")
-							--return select(2,table.unpack(results))
+						for key, val in ipairs(results) do
+							if not val then
+								print("Spoofing")
+								return select(2,tblUnpack(results))
+							else
+								break
+							end
 						end
 					end
 				end
@@ -6092,10 +6084,10 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=not botModeEnabled,
 			["ActivateFunction"]=(function(newValue)
-				C.Hook(game,"__namecall","kick",newValue and ({Run=function()
+				C.Hook(game,"__namecall","kick",newValue and (function()
 					print("The script has successfully intercepted an attempted kick.")
 					return false, nil
-				end,}))
+				end,))
 			end),
 		},
 		

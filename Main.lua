@@ -5909,7 +5909,7 @@ C.AvailableHacks ={
 			["Desc"]="Disable Touch Transmitters",
 			["Shortcut"]="Basic_DisableTouchTransmitters",
 			["Default"]=false,
-			--["DontActivate"]=true,
+			["DontActivate"]=true,
 			["Options"]={
 				[false]={
 					["Title"]="DISABLED",
@@ -6088,15 +6088,16 @@ C.AvailableHacks ={
 				end
 			end,
 			["StartUp"]=function(theirPlr,theirChar,firstRun)
-				if firstRun then
-					return
-				end
 				local theirHRP = theirChar:WaitForChild("HumanoidRootPart",30)-- wait for it to be loaded!
 				if not theirHRP then
 					return
 				end
 				task.wait(.5)
-				C.AvailableHacks.Basic[25].ApplyTransmitters(theirChar)
+				if firstRun then
+					C.AvailableHacks.Basic[25].ActivateFunction(C.enHacks.Basic_DisableTouchTransmitters)
+				else
+					C.AvailableHacks.Basic[25].ApplyTransmitters(theirChar)
+				end
 			end,
 		},
 		[27]={

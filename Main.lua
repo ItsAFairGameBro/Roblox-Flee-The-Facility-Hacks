@@ -11299,7 +11299,7 @@ C.CommandFunctions = {
 				else
 					getgenv().JoinPlayerMorphDesc = savedDescription
 				end
-				return true, "new", ""
+				return true, selectedName.SortName, ""
 			else
 				for num, theirPlr in ipairs(args[1]) do
 					if args[3] and not outfitData then

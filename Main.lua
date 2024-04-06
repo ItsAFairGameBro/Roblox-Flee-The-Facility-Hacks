@@ -3633,7 +3633,7 @@ C.AvailableHacks ={
 				}
 				setVisible()
 			end,
-			["MyStartUp"]=function(...)
+			--[[["MyStartUp"]=function(...)
 				C.AvailableHacks.Render[29].StartUp(...)
 			end,
 			["OthersStartUp"]=function(...)
@@ -3647,7 +3647,7 @@ C.AvailableHacks ={
 			end,
 			["OthersBeastAdded"]=function(...)
 				C.AvailableHacks.Render[29].BeastAdded(...)
-			end,
+			end,--]]
 		},
 		[28]={
 			["Type"]="ExTextButton",
@@ -5993,16 +5993,11 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-			["ApplyTransmitters"]=function(location)
-				local saveEn = C.enHacks.Basic_DisableTouchTransmitters
-				for num, instance in ipairs(location:GetDescendants()) do
-					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters then
-						return
-					end
-					if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
-						local parent = instance.Parent
-						local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
-						if canBeEn and not parent:HasTag("TouchDisabled") then
+			["ApplyTransmitters"]=function(instance)
+				if instance:IsA("TouchTransmitter") and instance.Parent and instance.Parent.Parent then
+					local parent = instance.Parent
+					local canBeEn, Type = C.AvailableHacks.Basic[25].CanBeEnabled(instance)
+					if canBeEn and not parent:HasTag("TouchDisabled") then
 							--[[local touchList = C.GetHardValue(instance.Parent,"Touched",{yield=true})
 							local didDisable = false
 							if #touchList>0 then
@@ -6019,71 +6014,83 @@ C.AvailableHacks ={
 								end
 							end
 							if #touchList==0 or not didDisable then--]]
-							local TouchToggle=C.ToggleTag:Clone()
-							table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type,TouchToggle})
+						local TouchToggle=C.ToggleTag:Clone()
+						table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type,TouchToggle})
 
-							TouchToggle.Name = "TouchToggle"
-							TouchToggle.Parent=HackGUI
-							TouchToggle.Adornee=parent
-							TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 0, 0)
-							TouchToggle.Enabled = true
-							CS:AddTag(TouchToggle,"RemoveOnDestroy")
-							CS:AddTag(parent,"TouchDisabled")
-							
-							if Type=="Part" then
-								TouchToggle.Toggle.Text = "Activate"
-								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
-							else
-								TouchToggle.Toggle.Text = "Enable"
-								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
-							end
-							TouchToggle.Toggle.MouseButton1Up:Connect(function()
-								if Type=="Part" then
-									local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
-									if not HRP then
-										return
-									end
-									warn("RUNNING",parent)
-									
-									
-									parent.CanTouch = false
-									RunS.RenderStepped:Wait()
-									parent.CanTouch = true
-									RunS.RenderStepped:Wait()
-									firetouchinterest(parent,HRP, 0)
-									RunS.RenderStepped:Wait()
-									firetouchinterest(parent,HRP, 1)
-									task.wait(1)
-									if TouchToggle.Parent then
-										parent.CanTouch = false
-									end
-								else
-									if parent.CanTouch then
-										TouchToggle.Toggle.Text = "Enable"
-										TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
-									else
-										TouchToggle.Toggle.Text = "Disable"
-										TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(170)
-									end
-									parent.CanTouch = not parent.CanTouch
-								end
-							end)
-							C.objectFuncts[parent]={parent.Destroying:Connect(function()
-								DS:AddItem(TouchToggle,1)--Delay it so that 1) no crashes and 2) no lag!
-							end)}
-							parent.CanTouch = false
-							--instance:Destroy()
-							--end
+						TouchToggle.Name = "TouchToggle"
+						TouchToggle.Parent=HackGUI
+						TouchToggle.Adornee=parent
+						TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 0, 0)
+						TouchToggle.Enabled = true
+						CS:AddTag(TouchToggle,"RemoveOnDestroy")
+						CS:AddTag(parent,"TouchDisabled")
+
+						if Type=="Part" then
+							TouchToggle.Toggle.Text = "Activate"
+							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
+						else
+							TouchToggle.Toggle.Text = "Enable"
+							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 						end
+						TouchToggle.Toggle.MouseButton1Up:Connect(function()
+							if Type=="Part" then
+								local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
+								if not HRP then
+									return
+								end
+								warn("RUNNING",parent)
+
+
+								parent.CanTouch = false
+								RunS.RenderStepped:Wait()
+								parent.CanTouch = true
+								RunS.RenderStepped:Wait()
+								firetouchinterest(parent,HRP, 0)
+								RunS.RenderStepped:Wait()
+								firetouchinterest(parent,HRP, 1)
+								task.wait(1)
+								if TouchToggle.Parent then
+									parent.CanTouch = false
+								end
+							else
+								if parent.CanTouch then
+									TouchToggle.Toggle.Text = "Enable"
+									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
+								else
+									TouchToggle.Toggle.Text = "Disable"
+									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(170)
+								end
+								parent.CanTouch = not parent.CanTouch
+							end
+						end)
+						C.objectFuncts[parent]={parent.Destroying:Connect(function()
+							DS:AddItem(TouchToggle,1)--Delay it so that 1) no crashes and 2) no lag!
+						end)}
+						parent.CanTouch = false
+						--instance:Destroy()
+						--end
 					end
+				end
+				local saveEn = C.enHacks.Basic_DisableTouchTransmitters
+				for num, location in ipairs(instance:GetChildren()) do
+					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters then
+						return
+					end
+					C.AvailableHacks.Basic[25].ApplyTransmitters(location)
 					if num%150==0 then
 						RunS.RenderStepped:Wait()
 					end
 				end
 			end,
+			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
+				if C.AvailableHacks.Basic[25].Funct then
+					C.AvailableHacks.Basic[25].Funct:Disconnect()
+					C.AvailableHacks.Basic[25].Funct = nil
+				end
 				C.AvailableHacks.Basic[25].UndoTransmitters(newValue)
 				if newValue then
+					C.AvailableHacks.Basic[25].Funct = workspace.DescendantAdded:Connect(C.AvailableHacks.Basic[25].ApplyTransmitters)
 					C.AvailableHacks.Basic[25].ApplyTransmitters(workspace)
 				end
 			end,

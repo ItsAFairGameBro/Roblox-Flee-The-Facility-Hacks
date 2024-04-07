@@ -5942,7 +5942,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[25].ApplyTransmitters(newMap)
 			end,
 			["GetType"]=function(instance)
-				if instance.Parent.Parent:FindFirstChild("Humanoid") then
+				if instance.Parent.Parent:WaitForChild("Humanoid",.1) then
 					return "Humanoid"
 				else
 					return "Part"
@@ -6038,20 +6038,36 @@ C.AvailableHacks ={
 								if not HRP then
 									return
 								end
-								warn("RUNNING",parent)
+								
+								local toTouch
+								
+								if TouchToggle.Toggle.Text == "Activate" then
+									TouchToggle.Toggle.Text = "DeActivate"
+									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(255,0,80)
+									toTouch = 0
+								else
+									TouchToggle.Toggle.Text = "Activate"
+									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
+									toTouch = 1
+								end
 
 
 								parent.CanTouch = true
 								RunS.RenderStepped:Wait()
-								parent.CanTouch = true
+								warn("RUNNING",parent,toTouch)
+								firetouchinterest(parent,HRP, toTouch)
 								RunS.RenderStepped:Wait()
-								firetouchinterest(parent,HRP, 0)
-								RunS.RenderStepped:Wait()
-								firetouchinterest(parent,HRP, 1)
-								task.wait(1)
+								task.wait(.5)
+								
 								if TouchToggle.Parent then
 									parent.CanTouch = false
 								end
+
+								--[[firetouchinterest(parent,HRP, 1)
+								task.wait(1)
+								if TouchToggle.Parent then
+									parent.CanTouch = false
+								end--]]
 							else
 								if parent.CanTouch then
 									TouchToggle.Toggle.Text = "Enable"

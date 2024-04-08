@@ -6237,7 +6237,7 @@ C.AvailableHacks ={
 						--else
 						--local org = object:GetAttribute("WeirdCanCollide") or 0
 						--object:SetAttribute("WeirdCanCollide",org + 1)
-						print("Added to",object,object:HasTag("InviWalls"))
+						--print("Added to",object,object:HasTag("InviWalls"))
 						C.SetCollide(object,true)
 						--end
 					end

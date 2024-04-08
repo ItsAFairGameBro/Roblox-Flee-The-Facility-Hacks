@@ -2162,6 +2162,7 @@ C.SaveGenvData = {["currentDesc"] = {
 		return tbl
 	end,
 	LoadFunct=function(input)
+		print("LOAD",input)
 		local tbl = {}
 		for name, val in pairs(input) do
 			tbl[name] = C.MorphSaveAndLoadGenv.LoadFunct(val)

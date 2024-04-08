@@ -5095,12 +5095,12 @@ C.AvailableHacks ={
 				local mouse = plr:GetMouse()
 				local i = 0
 				C.AvailableHacks.Basic[4].ToggleFunct=function(flying)
-					C.AvailableHacks.Basic[4].IsActive = flying
+					--C.AvailableHacks.Basic[4].IsActive = flying
 					bodyGyro.Parent = C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil
 					bodyVel.Parent = C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil
 					bodyGyro.CFrame = hrp.CFrame
 					bodyVel.Velocity = newVector3()
-					human:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
+					human:SetStateEnabled(Enum.HumanoidStateType.Seated,flying)
 					--setCollisionGroupRecursive(character,flying and groupName or "Original")
 
 					for i, v in pairs(animator:GetPlayingAnimationTracks()) do
@@ -5226,12 +5226,12 @@ C.AvailableHacks ={
 					if not flying then
 						setCollisionGroupRecursive(workspace, false)
 					end
-					C.AvailableHacks.Basic[4].IsActive = flying
+					--C.AvailableHacks.Basic[4].IsActive = flying
 					bodyGyro.Parent = (C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil)
 					bodyVel.Parent = (C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil)
 					bodyGyro.CFrame = hrp.CFrame
 					bodyVel.Velocity = newVector3()
-					human:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
+					human:SetStateEnabled(Enum.HumanoidStateType.Seated,flying)
 					--setCollisionGroupRecursive(character,flying and groupName or "Original")
 
 					local getPlayingAnimationTracks = animator:GetPlayingAnimationTracks();

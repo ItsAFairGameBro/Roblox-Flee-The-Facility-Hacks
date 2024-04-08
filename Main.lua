@@ -6262,14 +6262,16 @@ C.AvailableHacks ={
 					
 					object.CastShadow = false
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
-					object.Color = Color3.fromRGB(0,0,200)
 					if isDoor then
 						--object:SetAttribute("OriginalCollide",object.CanCollide)
+						object.Color = object:GetAttribute("Opened") and Color3.fromRGB(0,200) or  Color3.fromRGB(200)
 						setChangedAttribute(object,"CanCollide",function()
 							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
+					else
+						object.Color = Color3.fromRGB(0,0,200)
 					end--]]
 				end
 			end,

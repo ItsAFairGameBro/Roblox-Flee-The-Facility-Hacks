@@ -489,7 +489,7 @@ local function StartBetterConsole()
 	BetterConsoleTextEx.BorderSizePixel = 0
 	BetterConsoleTextEx.Size = UDim2.new(1, -10, 0, 0)
 	BetterConsoleTextEx.RichText = true
-	BetterConsoleTextEx.AutomaticSize = Enum.AutomaticSize.Y
+	--BetterConsoleTextEx.AutomaticSize = Enum.AutomaticSize.Y
 	BetterConsoleTextEx.ZIndex = 5001
 	BetterConsoleTextEx.Font = Enum.Font.Arial
 	BetterConsoleTextEx.Text = " <font color='rgb(200,50,50)'>[6:29:29 PM, Game]:</font> Random errorr occured!"
@@ -851,6 +851,10 @@ local function StartBetterConsole()
 		return isStudio or checkcaller()
 	end
 	--end
+	local textBounds = Instance.new("GetTextBoundsParams")
+	textBounds.Font = BetterConsoleTextEx.Font
+	textBounds.Size = BetterConsoleTextEx.Size
+	textBounds:AddTag("RemoveOnDestroy")
 	local function printFunction(message,messageType,isFromMe)
 		if isCleared then return end
 		allMessages += 1
@@ -864,6 +868,12 @@ local function StartBetterConsole()
 		MessageLabel.Text = message
 		MessageLabel.LayoutOrder = allMessages
 		MessageLabel.Name = allMessages
+		
+		textBounds.Width = BetterConsoleList.AbsoluteSize.X
+		textBounds.Text = MessageLabel.ContentText
+		
+		MessageLabel.Size = UDim2.new(1,0,0,TS:GetTextBoundsAsync(textBounds).Y)
+		
 		MessageLabel.Parent = BetterConsoleList
 		BetterConsole_SetMessagesVisibility(MessageLabel)
 		if wasAtBottom then -- and MessageLabel.Visible

@@ -8956,10 +8956,12 @@ C.AvailableHacks ={
 									teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position)
 									while canRun(true) and canRunPlr(theirPlr) 
 										and not theirTSM.Ragdoll.Value do
-
+										
 										if not C.AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
 											teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position + Vector3.new(0,getHumanoidHeight(C.char)))
 											--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
+										else
+											Hammer.HammerEvent:FireServer("HammerClick", true)
 										end
 										print("Out of range")
 										RunS.RenderStepped:Wait()

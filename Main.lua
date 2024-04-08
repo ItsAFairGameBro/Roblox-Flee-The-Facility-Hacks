@@ -1855,6 +1855,7 @@ C.MorphSaveAndLoadGenv={
 		if not input or input=="No" then
 			return
 		end
+		print(input)
 		return input.Name
 	end,
 	LoadFunct=function(input)
@@ -1864,6 +1865,7 @@ C.MorphSaveAndLoadGenv={
 }
 C.SaveGenvData = {["currentDesc"] = {
 	SaveFunct=function(input)
+		print("currentDEsc",input)
 		local tbl = {}
 		for name, val in pairs(input) do
 			tbl[name] = C.MorphSaveAndLoadGenv.SaveFunct(val)

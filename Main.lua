@@ -1866,14 +1866,14 @@ C.SaveGenvData = {["currentDesc"] = {
 	SaveFunct=function(input)
 		local tbl = {}
 		for name, val in pairs(input) do
-			tbl[name] = C.MorphSaveAndLoadGenv(val)
+			tbl[name] = C.MorphSaveAndLoadGenv.SaveFunct(val)
 		end
 		return tbl
 	end,
 	LoadFunct=function(input)
 		local tbl = {}
 		for name, val in pairs(input) do
-			tbl[name] = C.MorphSaveAndLoadGenv(val)
+			tbl[name] = C.MorphSaveAndLoadGenv.LoadFunct(val)
 		end
 		return tbl
 	end,	

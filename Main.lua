@@ -1849,6 +1849,294 @@ function stopCurrentAction(override)
 	end
 end
 
+--COMMANDS
+--COMMANDS CONTROL
+C.CommandFunctions = {
+	["refresh"]={
+		Type=false,
+		AfterTxt="%s",
+		Priority=10,
+		RequiresRefresh=true,
+		Run=function(args)
+			C.AvailableHacks.Basic[99].ActivateFunction()
+			return true
+		end,
+	},
+	["reset_settings"]={
+		Type=false,
+		AfterTxt="%s",
+		RequiresRefresh=true,
+		Run=function(args)
+			C.AvailableHacks.Basic[99].ActivateFunction(true, true)
+			return true,"Successful"
+		end,
+	},
+	["morph"]={
+		Type="Players",
+		AfterTxt=" to %s%s",
+		SupportsNew=true,
+		RestoreInstances={["Hammer"]=true,["Gemstone"]=true,["PackedGemstone"]=true,["PackedHammer"]=true},
+		GetHumanoidDesc=function(userID,outfitId)
+			local desc
+			if not outfitId then
+				desc = PS:GetHumanoidDescriptionFromUserId(userID)
+				desc.Name = userID
+			else
+				desc = PS:GetHumanoidDescriptionFromOutfitId(outfitId)
+				desc.Name = userID
+			end
+			return  desc
+		end,
+		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
+			local targetHuman = targetChar:FindFirstChild("Humanoid")
+			local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
+			if not targetHuman or targetHuman.Health <=0 or not targetHRP then
+				return
+			end
+			--local wasAnchored = targetHRP.Anchored
+			--humanDesc.Name = "CharacterDesc"
+			if not dontUpdate then
+				local currentDesc = getgenv().currentDesc[targetChar.Name]
+				if currentDesc and humanDesc~=currentDesc then
+					currentDesc:Destroy()
+				end
+				if not isDefault then
+					getgenv().currentDesc[targetChar.Name] = humanDesc
+				else
+					getgenv().currentDesc[targetChar.Name] = nil
+				end
+			end
+			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
+
+			local oldHuman = targetHuman
+			local newHuman = oldHuman:Clone()--(isR6 and false) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
+
+
+			local newHuman_Animator = newHuman:FindFirstChild("Animator")
+			if newHuman_Animator then
+				newHuman_Animator:Destroy() -- Prevents LoadAnimation error spams
+			end
+			local oldChar_ForceField = targetChar:FindFirstChild("ForceField",true)
+
+			newHuman.Name = "FakeHuman"
+			newHuman.Parent = targetChar
+			newHuman:AddTag("RemoveOnDestroy")
+			local Instances2Restore = {}
+			for num, accessory in ipairs(targetChar:GetDescendants()) do
+				if C.CommandFunctions.morph.RestoreInstances[accessory.Name] then
+					accessory.Parent = workspace
+					accessory:AddTag("RemoveOnDestroy")
+					table.insert(Instances2Restore,accessory)
+				elseif accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then
+					accessory:Destroy()
+				end
+			end
+			for num, instanceName in ipairs({"Shirt","Pants"}) do
+				local instance = targetChar:FindFirstChild(instanceName)
+				if instance then
+					if instanceName=="Shirt" then
+						instance.ShirtTemplate = humanDesc.Shirt
+					elseif instanceName=="Pants" then
+						instance.PantsTemplate = humanDesc.Pants
+					end
+				end
+			end
+			if not dontUpdate and gameName == "FleeMain" then
+				for num, capsule in ipairs(CS:GetTagged("Capsule")) do
+					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
+				end
+			end
+			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
+				task.wait(1)
+			end
+			--if oldHuman:FindFirstChild("HumanoidDescription") then
+			--	oldHuman.HumanoidDescription:Destroy()
+			--end
+			--humanDesc:Clone().Parent = oldHuman
+			--targetHRP.Anchored = wasAnchored
+			if camera.CameraSubject == newHuman then
+				camera.CameraSubject = oldHuman
+			end
+			if oldChar_ForceField then
+				oldChar_ForceField.Parent = targetChar:FindFirstChild("HumanoidRootPart")
+			end
+			for num, instance in ipairs(Instances2Restore) do
+				instance.Parent = targetChar
+				instance:RemoveTag("RemoveOnDestroy")
+			end
+			newHuman.Parent = nil
+			DS:AddItem(newHuman,3)
+		end,
+		Functs={},
+		CapsuleAdded=function(capsule,noAddFunct)
+			local function childAdded(child)
+				if child:IsA("Model") and child:WaitForChild("Humanoid",5) then
+					local humanDesc = getgenv().currentDesc[child.Name]
+					if humanDesc then
+						task.wait(.4)
+						local orgColor = child:WaitForChild("Head").Color
+						local myClone = humanDesc:Clone()
+						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
+							myClone[prop] = orgColor
+						end
+						C.CommandFunctions.morph.MorphPlayer(child,myClone,true)
+						DS:AddItem(myClone,15)
+					end
+				end
+			end
+
+			if not noAddFunct then
+				table.insert(C.CommandFunctions.morph.Functs,capsule.ChildAdded:Connect(childAdded))
+			end
+			if not capsule:FindFirstChild("PodTrigger") then
+				for num, child in ipairs(capsule:GetChildren()) do
+					task.spawn(childAdded,child)
+				end
+			end
+		end,
+		StartUp=function(theirPlr,theirChar,firstRun)
+			local theirHuman = theirChar:WaitForChild("Humanoid")
+			local PrimPart = theirHuman and theirChar:WaitForChild("HumanoidRootPart", 15)
+			if not theirHuman or not PrimPart then
+				return
+			end
+			task.wait(.5) --Avatar loaded wait!
+			if not theirPlr or not theirChar or not theirChar.Parent then
+				return
+			end
+			local currentChar = getgenv().currentDesc[theirPlr.Name]
+			if firstRun and not currentChar then
+				local JoinPlayerMorphDesc = getgenv().JoinPlayerMorphDesc
+				if JoinPlayerMorphDesc then
+					JoinPlayerMorphDesc = JoinPlayerMorphDesc:Clone()
+					getgenv().currentDesc[theirPlr.Name] = JoinPlayerMorphDesc
+					C.CommandFunctions.morph.MorphPlayer(theirChar,JoinPlayerMorphDesc,true)
+					--C.CommandFunctions.morph.Run({{theirPlr},JoinPlayerMorphId})
+				end
+			elseif currentChar then
+				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true)
+			end
+		end,
+		Run=function(args)
+			local selectedName = (args[2] == "" and "no") or checkFriendsPCALLFunction(args[2])
+			if not selectedName then
+				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
+			end
+			local outfitData
+			if args[3] and args[3] ~= "" then
+				if not getrenv().Outfits[selectedName.UserId] then
+					local wasSuccess,err = C.CommandFunctions.outfits.Run({selectedName.SortName})
+					if not wasSuccess then
+						return false, "Outfit Getter Err " .. tostring(err)
+					end
+				end
+				if not getrenv().Outfits[selectedName.UserId] then
+					return false, `Outfit not found for user {selectedName.SortName}, {selectedName.UserId}`
+				end
+				if tonumber(args[3]) then
+					args[3] = tonumber(args[3])
+				else
+					local index,didFind = C.StringStartsWith(getrenv().Outfits[selectedName.UserId], args[3])
+					if not didFind then
+						return false, "Outfit Name Not Found ("..tostring(args[3])..")"
+					end
+					args[3] = index;
+				end
+				outfitData = getrenv().Outfits[selectedName.UserId][args[3]]
+			else
+				args[3] = nil
+			end
+			local defaultHumanDesc = selectedName~="no" and
+				(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
+			if defaultHumanDesc == nil then
+				return false, "HumanoidDesc returned NULL for all players!"
+			end
+			local savedDescription = selectedName~="no" 
+				and C.CommandFunctions.morph.GetHumanoidDesc(selectedName.UserId,args[3] and outfitData.id)
+			--((args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
+			if args[1]=="new" then
+				if getgenv().JoinPlayerMorphDesc and getgenv().JoinPlayerMorphDesc ~= savedDescription then
+					getgenv().JoinPlayerMorphDesc:Destroy()
+				end
+				if selectedName=="no" then
+					getgenv().JoinPlayerMorphDesc = nil
+				else
+					getgenv().JoinPlayerMorphDesc = savedDescription
+				end
+			else
+				for num, theirPlr in ipairs(args[1]) do
+					if args[3] and not outfitData then
+						return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
+					end
+					local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId))
+						or C.CommandFunctions.morph.GetHumanoidDesc(selectedName.UserId,args[3] and outfitData.id)
+					if not desc2Apply then
+						return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
+					end
+					if theirPlr.Character then
+						task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
+					elseif selectedName ~= "no" then
+						if getgenv().currentDesc[theirPlr.Name] 
+							and getgenv().currentDesc[theirPlr.Name] ~= desc2Apply then
+							getgenv().currentDesc[theirPlr.Name]:Destroy()
+						end
+						getgenv().currentDesc[theirPlr.Name] = desc2Apply
+					else
+						if getgenv().currentDesc[theirPlr.Name] then
+							getgenv().currentDesc[theirPlr.Name]:Destroy()
+						end
+						getgenv().currentDesc[theirPlr.Name] = nil
+					end
+					--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
+				end
+			end
+			return true,args[2]=="" and "nothing" or selectedName.SortName,outfitData and (" " ..outfitData.name) or ""
+		end},
+	["unmorph"]={
+		Type="Players",
+		AfterTxt="",
+		Run=function(args)
+			C.CommandFunctions.morph.Run({args[1],""})
+			return true
+		end,
+	},
+	["outfits"]={
+		Type=false,
+		AfterTxt="%s",
+		Run=function(args)
+			local selectedName = checkFriendsPCALLFunction(args[1])
+			getrenv().Outfits = getrenv().Outfits or {}
+			if not selectedName then
+				return false, "User Not Found ("..tostring(args[1])..")"
+			end
+			local results,bodyResult = "",getrenv().Outfits[selectedName.UserId]
+			if not getrenv().Outfits[selectedName.UserId] then
+				local success,result = pcall(request,{Url="https://avatar.roblox.com/v1/users/"..selectedName.UserId.."/outfits",Method="GET"})
+				if not success then
+					return false, "Http Error "..result
+				elseif not result.Success then
+					return false, "Http Error "..result.StatusMessage
+				else
+					bodyResult = HS:JSONDecode(result.Body).data;
+					for num = #bodyResult,1,-1 do--for num, val in ipairs(bodyResult) do
+						local val = bodyResult[num];
+						if val.isEditable then
+							val.SortName = val.name 
+						else
+							table.remove(bodyResult,num)
+						end
+					end
+					getrenv().Outfits[selectedName.UserId] = bodyResult;
+				end
+			end
+			for num, val in ipairs(bodyResult) do
+				results..="\n"..num.."/"..val.name
+			end
+			return true, results
+		end,
+	}
+}
+
 --SAVE/LOAD MODULE
 C.MorphSaveAndLoadGenv={
 	SaveFunct=function(input)
@@ -11345,292 +11633,7 @@ C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
 
 getrenv().Outfits = getrenv().Outfits or {}
 getgenv().currentDesc = getgenv().currentDesc or {}
---COMMANDS CONTROL
-C.CommandFunctions = {
-	["refresh"]={
-		Type=false,
-		AfterTxt="%s",
-		Priority=10,
-		RequiresRefresh=true,
-		Run=function(args)
-			C.AvailableHacks.Basic[99].ActivateFunction()
-			return true
-		end,
-	},
-	["reset_settings"]={
-		Type=false,
-		AfterTxt="%s",
-		RequiresRefresh=true,
-		Run=function(args)
-			C.AvailableHacks.Basic[99].ActivateFunction(true, true)
-			return true,"Successful"
-		end,
-	},
-	["morph"]={
-		Type="Players",
-		AfterTxt=" to %s%s",
-		SupportsNew=true,
-		RestoreInstances={["Hammer"]=true,["Gemstone"]=true,["PackedGemstone"]=true,["PackedHammer"]=true},
-		GetHumanoidDesc=function(userID,outfitId)
-			local desc
-			if not outfitId then
-				desc = PS:GetHumanoidDescriptionFromUserId(userID)
-				desc.Name = userID
-			else
-				desc = PS:GetHumanoidDescriptionFromOutfitId(outfitId)
-				desc.Name = userID
-			end
-			return  desc
-		end,
-		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
-			local targetHuman = targetChar:FindFirstChild("Humanoid")
-			local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
-			if not targetHuman or targetHuman.Health <=0 or not targetHRP then
-				return
-			end
-			--local wasAnchored = targetHRP.Anchored
-			--humanDesc.Name = "CharacterDesc"
-			if not dontUpdate then
-				local currentDesc = getgenv().currentDesc[targetChar.Name]
-				if currentDesc and humanDesc~=currentDesc then
-					currentDesc:Destroy()
-				end
-				if not isDefault then
-					getgenv().currentDesc[targetChar.Name] = humanDesc
-				else
-					getgenv().currentDesc[targetChar.Name] = nil
-				end
-			end
-			local isR6 = targetHuman.RigType == Enum.HumanoidRigType.R6
 
-			local oldHuman = targetHuman
-			local newHuman = oldHuman:Clone()--(isR6 and false) and Instance.new("Humanoid") or oldHuman:Clone()----oldHuman:Clone()
-
-
-			local newHuman_Animator = newHuman:FindFirstChild("Animator")
-			if newHuman_Animator then
-				newHuman_Animator:Destroy() -- Prevents LoadAnimation error spams
-			end
-			local oldChar_ForceField = targetChar:FindFirstChild("ForceField",true)
-
-			newHuman.Name = "FakeHuman"
-			newHuman.Parent = targetChar
-			newHuman:AddTag("RemoveOnDestroy")
-			local Instances2Restore = {}
-			for num, accessory in ipairs(targetChar:GetDescendants()) do
-				if C.CommandFunctions.morph.RestoreInstances[accessory.Name] then
-					accessory.Parent = workspace
-					accessory:AddTag("RemoveOnDestroy")
-					table.insert(Instances2Restore,accessory)
-				elseif accessory:IsA("Accessory") or accessory:IsA("Pants") or accessory:IsA("Shirt") or accessory:IsA("ShirtGraphic") then
-					accessory:Destroy()
-				end
-			end
-			for num, instanceName in ipairs({"Shirt","Pants"}) do
-				local instance = targetChar:FindFirstChild(instanceName)
-				if instance then
-					if instanceName=="Shirt" then
-						instance.ShirtTemplate = humanDesc.Shirt
-					elseif instanceName=="Pants" then
-						instance.PantsTemplate = humanDesc.Pants
-					end
-				end
-			end
-			if not dontUpdate and gameName == "FleeMain" then
-				for num, capsule in ipairs(CS:GetTagged("Capsule")) do
-					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
-				end
-			end
-			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
-				task.wait(1)
-			end
-			--if oldHuman:FindFirstChild("HumanoidDescription") then
-			--	oldHuman.HumanoidDescription:Destroy()
-			--end
-			--humanDesc:Clone().Parent = oldHuman
-			--targetHRP.Anchored = wasAnchored
-			if camera.CameraSubject == newHuman then
-				camera.CameraSubject = oldHuman
-			end
-			if oldChar_ForceField then
-				oldChar_ForceField.Parent = targetChar:FindFirstChild("HumanoidRootPart")
-			end
-			for num, instance in ipairs(Instances2Restore) do
-				instance.Parent = targetChar
-				instance:RemoveTag("RemoveOnDestroy")
-			end
-			newHuman.Parent = nil
-			DS:AddItem(newHuman,3)
-		end,
-		Functs={},
-		CapsuleAdded=function(capsule,noAddFunct)
-			local function childAdded(child)
-				if child:IsA("Model") and child:WaitForChild("Humanoid",5) then
-					local humanDesc = getgenv().currentDesc[child.Name]
-					if humanDesc then
-						task.wait(.4)
-						local orgColor = child:WaitForChild("Head").Color
-						local myClone = humanDesc:Clone()
-						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
-							myClone[prop] = orgColor
-						end
-						C.CommandFunctions.morph.MorphPlayer(child,myClone,true)
-						DS:AddItem(myClone,15)
-					end
-				end
-			end
-
-			if not noAddFunct then
-				table.insert(C.CommandFunctions.morph.Functs,capsule.ChildAdded:Connect(childAdded))
-			end
-			if not capsule:FindFirstChild("PodTrigger") then
-				for num, child in ipairs(capsule:GetChildren()) do
-					task.spawn(childAdded,child)
-				end
-			end
-		end,
-		StartUp=function(theirPlr,theirChar,firstRun)
-			local theirHuman = theirChar:WaitForChild("Humanoid")
-			local PrimPart = theirHuman and theirChar:WaitForChild("HumanoidRootPart", 15)
-			if not theirHuman or not PrimPart then
-				return
-			end
-			task.wait(.5) --Avatar loaded wait!
-			if not theirPlr or not theirChar or not theirChar.Parent then
-				return
-			end
-			local currentChar = getgenv().currentDesc[theirPlr.Name]
-			if firstRun and not currentChar then
-				local JoinPlayerMorphDesc = getgenv().JoinPlayerMorphDesc
-				if JoinPlayerMorphDesc then
-					JoinPlayerMorphDesc = JoinPlayerMorphDesc:Clone()
-					getgenv().currentDesc[theirPlr.Name] = JoinPlayerMorphDesc
-					C.CommandFunctions.morph.MorphPlayer(theirChar,JoinPlayerMorphDesc,true)
-					--C.CommandFunctions.morph.Run({{theirPlr},JoinPlayerMorphId})
-				end
-			elseif currentChar then
-				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true)
-			end
-		end,
-		Run=function(args)
-			local selectedName = (args[2] == "" and "no") or checkFriendsPCALLFunction(args[2])
-			if not selectedName then
-				return false,`User Not Found: {args[2]}`--C.CreateSysMessage(`User Not Found: {args[2]}`)
-			end
-			local outfitData
-			if args[3] and args[3] ~= "" then
-				if not getrenv().Outfits[selectedName.UserId] then
-					local wasSuccess,err = C.CommandFunctions.outfits.Run({selectedName.SortName})
-					if not wasSuccess then
-						return false, "Outfit Getter Err " .. tostring(err)
-					end
-				end
-				if not getrenv().Outfits[selectedName.UserId] then
-					return false, `Outfit not found for user {selectedName.SortName}, {selectedName.UserId}`
-				end
-				if tonumber(args[3]) then
-					args[3] = tonumber(args[3])
-				else
-					local index,didFind = C.StringStartsWith(getrenv().Outfits[selectedName.UserId], args[3])
-					if not didFind then
-						return false, "Outfit Name Not Found ("..tostring(args[3])..")"
-					end
-					args[3] = index;
-				end
-				outfitData = getrenv().Outfits[selectedName.UserId][args[3]]
-			else
-				args[3] = nil
-			end
-			local defaultHumanDesc = selectedName~="no" and
-				(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
-			if defaultHumanDesc == nil then
-				return false, "HumanoidDesc returned NULL for all players!"
-			end
-			local savedDescription = selectedName~="no" 
-				and C.CommandFunctions.morph.GetHumanoidDesc(selectedName.UserId,args[3] and outfitData.id)
-			--((args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
-			if args[1]=="new" then
-				if getgenv().JoinPlayerMorphDesc and getgenv().JoinPlayerMorphDesc ~= savedDescription then
-					getgenv().JoinPlayerMorphDesc:Destroy()
-				end
-				if selectedName=="no" then
-					getgenv().JoinPlayerMorphDesc = nil
-				else
-					getgenv().JoinPlayerMorphDesc = savedDescription
-				end
-			else
-				for num, theirPlr in ipairs(args[1]) do
-					if args[3] and not outfitData then
-						return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
-					end
-					local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId))
-						or C.CommandFunctions.morph.GetHumanoidDesc(selectedName.UserId,args[3] and outfitData.id)
-					if not desc2Apply then
-						return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
-					end
-					if theirPlr.Character then
-						task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
-					elseif selectedName ~= "no" then
-						if getgenv().currentDesc[theirPlr.Name] 
-							and getgenv().currentDesc[theirPlr.Name] ~= desc2Apply then
-							getgenv().currentDesc[theirPlr.Name]:Destroy()
-						end
-						getgenv().currentDesc[theirPlr.Name] = desc2Apply
-					else
-						if getgenv().currentDesc[theirPlr.Name] then
-							getgenv().currentDesc[theirPlr.Name]:Destroy()
-						end
-						getgenv().currentDesc[theirPlr.Name] = nil
-					end
-					--(selectedName=="no" and theirPlr.UserId or PS:GetUserIdFromNameAsync(selectedName)))
-				end
-			end
-			return true,args[2]=="" and "nothing" or selectedName.SortName,outfitData and (" " ..outfitData.name) or ""
-		end},
-	["unmorph"]={
-		Type="Players",
-		AfterTxt="",
-		Run=function(args)
-			C.CommandFunctions.morph.Run({args[1],""})
-			return true
-		end,
-	},
-	["outfits"]={
-		Type=false,
-		AfterTxt="%s",
-		Run=function(args)
-			local selectedName = checkFriendsPCALLFunction(args[1])
-			getrenv().Outfits = getrenv().Outfits or {}
-			if not selectedName then
-				return false, "User Not Found ("..tostring(args[1])..")"
-			end
-			local results,bodyResult = "",getrenv().Outfits[selectedName.UserId]
-			if not getrenv().Outfits[selectedName.UserId] then
-				local success,result = pcall(request,{Url="https://avatar.roblox.com/v1/users/"..selectedName.UserId.."/outfits",Method="GET"})
-				if not success then
-					return false, "Http Error "..result
-				elseif not result.Success then
-					return false, "Http Error "..result.StatusMessage
-				else
-					bodyResult = HS:JSONDecode(result.Body).data;
-					for num = #bodyResult,1,-1 do--for num, val in ipairs(bodyResult) do
-						local val = bodyResult[num];
-						if val.isEditable then
-							val.SortName = val.name 
-						else
-							table.remove(bodyResult,num)
-						end
-					end
-					getrenv().Outfits[selectedName.UserId] = bodyResult;
-				end
-			end
-			for num, val in ipairs(bodyResult) do
-				results..="\n"..num.."/"..val.name
-			end
-			return true, results
-		end,
-	}
-}
 
 --HACK CONTROL
 local function BeastAdded(theirPlr,theirChar)

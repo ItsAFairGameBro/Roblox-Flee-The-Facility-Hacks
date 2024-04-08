@@ -1006,6 +1006,22 @@ function C.GetHardValue(instance,signal,Settings)
 end
 getgenv().GetHardValue = C.GetHardValue
 C.OriginalCollideName = "WeirdCanCollide"
+function C.SetCollide(object,toDisabled)
+	local org = object:GetAttribute(C.OriginalCollideName)
+	if toDisabled then
+		if object:GetAttribute(C.OriginalCollideName) or object.CanCollide then
+			org = (org or 0) + 1
+			object:SetAttribute(C.OriginalCollideName,org)
+		end
+		object.CanCollide=false
+	elseif org then
+		org = (org or 1) - 1
+		if org==0 then
+			object.CanCollide = true
+		end
+		object:SetAttribute(C.OriginalCollideName,org>0 and org or nil)
+	end
+end
 function C.FireSignal(instance,signal,Settings,...)
 	local elements = table.pack(...)
 	local fired = 0
@@ -5536,23 +5552,11 @@ C.AvailableHacks ={
 				local function setCollisionGroupRecursive(object,flying)
 					if object:IsA("BasePart") and not object:HasTag("InviWalls") then
 						if not flying then
-							local org = object:GetAttribute(C.OriginalCollideName)
-							if org then
-								org -= 1
-								if org==0 then
-									object.CanCollide = true
-								end
-								object:SetAttribute(C.OriginalCollideName,org>0 and org or nil)
-							end
 							--object.CanCollide=not object:GetAttribute(C.OriginalCollideName) or object.CanCollide
 						else
-							if object:GetAttribute(C.OriginalCollideName) or object.CanCollide then
-								local org = object:GetAttribute(C.OriginalCollideName) or 0
-								org += 1
-								object:SetAttribute(C.OriginalCollideName,org)
-							end
-							object.CanCollide=false
+							
 						end
+						C.SetCollide(object,flying)
 					end
 					for _, child in ipairs(object:GetChildren()) do
 						setCollisionGroupRecursive(child,flying)
@@ -6190,12 +6194,13 @@ C.AvailableHacks ={
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
 				else
-					local current = object:GetAttribute("WeirdCanCollide") or 1
+					--[[local current = object:GetAttribute("WeirdCanCollide") or 1
 					current -= 1
 					if current == 0 then
 						object.CanCollide = true-- and not object:GetAttribute("OriginalCollide")
 					end
-					object:SetAttribute("WeirdCanCollide",current>0 and current or nil)
+					object:SetAttribute("WeirdCanCollide",current>0 and current or nil)--]]
+					C.SetCollide(object,false)
 				end
 				--object:SetAttribute("WeirdCanCollide",nil)
 				--end
@@ -6229,8 +6234,9 @@ C.AvailableHacks ={
 						--if object:GetAttribute("OriginalCollide") and not isDoor then
 						--	object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))
 						--else
-						local org = object:GetAttribute("WeirdCanCollide") or 0
-						object:SetAttribute("WeirdCanCollide",org + 1)
+						--local org = object:GetAttribute("WeirdCanCollide") or 0
+						--object:SetAttribute("WeirdCanCollide",org + 1)
+						C.SetCollide(object,true)
 						--end
 					end
 					--object:SetAttribute("WeirdCanCollide",not object.CanCollide)

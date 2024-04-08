@@ -6237,19 +6237,20 @@ C.AvailableHacks ={
 						--else
 						--local org = object:GetAttribute("WeirdCanCollide") or 0
 						--object:SetAttribute("WeirdCanCollide",org + 1)
+						print("Added to",object,object:HasTag("InviWalls"))
 						C.SetCollide(object,true)
 						--end
 					end
 					--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
-					CS:AddTag(object,"InviWalls")
-					object.CanCollide = false
+					object:AddTag("InviWalls")
+					--object.CanCollide = false
 					object.CastShadow = false
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					object.Color = Color3.fromRGB(0,0,200)
 					if isDoor then
 						--object:SetAttribute("OriginalCollide",object.CanCollide)
 						setChangedAttribute(object,"CanCollide",function()
-							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
+							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)

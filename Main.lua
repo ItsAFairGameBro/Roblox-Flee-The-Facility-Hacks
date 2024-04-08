@@ -1894,7 +1894,7 @@ local function loadSaveData()
 				for genv_name,data in pairs(C.SaveGenvData) do
 					local input = C.enHacks[genv_name]
 					if input then
-						getgenv()[genv_name] = (data.LoadFunct and data.LoadFunct(data)) or input
+						getgenv()[genv_name] = (data.LoadFunct and data.LoadFunct(input)) or input
 					end
 					C.enHacks[genv_name] = nil
 				end

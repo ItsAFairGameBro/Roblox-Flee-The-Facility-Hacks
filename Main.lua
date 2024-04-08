@@ -6243,20 +6243,23 @@ C.AvailableHacks ={
 					if object:GetAttribute("OrgTrans")==nil then
 						object:SetAttribute("OrgTrans",object.Transparency)
 					end
-					if isCollision --and not object:HasTag("InviWalls")
-						and not isDoor then
-						--if object:GetAttribute("OriginalCollide") and not isDoor then
-						--	object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))
-						--else
-						--local org = object:GetAttribute("WeirdCanCollide") or 0
-						--object:SetAttribute("WeirdCanCollide",org + 1)
-						--print("Added to",object,object:HasTag("InviWalls"))
-						C.SetCollide(object,"inviwalls",true)
-						--end
+					if not isDoor then
+						if isCollision then
+							--if object:GetAttribute("OriginalCollide") and not isDoor then
+							--	object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))
+							--else
+							--local org = object:GetAttribute("WeirdCanCollide") or 0
+							--object:SetAttribute("WeirdCanCollide",org + 1)
+							--print("Added to",object,object:HasTag("InviWalls"))
+							C.SetCollide(object,"inviwalls",true)
+							--end
+						end
+					else
+						object.CanCollide = false
 					end
 					--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					object:AddTag("InviWalls")
-					--object.CanCollide = false
+					
 					object.CastShadow = false
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					object.Color = Color3.fromRGB(0,0,200)

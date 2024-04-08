@@ -11388,7 +11388,7 @@ C.CommandFunctions = {
 				return
 			end
 			--local wasAnchored = targetHRP.Anchored
-			humanDesc.Name = "CharacterDesc"
+			--humanDesc.Name = "CharacterDesc"
 			if not dontUpdate then
 				local currentDesc = getgenv().currentDesc[targetChar.Name]
 				if currentDesc and humanDesc~=currentDesc then

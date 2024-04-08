@@ -5951,7 +5951,7 @@ C.AvailableHacks ={
 			end,
 			["CanBeEnabled"]=function(instance,Type)
 				Type = Type or C.AvailableHacks.Basic[25].GetType(instance)
-				if isCleared then
+				if isCleared or not instance or not instance.Parent then
 					return false, Type
 				end
 				if C.enHacks.Basic_DisableTouchTransmitters=="Humanoids" and Type=="Humanoid" then
@@ -5964,14 +5964,10 @@ C.AvailableHacks ={
 					return false, Type
 				end
 			end,
-			["UndoTransmitters"]=function(saveEn)
-				for index = #C.AvailableHacks.Basic[25].TouchTransmitters,1,-1 do --for parent, object in pairs(C.AvailableHacks.Basic[25].TouchTransmitters) do
-					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters and not isCleared then
-						return
-					end
-					local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
-					local object, parent, Type, TouchToggle = table.unpack(data)
-					if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
+			["UndoTransmitter"]=function(index)
+				local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
+				local object, parent, Type, TouchToggle = table.unpack(data)
+				if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
 						--[[if typeof(parent)=="table" then
 							for num, connection in ipairs(parent) do
 								if connection.Function then
@@ -5981,14 +5977,21 @@ C.AvailableHacks ={
 								end
 							end
 						else--]]
-						parent.CanTouch = true--object.Parent = parent
-						if TouchToggle then
-							TouchToggle:Destroy()
-						end
-						parent:RemoveTag("TouchDisabled")
-						table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
-						--end
+					parent.CanTouch = true--object.Parent = parent
+					if TouchToggle then
+						TouchToggle:Destroy()
 					end
+					parent:RemoveTag("TouchDisabled")
+					table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
+					--end
+				end
+			end,
+			["UndoTransmitters"]=function(saveEn)
+				for index = #C.AvailableHacks.Basic[25].TouchTransmitters,1,-1 do --for parent, object in pairs(C.AvailableHacks.Basic[25].TouchTransmitters) do
+					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters and not isCleared then
+						return
+					end
+					C.AvailableHacks.Basic[25].UndoTransmitter(index)
 					if index%15==0 then
 						RunS.RenderStepped:Wait()
 					end
@@ -6016,7 +6019,8 @@ C.AvailableHacks ={
 							end
 							if #touchList==0 or not didDisable then--]]
 						local TouchToggle=C.ToggleTag:Clone()
-						table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,{instance,parent,Type,TouchToggle})
+						local insertTbl = {instance,parent,Type,TouchToggle,{}}
+						table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,insertTbl)
 
 						TouchToggle.Name = "TouchToggle"
 						TouchToggle.Parent=HackGUI
@@ -6033,7 +6037,7 @@ C.AvailableHacks ={
 							TouchToggle.Toggle.Text = "Enable"
 							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 						end
-						TouchToggle.Toggle.MouseButton1Up:Connect(function()
+						table.insert(insertTbl[5],TouchToggle.Toggle.MouseButton1Up:Connect(function()
 							if Type=="Part" then
 								local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
 								if not HRP then
@@ -6055,7 +6059,7 @@ C.AvailableHacks ={
 
 								parent.CanTouch = true
 								RunS.RenderStepped:Wait()
-								warn("RUNNING",parent,toTouch)
+								--warn("RUNNING",parent,toTouch)
 								firetouchinterest(parent,HRP, toTouch)
 								RunS.RenderStepped:Wait()
 								task.wait(.5)
@@ -6079,7 +6083,18 @@ C.AvailableHacks ={
 								end
 								parent.CanTouch = not parent.CanTouch
 							end
-						end)
+						end))
+						table.insert(insertTbl[5],parent.AncestryChanged:Connect(function(child,newParent)
+							if not newParent then
+								task.wait(1)
+								local Key = table.find(C.AvailableHacks.Basic[25].TouchTransmitters,insertTbl)
+								if Key then
+									C.AvailableHacks.Basic[25].UndoTransmitter(Key)
+								end
+							else
+								TouchToggle.Adornee=workspace:IsAncestorOf(child) and parent or nil
+							end
+						end))
 						C.objectFuncts[parent]={parent.Destroying:Connect(function()
 							DS:AddItem(TouchToggle,1)--Delay it so that 1) no crashes and 2) no lag!
 						end)}
@@ -6107,7 +6122,7 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Basic[25].UndoTransmitters(newValue)
 				if newValue then
-					C.AvailableHacks.Basic[25].Funct = workspace.DescendantAdded:Connect(C.AvailableHacks.Basic[25].ApplyTransmitters)
+					C.AvailableHacks.Basic[25].Funct = workspace.ChildAdded:Connect(C.AvailableHacks.Basic[25].ApplyTransmitters)
 					C.AvailableHacks.Basic[25].ApplyTransmitters(workspace)
 				end
 			end,

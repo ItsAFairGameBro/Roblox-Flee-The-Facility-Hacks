@@ -2201,7 +2201,10 @@ local function loadSaveData()
 				for genv_name,data in pairs(C.SaveGenvData) do
 					local input = loadedEnData[genv_name]
 					if input then
-						getgenv()[genv_name] = (data.LoadFunct and data.LoadFunct(input)) or input
+						local output = (data.LoadFunct and data.LoadFunct(input)) or input
+						if output~="" then
+							getgenv()[genv_name] = output
+						end
 					end
 					loadedEnData[genv_name] = nil
 				end

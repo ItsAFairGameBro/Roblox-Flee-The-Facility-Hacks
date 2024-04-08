@@ -2118,6 +2118,7 @@ C.CommandFunctions = {
 	["unmorph"]={
 		Type="Players",
 		AfterTxt="",
+		SupportsNew=true,
 		Run=function(args)
 			C.CommandFunctions.morph.Run({args[1],""})
 			return true
@@ -6206,7 +6207,11 @@ C.AvailableHacks ={
 						object:SetAttribute("OrgTrans",object.Transparency)
 					end
 					if object:GetAttribute("WeirdCanCollide")==nil then
-						object:SetAttribute("WeirdCanCollide",not object.CanCollide)
+						if object:GetAttribute("OriginalCollide") and not isDoor then
+							object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))
+						else
+							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
+						end
 					end
 					object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					CS:AddTag(object,"InviWalls")
@@ -8869,7 +8874,7 @@ C.AvailableHacks ={
 					return retValue
 				end
 				local function canRunPlr(theirPlr)
-					return theirPlr and theirPlr.Parent and theirPlr.Character 
+					return theirPlr and theirPlr.Parent and theirPlr.Character and theirPlr.Character.PrimaryPart
 						and theirPlr.Character:FindFirstChild("Humanoid") and theirPlr.Character.Humanoid.Health>0
 				end
 				C.refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")

@@ -8184,7 +8184,7 @@ C.AvailableHacks ={
 				end
 				table.insert(connections, human.Animator.AnimationPlayed:Connect(animTrackAdded))
 				for _, animTrack in ipairs(human.Animator:GetPlayingAnimationTracks()) do
-					task.spawn(animTrackAdded,animTrack,true)--the "true" is for it to be instant!
+					animTrackAdded(animTrack,true)--the "true" is for it to be instant!
 				end
 				task.spawn(doAnimate[human.RigType],clonedChar,connections)
 				table.insert(connections, clonedHuman.Running:Connect(function(speed)

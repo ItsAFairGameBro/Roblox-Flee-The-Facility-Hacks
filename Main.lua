@@ -872,9 +872,11 @@ local function StartBetterConsole()
 		textBounds.Width = BetterConsoleList.AbsoluteSize.X
 		textBounds.Text = MessageLabel.ContentText
 		
+		print("Get")
 		print(TS:GetTextBoundsAsync(textBounds))
 		
 		MessageLabel.Size = UDim2.new(1,0,0,TS:GetTextBoundsAsync(textBounds).Y)
+		print("don")
 		
 		MessageLabel.Parent = BetterConsoleList
 		BetterConsole_SetMessagesVisibility(MessageLabel)

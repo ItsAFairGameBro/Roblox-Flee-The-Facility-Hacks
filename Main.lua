@@ -6206,7 +6206,7 @@ C.AvailableHacks ={
 				object.Color = object:GetAttribute("OrgColor") or object.Color
 				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency
 				object.CastShadow = true
-				object:RemoveTag(object,"InviWalls")
+				object:RemoveTag("InviWalls")
 			end,
 			["InstanceAdded"]=function(object)
 				if not object:IsA("BasePart") or not object.Parent or not object.Parent.Parent then 

@@ -1991,7 +1991,7 @@ C.CommandFunctions = {
 				if child:IsA("Model") and child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
-						task.wait(.4)
+						task.wait(.2)
 						local orgColor = child:WaitForChild("Head").Color
 						local myClone = humanDesc:Clone()
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
@@ -2018,7 +2018,12 @@ C.CommandFunctions = {
 			if not theirHuman or not PrimPart then
 				return
 			end
-			task.wait(.5) --Avatar loaded wait!
+			CP:PreloadAsync({theirChar})
+			if firstRun then
+				task.wait(.83) --Avatar loaded wait!
+			else
+				task.wait(.63) --Avatar loaded wait!
+			end
 			if not theirPlr or not theirChar or not theirChar.Parent then
 				return
 			end
@@ -2200,6 +2205,7 @@ local function loadSaveData()
 					if input then
 						local output = (data.LoadFunct and data.LoadFunct(input)) or input
 						if output~="" then
+							print(input)
 							getgenv()[genv_name] = output
 						end
 					end

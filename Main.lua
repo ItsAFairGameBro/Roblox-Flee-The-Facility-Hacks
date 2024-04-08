@@ -6225,7 +6225,7 @@ C.AvailableHacks ={
 				if not object:IsA("BasePart") or not object.Parent or not object.Parent.Parent then 
 					return
 				end
-				local structure = C.AvailableHacks.Basic[20].GetStructure(object)
+				local structure, stuctureParent = C.AvailableHacks.Basic[20].GetStructure(object)
 				local isDoor,isWall = structure=="Door",structure=="Wall"
 				if not object.Parent then
 					return
@@ -6264,7 +6264,7 @@ C.AvailableHacks ={
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					if isDoor then
 						--object:SetAttribute("OriginalCollide",object.CanCollide)
-						object.Color = structure:GetAttribute("Opened") and Color3.fromRGB(0,200) or Color3.fromRGB(200)
+						object.Color = stuctureParent:GetAttribute("Opened") and Color3.fromRGB(0,200) or Color3.fromRGB(200)
 						setChangedAttribute(object,"CanCollide",function()
 							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)

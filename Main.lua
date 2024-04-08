@@ -1577,7 +1577,7 @@ local function recurseLoopPrint(leftTbl,str,depth)
 		str..=string.rep("\t",depth)
 		local isTable = typeof(val)=="table"
 		if isTable then
-			str..=("tbl "..num..":	{\n")
+			str..=("tbl "..printInstances(num)..":	{\n")
 			str..=recurseLoopPrint(val,"",depth+1)
 			str..=("\n	}")
 		else

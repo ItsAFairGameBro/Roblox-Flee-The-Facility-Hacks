@@ -6264,6 +6264,7 @@ C.AvailableHacks ={
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					if isDoor then
 						--object:SetAttribute("OriginalCollide",object.CanCollide)
+						print(object:GetAttribute("Opened"))
 						object.Color = object:GetAttribute("Opened") and Color3.fromRGB(0,200) or  Color3.fromRGB(200)
 						setChangedAttribute(object,"CanCollide",function()
 							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)

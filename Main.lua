@@ -1975,7 +1975,7 @@ C.CommandFunctions = {
 			if camera.CameraSubject == newHuman then
 				camera.CameraSubject = oldHuman
 			end
-			if oldChar_ForceField then
+			if oldChar_ForceField and oldChar_ForceField.Parent then
 				oldChar_ForceField.Parent = targetChar:FindFirstChild("HumanoidRootPart")
 			end
 			for num, instance in ipairs(Instances2Restore) do
@@ -2170,6 +2170,7 @@ C.MorphSaveAndLoadGenv={
 	end,
 	LoadFunct=function(input)
 		local userName,outfitID = table.unpack(input:split("/"))
+		print(userName,outfitID)
 		return C.CommandFunctions.morph.GetHumanoidDesc(tonumber(userName),tonumber(outfitID))
 	end
 }
@@ -2203,11 +2204,9 @@ local function loadSaveData()
 				for genv_name,data in pairs(C.SaveGenvData) do
 					local input = loadedEnData[genv_name]
 					if input then
-						output = (data.LoadFunct and data.LoadFunct(input)) or input
+						local output = (data.LoadFunct and data.LoadFunct(input)) or input
 						if output~="" then
-							--print(input)
 							getgenv()[genv_name] = output
-							--print(genv_name,getgenv()[genv_name],input)
 						end
 					end
 					loadedEnData[genv_name] = nil
@@ -11723,13 +11722,9 @@ local function CharacterRemoving(theirPlr,theirChar)
 	local inputFunctions = ({theirPlr,theirChar})
 	defaultFunction((isMyChar and "MyShutDown" or "OthersShutDown"),inputFunctions)
 end
---print("savedCommands",getgenv().lastCommands)
 C.savedCommands = getgenv().lastCommands
 if not C.savedCommands then
-	--print("creating cmds tbl")
 	C.savedCommands = {}
-	getgenv().lastCommands = C.savedCommands
-else
 	getgenv().lastCommands = C.savedCommands
 end
 function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)

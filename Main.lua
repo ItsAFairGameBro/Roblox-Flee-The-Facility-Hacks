@@ -1008,7 +1008,7 @@ getgenv().GetHardValue = C.GetHardValue
 C.OriginalCollideName = "WeirdCanCollide"
 function C.SetCollide(object,toDisabled)
 	local org = object:GetAttribute(C.OriginalCollideName)
-	local _DEBUG = object:FindFirstChild("SurfaceGui") and object.Name == "Part"
+	local _DEBUG = object:FindFirstChild("SurfaceGui") and object.Name == "Part" and object.SurfaceGui:FindFirstChild("TextLabel")
 	if _DEBUG then
 		print("OLD:",object.SurfaceGui:GetFullName(),org)
 	end

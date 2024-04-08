@@ -1913,7 +1913,7 @@ local function saveSaveData()
 		local input = getgenv()[genv_name]
 		if input then
 			if data.SaveFunct then
-				C.enHacks[genv_name] = data.SaveFunct(data)
+				C.enHacks[genv_name] = data.SaveFunct(input)
 			else
 				C.enHacks[genv_name] = input
 			end

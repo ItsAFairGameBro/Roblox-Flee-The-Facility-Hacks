@@ -1006,18 +1006,24 @@ function C.GetHardValue(instance,signal,Settings)
 end
 getgenv().GetHardValue = C.GetHardValue
 C.OriginalCollideName = "WeirdCanCollide"
-function C.SetCollide(object,toDisabled)
+function C.SetCollide(object,id,toDisabled)
 	local org = object:GetAttribute(C.OriginalCollideName)
 	local _DEBUG = object:FindFirstChild("SurfaceGui") and object.Name == "Part" and object.SurfaceGui:FindFirstChild("TextLabel")
 	if _DEBUG then
-		print("OLD:",object.SurfaceGui:GetFullName(),org)
+		--print("OLD:",object.SurfaceGui:GetFullName(),org)
+	end
+	local oldID = object:GetAttribute(id)
+	if oldID == toDisabled or nil then
+		return
+	else
+		object:SetAttribute(id,toDisabled or nil)
 	end
 	if toDisabled then
 		if object:GetAttribute(C.OriginalCollideName) or object.CanCollide then
 			org = (org or 0) + 1
 			object:SetAttribute(C.OriginalCollideName,org)
 			if _DEBUG then
-				print("SET:",object.SurfaceGui:GetFullName(),org)
+				--print("SET:",object.SurfaceGui:GetFullName(),org)
 			end
 		end
 		object.CanCollide=false
@@ -5563,7 +5569,7 @@ C.AvailableHacks ={
 						else
 							
 						end
-						C.SetCollide(object,flying)
+						C.SetCollide(object,"noclip",flying)
 					end
 					for _, child in ipairs(object:GetChildren()) do
 						setCollisionGroupRecursive(child,flying)
@@ -6206,7 +6212,7 @@ C.AvailableHacks ={
 						object.CanCollide = true-- and not object:GetAttribute("OriginalCollide")
 					end
 					object:SetAttribute("WeirdCanCollide",current>0 and current or nil)--]]
-					C.SetCollide(object,false)
+					C.SetCollide(object,"inviwalls",false)
 				end
 				--object:SetAttribute("WeirdCanCollide",nil)
 				--end
@@ -6237,7 +6243,7 @@ C.AvailableHacks ={
 					if object:GetAttribute("OrgTrans")==nil then
 						object:SetAttribute("OrgTrans",object.Transparency)
 					end
-					if isCollision and not object:HasTag("InviWalls")
+					if isCollision --and not object:HasTag("InviWalls")
 						and not isDoor then
 						--if object:GetAttribute("OriginalCollide") and not isDoor then
 						--	object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))
@@ -6245,7 +6251,7 @@ C.AvailableHacks ={
 						--local org = object:GetAttribute("WeirdCanCollide") or 0
 						--object:SetAttribute("WeirdCanCollide",org + 1)
 						--print("Added to",object,object:HasTag("InviWalls"))
-						C.SetCollide(object,true)
+						C.SetCollide(object,"inviwalls",true)
 						--end
 					end
 					--object:SetAttribute("WeirdCanCollide",not object.CanCollide)

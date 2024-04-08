@@ -178,6 +178,7 @@ C.AllowedCameraEnums = {
 	[Enum.CameraType.Track] = true,
 	[Enum.CameraType.Custom] = true,
 }
+local camera=workspace:WaitForChild("Camera")
 function C.ApplyRichTextEscapeCharacters(str,toEscaped,escapelist)
 	local fromIndex = toEscaped and 1 or 2
 	local toIndex = toEscaped and 2 or 1
@@ -1851,6 +1852,23 @@ end
 
 --COMMANDS
 --COMMANDS CONTROL
+local function checkFriendsPCALLFunction(inputName)
+	local friendsTable = C.GetFriendsFunct(inputName and 26682673 or plr.UserId)
+
+	if inputName then
+		table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})
+		table.insert(friendsTable,{SortName = "areallycoolguy",UserId = 26682673})
+		table.sort(friendsTable,function(a,b)
+			local aLen = a.SortName:len()
+			local bLen = b.SortName:len()
+			return aLen < bLen
+		end)
+		local index,selectedName = C.StringStartsWith(friendsTable,inputName)
+		return selectedName
+	else
+		return friendsTable
+	end
+end
 C.CommandFunctions = {
 	["refresh"]={
 		Type=false,
@@ -3273,7 +3291,6 @@ end
 plr=PS.LocalPlayer
 C.char=plr.Character or plr.CharacterAdded:Wait()
 human=C.char:WaitForChild("Humanoid")
-local camera=workspace:WaitForChild("Camera")
 local hackChanged=Instance.new("BindableEvent")
 local computerHackStartTime=os.clock()
 local lastHackedPC,lastHackedPosition=nil,Vector3.new(100,100,100)
@@ -4049,7 +4066,7 @@ C.AvailableHacks ={
 				end
 				local ToggleButton = newTag.Toggle
 				ToggleButton.Text = "Teleport"
-				function setToggleFunction()
+				local function setToggleFunction()
 					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
 					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
 					if ActionEventVal and TriggerType=="Computer" then
@@ -11320,24 +11337,6 @@ function C.GetFriendsFunct(userID)
 		savedFriendsCashe[userID] = table.clone(friendsTable)
 	end
 	return friendsTable
-end
-
-local function checkFriendsPCALLFunction(inputName)
-	local friendsTable = C.GetFriendsFunct(inputName and 26682673 or plr.UserId)
-
-	if inputName then
-		table.insert(friendsTable,{SortName = "LivyC4l1f3",UserId = 432182186})
-		table.insert(friendsTable,{SortName = "areallycoolguy",UserId = 26682673})
-		table.sort(friendsTable,function(a,b)
-			local aLen = a.SortName:len()
-			local bLen = b.SortName:len()
-			return aLen < bLen
-		end)
-		local index,selectedName = C.StringStartsWith(friendsTable,inputName)
-		return selectedName
-	else
-		return friendsTable
-	end
 end
 
 local success, err = pcall(checkFriendsPCALLFunction);

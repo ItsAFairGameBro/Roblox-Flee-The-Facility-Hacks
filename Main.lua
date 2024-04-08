@@ -2161,18 +2161,15 @@ C.MorphSaveAndLoadGenv={
 		if not input or input=="No" then
 			return
 		end
-		print(input)
 		return input.Name
 	end,
 	LoadFunct=function(input)
 		local userName,outfitID = table.unpack(input:split("/"))
-		print("LOADDESC",userName,outfitID)
 		return C.CommandFunctions.morph.GetHumanoidDesc(tonumber(userName),tonumber(outfitID))
 	end
 }
 C.SaveGenvData = {["currentDesc"] = {
 	SaveFunct=function(input)
-		print("currentDEsc",input)
 		local tbl = {}
 		for name, val in pairs(input) do
 			tbl[name] = C.MorphSaveAndLoadGenv.SaveFunct(val)
@@ -2180,14 +2177,14 @@ C.SaveGenvData = {["currentDesc"] = {
 		return tbl
 	end,
 	LoadFunct=function(input)
-		print("LOAD",input)
 		local tbl = {}
 		for name, val in pairs(input) do
 			tbl[name] = C.MorphSaveAndLoadGenv.LoadFunct(val)
 		end
 		return tbl
 	end,	
-},["JoinPlayerMorphDesc"]=C.MorphSaveAndLoadGenv}
+},["JoinPlayerMorphDesc"]=C.MorphSaveAndLoadGenv,
+["lastCommands"]={}}
 local loadedEnData = {}
 local function loadSaveData()
 	if isStudio then return end

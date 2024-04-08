@@ -6182,7 +6182,7 @@ C.AvailableHacks ={
 				else
 					object.CanCollide = not object:GetAttribute("WeirdCanCollide")-- and not object:GetAttribute("OriginalCollide")
 				end
-				object:SetAttribute("WeirdCanCollide",nil)
+				--object:SetAttribute("WeirdCanCollide",nil)
 				--end
 				object.Color = object:GetAttribute("OrgColor") or object.Color
 				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency

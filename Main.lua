@@ -5537,8 +5537,10 @@ C.AvailableHacks ={
 					if object:IsA("BasePart") and not object:HasTag("InviWalls") then
 						if not flying then
 							object.CanCollide=not object:GetAttribute(C.OriginalCollideName) or object.CanCollide
-						elseif object:GetAttribute(C.OriginalCollideName) == nil then
-							object:SetAttribute(C.OriginalCollideName,object.CanCollide)
+						else
+							if object:GetAttribute(C.OriginalCollideName) == nil then
+								object:SetAttribute(C.OriginalCollideName,object.CanCollide)
+							end
 							object.CanCollide=false
 						end
 					end

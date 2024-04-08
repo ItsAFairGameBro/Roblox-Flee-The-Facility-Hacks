@@ -2207,6 +2207,7 @@ local function loadSaveData()
 						if output~="" then
 							print(input)
 							getgenv()[genv_name] = output
+							print(genv_name,getgenv()[genv_name],input)
 						end
 					end
 					loadedEnData[genv_name] = nil

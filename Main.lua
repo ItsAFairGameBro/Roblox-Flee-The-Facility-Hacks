@@ -510,7 +510,7 @@ local function StartBetterConsole()
 	BetterConsoleDesc.Size = UDim2.new(1, 0, 0.0404888801, 0)
 	BetterConsoleDesc.ZIndex = 5001
 	BetterConsoleDesc.Font = Enum.Font.Arial
-	BetterConsoleDesc.Text = "Press F9 or the mobile button to open/close"
+	BetterConsoleDesc.Text = `Press "M" or the mobile button to open/close`
 	BetterConsoleDesc.TextColor3 = Color3.new(1, 1, 1)
 	BetterConsoleDesc.TextScaled = true
 	BetterConsoleDesc.TextSize = 14
@@ -6219,7 +6219,8 @@ C.AvailableHacks ={
 				elseif (isDoor and not C.enHacks.Blatant_WalkThruDoors) or (isWall and not C.enHacks.Blatant_WalkThruWalls) then
 					return C.AvailableHacks.Basic[20].InstanceRemoved(object)	
 				end
-				local shouldBeInvi = ((object:GetAttribute("OrgTrans") or object.Transparency)>=.95 and object.CanCollide) 
+				local isCollision = (object:GetAttribute("WeirdCanCollide") or object.CanCollide)
+				local shouldBeInvi = ((object:GetAttribute("OrgTrans") or object.Transparency)>=.95 and isCollision) 
 					or (C.enHacks.Blatant_WalkThruDoors and isDoor) or (C.enHacks.Blatant_WalkThruWalls and isWall)
 				if (shouldBeInvi) and (GlobalSettings.MinimumHeight<=GetAbsoluteWorldSize(object).Y or isDoor or isWall)
 					and not object.Parent:FindFirstChild("Humanoid") then
@@ -6229,7 +6230,7 @@ C.AvailableHacks ={
 					if object:GetAttribute("OrgTrans")==nil then
 						object:SetAttribute("OrgTrans",object.Transparency)
 					end
-					if (object:GetAttribute("WeirdCanCollide") or object.CanCollide) and not object:HasTag("InviWalls")
+					if isCollision and not object:HasTag("InviWalls")
 						and not isDoor then
 						--if object:GetAttribute("OriginalCollide") and not isDoor then
 						--	object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))

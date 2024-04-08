@@ -5605,6 +5605,7 @@ C.AvailableHacks ={
 				CAS:UnbindAction("right"..C.saveIndex)
 				CAS:UnbindAction("up"..C.saveIndex)
 				CAS:UnbindAction("down"..C.saveIndex)
+				human:SetStateEnabled(Enum.HumanoidStateType.Seated,true)
 				local JetpackGUI=plr.PlayerGui:FindFirstChild("JetpackGUI")
 				if JetpackGUI~=nil then 
 					JetpackGUI:Destroy()
@@ -5622,6 +5623,7 @@ C.AvailableHacks ={
 						if (not human or human:GetState() == Enum.HumanoidStateType.Dead) then
 							return
 						end
+						human:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
 						C.AvailableHacks.Basic[4].IsActive=not C.AvailableHacks.Basic[4].IsActive
 						if C.AvailableHacks.Basic[4].ToggleFunct~=nil then
 							C.AvailableHacks.Basic[4].ToggleFunct(C.AvailableHacks.Basic[4].IsActive)

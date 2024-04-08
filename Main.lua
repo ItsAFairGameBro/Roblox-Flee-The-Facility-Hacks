@@ -5536,10 +5536,18 @@ C.AvailableHacks ={
 				local function setCollisionGroupRecursive(object,flying)
 					if object:IsA("BasePart") and not object:HasTag("InviWalls") then
 						if not flying then
-							object.CanCollide=not object:GetAttribute(C.OriginalCollideName) or object.CanCollide
+							local org = object:GetAttribute(C.OriginalCollideName) or 1
+							org -= 1
+							if org==0 then
+								object.CanCollide = true
+							end
+							object:SetAttribute(C.OriginalCollideName,org>0 and org or nil)
+							--object.CanCollide=not object:GetAttribute(C.OriginalCollideName) or object.CanCollide
 						else
-							if object:GetAttribute(C.OriginalCollideName) == nil then
-								object:SetAttribute(C.OriginalCollideName,not object.CanCollide)
+							if object:GetAttribute(C.OriginalCollideName) or object.CanCollide then
+								local org = object:GetAttribute(C.OriginalCollideName) or 0
+								org += 1
+								object:SetAttribute(C.OriginalCollideName,org)
 							end
 							object.CanCollide=false
 						end
@@ -6180,7 +6188,12 @@ C.AvailableHacks ={
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
 				else
-					object.CanCollide = not object:GetAttribute("WeirdCanCollide")-- and not object:GetAttribute("OriginalCollide")
+					local current = object:GetAttribute("WeirdCanCollide") or 1
+					current -= 1
+					if current == 0 then
+						object.CanCollide = true-- and not object:GetAttribute("OriginalCollide")
+					end
+					object:SetAttribute("WeirdCanCollide",current>0 and current or nil)
 				end
 				--object:SetAttribute("WeirdCanCollide",nil)
 				--end
@@ -6209,14 +6222,16 @@ C.AvailableHacks ={
 					if object:GetAttribute("OrgTrans")==nil then
 						object:SetAttribute("OrgTrans",object.Transparency)
 					end
-					if object:GetAttribute("WeirdCanCollide")==nil and not isDoor then
+					if (object:GetAttribute("WeirdCanCollide") or object.CanCollide) and not object:HasTag("InviWalls")
+						and not isDoor then
 						--if object:GetAttribute("OriginalCollide") and not isDoor then
 						--	object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))
 						--else
-							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
+						local org = object:GetAttribute("WeirdCanCollide") or 0
+						object:SetAttribute("WeirdCanCollide",org + 1)
 						--end
 					end
-					object:SetAttribute("WeirdCanCollide",not object.CanCollide)
+					--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					CS:AddTag(object,"InviWalls")
 					object.CanCollide = false
 					object.CastShadow = false

@@ -6181,7 +6181,6 @@ C.AvailableHacks ={
 			end,
 			["InstanceRemoved"]=function(object)
 				local structure, instance = C.AvailableHacks.Basic[20].GetStructure(object)
-				object:RemoveTag(object,"InviWalls")
 				--print(object.Name,structure)
 				--[[if object.Name=="WalkThru" and structure == "Door" then
 					local DoorTrigger = StringWaitForChild(object.Parent,"DoorTrigger.ActionSign",0)
@@ -6193,7 +6192,7 @@ C.AvailableHacks ={
 				end
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
-				else
+				elseif object:HasTag("InviWalls") then
 					--[[local current = object:GetAttribute("WeirdCanCollide") or 1
 					current -= 1
 					if current == 0 then
@@ -6207,6 +6206,7 @@ C.AvailableHacks ={
 				object.Color = object:GetAttribute("OrgColor") or object.Color
 				object.Transparency = object:GetAttribute("OrgTrans") or object.Transparency
 				object.CastShadow = true
+				object:RemoveTag(object,"InviWalls")
 			end,
 			["InstanceAdded"]=function(object)
 				if not object:IsA("BasePart") or not object.Parent or not object.Parent.Parent then 

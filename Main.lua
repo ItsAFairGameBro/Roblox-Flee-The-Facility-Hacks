@@ -11723,10 +11723,10 @@ local function CharacterRemoving(theirPlr,theirChar)
 	local inputFunctions = ({theirPlr,theirChar})
 	defaultFunction((isMyChar and "MyShutDown" or "OthersShutDown"),inputFunctions)
 end
-print("savedCommands",getgenv().lastCommands)
-C.savedCommands = table.clone(getgenv().lastCommands)
+--print("savedCommands",getgenv().lastCommands)
+C.savedCommands = {"hi"}--table.clone(getgenv().lastCommands)
 if not C.savedCommands then
-	print("creating cmds tbl")
+	--print("creating cmds tbl")
 	C.savedCommands = {}
 	getgenv().lastCommands = C.savedCommands
 else

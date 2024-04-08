@@ -1862,7 +1862,22 @@ C.MorphSaveAndLoadGenv={
 		C.CommandFunctions.morph.GetHumanoidDesc(userName,tonumber(outfitID))
 	end
 }
-C.SaveGenvData = {["currentDesc"] = C.MorphSaveAndLoadGenv,["JoinPlayerMorphDesc"]=C.MorphSaveAndLoadGenv}
+C.SaveGenvData = {["currentDesc"] = {
+	SaveFunct=function(input)
+		local tbl = {}
+		for name, val in pairs(input) do
+			tbl[name] = C.MorphSaveAndLoadGenv(val)
+		end
+		return tbl
+	end,
+	LoadFunct=function(input)
+		local tbl = {}
+		for name, val in pairs(input) do
+			tbl[name] = C.MorphSaveAndLoadGenv(val)
+		end
+		return tbl
+	end,	
+},["JoinPlayerMorphDesc"]=C.MorphSaveAndLoadGenv}
 local loadedEnData = {}
 local function loadSaveData()
 	if isStudio then return end

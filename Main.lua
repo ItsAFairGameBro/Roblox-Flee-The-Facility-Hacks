@@ -8912,9 +8912,23 @@ C.AvailableHacks ={
 				local function canRun(noReset)
 					local retValue = savedDeb == C.AvailableHacks.Beast[77].SaveDeb and not isCleared and C.char == C.Beast
 
+					local isFinished = true
+					for num, theirPlr in ipairs(PS:GetPlayers()) do
+						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule",1)
+						if theirTSM and theirTSM.Health.Value > 0 and not theirTSM.Captured.Value then
+							isFinished = false
+							break--performance reasons!
+						end
+					end
+					if isFinished then
+						retValue = false
+					end
+
 					if not retValue and not noReset then--CLEANUP CHECK!
 						trigger_setTriggers("Beast_CaptureAllSurvivors",true)
 					end
+					
+					
 					return retValue
 				end
 				local function canRunPlr(theirPlr)
@@ -8934,7 +8948,11 @@ C.AvailableHacks ={
 								--PROCESS SEQUENCE
 								local loopInstance = 1
 								while not theirTSM.Captured.Value and canRunPlr(theirPlr) do
-									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
+									if not canRun() then
+										return
+									elseif not canRunPlr(theirPlr) then
+										break
+									end
 									teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position)
 									while canRun(true) and canRunPlr(theirPlr) 
 										and not theirTSM.Ragdoll.Value do
@@ -8971,19 +8989,8 @@ C.AvailableHacks ={
 						end
 					end
 					if not canRun() then return end
-					local isFinished = true
-					for num, theirPlr in ipairs(PS:GetPlayers()) do
-						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule",1)
-						if theirTSM and theirTSM.Health.Value > 0 and not theirTSM.Captured.Value then
-							isFinished = false
-							break--performance reasons!
-						end
-					end
-					if isFinished then
-						break
-					else
-						task.wait()
-					end
+					RunS.RenderStepped:Wait()
+					print("OUTside loop1!")
 				end
 				if not canRun() then return end
 				warn("<font color='rgb(255,255,0)'>Finished Capturing!</font>")

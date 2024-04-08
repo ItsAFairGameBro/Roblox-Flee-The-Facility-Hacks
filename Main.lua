@@ -8183,9 +8183,6 @@ C.AvailableHacks ={
 					end
 				end
 				table.insert(connections, human.Animator.AnimationPlayed:Connect(animTrackAdded))
-				for _, animTrack in ipairs(human.Animator:GetPlayingAnimationTracks()) do
-					animTrackAdded(animTrack,true)--the "true" is for it to be instant!
-				end
 				task.spawn(doAnimate[human.RigType],clonedChar,connections)
 				table.insert(connections, clonedHuman.Running:Connect(function(speed)
 					local myTrack = SavedAnimsTracks["rbxassetid://961932719"]
@@ -8199,6 +8196,9 @@ C.AvailableHacks ={
 						myTrack:AdjustSpeed(0)
 					end
 				end))
+				for _, animTrack in ipairs(human.Animator:GetPlayingAnimationTracks()) do
+					animTrackAdded(animTrack,true)--the "true" is for it to be instant!
+				end
 			end,
 			["ActivateFunction"] = function(enabled, characterSpawn)
 				if enabled == C.AvailableHacks.Basic[30].Active and not characterSpawn then

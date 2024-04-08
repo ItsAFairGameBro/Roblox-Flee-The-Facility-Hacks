@@ -8942,7 +8942,7 @@ C.AvailableHacks ={
 					for num, theirPlr in ipairs(PS:GetPlayers()) do
 						local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule",1)
 						local theirChar = theirPlr.Character
-						if theirChar and theirChar.PrimaryPart and theirTSM then
+						if theirChar and theirChar.PrimaryPart and theirTSM and (not CarriedTorso.Value or CarriedTorso.Value.Parent == theirChar) then
 							local theirHuman = theirChar:FindFirstChild("Humanoid")
 							if theirHuman and theirHuman.Health > 0 and select(2,isInGame(theirChar,true))=="Runner" then
 								--PROCESS SEQUENCE

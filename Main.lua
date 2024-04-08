@@ -5536,12 +5536,14 @@ C.AvailableHacks ={
 				local function setCollisionGroupRecursive(object,flying)
 					if object:IsA("BasePart") and not object:HasTag("InviWalls") then
 						if not flying then
-							local org = object:GetAttribute(C.OriginalCollideName) or 1
-							org -= 1
-							if org==0 then
-								object.CanCollide = true
+							local org = object:GetAttribute(C.OriginalCollideName)
+							if org then
+								org -= 1
+								if org==0 then
+									object.CanCollide = true
+								end
+								object:SetAttribute(C.OriginalCollideName,org>0 and org or nil)
 							end
-							object:SetAttribute(C.OriginalCollideName,org>0 and org or nil)
 							--object.CanCollide=not object:GetAttribute(C.OriginalCollideName) or object.CanCollide
 						else
 							if object:GetAttribute(C.OriginalCollideName) or object.CanCollide then

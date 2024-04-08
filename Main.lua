@@ -1008,7 +1008,7 @@ getgenv().GetHardValue = C.GetHardValue
 C.OriginalCollideName = "WeirdCanCollide"
 function C.SetCollide(object,toDisabled)
 	local org = object:GetAttribute(C.OriginalCollideName)
-	if object:FindFirstChild("SurfaceGui") then
+	if object:FindFirstChild("SurfaceGui") and object.Name == "Part" then
 		print("SIGN:",object.SurfaceGui:GetFullName(),org)
 	end
 	if toDisabled then
@@ -6543,7 +6543,7 @@ C.AvailableHacks ={
 				end
 			end,
 		},
-		[27]={
+		[27]=(gameUniverse == "Flee" and {
 			["Type"] = "ExTextButton",
 			["Title"] = ("Anti Kick"),
 			["Desc"] = ("Works in most cases"),
@@ -6561,7 +6561,7 @@ C.AvailableHacks ={
 					return false, nil
 				end) or nil)
 			end),
-		},
+		} or nil),
 		
 
 		[30]={

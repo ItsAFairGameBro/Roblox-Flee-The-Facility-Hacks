@@ -1008,13 +1008,17 @@ getgenv().GetHardValue = C.GetHardValue
 C.OriginalCollideName = "WeirdCanCollide"
 function C.SetCollide(object,toDisabled)
 	local org = object:GetAttribute(C.OriginalCollideName)
-	if object:FindFirstChild("SurfaceGui") and object.Name == "Part" then
-		print("SIGN:",object.SurfaceGui:GetFullName(),org)
+	local _DEBUG = object:FindFirstChild("SurfaceGui") and object.Name == "Part"
+	if _DEBUG then
+		print("OLD:",object.SurfaceGui:GetFullName(),org)
 	end
 	if toDisabled then
 		if object:GetAttribute(C.OriginalCollideName) or object.CanCollide then
 			org = (org or 0) + 1
 			object:SetAttribute(C.OriginalCollideName,org)
+			if _DEBUG then
+				print("SET:",object.SurfaceGui:GetFullName(),org)
+			end
 		end
 		object.CanCollide=false
 	elseif org then

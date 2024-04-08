@@ -1850,6 +1850,7 @@ function stopCurrentAction(override)
 end
 
 --SAVE/LOAD MODULE
+local SaveGenvData = {["currentDesc"] = {},["JoinPlayerMorphId"]={}}
 local loadedEnData = {}
 local function loadSaveData()
 	if isStudio then return end
@@ -1860,6 +1861,10 @@ local function loadSaveData()
 			local success2, result2 = pcall(HS.JSONDecode,HS,result)
 			if success2 then
 				loadedEnData = result2
+				for genv_name,data in pairs(SaveGenvData) do
+					getgenv()[genv_name] = C.enHacks[genv_name]
+					C.enHacks[genv_name] = nil
+				end
 			else
 				warn("Load Error (JSONDecode):", result2)
 			end
@@ -1872,6 +1877,9 @@ local function loadSaveData()
 end
 local function saveSaveData()
 	if isStudio then return end
+	for genv_name,data in pairs(SaveGenvData) do
+		C.enHacks[genv_name] = getgenv()[genv_name] or nil
+	end
 	local success,result = pcall(HS.JSONEncode,HS,C.enHacks)
 	if not success then
 		warn("Save Error (JSONEncode):",result)
@@ -10747,8 +10755,8 @@ C.clear = function(isManualClear)
 	if isManualClear then
 		getrenv().warn = oldWarn
 		getrenv().print = oldPrint
-		getgenv().currentDesc = nil -- clear the cashe
-		getgenv().JoinPlayerMorphId = nil -- clear the join player id
+		--getgenv().currentDesc = nil -- clear the cashe
+		--getgenv().JoinPlayerMorphId = nil -- clear the join player id
 		
 		if gameUniverse == "Flee" then
 			if gameUniverse=="FleeMain" then

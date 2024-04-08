@@ -8937,6 +8937,9 @@ C.AvailableHacks ={
 				end
 				C.refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")
 				trigger_setTriggers("Beast_CaptureAllSurvivors",false)
+				local function teleportFunct(theirChar,theirHuman)
+					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * theirHuman.MoveDirection).Position + Vector3.new(0,getHumanoidHeight(C.char)))
+				end
 				while true do
 					if not canRun() then return end
 					for num, theirPlr in ipairs(PS:GetPlayers()) do
@@ -8953,12 +8956,12 @@ C.AvailableHacks ={
 									elseif not canRunPlr(theirPlr) then
 										break
 									end
-									teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position)
+									teleportFunct(theirChar,theirHuman)
 									while canRun(true) and canRunPlr(theirPlr) 
 										and not theirTSM.Ragdoll.Value do
 										
 										if not C.AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
-											teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * CFrame.new(0,0,1)).Position + Vector3.new(0,getHumanoidHeight(C.char)))
+											teleportFunct(theirChar,theirHuman)
 											--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
 										else
 											Hammer.HammerEvent:FireServer("HammerClick", true)

@@ -852,7 +852,7 @@ local function StartBetterConsole()
 	end
 	--end
 	local textBounds = Instance.new("GetTextBoundsParams")
-	textBounds.Font = BetterConsoleTextEx.Font
+	textBounds.Font = BetterConsoleTextEx.Font.Name
 	textBounds.Size = BetterConsoleTextEx.Size
 	textBounds:AddTag("RemoveOnDestroy")
 	local function printFunction(message,messageType,isFromMe)

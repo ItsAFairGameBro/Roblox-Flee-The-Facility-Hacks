@@ -1860,7 +1860,7 @@ C.MorphSaveAndLoadGenv={
 	end,
 	LoadFunct=function(input)
 		local userName,outfitID = input:split("/")
-		C.CommandFunctions.morph.GetHumanoidDesc(userName,tonumber(outfitID))
+		C.CommandFunctions.morph.GetHumanoidDesc(tonumber(userName),tonumber(outfitID))
 	end
 }
 C.SaveGenvData = {["currentDesc"] = {

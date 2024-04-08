@@ -1892,11 +1892,11 @@ local function loadSaveData()
 			if success2 then
 				loadedEnData = result2
 				for genv_name,data in pairs(C.SaveGenvData) do
-					local input = C.enHacks[genv_name]
+					local input = loadedEnData[genv_name]
 					if input then
 						getgenv()[genv_name] = (data.LoadFunct and data.LoadFunct(input)) or input
 					end
-					C.enHacks[genv_name] = nil
+					loadedEnData[genv_name] = nil
 				end
 			else
 				warn("Load Error (JSONDecode):", result2)

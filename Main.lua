@@ -1850,7 +1850,19 @@ function stopCurrentAction(override)
 end
 
 --SAVE/LOAD MODULE
-local SaveGenvData = {["currentDesc"] = {},["JoinPlayerMorphId"]={}}
+C.MorphSaveAndLoadGenv={
+	SaveFunct=function(input)
+		if not input or input=="No" then
+			return
+		end
+		return input.Name
+	end,
+	LoadFunct=function(input)
+		local userName,outfitID = input:split("/")
+		C.CommandFunctions.morph.GetHumanoidDesc(userName,tonumber(outfitID))
+	end
+}
+C.SaveGenvData = {["currentDesc"] = C.MorphSaveAndLoadGenv,["JoinPlayerMorphDesc"]=C.MorphSaveAndLoadGenv}
 local loadedEnData = {}
 local function loadSaveData()
 	if isStudio then return end
@@ -1861,8 +1873,11 @@ local function loadSaveData()
 			local success2, result2 = pcall(HS.JSONDecode,HS,result)
 			if success2 then
 				loadedEnData = result2
-				for genv_name,data in pairs(SaveGenvData) do
-					getgenv()[genv_name] = C.enHacks[genv_name]
+				for genv_name,data in pairs(C.SaveGenvData) do
+					local input = C.enHacks[genv_name]
+					if input then
+						getgenv()[genv_name] = (data.LoadFunct and data.LoadFunct(data)) or input
+					end
 					C.enHacks[genv_name] = nil
 				end
 			else
@@ -1877,8 +1892,17 @@ local function loadSaveData()
 end
 local function saveSaveData()
 	if isStudio then return end
-	for genv_name,data in pairs(SaveGenvData) do
-		C.enHacks[genv_name] = getgenv()[genv_name] or nil
+	for genv_name,data in pairs(C.SaveGenvData) do
+		local input = getgenv()[genv_name]
+		if input then
+			if data.SaveFunct then
+				C.enHacks[genv_name] = data.SaveFunct(data)
+			else
+				C.enHacks[genv_name] = input
+			end
+		else
+			C.enHacks[genv_name] = nil
+		end
 	end
 	local success,result = pcall(HS.JSONEncode,HS,C.enHacks)
 	if not success then
@@ -8236,10 +8260,10 @@ C.AvailableHacks ={
 				--if C.enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
 				local capsule,closestDist=nil,math.huge
 				for num,cap in ipairs(CS:GetTagged("Capsule")) do
-					print("PP",cap.PrimaryPart)
+					--print("PP",cap.PrimaryPart)
 					if cap.PrimaryPart then
 						local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
-						print(dist,cap:FindFirstChild("PodTrigger"))
+						--print(dist,cap:FindFirstChild("PodTrigger"))
 						if (dist<closestDist and cap:FindFirstChild("PodTrigger") 
 							and cap.PodTrigger:FindFirstChild("CapturedTorso") and not cap.PodTrigger.CapturedTorso.Value) then
 							capsule,closestDist=cap,dist
@@ -11329,6 +11353,17 @@ C.CommandFunctions = {
 		AfterTxt=" to %s%s",
 		SupportsNew=true,
 		RestoreInstances={["Hammer"]=true,["Gemstone"]=true,["PackedGemstone"]=true,["PackedHammer"]=true},
+		GetHumanoidDesc=function(userID,outfitId)
+			local desc
+			if outfitId then
+				desc = PS:GetHumanoidDescriptionFromUserId(userID)
+				desc.Name = userID
+			else
+				desc = PS:GetHumanoidDescriptionFromOutfitId(outfitId)
+				desc.Name = userID
+			end
+			return  desc
+		end,
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
@@ -11509,8 +11544,8 @@ C.CommandFunctions = {
 					if args[3] and not outfitData then
 						return false, `Outfit {args[3]} not found for player {theirPlr.Name}`
 					end
-					local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId)) or
-						(args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId)
+					local desc2Apply = (selectedName =="no" and PS:GetHumanoidDescriptionFromUserId(theirPlr.UserId))
+						or C.CommandFunctions.morph.GetHumanoidDesc(selectedName.UserId,args[3] and outfitData.id)
 					if not desc2Apply then
 						return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
 					end

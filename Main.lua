@@ -2147,7 +2147,7 @@ C.MorphSaveAndLoadGenv={
 		return input.Name
 	end,
 	LoadFunct=function(input)
-		local userName,outfitID = input:split("/")
+		local userName,outfitID = table.unpack(input:split("/"))
 		print(userName,outfitID)
 		C.CommandFunctions.morph.GetHumanoidDesc(tonumber(userName),tonumber(outfitID))
 	end

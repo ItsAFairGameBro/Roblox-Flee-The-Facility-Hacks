@@ -1005,6 +1005,7 @@ function C.GetHardValue(instance,signal,Settings)
 	end
 end
 getgenv().GetHardValue = C.GetHardValue
+C.OriginalCollideName = "WeirdCanCollide"
 function C.FireSignal(instance,signal,Settings,...)
 	local elements = table.pack(...)
 	local fired = 0
@@ -5535,9 +5536,9 @@ C.AvailableHacks ={
 				local function setCollisionGroupRecursive(object,flying)
 					if object:IsA("BasePart") and not object:HasTag("InviWalls") then
 						if not flying then
-							object.CanCollide=object:GetAttribute("OriginalCollide") or object.CanCollide
-						else
-							object:SetAttribute("OriginalCollide",object.CanCollide)
+							object.CanCollide=not object:GetAttribute(C.OriginalCollideName) or object.CanCollide
+						elseif object:GetAttribute(C.OriginalCollideName) == nil then
+							object:SetAttribute(C.OriginalCollideName,object.CanCollide)
 							object.CanCollide=false
 						end
 					end
@@ -6177,7 +6178,7 @@ C.AvailableHacks ={
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
 				else
-					object.CanCollide = not object:GetAttribute("WeirdCanCollide") and not object:GetAttribute("OriginalCollide")
+					object.CanCollide = not object:GetAttribute("WeirdCanCollide")-- and not object:GetAttribute("OriginalCollide")
 				end
 				object:SetAttribute("WeirdCanCollide",nil)
 				--end
@@ -6206,12 +6207,12 @@ C.AvailableHacks ={
 					if object:GetAttribute("OrgTrans")==nil then
 						object:SetAttribute("OrgTrans",object.Transparency)
 					end
-					if object:GetAttribute("WeirdCanCollide")==nil then
-						if object:GetAttribute("OriginalCollide") and not isDoor then
-							object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))
-						else
+					if object:GetAttribute("WeirdCanCollide")==nil and not isDoor then
+						--if object:GetAttribute("OriginalCollide") and not isDoor then
+						--	object:SetAttribute("WeirdCanCollide",object:GetAttribute("OriginalCollide"))
+						--else
 							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
-						end
+						--end
 					end
 					object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					CS:AddTag(object,"InviWalls")
@@ -6220,7 +6221,7 @@ C.AvailableHacks ={
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					object.Color = Color3.fromRGB(0,0,200)
 					if isDoor then
-						object:SetAttribute("OriginalCollide",object.CanCollide)
+						--object:SetAttribute("OriginalCollide",object.CanCollide)
 						setChangedAttribute(object,"CanCollide",function()
 							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)

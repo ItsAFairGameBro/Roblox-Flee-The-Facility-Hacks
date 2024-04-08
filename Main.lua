@@ -6268,7 +6268,6 @@ C.AvailableHacks ={
 						setChangedAttribute(object,"CanCollide",function()
 							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)
-							task.wait(1)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
 					else

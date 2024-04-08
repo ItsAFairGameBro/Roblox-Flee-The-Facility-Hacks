@@ -5811,7 +5811,7 @@ C.AvailableHacks ={
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
 				else
-					object.CanCollide = not object:GetAttribute("WeirdCanCollide") or object:GetAttribute("OriginalCollide")
+					object.CanCollide = not object:GetAttribute("WeirdCanCollide") and not object:GetAttribute("OriginalCollide")
 				end
 				object:SetAttribute("WeirdCanCollide",nil)
 				--end

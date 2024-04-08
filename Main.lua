@@ -11724,10 +11724,12 @@ local function CharacterRemoving(theirPlr,theirChar)
 	defaultFunction((isMyChar and "MyShutDown" or "OthersShutDown"),inputFunctions)
 end
 print("savedCommands",getgenv().lastCommands)
-C.savedCommands = getgenv().lastCommands
+C.savedCommands = table.clone(getgenv().lastCommands)
 if not C.savedCommands then
 	print("creating cmds tbl")
 	C.savedCommands = {}
+	getgenv().lastCommands = C.savedCommands
+else
 	getgenv().lastCommands = C.savedCommands
 end
 function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)

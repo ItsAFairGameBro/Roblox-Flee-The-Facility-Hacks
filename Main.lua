@@ -5100,6 +5100,7 @@ C.AvailableHacks ={
 					bodyVel.Parent = C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil
 					bodyGyro.CFrame = hrp.CFrame
 					bodyVel.Velocity = newVector3()
+					human:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
 					--setCollisionGroupRecursive(character,flying and groupName or "Original")
 
 					for i, v in pairs(animator:GetPlayingAnimationTracks()) do
@@ -5230,6 +5231,7 @@ C.AvailableHacks ={
 					bodyVel.Parent = (C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil)
 					bodyGyro.CFrame = hrp.CFrame
 					bodyVel.Velocity = newVector3()
+					human:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
 					--setCollisionGroupRecursive(character,flying and groupName or "Original")
 
 					local getPlayingAnimationTracks = animator:GetPlayingAnimationTracks();
@@ -5623,10 +5625,10 @@ C.AvailableHacks ={
 						if (not human or human:GetState() == Enum.HumanoidStateType.Dead) then
 							return
 						end
-						human:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
-						C.AvailableHacks.Basic[4].IsActive=not C.AvailableHacks.Basic[4].IsActive
+						local isActive = not C.AvailableHacks.Basic[4].IsActive
+						C.AvailableHacks.Basic[4].IsActive=isActive
 						if C.AvailableHacks.Basic[4].ToggleFunct~=nil then
-							C.AvailableHacks.Basic[4].ToggleFunct(C.AvailableHacks.Basic[4].IsActive)
+							C.AvailableHacks.Basic[4].ToggleFunct(isActive)
 						end
 					end
 				end

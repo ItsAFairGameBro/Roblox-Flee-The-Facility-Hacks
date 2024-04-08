@@ -5811,7 +5811,7 @@ C.AvailableHacks ={
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
 				else
-					object.CanCollide = not object:GetAttribute("WeirdCanCollide")
+					object.CanCollide = not object:GetAttribute("WeirdCanCollide") or object:GetAttribute("OriginalCollide")
 				end
 				object:SetAttribute("WeirdCanCollide",nil)
 				--end
@@ -5843,12 +5843,14 @@ C.AvailableHacks ={
 					if object:GetAttribute("WeirdCanCollide")==nil then
 						object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					end
+					object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					CS:AddTag(object,"InviWalls")
 					object.CanCollide = false
 					object.CastShadow = false
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					object.Color = Color3.fromRGB(0,0,200)
 					if isDoor then
+						object:SetAttribute("OriginalCollide",object.CanCollide)
 						setChangedAttribute(object,"CanCollide",function()
 							object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)
@@ -5942,7 +5944,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[25].ApplyTransmitters(newMap)
 			end,
 			["GetType"]=function(instance)
-				if instance.Parent.Parent.ClassName=="Model"
+				if instance.Parent.Parent.ClassName=="Model" and instance.Parent.Parent.Parent==workspace
 					and instance.Parent.Parent:WaitForChild("Humanoid",.1) then
 					return "Humanoid"
 				else
@@ -6122,7 +6124,7 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Basic[25].UndoTransmitters(newValue)
 				if newValue then
-					C.AvailableHacks.Basic[25].Funct = workspace.ChildAdded:Connect(C.AvailableHacks.Basic[25].ApplyTransmitters)
+					C.AvailableHacks.Basic[25].Funct = workspace.DescendantAdded:Connect(C.AvailableHacks.Basic[25].ApplyTransmitters)
 					C.AvailableHacks.Basic[25].ApplyTransmitters(workspace)
 				end
 			end,

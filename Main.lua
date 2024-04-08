@@ -6268,6 +6268,7 @@ C.AvailableHacks ={
 						setChangedAttribute(object,"CanCollide",function()
 							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedAttribute(object,"CanCollide",nil)
+							task.wait(1)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
 					else
@@ -8940,7 +8941,7 @@ C.AvailableHacks ={
 				C.refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")
 				trigger_setTriggers("Beast_CaptureAllSurvivors",false)
 				local function teleportFunct(theirChar,theirHuman)
-					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * theirHuman.MoveDirection).Position + Vector3.new(0,getHumanoidHeight(C.char)))
+					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * theirHuman.MoveDirection) + Vector3.new(0,getHumanoidHeight(C.char)))
 				end
 				while true do
 					if not canRun() then return end

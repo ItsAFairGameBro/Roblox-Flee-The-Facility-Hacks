@@ -2205,9 +2205,9 @@ local function loadSaveData()
 					if input then
 						local output = (data.LoadFunct and data.LoadFunct(input)) or input
 						if output~="" then
-							print(input)
+							--print(input)
 							getgenv()[genv_name] = output
-							print(genv_name,getgenv()[genv_name],input)
+							--print(genv_name,getgenv()[genv_name],input)
 						end
 					end
 					loadedEnData[genv_name] = nil
@@ -11723,8 +11723,10 @@ local function CharacterRemoving(theirPlr,theirChar)
 	local inputFunctions = ({theirPlr,theirChar})
 	defaultFunction((isMyChar and "MyShutDown" or "OthersShutDown"),inputFunctions)
 end
+print("savedCommands",getgenv().lastCommands)
 C.savedCommands = getgenv().lastCommands
 if not C.savedCommands then
+	print("creating cmds tbl")
 	C.savedCommands = {}
 	getgenv().lastCommands = C.savedCommands
 end

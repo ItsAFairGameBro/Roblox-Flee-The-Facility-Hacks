@@ -11355,7 +11355,7 @@ C.CommandFunctions = {
 		RestoreInstances={["Hammer"]=true,["Gemstone"]=true,["PackedGemstone"]=true,["PackedHammer"]=true},
 		GetHumanoidDesc=function(userID,outfitId)
 			local desc
-			if outfitId then
+			if not outfitId then
 				desc = PS:GetHumanoidDescriptionFromUserId(userID)
 				desc.Name = userID
 			else

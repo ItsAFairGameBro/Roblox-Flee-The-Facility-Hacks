@@ -2170,7 +2170,6 @@ C.MorphSaveAndLoadGenv={
 	end,
 	LoadFunct=function(input)
 		local userName,outfitID = table.unpack(input:split("/"))
-		print(userName,outfitID)
 		return C.CommandFunctions.morph.GetHumanoidDesc(tonumber(userName),tonumber(outfitID))
 	end
 }
@@ -12184,7 +12183,11 @@ table.insert(C.functs,(PS.PlayerRemoving:Connect(intermediatePlayerRemovingFunct
 --print(("C.Map Functs Loaded %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 
 for num,theirPlr in ipairs(PS:GetPlayers()) do
-	task.spawn(PlayerAdded,theirPlr)
+	if theirPlr==plr then
+		task.spawn(PlayerAdded,theirPlr)
+	else
+		task.delay(.1 * num,PlayerAdded,theirPlr)
+	end
 	if num%10==0 then
 		RunS.RenderStepped:Wait()
 	end

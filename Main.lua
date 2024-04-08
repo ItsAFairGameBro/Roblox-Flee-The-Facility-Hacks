@@ -5942,7 +5942,8 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[25].ApplyTransmitters(newMap)
 			end,
 			["GetType"]=function(instance)
-				if instance.Parent.Parent:WaitForChild("Humanoid",.1) then
+				if instance.Parent.Parent.ClassName=="Model"
+					and instance.Parent.Parent:WaitForChild("Humanoid",.1) then
 					return "Humanoid"
 				else
 					return "Part"
@@ -8204,11 +8205,14 @@ C.AvailableHacks ={
 					return
 				end
 				--if C.enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
-				local capsule,closestDist=nil,10000
-				for num,cap in pairs(CS:GetTagged("Capsule")) do
-					if cap.PrimaryPart~=nil then
+				local capsule,closestDist=nil,math.huge
+				for num,cap in ipairs(CS:GetTagged("Capsule")) do
+					print("PP",cap.PrimaryPart)
+					if cap.PrimaryPart then
 						local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
-						if (dist<closestDist and cap:FindFirstChild("PodTrigger")~=nil and cap.PodTrigger:FindFirstChild("CapturedTorso")~=nil and cap.PodTrigger.CapturedTorso.Value==nil) then
+						print(dist,cap:FindFirstChild("PodTrigger"))
+						if (dist<closestDist and cap:FindFirstChild("PodTrigger") 
+							and cap.PodTrigger:FindFirstChild("CapturedTorso") and not cap.PodTrigger.CapturedTorso.Value) then
 							capsule,closestDist=cap,dist
 						end
 					end

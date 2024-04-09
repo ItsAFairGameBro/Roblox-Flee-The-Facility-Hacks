@@ -8727,8 +8727,10 @@ C.AvailableHacks ={
 								end
 							end
 							if hasValid then
+								print("GOOD-Valid Cap Found!")
 								break
 							elseif #capsuleList==0 then
+								print("GOOD-Wait")
 								CS:GetInstanceAddedSignal("Capsule"):Wait()
 							end
 							task.wait(.75)

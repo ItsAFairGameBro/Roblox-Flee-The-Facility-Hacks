@@ -3377,21 +3377,24 @@ local function setChangedProperty(object,value,funct)
 		C.objectFuncts[object][value]=nil;
 	end
 end
-local function setChangedAttribute(object,value,funct)
+local function setChangedAttribute(object,value,funct,index)
 	if object==nil or object.Parent==nil then
 		return
 	end
 	if not C.objectFuncts[object] then
 		C.objectFuncts[object] = {};
 	end
-	if C.objectFuncts[object][value]~=nil then
-		C.objectFuncts[object][value]:Disconnect();
-		C.objectFuncts[object][value] = nil;
+	if not C.objectFuncts[object][value] then
+		C.objectFuncts[object][value] = {};
+	end
+	if C.objectFuncts[object][value][index]~=nil then
+		C.objectFuncts[object][value][index]:Disconnect();
+		C.objectFuncts[object][value][index] = nil;
 	end
 	if funct~=nil and funct~=false then
-		C.objectFuncts[object][value] = object:GetAttributeChangedSignal(value):Connect(funct);
+		C.objectFuncts[object][value][index] = object:GetAttributeChangedSignal(value):Connect(funct);
 	else
-		C.objectFuncts[object][value]=nil;
+		C.objectFuncts[object][value][index]=nil;
 	end
 end
 

@@ -9666,7 +9666,7 @@ C.AvailableHacks ={
 			["getGoodTriggers"]=function(pc,onlyHacks95)
 				local screen = pc:FindFirstChild("Screen")
 				if ((screen.Color.G*255)<128) and ((screen.Color.G*255)>126) 
-					or (not onlyHacks95 and pc:GetAttribute("Progress") > .95 ) then--check if its green, meaning no hack hecked pcs!
+					or (not onlyHacks95 and (pc:GetAttribute("Progress") or 0) > .95 ) then--check if its green, meaning no hack hecked pcs!
 					return {}
 				end
 				local list={}

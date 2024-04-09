@@ -8739,7 +8739,7 @@ C.AvailableHacks ={
 						C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
 					end
 					local input = C.enHacks.AutoCapture and captureSurvivorFunction
-					setChangedProperty(CarriedTorso,"Value",input)
+					--setChangedProperty(CarriedTorso,"Value",input)
 					C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
 				elseif C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
 					warn("rope not found!!!! hackssss bro!", C.char:GetFullName())

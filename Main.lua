@@ -6216,6 +6216,7 @@ C.AvailableHacks ={
 				else--]]
 				if structure == "Door" then
 					setChangedProperty(object,"CanCollide",false)--Disable this first!
+					setChangedAttribute(instance,"Opened",nil,object)
 				end
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")

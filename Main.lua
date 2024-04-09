@@ -4378,21 +4378,22 @@ C.AvailableHacks ={
 							break
 						end
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
+						RunS.RenderStepped:Wait()
 						RS.RemoteEvent:FireServer("Input", "Action", true)
 						if isOpened then
 							RS.RemoteEvent:FireServer("Input", "Trigger", false)
 						end
 						RunS.RenderStepped:Wait()
 					end
-					local function TaskSpawnDelayedFunction()
-						while actionSign.Value==0 do
-							actionSign.Changed:Wait()
+					if noTriggers~=true then
+						local function TaskSpawnDelayedFunction()
+							while actionSign.Value==0 do
+								actionSign.Changed:Wait()
+							end
+								trigger_setTriggers("RemoteDoorControl",true)
 						end
-						if noTriggers~=true then
-							trigger_setTriggers("RemoteDoorControl",true)
-						end
+						task.spawn(TaskSpawnDelayedFunction)
 					end
-					task.spawn(TaskSpawnDelayedFunction)
 					--wait()
 					if currentEvent~=nil and not isOpened and false then--and saveActionSign == actionSign.Value then
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
@@ -9772,7 +9773,7 @@ C.AvailableHacks ={
 							if exitDoor:FindFirstChild("ExitDoorTrigger") and (exitDoor.ExitDoorTrigger.ActionSign.Value == 12 or exitDoor.ExitDoorTrigger.ActionSign.Value == 10)
 								and C.AvailableHacks.Blatant[15].DoorFuncts[exitDoor] and isInGame(C.char,true) and isInGame(C.char) then
 								trigger_setTriggers("BotRunner",{Exit=false})
-								C.AvailableHacks.Blatant[15].DoorFuncts[exitDoor]()
+								C.AvailableHacks.Blatant[15].DoorFuncts[exitDoor](true,true)
 							end
 							local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
 							RunS.RenderStepped:Wait()

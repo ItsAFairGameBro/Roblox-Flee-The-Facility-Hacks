@@ -9006,7 +9006,8 @@ C.AvailableHacks ={
 				trigger_setTriggers("Beast_CaptureAllSurvivors",false)
 				local function teleportFunct(theirChar,theirHuman)
 					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position
-						+ (theirHuman.MoveDirection.Magnitude>0 and theirChar:GetPivot() * Vector3.new(0,0,-1/5) or theirHuman.MoveDirection)*5 + Vector3.new(0,getHumanoidHeight(C.char)))
+						+ (theirHuman.MoveDirection.Magnitude>0 and theirChar:GetPivot() * Vector3.new(0,0,-1/5) or theirChar:GetPivot().Position+theirHuman.MoveDirection)*5)
+						--+ Vector3.new(0,getHumanoidHeight(C.char)))
 				end
 				while true do
 					if not canRun() then return end

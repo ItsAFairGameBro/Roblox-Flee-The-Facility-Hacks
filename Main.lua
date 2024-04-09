@@ -4603,6 +4603,7 @@ C.AvailableHacks ={
 			["Desc"]="Allows you to spectate at any time",
 			["Shortcut"]="Util_ForceAllowSpectate",
 			["Default"]=true,
+			["DontActivate"]=true,
 			["Functs"]={},
 			["ActivateFunction"]=function(newValue)
 				local TSMModule = require(myTSM)
@@ -4750,7 +4751,7 @@ C.AvailableHacks ={
 				updateSpectatorFrameColor3()
 			end,
 			["MyStartUp"]=function()
-				C.AvailableHacks.Utility[5].ActivateFunction()
+				C.AvailableHacks.Utility[5].ActivateFunction(C.enHacks.Util_ForceAllowSpectate)
 			end,
 			["MapAdded"]=function()
 				C.AvailableHacks.Utility[5].MyPlayerAdded()

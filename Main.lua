@@ -9005,8 +9005,8 @@ C.AvailableHacks ={
 				C.refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")
 				trigger_setTriggers("Beast_CaptureAllSurvivors",false)
 				local function teleportFunct(theirChar,theirHuman)
-					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position
-						+ (theirHuman.MoveDirection.Magnitude>0 and theirChar:GetPivot() * Vector3.new(0,0,-1/5) or theirChar:GetPivot().Position+theirHuman.MoveDirection)*5)
+					local offset = (theirHuman.MoveDirection.Magnitude>0 and theirChar:GetPivot() * Vector3.new(0,0,-1) or theirChar:GetPivot().Position+theirHuman.MoveDirection*5)
+					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + offset)
 						--+ Vector3.new(0,getHumanoidHeight(C.char)))
 				end
 				while true do

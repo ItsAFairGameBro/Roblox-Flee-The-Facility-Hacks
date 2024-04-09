@@ -3358,44 +3358,42 @@ if gameName=="FleeMain" then
 	end;
 end;
 
-local function setChangedProperty(object,value,funct)
+local function setChangedProperty(object,value,funct,index)
 	if object==nil or object.Parent==nil then
 		return
 	end
+	index = index and (index..value) or value
 	if not C.objectFuncts[object] then
 		C.objectFuncts[object] = {};
 	end
-	if C.objectFuncts[object][value]~=nil then
-		C.objectFuncts[object][value]:Disconnect();
-		C.objectFuncts[object][value] = nil;
+	if C.objectFuncts[object][index] then
+		C.objectFuncts[object][index]:Disconnect();
 	end
-	if funct~=nil and funct~=false then
+	if funct then
 		if value=="Value" and object:IsA("ValueBase") then
-			C.objectFuncts[object][value] = object.Changed:Connect(funct);
+			C.objectFuncts[object][index] = object.Changed:Connect(funct);
 		else
-			C.objectFuncts[object][value] = object:GetPropertyChangedSignal(value):Connect(funct);
+			C.objectFuncts[object][index] = object:GetPropertyChangedSignal(value):Connect(funct);
 		end
 	else
-		C.objectFuncts[object][value]=nil;
+		C.objectFuncts[object][index]=nil;
 	end
 end
 local function setChangedAttribute(object,value,funct,index)
 	if object==nil or object.Parent==nil then
 		return
 	end
-	if not C.attributeFuncts[object] then
-		C.attributeFuncts[object] = {};
+	index = "ATTR_"..(index and (index..value) or value)
+	if not C.objectFuncts[object] then
+		C.objectFuncts[object] = {};
 	end
-	if not C.attributeFuncts[object][value] then
-		C.attributeFuncts[object][value] = {};
-	end
-	if C.attributeFuncts[object][value][index]~=nil then
-		C.attributeFuncts[object][value][index]:Disconnect();
+	if C.objectFuncts[object][index] then
+		C.objectFuncts[object][index]:Disconnect();
 	end
 	if funct then
-		C.attributeFuncts[object][value][index] = object:GetAttributeChangedSignal(value):Connect(funct);
+		C.objectFuncts[object][index] = object:GetAttributeChangedSignal(value):Connect(funct);
 	else
-		C.attributeFuncts[object][value][index]=nil;
+		C.objectFuncts[object][index]=nil;
 	end
 end
 
@@ -3545,7 +3543,7 @@ C.AvailableHacks ={
 					newTag.Username.TextColor3=Screen.BrickColor.Color
 					newTag.ExpandingBar.Visible=Screen.BrickColor.Name~="Dark green" and (math.abs(newTag.ExpandingBar.AmtFinished.Size.X.Scale%1)<=.00001) and C.enHacks.ESP_PCProg
 				end
-				setChangedProperty(Screen,"Color",updateText)
+				setChangedProperty(Screen,"Color",updateText,"ESP_PC")
 				updateText()
 				--end
 			end,
@@ -4141,7 +4139,7 @@ C.AvailableHacks ={
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
 				C.AvailableHacks.Render[28].ComputerTeleportFunctions[Computer] = setToggleFunction
 				C.AvailableHacks.Render[28].SetEnabled(newTag)
-				setChangedProperty(Screen, "Color", hackedTeleportFunction)
+				setChangedProperty(Screen, "Color", hackedTeleportFunction,"Render_HackComputers")
 				hackedTeleportFunction()
 			end,
 		},

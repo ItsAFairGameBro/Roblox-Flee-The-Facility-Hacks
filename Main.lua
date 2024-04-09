@@ -4380,10 +4380,11 @@ C.AvailableHacks ={
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
 						RunS.RenderStepped:Wait()
 						RS.RemoteEvent:FireServer("Input", "Action", true)
+						RunS.RenderStepped:Wait()
 						if isOpened then
 							RS.RemoteEvent:FireServer("Input", "Trigger", false)
+							RunS.RenderStepped:Wait()
 						end
-						RunS.RenderStepped:Wait()
 					end
 					if noTriggers~=true then
 						local function TaskSpawnDelayedFunction()

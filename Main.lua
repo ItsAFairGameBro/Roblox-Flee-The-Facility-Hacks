@@ -4378,7 +4378,7 @@ C.AvailableHacks ={
 							break
 						end
 						RS.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
-						RunS.RenderStepped:Wait()
+						--RunS.RenderStepped:Wait()
 						RS.RemoteEvent:FireServer("Input", "Action", true)
 						RunS.RenderStepped:Wait()
 						if isOpened then

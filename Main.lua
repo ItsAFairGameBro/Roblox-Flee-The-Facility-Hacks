@@ -8731,7 +8731,7 @@ C.AvailableHacks ={
 							elseif #capsuleList==0 then
 								CS:GetInstanceAddedSignal("Capsule"):Wait()
 							end
-							task.wait(.75)
+							task.wait(.25)
 						end
 						if not canRun(saveTorso) then
 							return
@@ -8961,7 +8961,8 @@ C.AvailableHacks ={
 				C.refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")
 				trigger_setTriggers("Beast_CaptureAllSurvivors",false)
 				local function teleportFunct(theirChar,theirHuman)
-					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + (theirChar:GetPivot() * theirHuman.MoveDirection) + Vector3.new(0,getHumanoidHeight(C.char)))
+					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position
+						+ (theirHuman.MoveDirection.Magnitude>0 and theirChar:GetPivot() * Vector3.new(0,0,-1/5) or theirHuman.MoveDirection)*5 + Vector3.new(0,getHumanoidHeight(C.char)))
 				end
 				while true do
 					if not canRun() then return end

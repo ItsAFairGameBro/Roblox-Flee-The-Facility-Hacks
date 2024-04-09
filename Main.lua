@@ -113,7 +113,7 @@ local whitelistedUsers={
 	["goldenbear25"]=true,
 };
 local owernshipUsers={
-	["suitedforbans2"]=true,
+	["suitedforbans3"]=true,
 };
 if not myBots[plr.Name:lower()] then
 	if not botModeEnabled and not GlobalSettings.ForceBotMode then

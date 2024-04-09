@@ -3356,7 +3356,7 @@ if gameName=="FleeMain" then
 	end;
 end;
 
-local function setChangedAttribute(object,value,funct)
+local function setChangedProperty(object,value,funct)
 	if object==nil or object.Parent==nil then
 		return
 	end
@@ -3371,20 +3371,31 @@ local function setChangedAttribute(object,value,funct)
 		if value=="Value" and object:IsA("ValueBase") then
 			C.objectFuncts[object][value] = object.Changed:Connect(funct);
 		else
-
 			C.objectFuncts[object][value] = object:GetPropertyChangedSignal(value):Connect(funct);
 		end
 	else
 		C.objectFuncts[object][value]=nil;
 	end
 end
+local function setChangedAttribute(object,value,funct)
+	if object==nil or object.Parent==nil then
+		return
+	end
+	if not C.objectFuncts[object] then
+		C.objectFuncts[object] = {};
+	end
+	if C.objectFuncts[object][value]~=nil then
+		C.objectFuncts[object][value]:Disconnect();
+		C.objectFuncts[object][value] = nil;
+	end
+	if funct~=nil and funct~=false then
+		C.objectFuncts[object][value] = object:GetAttributeChangedSignal(value):Connect(funct);
+	else
+		C.objectFuncts[object][value]=nil;
+	end
+end
+
 --Settings:
-
-
-
-
-
-
 C.AvailableHacks ={
 	["Render"]={
 		[1]={
@@ -3530,7 +3541,7 @@ C.AvailableHacks ={
 					newTag.Username.TextColor3=Screen.BrickColor.Color
 					newTag.ExpandingBar.Visible=Screen.BrickColor.Name~="Dark green" and (math.abs(newTag.ExpandingBar.AmtFinished.Size.X.Scale%1)<=.00001) and C.enHacks.ESP_PCProg
 				end
-				setChangedAttribute(Screen,"Color",updateText)
+				setChangedProperty(Screen,"Color",updateText)
 				updateText()
 				--end
 			end,
@@ -3743,7 +3754,7 @@ C.AvailableHacks ={
 						nameTag.ExpandingBar.AmtFinished.Size=UDim2.new(ActionProgress.Value, 0, 1, 0)
 					end
 				end
-				setChangedAttribute(ActionProgress,"Value",ActionChanged)
+				setChangedProperty(ActionProgress,"Value",ActionChanged)
 				ActionChanged()
 			end,
 		},
@@ -3825,7 +3836,7 @@ C.AvailableHacks ={
 					end
 					task.spawn(SetMiniGameResultFunction)--]]
 				end
-				setChangedAttribute(ActionProgress,"Value",ActionChanged)
+				setChangedProperty(ActionProgress,"Value",ActionChanged)
 				ActionChanged()
 			end,
 		},
@@ -4126,7 +4137,7 @@ C.AvailableHacks ={
 				ToggleButton.MouseButton1Up:Connect(setToggleFunction)
 				C.AvailableHacks.Render[28].ComputerTeleportFunctions[Computer] = setToggleFunction
 				C.AvailableHacks.Render[28].SetEnabled(newTag)
-				setChangedAttribute(Screen, "Color", hackedTeleportFunction)
+				setChangedProperty(Screen, "Color", hackedTeleportFunction)
 				hackedTeleportFunction()
 			end,
 		},
@@ -4146,9 +4157,9 @@ C.AvailableHacks ={
 				end
 
 				if newValue==16 then
-					setChangedAttribute(human,"WalkSpeed",false)
+					setChangedProperty(human,"WalkSpeed",false)
 				else
-					setChangedAttribute(human,"WalkSpeed",setSpeed)
+					setChangedProperty(human,"WalkSpeed",setSpeed)
 				end
 				setSpeed()
 			end,
@@ -4168,7 +4179,7 @@ C.AvailableHacks ={
 			end,
 			["Default"]=false,
 			["ActivateFunction"]=function(newValue)
-				setChangedAttribute(plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("Ragdoll"),"Value",newValue and 
+				setChangedProperty(plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("Ragdoll"),"Value",newValue and 
 					C.AvailableHacks.Blatant[4].EnableScript or false)
 				if newValue then
 					spawn(C.AvailableHacks.Blatant[4].EnableScript)
@@ -4222,7 +4233,7 @@ C.AvailableHacks ={
 			end,
 			["Default"]=false,
 			["ActivateFunction"]=function(newValue)
-				setChangedAttribute(plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("ActionInput"),"Value",(newValue and C.AvailableHacks.Blatant[10].EnableScript or false))
+				setChangedProperty(plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("ActionInput"),"Value",(newValue and C.AvailableHacks.Blatant[10].EnableScript or false))
 				if newValue then
 					C.AvailableHacks.Blatant[10].EnableScript()
 				end
@@ -4309,9 +4320,9 @@ C.AvailableHacks ={
 						updateDisplays()
 					end
 				end))--]]
-				setChangedAttribute(RS.IsGameActive,"Value",updateDisplays)
-				setChangedAttribute(camera,"CameraSubject",updateDisplays)
-				setChangedAttribute(TSM:WaitForChild("Escaped"),"Value",updateDisplays)
+				setChangedProperty(RS.IsGameActive,"Value",updateDisplays)
+				setChangedProperty(camera,"CameraSubject",updateDisplays)
+				setChangedProperty(TSM:WaitForChild("Escaped"),"Value",updateDisplays)
 			end,
 			["DoorAdded"]=function(door,doorType)
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
@@ -4388,7 +4399,7 @@ C.AvailableHacks ={
 				local function actionSignChangedFunct()
 					C.AvailableHacks.Blatant[15].ChangedFunction(door,newTag,doorTrigger)
 				end
-				setChangedAttribute(actionSign,"Value", (actionSignChangedFunct))
+				setChangedProperty(actionSign,"Value", (actionSignChangedFunct))
 			end,
 		},
 		[18]={
@@ -4537,7 +4548,7 @@ C.AvailableHacks ={
 						RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
 					end
 				end
-				setChangedAttribute(minigameResult,"Value",updateMiniGameResult)
+				setChangedProperty(minigameResult,"Value",updateMiniGameResult)
 				updateMiniGameResult()
 
 
@@ -4567,13 +4578,13 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				local updateZoom=C.AvailableHacks.Utility[2].UpdateZoom
 				if newValue then
-					setChangedAttribute(plr,"CameraMinZoomDistance",updateZoom)
-					setChangedAttribute(plr,"CameraMaxZoomDistance",updateZoom)
-					setChangedAttribute(plr,"CameraMode",updateZoom)
+					setChangedProperty(plr,"CameraMinZoomDistance",updateZoom)
+					setChangedProperty(plr,"CameraMaxZoomDistance",updateZoom)
+					setChangedProperty(plr,"CameraMode",updateZoom)
 				else
-					setChangedAttribute(plr,"CameraMinZoomDistance",false)
-					setChangedAttribute(plr,"CameraMaxZoomDistance",false)
-					setChangedAttribute(plr,"CameraMode",false)
+					setChangedProperty(plr,"CameraMinZoomDistance",false)
+					setChangedProperty(plr,"CameraMaxZoomDistance",false)
+					setChangedProperty(plr,"CameraMode",false)
 				end
 				updateZoom(nil,not newValue)
 			end,
@@ -4771,7 +4782,7 @@ C.AvailableHacks ={
 								MenusTabFrame.Visible=not IsCheckingLoadData.Value;
 							end
 						end
-						setChangedAttribute(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
+						setChangedProperty(MenusTabFrame,"Visible", (newValue and changedFunct or nil));
 						changedFunct()
 					end
 					if BeastPowerMenuFrame then
@@ -4780,7 +4791,7 @@ C.AvailableHacks ={
 								BeastPowerMenuFrame.Visible=false;
 							end
 						end
-						setChangedAttribute(BeastPowerMenuFrame, "Visible", (newValue and beastScreen or nil));
+						setChangedProperty(BeastPowerMenuFrame, "Visible", (newValue and beastScreen or nil));
 						beastScreen()
 					end
 					if SurvivorStartFrame then
@@ -4789,7 +4800,7 @@ C.AvailableHacks ={
 								SurvivorStartFrame.Visible=false;
 							end
 						end
-						setChangedAttribute(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
+						setChangedProperty(SurvivorStartFrame, "Visible", (newValue and survivorScreen or nil));
 						survivorScreen()
 					end
 				end
@@ -4868,7 +4879,7 @@ C.AvailableHacks ={
 						camera.CameraType = Enum.CameraType.Custom
 					end
 				end
-				setChangedAttribute(camera,"CameraType", (newValue and cameraChanged or nil));
+				setChangedProperty(camera,"CameraType", (newValue and cameraChanged or nil));
 				cameraChanged()
 				--[[local function textBoxSelected(TextBox)
 					if TextBox.TextScaled then
@@ -5018,8 +5029,8 @@ C.AvailableHacks ={
 					TouchGui.Enabled = not C.enHacks.Util_HideTouchscreen
 					ContextActionGui.Enabled = not C.enHacks.Util_HideTouchscreen
 				end
-				setChangedAttribute(TouchGui,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
-				setChangedAttribute(ContextActionGui,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
+				setChangedProperty(TouchGui,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
+				setChangedProperty(ContextActionGui,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
 				human.AutoJumpEnabled = not C.enHacks.Util_HideTouchscreen
 				updateTouchScreenEnability()
 			end,
@@ -5180,9 +5191,9 @@ C.AvailableHacks ={
 					return
 				end
 				C.AvailableHacks.Utility[9].MusicValue = musicSound
-				setChangedAttribute(musicSound,"Playing",C.AvailableHacks.Utility[9].ActivateFunction)
-				setChangedAttribute(musicSound,"IsPlaying",C.AvailableHacks.Utility[9].ActivateFunction)
-				setChangedAttribute(musicSound,"Volume",C.AvailableHacks.Utility[9].ActivateFunction)
+				setChangedProperty(musicSound,"Playing",C.AvailableHacks.Utility[9].ActivateFunction)
+				setChangedProperty(musicSound,"IsPlaying",C.AvailableHacks.Utility[9].ActivateFunction)
+				setChangedProperty(musicSound,"Volume",C.AvailableHacks.Utility[9].ActivateFunction)
 				C.AvailableHacks.Utility[9].ActivateFunction()
 				C.AvailableHacks.Utility[9].Funct = musicSound.Played:Connect(C.AvailableHacks.Utility[9].ActivateFunction)
 			end,
@@ -5342,9 +5353,9 @@ C.AvailableHacks ={
 			end,
 			["ActivateFunction"]=function(newValue)
 				if newValue==defaultCharacterWalkSpeed or isCleared then
-					setChangedAttribute(human,"WalkSpeed",false)
+					setChangedProperty(human,"WalkSpeed",false)
 				else
-					setChangedAttribute(human,"WalkSpeed",C.AvailableHacks.Basic[1].UpdateSpeed)
+					setChangedProperty(human,"WalkSpeed",C.AvailableHacks.Basic[1].UpdateSpeed)
 				end 
 				C.AvailableHacks.Basic[1].UpdateSpeed()
 			end,
@@ -5380,9 +5391,9 @@ C.AvailableHacks ={
 				setJump();
 
 				if ((newValue) == (SP.CharacterJumpPower)) then
-					setChangedAttribute(human,"JumpPower",false);
+					setChangedProperty(human,"JumpPower",false);
 				else
-					setChangedAttribute(human,"JumpPower",setJump);
+					setChangedProperty(human,"JumpPower",setJump);
 				end;
 			end,
 			["MyStartUp"]=function(theirPlr,theirChar)
@@ -5403,9 +5414,9 @@ C.AvailableHacks ={
 				end
 				local absVal = math.abs(newValue-196.2)
 				if ((absVal) < 0.0001) then
-					setChangedAttribute(workspace,"Gravity",false)
+					setChangedProperty(workspace,"Gravity",false)
 				else
-					setChangedAttribute(workspace,"Gravity",setSpeed)
+					setChangedProperty(workspace,"Gravity",setSpeed)
 				end
 				setSpeed()
 			end),
@@ -6201,7 +6212,7 @@ C.AvailableHacks ={
 					object.CanCollide = DoorTrigger and DoorTrigger.Value == 10
 				else--]]
 				if structure == "Door" then
-					setChangedAttribute(object,"CanCollide",false)--Disable this first!
+					setChangedProperty(object,"CanCollide",false)--Disable this first!
 				end
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
@@ -6264,12 +6275,17 @@ C.AvailableHacks ={
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
 					if isDoor then
 						--object:SetAttribute("OriginalCollide",object.CanCollide)
-						object.Color = stuctureParent:GetAttribute("Opened") and Color3.fromRGB(0,200) or Color3.fromRGB(200)
-						setChangedAttribute(object,"CanCollide",function()
+						local function refreshColor()
+							object.Color = stuctureParent:GetAttribute("Opened") and Color3.fromRGB(0,200) or Color3.fromRGB(200)
+						end
+						setChangedProperty(object,"CanCollide",function()
 							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
-							setChangedAttribute(object,"CanCollide",nil)
+							setChangedProperty(object,"CanCollide",nil)
+							setChangedAttribute(object,"Opened",nil)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
+						setChangedAttribute(object,"Opened",refreshColor)
+						refreshColor()
 					else
 						object.Color = Color3.fromRGB(0,0,200)
 					end--]]
@@ -8598,7 +8614,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Beast[55].ChangedFunction(TSM,theirPlr,true)
 				end
 				local myInput = (C.enHacks.AutoAddRope and funct)
-				setChangedAttribute(TSM:WaitForChild("Ragdoll",30),"Value", myInput)
+				setChangedProperty(TSM:WaitForChild("Ragdoll",30),"Value", myInput)
 				C.AvailableHacks.Beast[55].ChangedFunction(TSM,theirPlr,false)
 			end,
 			["MyPlayerAdded"]=function(myPlr)
@@ -8623,7 +8639,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Beast[60].ChangedFunction();
 				end
 				local inputChangedAttribute_INPUT = (newValue and BlatantChangedFunction);
-				setChangedAttribute(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
+				setChangedProperty(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
 				C.AvailableHacks.Beast[60].ChangedFunction();
 			end),
 			["CaptureSurvivor"] = function(theirPlr,theirChar,override)
@@ -8718,7 +8734,7 @@ C.AvailableHacks ={
 						C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
 					end
 					local input = C.enHacks.AutoCapture and captureSurvivorFunction
-					setChangedAttribute(CarriedTorso,"Value",input)
+					setChangedProperty(CarriedTorso,"Value",input)
 					C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
 				elseif C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
 					warn("rope not found!!!! hackssss bro!", C.char:GetFullName())
@@ -8728,7 +8744,7 @@ C.AvailableHacks ={
 
 			--["MyStartUp"]=function()
 	--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
-	setChangedAttribute(
+	setChangedProperty(
 		TSM:WaitForChild("IsBeast"),
 		"Value",C.enHacks.AutoCapture and function()
 			C.AvailableHacks.Beast[60].ChangedFunction()
@@ -9059,7 +9075,7 @@ C.AvailableHacks ={
 			end,
 			["ActivateFunction"]=function()
 				if workspace:IsAncestorOf(C.Beast) and C.Beast~=C.char then
-					setChangedAttribute(C.Beast:WaitForChild("CarriedTorso",30),"Value",false)--deletes the last function!
+					setChangedProperty(C.Beast:WaitForChild("CarriedTorso",30),"Value",false)--deletes the last function!
 					C.AvailableHacks.Runner[3].OthersBeastAdded(PS:GetPlayerFromCharacter(C.Beast),C.Beast)
 				end
 				--C.AvailableHacks.Runner[3].ChangedFunction()
@@ -9069,7 +9085,7 @@ C.AvailableHacks ={
 				if CarriedTorso==nil then
 					return
 				end
-				setChangedAttribute(CarriedTorso,"Value",C.enHacks.AutoRemoveRope and (function(newRopee)
+				setChangedProperty(CarriedTorso,"Value",C.enHacks.AutoRemoveRope and (function(newRopee)
 					C.AvailableHacks.Runner[3].ChangedFunction(newRopee)
 				end) or false)
 				C.AvailableHacks.Runner[3].ChangedFunction()
@@ -9131,7 +9147,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Runner[4].Changed:Disconnect()
 					C.AvailableHacks.Runner[4].Changed=nil
 				end
-				--setChangedAttribute(currentAnimation,"Value",newValue and currentAnimationUpdate)
+				--setChangedProperty(currentAnimation,"Value",newValue and currentAnimationUpdate)
 				currentAnimationUpdate(actionEvent.Value)
 			end,
 		},
@@ -9170,7 +9186,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Runner[71].Triggered()
 				end
 				--local theArg = ((C.enHacks.Panic and (theFunction)) or false)
-				--setChangedAttribute(TSM:WaitForChild("Ragdoll"),"Value",theArg)
+				--setChangedProperty(TSM:WaitForChild("Ragdoll"),"Value",theArg)
 				if shouldntTrigger~=true then
 					C.AvailableHacks.Runner[71].Triggered()
 				end
@@ -9231,7 +9247,7 @@ C.AvailableHacks ={
 					if PodTrigger then
 						local CapturedTorso = PodTrigger:FindFirstChild("CapturedTorso")
 						if CapturedTorso and PodTrigger.Parent then
-							setChangedAttribute(
+							setChangedProperty(
 								CapturedTorso,
 								"Value",newValue and function()
 									C.AvailableHacks.Runner[80].RescueSurvivor(capsule)
@@ -9269,7 +9285,7 @@ C.AvailableHacks ={
 				task.wait(.5)
 				local PodTrigger = capsule:FindFirstChild("PodTrigger")
 				if PodTrigger and PodTrigger:FindFirstChild("CapturedTorso") then
-					setChangedAttribute(
+					setChangedProperty(
 						PodTrigger.CapturedTorso,
 						"Value",C.enHacks.AutoRescue and (function()
 							C.AvailableHacks.Runner[80].RescueSurvivor(capsule)
@@ -9376,8 +9392,8 @@ C.AvailableHacks ={
 						BeastEvent:FireServer("Jumped");
 						return true;
 					end
-					local setChangedAttributeUpdate_INPUT = (C.enHacks.PermSlowBeast and changeSpeed) ;
-					setChangedAttribute(Humanoid,"WalkSpeed", setChangedAttributeUpdate_INPUT);
+					local setChangedPropertyUpdate_INPUT = (C.enHacks.PermSlowBeast and changeSpeed) ;
+					setChangedProperty(Humanoid,"WalkSpeed", setChangedPropertyUpdate_INPUT);
 					while (C.enHacks.PermSlowBeast and (changeSpeed())) do
 					task.wait();
 				end;
@@ -9390,7 +9406,7 @@ C.AvailableHacks ={
 					if Humanoid==nil or Humanoid.Health<=0 then
 					return
 				end
-					setChangedAttribute(Humanoid,"WalkSpeed",nil)
+					setChangedProperty(Humanoid,"WalkSpeed",nil)
 				end,
 			},
 
@@ -10424,7 +10440,7 @@ C.AvailableHacks ={
 						--print(C.AvailableHacks.Bot[23].IsRunning)
 					end
 				end
-				setChangedAttribute(RS.GameStatus, "Value", (RSUpdateGameStatusFunction))
+				setChangedProperty(RS.GameStatus, "Value", (RSUpdateGameStatusFunction))
 			end,
 		},--]]
 		[28]={
@@ -10498,7 +10514,7 @@ C.AvailableHacks ={
 						C.AvailableHacks.Bot[28].ActivateFunction() 
 					end
 				end
-				setChangedAttribute(RS.GameStatus, "Value", (RSUpdateGameStatusFunction))
+				setChangedProperty(RS.GameStatus, "Value", (RSUpdateGameStatusFunction))
 			end,
 		},
 		[30]={
@@ -12297,7 +12313,7 @@ if gameName=="FleeMain" then
 		lastAnimationName = newValue
 		defaultFunction("AnimationChanged",newValue)
 	end
-	setChangedAttribute(currentAnimation,"Value",updateAnimation)
+	setChangedProperty(currentAnimation,"Value",updateAnimation)
 	updateAnimation()
 	trigger_setTriggers("StartUp",{Computer=false})
 	task.delay(5,trigger_setTriggers,"StartUp",{Computer=true})--careful with computers at the start!
@@ -12369,8 +12385,8 @@ if gameName=="FleeMain" then
 			startCredits = theirPlr:GetAttribute("StartCredits") or currentCredits.Value;
 			theirPlr:SetAttribute("StartXP",startXP);
 			theirPlr:SetAttribute("StartCredits",startCredits);
-			setChangedAttribute(currentXP,"Value",updateXPStats);
-			setChangedAttribute(currentCredits,"Value",updateCreditStats);
+			setChangedProperty(currentXP,"Value",updateXPStats);
+			setChangedProperty(currentCredits,"Value",updateCreditStats);
 			updateXPStats();
 			updateCreditStats();
 		end

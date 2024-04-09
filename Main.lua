@@ -30,7 +30,7 @@ newVector3, newColor3 = Vector3.new, Color3.fromRGB
 isStudio=RunS:IsStudio()
 --C.functs,C.refreshEnHack = {}, {}
 
-local C={enHacks = {},playerEvents={},objectFuncts={},functs={},refreshEnHack={},
+local C={enHacks = {},playerEvents={},objectFuncts={},attributeFuncts={},functs={},refreshEnHack={},
 Map=nil,char=nil,Beast=nil,TestPart=nil,ToggleTag=nil,clear=nil,saveIndex=nil,AvailableHacks=nil,ResetEvent=nil,
 CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil,textBoxSize=24}
 --local C.Map,C.char,C.Beast,C.TestPart,C.C.ToggleTag,clear,C.saveIndex,C.AvailableHacks,ResetEvent,C.C.C.CommandBarLine,C.Console,C.ConsoleButton,C.PlayerControlModule
@@ -3381,20 +3381,19 @@ local function setChangedAttribute(object,value,funct,index)
 	if object==nil or object.Parent==nil then
 		return
 	end
-	if not C.objectFuncts[object] then
-		C.objectFuncts[object] = {};
+	if not C.attributeFuncts[object] then
+		C.attributeFuncts[object] = {};
 	end
-	if not C.objectFuncts[object][value] then
-		C.objectFuncts[object][value] = {};
+	if not C.attributeFuncts[object][value] then
+		C.attributeFuncts[object][value] = {};
 	end
-	if C.objectFuncts[object][value][index]~=nil then
-		C.objectFuncts[object][value][index]:Disconnect();
-		C.objectFuncts[object][value][index] = nil;
+	if C.attributeFuncts[object][value][index]~=nil then
+		C.attributeFuncts[object][value][index]:Disconnect();
 	end
-	if funct~=nil and funct~=false then
-		C.objectFuncts[object][value][index] = object:GetAttributeChangedSignal(value):Connect(funct);
+	if funct then
+		C.attributeFuncts[object][value][index] = object:GetAttributeChangedSignal(value):Connect(funct);
 	else
-		C.objectFuncts[object][value][index]=nil;
+		C.attributeFuncts[object][value][index]=nil;
 	end
 end
 
@@ -11306,13 +11305,15 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
 
-	local searchList = C.objectFuncts or {}
-	for obj,objectEventsList in pairs(searchList) do
-		local insideSearchList = objectEventsList or {}
-		for value,funct in pairs(insideSearchList) do
-			if funct~=nil then
-				funct:Disconnect()
-				funct=nil
+	for num, thing2Clear in ipairs({"objectFuncts","attributeFuncts"}) do
+		local searchList = C[thing2Clear] or {}
+		for obj,objectEventsList in pairs(searchList) do
+			local insideSearchList = objectEventsList or {}
+			for value,funct in pairs(insideSearchList) do
+				if funct~=nil then
+					funct:Disconnect()
+					funct=nil
+				end
 			end
 		end
 	end

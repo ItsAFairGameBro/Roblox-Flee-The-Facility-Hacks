@@ -3365,12 +3365,16 @@ local function setChangedProperty(object,value,funct,index)
 	if object==nil or object.Parent==nil then
 		return
 	end
-	index = index and (index..value) or value
+	--index = index and (index..value) or value
 	if not C.objectFuncts[object] then
 		C.objectFuncts[object] = {};
 	end
-	if C.objectFuncts[object][index] then
-		C.objectFuncts[object][index]:Disconnect();
+	if not C.objectFuncts[object][value] then
+		C.objectFuncts[object][value] = {};
+	end
+	local connectionsList = C.objectFuncts[object][value]
+	if connectionsList[index] then
+		connectionsList[index]:Disconnect();
 	end
 	if funct then
 		local signal = (typeof(funct)=="RBXScriptConnection" and funct) or object:GetPropertyChangedSignal(value):Connect(funct);
@@ -3379,26 +3383,33 @@ local function setChangedProperty(object,value,funct,index)
 		--else
 		--	C.objectFuncts[object][index] = object:GetPropertyChangedSignal(value):Connect(funct);
 		--end
-		C.objectFuncts[object][index] = signal;
+		connectionsList[index] = signal;
 	else
-		C.objectFuncts[object][index]=nil;
+		connectionsList[index]=nil;
 	end
 end
 local function setChangedAttribute(object,value,funct,index)
 	if object==nil or object.Parent==nil then
 		return
 	end
-	index = "ATTR_"..(index and (tostring(index)..value) or value)
+	--index = "ATTR_"..(index and (tostring(index)..value) or value)
+	local storeValue = "ATTR_"..value
 	if not C.objectFuncts[object] then
 		C.objectFuncts[object] = {};
 	end
-	if C.objectFuncts[object][index] then
-		C.objectFuncts[object][index]:Disconnect();
+	if not C.objectFuncts[object][storeValue] then
+		C.objectFuncts[object][storeValue] = {};
+	end
+	local connectionsList = C.objectFuncts[object][storeValue]
+	if connectionsList[index] then
+		connectionsList[index]:Disconnect();
 	end
 	if funct then
-		C.objectFuncts[object][index] = object:GetAttributeChangedSignal(value):Connect(funct);
+		local signal = (typeof(funct)=="RBXScriptConnection" and funct) or object:GetAttributeChangedSignal(value):Connect(funct);
+
+		connectionsList[index] = signal;
 	else
-		C.objectFuncts[object][index]=nil;
+		connectionsList[index]=nil;
 	end
 end
 

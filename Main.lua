@@ -6337,7 +6337,7 @@ C.AvailableHacks ={
 					object:AddTag("InviWalls")
 					
 					object.CastShadow = false
-					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .85
+					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .6
 					if isDoor then
 						--object:SetAttribute("OriginalCollide",object.CanCollide)
 						local function refreshColor()

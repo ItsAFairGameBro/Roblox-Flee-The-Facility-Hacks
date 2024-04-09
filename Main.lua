@@ -6281,10 +6281,10 @@ C.AvailableHacks ={
 						setChangedProperty(object,"CanCollide",function()
 							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedProperty(object,"CanCollide",nil)
-							setChangedAttribute(object,"Opened",nil)
+							setChangedAttribute(stuctureParent,"Opened",nil)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
-						setChangedAttribute(object,"Opened",refreshColor)
+						setChangedAttribute(stuctureParent,"Opened",refreshColor)
 						refreshColor()
 					else
 						object.Color = Color3.fromRGB(0,0,200)

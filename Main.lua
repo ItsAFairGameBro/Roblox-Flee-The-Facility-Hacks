@@ -5328,6 +5328,42 @@ C.AvailableHacks ={
 				end
 			end
 		},
+		[22]={
+			["Type"]="ExTextButton",
+			["Title"]="Rescue In Range",
+			["Desc"]="Automatically rescues when in range",
+			["Shortcut"]="Util_Macro_Rescue",--TODO HERE
+			["Default"]=true,
+			["Funct"]=nil,
+			["ActivateFunction"]=function(en)
+				if C.AvailableHacks.Utility[22].Funct then
+					C.AvailableHacks.Utility[22].Funct:Disconnect()
+					C.AvailableHacks.Utility[22].Funct = nil
+				end
+				if en then
+					C.AvailableHacks.Utility[22].Funct = myTSM:WaitForChild("ActionEvent"):Connect(function(newEvent)
+						local topParent = newEvent
+						while topParent and topParent ~= C.Map do
+							topParent = topParent.Parent
+						end
+						if not topParent then
+							return
+						end
+						if not topParent:HasTag("Capsule") then
+							print("TopParent",topParent,"Not A FreezePod!")
+							return
+						end
+						print("TopParent",topParent,"Capsule, Cont!")
+						
+						RemoteEvent:FireServer("Input", "Action", true)
+						myTSM.ActionInput.Value = true
+						RunS.RenderStepped:Wait()
+						RemoteEvent:FireServer("Input", "Action", false)
+						myTSM.ActionInput.Value = false
+					end)
+				end
+			end
+		},
 	},
 	["Basic"]={
 		[1]={
@@ -10042,13 +10078,17 @@ C.AvailableHacks ={
 			end,
 			["OthersPlayerAdded"]=function(theirPlr)
 				local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
+				local capturedValue = TSM:WaitForChild("Captured",30)
+				if not capturedValue then
+					return
+				end
 				local function CaptureChanged()
-					if not TSM.Captured.Value and human and theirPlr==plr then
+					if not capturedValue.Value and human and theirPlr==plr then
 						human:ChangeState(Enum.HumanoidStateType.Landed)
 					end
 					theirPlr:SetAttribute("HasCaptured",true)
 				end
-				table.insert(C.functs,TSM.Captured.Changed:Connect(CaptureChanged))
+				table.insert(C.functs,capturedValue.Changed:Connect(CaptureChanged))
 			end,
 			["MyPlayerAdded"]=function()
 				local function EscapeChanged()

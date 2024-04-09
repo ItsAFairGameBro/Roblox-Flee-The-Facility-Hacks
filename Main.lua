@@ -3767,7 +3767,7 @@ C.AvailableHacks ={
 					if not nameTag then
 						return
 					end
-					if not nameTag:FindFirstChild("ExpandingBar") then
+					if not nameTag:WaitForChild("ExpandingBar",30) then
 						return
 					end
 					nameTag.ExpandingBar.Visible=(C.enHacks.ESP_PlayerProg and ActionProgress.Value~=0 and TSM.CurrentAnimation.Value~="Typing")

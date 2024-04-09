@@ -8707,7 +8707,6 @@ C.AvailableHacks ={
 				local CarriedTorso=C.char:WaitForChild("CarriedTorso",20)
 				if CarriedTorso~=nil then
 					local function canRun(saveTorso)
-						debug.traceback("CanRun"..tostring(C.char == C.Beast))
 						return C.char == C.Beast and CarriedTorso.Parent and not isCleared and saveTorso==CarriedTorso.Value
 					end
 					local function captureSurvivorFunction()
@@ -8728,10 +8727,8 @@ C.AvailableHacks ={
 								end
 							end
 							if hasValid then
-								print("GOOD-Valid Cap Found!")
 								break
 							elseif #capsuleList==0 then
-								print("GOOD-Wait")
 								CS:GetInstanceAddedSignal("Capsule"):Wait()
 							end
 							task.wait(.75)
@@ -8742,8 +8739,8 @@ C.AvailableHacks ={
 						C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
 					end
 					local input = C.enHacks.AutoCapture and captureSurvivorFunction
-					--setChangedProperty(CarriedTorso,"Value",input)
-					C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
+					setChangedProperty(CarriedTorso,"Value",input)
+					captureSurvivorFunction()--C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
 				elseif C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
 					warn("rope not found!!!! hackssss bro!", C.char:GetFullName())
 				end

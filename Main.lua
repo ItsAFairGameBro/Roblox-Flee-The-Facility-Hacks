@@ -123,7 +123,7 @@ if not myBots[plr.Name:lower()] then
 		botModeEnabled = true;
 	end
 end
-local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
+local MyDefaults = {BotFarmRunner = (botModeEnabled and "Hack")}
 local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
 local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
 local absMinTimeBetweenPCs=15 --abs min time to hack, overrides minspeed

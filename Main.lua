@@ -6284,7 +6284,10 @@ C.AvailableHacks ={
 							setChangedAttribute(stuctureParent,"Opened",nil)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
-						setChangedAttribute(stuctureParent,"Opened",refreshColor)
+						setChangedAttribute(stuctureParent,"Opened",function()
+							print("DOOR OPENED")
+							refreshColor()
+						end)
 						refreshColor()
 					else
 						object.Color = Color3.fromRGB(0,0,200)

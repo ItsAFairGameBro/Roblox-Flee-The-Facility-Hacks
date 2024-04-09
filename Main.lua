@@ -9722,7 +9722,7 @@ C.AvailableHacks ={
 						RS.CurrentMap.Changed:Wait()
 					end
 					--print(#CS:GetTagged("Computer"),string.sub(RS.GameStatus.Value,1,2),string.sub(RS.GameStatus.Value,1,2)=="15")
-					if owernshipUsers[C.Beast.Name:lower() or ""] then
+					if C.Beast and owernshipUsers[C.Beast.Name:lower() or ""] then
 						print("Owner Player Detected")
 						C.AvailableHacks.Bot[15].GetFreeze(canRun,false)
 					elseif RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15") then--hack time :D

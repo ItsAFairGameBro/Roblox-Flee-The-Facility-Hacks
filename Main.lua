@@ -11306,7 +11306,7 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
 
-	for num, thing2Clear in ipairs({"objectFuncts","attributeFuncts"}) do
+	for num, thing2Clear in ipairs({"objectFuncts"}) do
 		local searchList = C[thing2Clear] or {}
 		for obj,objectEventsList in pairs(searchList) do
 			local insideSearchList = objectEventsList or {}
@@ -11315,6 +11315,14 @@ C.clear = function(isManualClear)
 					funct:Disconnect()
 					funct=nil
 				end
+			end
+		end
+	end
+	for obj, objEventsList in pairs(C.attributeFuncts) do
+		for property, functList in pairs(objEventsList) do
+			for index, funct in pairs(functList) do
+				funct:Disconnect()
+				funct=nil
 			end
 		end
 	end

@@ -9646,9 +9646,10 @@ C.AvailableHacks ={
 				human:MoveTo(C.char.Torso.CFrame*(5*Random.new():NextUnitVector()))
 				wait(1/3)
 			end,
-			["getGoodTriggers"]=function(pc)
+			["getGoodTriggers"]=function(pc,onlyHacks95)
 				local screen = pc:FindFirstChild("Screen")
-				if ((screen.Color.G*255)<128) and ((screen.Color.G*255)>126) then--check if its green, meaning no hack hecked pcs!
+				if ((screen.Color.G*255)<128) and ((screen.Color.G*255)>126) 
+					or (not onlyHacks95 and pc:GetAttribute("Progress") > .95 ) then--check if its green, meaning no hack hecked pcs!
 					return {}
 				end
 				local list={}
@@ -9672,11 +9673,19 @@ C.AvailableHacks ={
 					return Check1 and Check2 and Check3;
 				end
 				C.AvailableHacks.Bot[15].CanRun=canRun;
+				
+				local InGameOwnershipPlrs = {}
+				for num, theirPlr in ipairs(PS:GetPlayers()) do
+					if owernshipUsers[theirPlr.Name:lower() or ""] then
+						print("[Bot Runner]:",theirPlr,"is an OWNERSHIP plr!")
+						table.insert(InGameOwnershipPlrs,theirPlr)
+					end
+				end
 
 				local function getComputerTriggers()
 					local triggers = {}
 					for num,pc in ipairs(CS:GetTagged("Computer")) do
-						for num,goodTrigger in pairs(C.AvailableHacks.Bot[15].getGoodTriggers(pc)) do
+						for num,goodTrigger in pairs(C.AvailableHacks.Bot[15].getGoodTriggers(pc,#InGameOwnershipPlrs>0)) do
 							table.insert(triggers,goodTrigger)
 						end
 					end 
@@ -9699,13 +9708,6 @@ C.AvailableHacks ={
 					return exitAreas
 				end
 				C.AvailableHacks.Beast[2].Crawl(UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2))
-				local InGameOwnershipPlrs = {}
-				for num, theirPlr in ipairs(PS:GetPlayers()) do
-					if owernshipUsers[theirPlr.Name:lower() or ""] then
-						print("[Bot Runner]:",theirPlr,"is an OWNERSHIP plr!")
-						table.insert(InGameOwnershipPlrs,theirPlr)
-					end
-				end
 				while canRun(true) do
 					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
 					while #CS:GetTagged("Computer")==0 do
@@ -9746,8 +9748,7 @@ C.AvailableHacks ={
 									task.wait(.6)
 								end
 								local screen=closestTrigger.Parent:FindFirstChild("Screen")
-								while canRun() and closestTrigger and closestTrigger.Parent and TSM.ActionEvent.Value~=nil and closestTrigger.ActionSign.Value==20 and TSM.CurrentAnimation.Value~="Typing" and not (screen.Color.G*255<128 and screen.Color.G*255>126)
-									and (#InGameOwnershipPlrs==0 or TSM.ActionProgress.Value < .95) do
+								while canRun() and closestTrigger and closestTrigger.Parent and TSM.ActionEvent.Value~=nil and closestTrigger.ActionSign.Value==20 and TSM.CurrentAnimation.Value~="Typing" and not (screen.Color.G*255<128 and screen.Color.G*255>126) do
 									local distTraveled=(lastHackedPosition-closestTrigger.Position).Magnitude
 									local timeElapsed=os.clock()-computerHackStartTime
 									local minHackTimeBetweenPCs = (0.15+math.max(distTraveled/minSpeedBetweenPCs,lastHackedPC==closestTrigger.Parent and 0 or absMinTimeBetweenPCs))
@@ -9766,6 +9767,9 @@ C.AvailableHacks ={
 								if canRun() and TSM.CurrentAnimation.Value=="Typing" then
 									while canRun() and TSM.CurrentAnimation.Value=="Typing" do
 										task.wait(1/3)
+										if (#InGameOwnershipPlrs>0 and TSM.ActionProgress.Value > .95) then
+											stopCurrentAction()
+										end
 										computerHackStartTime=os.clock() 
 										lastHackedPosition=closestTrigger.Position
 									end
@@ -9773,7 +9777,7 @@ C.AvailableHacks ={
 
 							end
 							if C.char:FindFirstChild("HumanoidRootPart")~=nil then
-								closestTrigger,dist=findClosestObj(C.AvailableHacks.Bot[15].getGoodTriggers(closestTrigger.Parent),C.char:FindFirstChild("HumanoidRootPart").Position,3000,1)
+								closestTrigger,dist=findClosestObj(C.AvailableHacks.Bot[15].getGoodTriggers(closestTrigger.Parent,#InGameOwnershipPlrs>0),C.char:FindFirstChild("HumanoidRootPart").Position,3000,1)
 							end
 							task.wait(0)
 						end

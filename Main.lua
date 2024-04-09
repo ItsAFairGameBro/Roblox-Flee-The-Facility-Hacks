@@ -5357,10 +5357,8 @@ C.AvailableHacks ={
 							return
 						end
 						if not topParent:HasTag("Capsule") then
-							print("TopParent",topParent,"Not A FreezePod!")
 							return
 						end
-						print("TopParent",topParent,"Capsule, Cont!")
 						
 						RemoteEvent:FireServer("Input", "Action", true)
 						myTSM.ActionInput.Value = true

@@ -5341,7 +5341,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Utility[22].Funct = nil
 				end
 				if en then
-					C.AvailableHacks.Utility[22].Funct = myTSM:WaitForChild("ActionEvent"):Connect(function(newEvent)
+					C.AvailableHacks.Utility[22].Funct = myTSM:WaitForChild("ActionEvent").Changed:Connect(function(newEvent)
 						local topParent = newEvent
 						while topParent and topParent ~= C.Map do
 							topParent = topParent.Parent

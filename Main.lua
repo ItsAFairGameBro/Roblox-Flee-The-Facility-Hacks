@@ -8707,6 +8707,7 @@ C.AvailableHacks ={
 				local CarriedTorso=C.char:WaitForChild("CarriedTorso",20)
 				if CarriedTorso~=nil then
 					local function canRun(saveTorso)
+						debug.traceback("CanRun"..tostring(C.char == C.Beast))
 						return C.char == C.Beast and CarriedTorso.Parent and not isCleared and saveTorso==CarriedTorso.Value
 					end
 					local function captureSurvivorFunction()

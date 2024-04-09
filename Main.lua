@@ -5343,7 +5343,7 @@ C.AvailableHacks ={
 				if en then
 					C.AvailableHacks.Utility[22].Funct = myTSM:WaitForChild("ActionEvent").Changed:Connect(function(newEvent)
 						local topParent = newEvent
-						while topParent and topParent ~= C.Map do
+						while topParent and topParent.Parent ~= C.Map do
 							topParent = topParent.Parent
 						end
 						if not topParent then

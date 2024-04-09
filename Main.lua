@@ -6288,7 +6288,6 @@ C.AvailableHacks ={
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
 						setChangedAttribute(stuctureParent,"Opened",function()
-							print("DOOR OPENED")
 							refreshColor()
 						end,object)
 						refreshColor()

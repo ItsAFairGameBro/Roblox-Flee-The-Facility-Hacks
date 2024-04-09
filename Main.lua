@@ -3373,11 +3373,13 @@ local function setChangedProperty(object,value,funct,index)
 		C.objectFuncts[object][index]:Disconnect();
 	end
 	if funct then
-		if value=="Value" and object:IsA("ValueBase") then
-			C.objectFuncts[object][index] = object.Changed:Connect(funct);
-		else
-			C.objectFuncts[object][index] = object:GetPropertyChangedSignal(value):Connect(funct);
-		end
+		local signal = (typeof(funct)=="RBXScriptConnection" and funct) or object:GetPropertyChangedSignal(value):Connect(funct);
+		--if value=="Value" and object:IsA("ValueBase") then
+		--	C.objectFuncts[object][index] = object.Changed:Connect(funct);
+		--else
+		--	C.objectFuncts[object][index] = object:GetPropertyChangedSignal(value):Connect(funct);
+		--end
+		C.objectFuncts[object][index] = signal;
 	else
 		C.objectFuncts[object][index]=nil;
 	end
@@ -6132,6 +6134,7 @@ C.AvailableHacks ={
 			["Desc"]='Keybind: "T"',
 			["Shortcut"]="Teleport",
 			["Default"]=true,
+			["Functs"]={},
 			["TeleportFunction"]=function(target,newOrien)
 				local isCFrame=typeof(target)=="CFrame"
 				local primPart=C.char.PrimaryPart
@@ -6161,10 +6164,11 @@ C.AvailableHacks ={
 			end,
 			["ActivateFunction"]=function(newValue)
 				local mouse=plr:GetMouse();
-				C.objectFuncts[mouse]=C.objectFuncts[mouse] or {};
-				for num,funct in pairs(C.objectFuncts[mouse]) do
+				--C.objectFuncts[mouse]=C.objectFuncts[mouse] or {};
+				for num,funct in pairs(C.AvailableHacks.Basic[12].Functs) do--C.objectFuncts[mouse]) do
 					funct:Disconnect();
-				end;
+				end;--]]
+				C.AvailableHacks.Basic[12].Functs = {};
 				if newValue then
 					local function keyDownFunction(key)
 						if key == "t" then
@@ -6185,9 +6189,9 @@ C.AvailableHacks ={
 							TPFunction(inputPosition);
 						end;
 					end;
-					local objectFuncts_ADD = C.objectFuncts[mouse];
+					--local objectFuncts_ADD = C.objectFuncts[mouse];
 					local connection_1 = mouse.KeyDown:Connect(keyDownFunction);
-					table.insert(objectFuncts_ADD, connection_1);
+					table.insert(C.AvailableHacks.Basic[12].Functs, connection_1);
 					local lastTouch = 0;
 					local function TouchTapFunction(touchPositions,gameProcessedEvent)
 						if gameProcessedEvent or not PlayerGui.TouchGui.Enabled then
@@ -6201,7 +6205,7 @@ C.AvailableHacks ={
 						end;
 					end;
 					local connection_2 = UIS.TouchTap:Connect(TouchTapFunction);
-					table.insert(objectFuncts_ADD,connection_2);
+					table.insert(C.AvailableHacks.Basic[12].Functs,connection_2);
 				end;
 
 			end,
@@ -9797,6 +9801,7 @@ C.AvailableHacks ={
 							while ((table.find(workspace:GetPartsInPart(C.char.HumanoidRootPart),closestExitArea)) and isInGame(C.char,true) and isInGame(C.char)
 								and (not exitDoor:FindFirstChild("ExitDoorTrigger") 
 									or (exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12 and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 10))) do
+								trigger_setTriggers("BotRunner",true)
 								if human.FloorMaterial~=Enum.Material.Air then
 									human:ChangeState(Enum.HumanoidStateType.Jumping)
 									teleportMyself(C.char:GetPivot() * CFrame.new(0,0,-2))

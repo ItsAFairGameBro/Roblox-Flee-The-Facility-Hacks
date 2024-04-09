@@ -3365,6 +3365,7 @@ local function setChangedProperty(object,value,funct,index)
 	if object==nil or object.Parent==nil then
 		return
 	end
+	index = index or GS
 	--index = index and (index..value) or value
 	if not C.objectFuncts[object] then
 		C.objectFuncts[object] = {};
@@ -3393,6 +3394,7 @@ local function setChangedAttribute(object,value,funct,index)
 		return
 	end
 	--index = "ATTR_"..(index and (tostring(index)..value) or value)
+	index = index or GS
 	local storeValue = "ATTR_"..value
 	if not C.objectFuncts[object] then
 		C.objectFuncts[object] = {};

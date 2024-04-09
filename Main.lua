@@ -3767,6 +3767,9 @@ C.AvailableHacks ={
 					if not nameTag then
 						return
 					end
+					if not nameTag:FindFirstChild("ExpandingBar") then
+						return
+					end
 					nameTag.ExpandingBar.Visible=(C.enHacks.ESP_PlayerProg and ActionProgress.Value~=0 and TSM.CurrentAnimation.Value~="Typing")
 					if TSM.CurrentAnimation.Value=="Typing" then
 						C.AvailableHacks.Render[7].RefreshBar(theirPlr,HRP,ActionProgress)
@@ -11394,22 +11397,24 @@ C.clear = function(isManualClear)
 		local searchList = C[thing2Clear] or {}
 		for obj,objectEventsList in pairs(searchList) do
 			local insideSearchList = objectEventsList or {}
-			for value,funct in pairs(insideSearchList) do
-				if funct~=nil then
-					funct:Disconnect()
-					funct=nil
+			for value,functList in pairs(insideSearchList) do
+				for index, funct in ipairs(functList) do
+					if funct~=nil then
+						funct:Disconnect()
+						funct=nil
+					end
 				end
 			end
 		end
 	end
-	for obj, objEventsList in pairs(C.attributeFuncts) do
+	--[[for obj, objEventsList in pairs(C.attributeFuncts) do
 		for property, functList in pairs(objEventsList) do
 			for index, funct in pairs(functList) do
 				funct:Disconnect()
 				funct=nil
 			end
 		end
-	end
+	end--]]
 
 
 	getgenv()["ActiveScript"..getID][C.saveIndex] = nil

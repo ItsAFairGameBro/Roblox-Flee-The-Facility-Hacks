@@ -1925,14 +1925,14 @@ C.CommandFunctions = {
 		SupportsNew=true,
 		RestoreInstances={["Hammer"]=true,["Gemstone"]=true,["PackedGemstone"]=true,["PackedHammer"]=true},
 		GetHumanoidDesc=function(userID,outfitId)
-			local desc
-			if not outfitId then
-				desc = PS:GetHumanoidDescriptionFromUserId(userID)
-				desc.Name = userID
-			else
-				desc = PS:GetHumanoidDescriptionFromOutfitId(outfitId)
-				desc.Name = userID
+			local success, desc
+			while not success do
+				success,desc = pcall(PS[outfitId and "GetHumanoidDescriptionFromOutfitId" or "GetHumanoidDescriptionFromUserId"], PS,outfitId or userID)
+				if not success then
+					task.wait(.3)
+				end
 			end
+			desc.Name = userID .. (outfitId and ("/"..outfitId) or "")
 			return  desc
 		end,
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
@@ -2021,7 +2021,7 @@ C.CommandFunctions = {
 				if child:IsA("Model") and child:WaitForChild("Humanoid",5) then
 					local humanDesc = getgenv().currentDesc[child.Name]
 					if humanDesc then
-						task.wait(.2)
+						task.wait(.3)
 						local orgColor = child:WaitForChild("Head").Color
 						local myClone = humanDesc:Clone()
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
@@ -2302,13 +2302,15 @@ local function sortPlayersByXPThenCredits(plrList)
 		local aStats=a:FindFirstChild("SavedPlayerStatsModule")
 		local bStats=b:FindFirstChild("SavedPlayerStatsModule")
 		local doesExistA, doesExistB = aStats and aStats.Parent, bStats and bStats.Parent
-		if not doesExistA or not doesExistB then
-			return doesExistA and not doesExistB
+		if doesExistA and not doesExistB then
+			return true
+		elseif not doesExistA and doesExistB then
+			return false
 		end
 		local isABot=myBots[a.Name:lower()]
 		local isBBot=myBots[b.Name:lower()]
 		if isABot~=isBBot then
-			return true
+			return isABot and not isBBot
 		end
 		local aLevel = aStats:FindFirstChild("Level")
 		local bLevel = bStats:FindFirstChild("Level")
@@ -9814,11 +9816,12 @@ C.AvailableHacks ={
 				C.AvailableHacks.Bot[15].GetFreeze(canRun,canCapture)
 			end,
 			["GetFreeze"]=function(canRun,canCapture)
+				local CarriedTorso = StringWaitForChild(C.Beast,"CarriedTorso",10)
 				local currentPath = C.AvailableHacks.Bot[15].CurrentPath
-				while canRun(true) do
+				while canRun(true) and CarriedTorso do
 					human:SetAttribute("OverrideSpeed",((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<16 and 25 or 42))
 					local inRange = (C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<6
-					if not inRange and not myTSM.Captured.Value then
+					if not inRange and not myTSM.Captured.Value and (not myTSM.Ragdoll.Value or (CarriedTorso and CarriedTorso.Value~=(C.char and C.char.Parent))) then
 						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-2),canRun)
 					end
 					local i = 0
@@ -9843,7 +9846,7 @@ C.AvailableHacks ={
 							if not canRun(true) then
 								return
 							end
-							if myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent then
+							if myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent and (CarriedTorso and CarriedTorso.Value~=(C.char and C.char.Parent)) then
 								--teleportMyself(C.Beast:GetPivot()*CFrame.new(0,0,2))
 								--RunS.RenderStepped:Wait()
 								C.AvailableHacks.Beast[55].RopeSurvivor(myTSM,plr,true)

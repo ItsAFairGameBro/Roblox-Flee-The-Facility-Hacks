@@ -6215,7 +6215,7 @@ C.AvailableHacks ={
 				else--]]
 				if structure == "Door" then
 					setChangedProperty(object,"CanCollide",false)--Disable this first!
-					--setChangedAttribute(instance,"Opened",nil,object)
+					setChangedAttribute(instance,"Opened",nil,object)
 				end
 				if structure == "Door" then
 					object.CanCollide = not instance:GetAttribute("Opened")
@@ -6284,10 +6284,10 @@ C.AvailableHacks ={
 						setChangedProperty(object,"CanCollide",function()
 							--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 							setChangedProperty(object,"CanCollide",nil)
-							--setChangedAttribute(stuctureParent,"Opened",nil,object)
+							setChangedAttribute(stuctureParent,"Opened",nil,object)
 							C.AvailableHacks.Basic[20].InstanceAdded(object)
 						end)
-						--[[setChangedAttribute(stuctureParent,"Opened",function()
+						setChangedAttribute(stuctureParent,"Opened",function()
 							refreshColor()
 						end,object)--]]
 						refreshColor()

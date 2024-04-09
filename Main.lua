@@ -11398,11 +11398,14 @@ C.clear = function(isManualClear)
 		for obj,objectEventsList in pairs(searchList) do
 			local insideSearchList = objectEventsList or {}
 			for value,functList in pairs(insideSearchList) do
-				for index, funct in ipairs(functList) do
+				--[[for index, funct in ipairs(functList) do
 					if funct~=nil then
 						funct:Disconnect()
 						funct=nil
 					end
+				end--]]
+				if functList then
+					functList:Disonncet()
 				end
 			end
 		end

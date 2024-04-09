@@ -112,6 +112,9 @@ local whitelistedUsers={
 	["kitcat4681"]=true,
 	["goldenbear25"]=true,
 };
+local owernshipUsers={
+	["suitedforbans2"]=true,
+};
 if not myBots[plr.Name:lower()] then
 	if not botModeEnabled and not GlobalSettings.ForceBotMode then
 		myBots={};
@@ -4643,8 +4646,6 @@ C.AvailableHacks ={
 								return false
 							end
 						end
-					elseif valName == "Credits" then
-						return 69696969
 					end
 
 					return NormalFunction(valName)
@@ -9698,10 +9699,17 @@ C.AvailableHacks ={
 					return exitAreas
 				end
 				C.AvailableHacks.Beast[2].Crawl(UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2))
+				local InGameOwnershipPlrs = {}
+				for num, theirPlr in ipairs(PS:GetPlayers()) do
+					if owernshipUsers[theirPlr.Name:lower() or ""] then
+						print("[Bot Runner]:",theirPlr,"is an OWNERSHIP plr!")
+						table.insert(InGameOwnershipPlrs,theirPlr)
+					end
+				end
 				while canRun(true) do
 					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
 					while #CS:GetTagged("Computer")==0 do
-						print("[Bot Runner]: Waiting For Computers!")
+						--print("[Bot Runner]: Waiting For Computers!")
 						human:Move(newVector3())
 						CS:GetInstanceAddedSignal("Computer"):Wait()
 						task.wait()
@@ -9709,12 +9717,15 @@ C.AvailableHacks ={
 							C.AvailableHacks.Beast[2].Crawl(C.AvailableHacks.Beast[2].IsCrawling) --RS.IsGameActive.Changed:Wait() --wait(1)
 						end)
 					end
-					while RS.CurrentMap.Value==nil do
+					while not RS.CurrentMap.Value do
 						print("[Bot Runner]: Waiting For C.Map!")
 						RS.CurrentMap.Changed:Wait()
 					end
 					--print(#CS:GetTagged("Computer"),string.sub(RS.GameStatus.Value,1,2),string.sub(RS.GameStatus.Value,1,2)=="15")
-					if RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15") then--hack time :D
+					if owernshipUsers[C.Beast.Name:lower() or ""] then
+						print("Owner Player Detected")
+						C.AvailableHacks.Bot[15].GetFreeze(canRun,false)
+					elseif RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15") then--hack time :D
 						local closestTrigger,dist=findClosestObj(getComputerTriggers(),C.char:FindFirstChild("HumanoidRootPart").Position,3000,6)
 						while canRun() and closestTrigger~=nil and (RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15")) do --print("found trigger")
 							local ActionSign=closestTrigger:FindFirstChild("ActionSign")
@@ -9735,7 +9746,8 @@ C.AvailableHacks ={
 									task.wait(.6)
 								end
 								local screen=closestTrigger.Parent:FindFirstChild("Screen")
-								while canRun() and closestTrigger and closestTrigger.Parent and TSM.ActionEvent.Value~=nil and closestTrigger.ActionSign.Value==20 and TSM.CurrentAnimation.Value~="Typing" and not (screen.Color.G*255<128 and screen.Color.G*255>126) do
+								while canRun() and closestTrigger and closestTrigger.Parent and TSM.ActionEvent.Value~=nil and closestTrigger.ActionSign.Value==20 and TSM.CurrentAnimation.Value~="Typing" and not (screen.Color.G*255<128 and screen.Color.G*255>126)
+									and (#InGameOwnershipPlrs==0 or TSM.ActionProgress.Value < .95) do
 									local distTraveled=(lastHackedPosition-closestTrigger.Position).Magnitude
 									local timeElapsed=os.clock()-computerHackStartTime
 									local minHackTimeBetweenPCs = (0.15+math.max(distTraveled/minSpeedBetweenPCs,lastHackedPC==closestTrigger.Parent and 0 or absMinTimeBetweenPCs))

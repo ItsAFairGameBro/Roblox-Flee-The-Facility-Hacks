@@ -11317,7 +11317,7 @@ C.clear = function(isManualClear)
 		--end
 		C.AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
 		if C.AvailableHacks.Utility[7] then
-			C.AvailableHacks.Utility[7].ActivateFunction(false,true)--enable touchscreen, if needed!
+			--C.AvailableHacks.Utility[7].ActivateFunction(false,true)--enable touchscreen, if needed!
 		end
 		if C.AvailableHacks.Utility[5] then
 			C.AvailableHacks.Utility[5].ActivateFunction(false)--disable spectate hacks

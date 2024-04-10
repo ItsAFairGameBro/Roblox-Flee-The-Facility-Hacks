@@ -11317,7 +11317,7 @@ C.clear = function(isManualClear)
 		--end
 		C.AvailableHacks.Utility[2].ActivateFunction(false)--disable override zooming
 		if C.AvailableHacks.Utility[7] then
-			--C.AvailableHacks.Utility[7].ActivateFunction(false,true)--enable touchscreen, if needed!
+			C.AvailableHacks.Utility[7].ActivateFunction(false,true)--enable touchscreen, if needed!
 		end
 		if C.AvailableHacks.Utility[5] then
 			C.AvailableHacks.Utility[5].ActivateFunction(false)--disable spectate hacks
@@ -11395,12 +11395,12 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
 
 
-	for num, thing2Clear in ipairs({"objectFuncts"}) do
+	for num, thing2Clear in pairs({"objectFuncts"}) do
 		local searchList = C[thing2Clear] or {}
 		for obj,objectEventsList in pairs(searchList) do
 			local insideSearchList = objectEventsList or {}
 			for value,functList in pairs(insideSearchList) do
-				for index, funct in ipairs(functList) do
+				for index, funct in pairs(functList) do
 					if funct~=nil then
 						funct:Disconnect()
 						funct=nil

@@ -11393,20 +11393,22 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
 
+	print(C.objectFuncts)
+
 	for num, thing2Clear in ipairs({"objectFuncts"}) do
 		local searchList = C[thing2Clear] or {}
 		for obj,objectEventsList in pairs(searchList) do
 			local insideSearchList = objectEventsList or {}
 			for value,functList in pairs(insideSearchList) do
-				--[[for index, funct in ipairs(functList) do
+				for index, funct in ipairs(functList) do
 					if funct~=nil then
 						funct:Disconnect()
 						funct=nil
 					end
 				end--]]
-				if functList then
+				--[[if functList then
 					functList:Disonncet()
-				end
+				end--]]
 			end
 		end
 	end

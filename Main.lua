@@ -11394,7 +11394,6 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
 
-	print(C.objectFuncts)
 
 	for num, thing2Clear in ipairs({"objectFuncts"}) do
 		local searchList = C[thing2Clear] or {}

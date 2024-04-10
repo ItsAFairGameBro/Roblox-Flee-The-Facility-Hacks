@@ -3537,9 +3537,9 @@ C.AvailableHacks ={
 			end,
 			["ComputerAdded"]=function(computerTable)
 				--if computerTable.ClassName=="Model" and computerTable.Name=="ComputerTable" then
-				if not C.objectFuncts[computerTable] then
-					C.objectFuncts[computerTable] = {};
-				end
+				--if not C.objectFuncts[computerTable] then
+				--	C.objectFuncts[computerTable] = {};
+				--end
 				local primPart,Screen=computerTable.PrimaryPart,computerTable:FindFirstChild("Screen",true);
 				local newTag=NameTagEx:Clone();
 				newTag.Username.TextColor3=newColor3(84, 84, 84);
@@ -3609,7 +3609,7 @@ C.AvailableHacks ={
 				--end
 				local key
 				delay(.25,function()
-					C.objectFuncts[theirChar]=C.objectFuncts[theirChar] or {}
+					--C.objectFuncts[theirChar]=C.objectFuncts[theirChar] or {}
 					while not isCleared and theirChar~=nil and theirChar.Parent~=nil do
 						--if C.enHacks.ESP_Highlight then
 						--key=#C.objectFuncts[theirChar]+1
@@ -3869,6 +3869,7 @@ C.AvailableHacks ={
 			["Desc"]="Interactable Freezing Pods",
 			["Shortcut"]="Render_FreezingPods",
 			["Default"]=false,
+			["Funct"]=nil,
 			["Event"]=nil,
 			["SetEnabled"]=function(tag)
 				local isInGame=isInGame(camera.CameraSubject.Parent)
@@ -3893,10 +3894,10 @@ C.AvailableHacks ={
 				--	C.AvailableHacks.Render[30].Event:Destroy()
 				--end
 				--C.AvailableHacks.Render[30].Event=nil
-				if C.objectFuncts[C.AvailableHacks.Render[30].Event] then
+				--[[if C.objectFuncts[C.AvailableHacks.Render[30].Event] then
 					C.objectFuncts[C.AvailableHacks.Render[30].Event][1]:Disconnect()
 					C.objectFuncts[C.AvailableHacks.Render[30].Event] = nil
-				end
+				end--]]
 			end,
 			["UpdateDisplays"]=function()
 				C.AvailableHacks.Render[30].ActivateFunction(C.enHacks.RemotelyHackComputers)
@@ -3957,10 +3958,10 @@ C.AvailableHacks ={
 						ToggleButton.Visible = false
 					end
 				end
-				C.objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
-					CapturedTorso.Changed:Connect(setVisible),
-					ActionSign.Changed:Connect(setVisible),
-					carriedTorso.Event:Connect(setVisible)
+				C.objectFuncts[ToggleButton]={MouseButton1Up={ToggleButton.MouseButton1Up:Connect(setToggleFunction)},
+					CapturedTorso={CapturedTorso.Changed:Connect(setVisible)},
+					ActionSign={ActionSign.Changed:Connect(setVisible)},
+					CarriedTorso={carriedTorso.Event:Connect(setVisible)},
 				}
 				setVisible()
 			end,
@@ -3975,9 +3976,9 @@ C.AvailableHacks ={
 					RunS.RenderStepped:Wait()
 				until C.AvailableHacks.Render[30].Event
 				if not C.Beast then error("Where the dog go") return end
-				C.objectFuncts[C.AvailableHacks.Render[30].Event]={C.Beast:WaitForChild("CarriedTorso").Changed:Connect(function(newValue)
+				setChangedProperty(C.Beast:WaitForChild("CarriedTorso"),"Value",function(newValue)
 					C.AvailableHacks.Render[30].Event:Fire(newValue)
-				end)}
+				end,"CarriedTorsoChanged")
 			end,
 			["OthersBeastAdded"]=function()
 				C.AvailableHacks.Render[30].MyBeastAdded()
@@ -4053,9 +4054,9 @@ C.AvailableHacks ={
 					end
 					ToggleButton.Visible = theirRagdollValue.Value
 				end
-				C.objectFuncts[ToggleButton]={ToggleButton.MouseButton1Up:Connect(setToggleFunction),
-					carriedTorso.Event:Connect(setVisible),
-					theirRagdollValue.Changed:Connect(setVisible),
+				C.objectFuncts[ToggleButton]={MouseButton1Up={ToggleButton.MouseButton1Up:Connect(setToggleFunction)},
+					CarriedTorso={carriedTorso.Event:Connect(setVisible)},
+					RagdollChanged={theirRagdollValue.Changed:Connect(setVisible)},
 				}
 				setVisible()
 			end,
@@ -6599,9 +6600,9 @@ C.AvailableHacks ={
 								TouchToggle.Adornee=workspace:IsAncestorOf(child) and parent or nil
 							end
 						end))
-						C.objectFuncts[parent]={parent.Destroying:Connect(function()
+						C.objectFuncts[parent]={Destroying = {parent.Destroying:Connect(function()
 							DS:AddItem(TouchToggle,1)--Delay it so that 1) no crashes and 2) no lag!
-						end)}
+						end)}}
 						parent.CanTouch = false
 						--instance:Destroy()
 						--end
@@ -11881,9 +11882,9 @@ local function CharacterAdded(theirChar,firstRun)
 	defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
 	defaultFunction("StartUp",inputFunctions)
 	C.objectFuncts[theirHumanoid] = C.objectFuncts[theirHumanoid] or {}
-	C.objectFuncts[theirHumanoid]["Died"] = theirHumanoid.Died:Connect(function()
+	C.objectFuncts[theirHumanoid]["Died"] = {theirHumanoid.Died:Connect(function()
 		defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
-	end)
+	end)}
 	if gameUniverse=="Flee" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		if theirTSM then

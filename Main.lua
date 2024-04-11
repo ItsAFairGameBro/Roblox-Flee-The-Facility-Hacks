@@ -12026,6 +12026,8 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 			if CommandData.Type=="Player" and #args[1]>1 then
 				canRunFunction = C.CreateSysMessage(`{command} only supports a single player`)
 			end
+		elseif CommandData.Type=="" then
+			--do nothing
 		elseif CommandData.Type~=false then
 			canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}, {tostring(CommandData.Type)}`)
 		end

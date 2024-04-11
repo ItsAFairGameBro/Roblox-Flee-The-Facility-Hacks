@@ -256,9 +256,12 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 	return newText, totalReplacements
 end
 function C.CreateSysMessage(message,color)
-	TCS:DisplaySystemMessage(message)
-	--SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
-	--	Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
+	if TCS.ChatVersion == Enum.ChatVersion.TextChatService then
+		TCS:FindFirstChildWhichIsA("TextChannel"):DisplaySystemMessage(message)
+	else
+		SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
+			Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
+	end
 end
 getgenv().Hooks = getgenv().Hooks or {}
 function C.Hook(root,method,functName,functData)

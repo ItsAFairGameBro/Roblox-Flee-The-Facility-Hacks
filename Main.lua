@@ -2223,7 +2223,7 @@ C.CommandFunctions = {
 			if not theirChar then
 				return false, `Character not found for {theirPlr.Name}`
 			end
-			local HRP = theirPlr.PrimaryPart
+			local HRP = theirChar.PrimaryPart
 			if not HRP then
 				return false, `HRP not found for {theirPlr.Name}`
 			end

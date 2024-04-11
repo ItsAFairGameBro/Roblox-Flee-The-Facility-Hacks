@@ -6500,7 +6500,7 @@ C.AvailableHacks ={
 								
 								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.Q)
 									or C.AvailableHacks.Beast[2].IsCrawling
-								print(canCollide)
+								print(canCollide,C.char.Torso.CanCollide)
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then
 										C.SetCollide(basepart,"wallclip",canCollide,true)

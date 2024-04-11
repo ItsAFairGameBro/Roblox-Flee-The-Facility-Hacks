@@ -6494,12 +6494,11 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Basic[24].Funct=RunS.Stepped:Connect(function()
 						if C.char then
-							if C.human and C.human.Health>0 then
-								local state = C.human:GetState()
+							if human and human.Health>0 then
+								local state = human:GetState()
 								
 								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.LeftControl)
 									or C.AvailableHacks.Beast[2].IsCrawling--TODO HERE
-								print(state,C.AvailableHacks.Beast[2].IsCrawling)
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then
 										basepart.CanCollide=canCollide

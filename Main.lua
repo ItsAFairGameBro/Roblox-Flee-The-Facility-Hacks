@@ -6275,7 +6275,7 @@ C.AvailableHacks ={
 								inputPosition = mouse.Hit.Position;
 								local result,hitPart = raycast(camera.CFrame.Position,inputPosition,{"Blacklist",C.char},1000,1,true)
 								if not result then
-									return print("Hit Non")
+									return
 								else
 									inputPosition = result.Position
 								end

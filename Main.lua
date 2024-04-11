@@ -1021,7 +1021,7 @@ function C.SetCollide(object,id,toDisabled)
 	end
 	local oldID = object:GetAttribute(id)
 	if oldID == toDisabled or nil then
-		return
+		--return
 	else
 		object:SetAttribute(id,toDisabled or nil)
 	end

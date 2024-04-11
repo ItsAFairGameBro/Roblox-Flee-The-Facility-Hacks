@@ -6499,7 +6499,7 @@ C.AvailableHacks ={
 								
 								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.LeftControl)
 									or C.AvailableHacks.Beast[2].IsCrawling--TODO HERE
-								
+								print(state,C.AvailableHacks.Beast[2].IsCrawling)
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then
 										basepart.CanCollide=canCollide

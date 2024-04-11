@@ -6488,7 +6488,7 @@ C.AvailableHacks ={
 		[24]={
 			["Type"]="ExTextButton",
 			["Title"]="Better Wall Clip",
-			["Desc"]="Allows walking through walls; disabled while crawl; hold F to temp disable",
+			["Desc"]="Allows walking through walls; disabled while crawl; hold R to temp disable",
 			["Shortcut"]="Basic_NoClip",
 			["Default"]=false,
 			["Options"] = {
@@ -6519,8 +6519,8 @@ C.AvailableHacks ={
 							if human and human.Health>0 then
 								local state = human:GetState()
 								
-								local hasFDown = (newValue=="Hold" and UIS:IsKeyDown(Enum.KeyCode.F))
-								if newValue=="Toggle" and UIS:IsKeyDown(Enum.KeyCode.F) then
+								local hasFDown = (newValue=="Hold" and UIS:IsKeyDown(Enum.KeyCode.R))
+								if newValue=="Toggle" and UIS:IsKeyDown(Enum.KeyCode.R) then
 									isHoldF = not isHoldF
 								end
 								hasFDown = hasFDown or isHoldF

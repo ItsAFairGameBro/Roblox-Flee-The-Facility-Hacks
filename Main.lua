@@ -1943,7 +1943,7 @@ C.CommandFunctions = {
 			desc.Name = userID .. (outfitId and ("/"..outfitId) or "")
 			return  desc
 		end,
-		MorphPlayer=function(targetChar, humanDesc, dontUpdate, isDefault)
+		MorphPlayer=function(targetChar, humanDesc, dontUpdate, dontAddCap, isDefault)
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
 			if not targetHuman or targetHuman.Health <=0 or not targetHRP then
@@ -1997,7 +1997,7 @@ C.CommandFunctions = {
 					end
 				end
 			end
-			if not dontUpdate and gameName == "FleeMain" then
+			if not dontAddCap and gameName == "FleeMain" then
 				for num, capsule in ipairs(CS:GetTagged("Capsule")) do
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
@@ -2035,7 +2035,7 @@ C.CommandFunctions = {
 						for num, prop in ipairs({"LeftArmColor","RightArmColor","LeftLegColor","RightLegColor","TorsoColor","HeadColor"}) do
 							myClone[prop] = orgColor
 						end
-						C.CommandFunctions.morph.MorphPlayer(child,myClone,true)
+						C.CommandFunctions.morph.MorphPlayer(child,myClone,true,true)
 						DS:AddItem(myClone,15)
 					end
 				end
@@ -2071,11 +2071,11 @@ C.CommandFunctions = {
 				if JoinPlayerMorphDesc then
 					JoinPlayerMorphDesc = JoinPlayerMorphDesc:Clone()
 					getgenv().currentDesc[theirPlr.Name] = JoinPlayerMorphDesc
-					C.CommandFunctions.morph.MorphPlayer(theirChar,JoinPlayerMorphDesc,true)
+					C.CommandFunctions.morph.MorphPlayer(theirChar,JoinPlayerMorphDesc,false,true)
 					--C.CommandFunctions.morph.Run({{theirPlr},JoinPlayerMorphId})
 				end
 			elseif currentChar then
-				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true)
+				C.CommandFunctions.morph.MorphPlayer(theirChar,currentChar,true,not firstRun)
 			end
 		end,
 		Run=function(args)
@@ -2135,7 +2135,7 @@ C.CommandFunctions = {
 						return false, `HumanoidDesc returned NULL for {theirPlr.Name}`
 					end
 					if theirPlr.Character then
-						task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,selectedName == "no")
+						task.spawn(C.CommandFunctions.morph.MorphPlayer,theirPlr.Character,desc2Apply,false,false,selectedName == "no")
 					elseif selectedName ~= "no" then
 						if getgenv().currentDesc[theirPlr.Name] 
 							and getgenv().currentDesc[theirPlr.Name] ~= desc2Apply then

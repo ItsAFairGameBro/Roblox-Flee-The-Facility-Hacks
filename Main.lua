@@ -6273,6 +6273,10 @@ C.AvailableHacks ={
 								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[closestPC]()
 							else
 								inputPosition = mouse.Hit.Position;
+								local result,hitPart = raycast(camera.CFrame.Position,inputPosition,{"Blacklist",C.char},1000,1,true)
+								if not result then
+									return print("Hit Non")
+								end
 							end
 							TPFunction(inputPosition);
 						end;

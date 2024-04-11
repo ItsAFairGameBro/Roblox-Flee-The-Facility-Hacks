@@ -6478,6 +6478,39 @@ C.AvailableHacks ={
 				end
 			end,
 		},
+		[24]={
+			["Type"]="ExTextButton",
+			["Title"]="Better Wall Clip",
+			["Desc"]="Allows walking through walls; disabled while crawl; hold Left Ctrl to disable",
+			["Shortcut"]="Basic_NoClip",
+			["Default"]=false,
+			["Universes"]={"Global"},
+			["Funct"]=nil,
+			["ActivateFunction"]=function(newValue)
+				if C.AvailableHacks.Basic[24].Funct then
+					C.AvailableHacks.Basic[24].Funct:Disconnect()
+					C.AvailableHacks.Basic[24].Funct=nil
+				end
+				if newValue then
+					C.AvailableHacks.Basic[24].Funct=RunS.Stepped:Connect(function()
+						if C.char then
+							if C.human and C.human.Health>0 then
+								local state = C.human:GetState()
+								
+								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.LeftControl)
+									or C.AvailableHacks.Beast[2].IsCrawling--TODO HERE
+								
+								for num, basepart in ipairs(C.char:GetDescendants()) do
+									if basepart and basepart:IsA("BasePart") then
+										basepart.CanCollide=canCollide
+									end
+								end
+							end
+						end
+					end)
+				end
+			end,
+		},
 		[25]={
 			["Type"]="ExTextButton",
 			["Title"]="Disable Touch Transmitters",

@@ -6514,16 +6514,20 @@ C.AvailableHacks ={
 				end
 				if newValue then
 					local isHoldF = false
+					local wasLastFrameHolding = false
 					C.AvailableHacks.Basic[24].Funct=RunS.Stepped:Connect(function()
 						if C.char then
 							if human and human.Health>0 then
 								local state = human:GetState()
 								
-								local hasFDown = (newValue=="Hold" and UIS:IsKeyDown(Enum.KeyCode.R))
-								if newValue=="Toggle" and UIS:IsKeyDown(Enum.KeyCode.R) then
+								local hasRDown = UIS:IsKeyDown(Enum.KeyCode.R)
+								
+								local hasFDown = (newValue=="Hold" and hasRDown)
+								if newValue=="Toggle" and hasRDown and not wasLastFrameHolding then
 									isHoldF = not isHoldF
 								end
 								hasFDown = hasFDown or isHoldF
+								wasLastFrameHolding = hasRDown
 								
 								local canCollide = state == Enum.HumanoidStateType.Climbing or hasFDown
 									or C.AvailableHacks.Beast[2].IsCrawling

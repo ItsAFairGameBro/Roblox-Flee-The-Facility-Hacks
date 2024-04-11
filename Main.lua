@@ -6276,6 +6276,8 @@ C.AvailableHacks ={
 								local result,hitPart = raycast(camera.CFrame.Position,inputPosition,{"Blacklist",C.char},1000,1,true)
 								if not result then
 									return print("Hit Non")
+								else
+									inputPosition = result.Position
 								end
 							end
 							TPFunction(inputPosition);

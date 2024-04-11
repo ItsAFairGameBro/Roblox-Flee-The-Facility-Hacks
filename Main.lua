@@ -1902,6 +1902,7 @@ local function checkFriendsPCALLFunction(inputName)
 		return friendsTable
 	end
 end
+local isFollowing = false
 C.CommandFunctions = {
 	["refresh"]={
 		Type=false,
@@ -2194,7 +2195,7 @@ C.CommandFunctions = {
 	},
 	["teleport"]={
 		Type="Player",
-		AfterTxt="",
+		AfterTxt="Teleported to %s",
 		Run=function(args)
 			local theirPlr = args[1][1]
 			local theirChar = theirPlr.Character
@@ -2205,8 +2206,51 @@ C.CommandFunctions = {
 			if not HRP then
 				return false, `HRP not found for {theirPlr.Name}`
 			end
-			teleportMyself(HRP.CFrame * CFrame.new(0,0,-1))
-			return true,`Teleported to {theirPlr.Name}`
+			teleportMyself(HRP.CFrame * CFrame.new(0,0,3))
+			return true,theirPlr.Name
+		end,
+	},
+	["follow"]={
+		Type="Player",
+		AfterTxt="%s",
+		Run=function(args)
+			local theirPlr = args[1][1]
+			local theirChar = theirPlr.Character
+			if not theirChar then
+				return false, `Character not found for {theirPlr.Name}`
+			end
+			local HRP = theirChar:FindFirstChild("HumanoidRootPart")
+			if not HRP then
+				return false, `HRP not found for {theirPlr.Name}`
+			end
+			local dist = args[2]=="" and 5 or tonumber(args[2])
+			if not dist then
+				return false, `Invalid Number {args[2]}`
+			end
+			isFollowing = theirPlr
+			local saveChar = C.char
+			task.spawn(function()
+				while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent do
+					teleportMyself(HRP.CFrame * CFrame.new(0,0,dist))
+					task.wait()
+				end
+				if isFollowing == theirPlr then
+					isFollowing = false
+				end
+			end)
+			return true,`Following {theirPlr.Name}`
+		end,
+	},
+	["unfollow"]={
+		Type="",
+		AfterTxt="%s",
+		Run=function(args)
+			if not isFollowing then
+				return false, "Not Following Any User"
+			end
+			local str = `Unfollowed {isFollowing.Name}`
+			isFollowing = false
+			return true,str
 		end,
 	},
 }

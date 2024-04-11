@@ -2227,17 +2227,21 @@ C.CommandFunctions = {
 			if not dist then
 				return false, `Invalid Number {args[2]}`
 			end
+			
 			isFollowing = theirPlr
 			local saveChar = C.char
-			task.spawn(function()
-				while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
-					teleportMyself(HRP.CFrame * CFrame.new(0,0,dist))
-					task.wait()
-				end
-				if isFollowing == theirPlr then
-					isFollowing = false
-				end
+			RunS:UnbindFromRenderStep("Follow")
+			RunS:BindToRenderStep("Follow",69,function()
+				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
+					teleportMyself(HRP.CFrame * CFrame.new(0,getHumanoidHeight(C.char),dist))
+					--task.wait()
+				--end
+				--if isFollowing == theirPlr then
+				--	isFollowing = false
+				--end
 			end)
+			--task.spawn(function()
+			--end)
 			return true,theirPlr.Name
 		end,
 	},
@@ -2250,6 +2254,7 @@ C.CommandFunctions = {
 			end
 			local str = `{isFollowing.Name}`
 			isFollowing = false
+			RunS:UnbindFromRenderStep("Follow")
 			return true,str
 		end,
 	},
@@ -9964,7 +9969,7 @@ C.AvailableHacks ={
 					human:SetAttribute("OverrideSpeed",((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<16 and 25 or 42))
 					local inRange = (C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<6
 					if not inRange and not myTSM.Captured.Value and (not myTSM.Ragdoll.Value or (CarriedTorso and CarriedTorso.Value~=(C.char and C.char.Parent))) then
-						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-2),canRun)
+						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-4),canRun)
 					end
 					local i = 0
 					while (canRun(true) and (C.Beast and C.Beast:FindFirstChild("HumanoidRootPart")) and ((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<7)) do

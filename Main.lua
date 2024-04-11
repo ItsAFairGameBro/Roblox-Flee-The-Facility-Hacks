@@ -2206,7 +2206,7 @@ C.CommandFunctions = {
 				return false, `HRP not found for {theirPlr.Name}`
 			end
 			teleportMyself(HRP.CFrame * CFrame.new(0,0,-1))
-			return true
+			return true,`Teleported to {theirPlr.Name}`
 		end,
 	},
 }
@@ -11979,7 +11979,7 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 					canRunFunction = C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
 				end
 			end
-			if CommandData.Type=="Player" and #ChosenPlr>1 then
+			if CommandData.Type=="Player" and #args[1]>1 then
 				canRunFunction = C.CreateSysMessage(`{command} only supports a single player`)
 			end
 		elseif CommandData.Type~=false then

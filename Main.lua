@@ -2238,7 +2238,7 @@ C.CommandFunctions = {
 					isFollowing = false
 				end
 			end)
-			return true,`Following {theirPlr.Name}`
+			return true,theirPlr.Name
 		end,
 	},
 	["unfollow"]={
@@ -2248,7 +2248,7 @@ C.CommandFunctions = {
 			if not isFollowing then
 				return false, "Not Following Any User"
 			end
-			local str = `Unfollowed {isFollowing.Name}`
+			local str = `{isFollowing.Name}`
 			isFollowing = false
 			return true,str
 		end,

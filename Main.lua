@@ -1027,7 +1027,7 @@ function C.SetCollide(object,id,toEnabled,alwaysUpd)
 		object:SetAttribute(id,toDisabled or nil)
 	end
 	if toDisabled then
-		if object:GetAttribute(C.OriginalCollideName) or object.CanCollide then
+		if not org and (object:GetAttribute(C.OriginalCollideName) or object.CanCollide) then
 			org = (org or 0) + 1
 			object:SetAttribute(C.OriginalCollideName,org)
 			--if _DEBUG then
@@ -6500,7 +6500,6 @@ C.AvailableHacks ={
 								
 								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.Q)
 									or C.AvailableHacks.Beast[2].IsCrawling
-								print(canCollide,C.char.Torso.CanCollide)
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then
 										C.SetCollide(basepart,"wallclip",canCollide,true)

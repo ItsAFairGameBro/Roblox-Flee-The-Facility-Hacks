@@ -6488,9 +6488,23 @@ C.AvailableHacks ={
 		[24]={
 			["Type"]="ExTextButton",
 			["Title"]="Better Wall Clip",
-			["Desc"]="Allows walking through walls; disabled while crawl; hold Q to temp disable",
+			["Desc"]="Allows walking through walls; disabled while crawl; hold F to temp disable",
 			["Shortcut"]="Basic_NoClip",
 			["Default"]=false,
+			["Options"] = {
+				[false]={
+					["Title"]="OFF",
+					["TextColor"]=newColor3(255,255,255),
+				},
+				["Hold"] = {
+					["Title"]="HOLD",
+					["TextColor"]=newColor3(0,0,255),
+				},
+				["Toggle"] = {
+					["Title"]="TOGGLE",
+					["TextColor"]=newColor3(255,255,0)
+				},
+			},
 			["Universes"]={"Global"},
 			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
@@ -6499,12 +6513,19 @@ C.AvailableHacks ={
 					C.AvailableHacks.Basic[24].Funct=nil
 				end
 				if newValue then
+					local isHoldF = false
 					C.AvailableHacks.Basic[24].Funct=RunS.Stepped:Connect(function()
 						if C.char then
 							if human and human.Health>0 then
 								local state = human:GetState()
 								
-								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.Q)
+								local hasFDown = (newValue=="Hold" and UIS:IsKeyDown(Enum.KeyCode.F))
+								if newValue=="Toggle" and UIS:IsKeyDown(Enum.KeyCode.F) then
+									isHoldF = not isHoldF
+								end
+								hasFDown = hasFDown or isHoldF
+								
+								local canCollide = state == Enum.HumanoidStateType.Climbing or hasFDown
 									or C.AvailableHacks.Beast[2].IsCrawling
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then

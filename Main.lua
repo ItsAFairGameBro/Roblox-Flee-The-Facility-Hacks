@@ -6335,7 +6335,7 @@ C.AvailableHacks ={
 			["GetStructure"]=function(object)
 				local doorNames = {"Door","DoorL","DoorR"}
 
-				if table.find(doorNames,object.Parent.Name) and not object.Parent.Parent==workspace then--or object.Name=="WalkThru" then
+				if table.find(doorNames,object.Parent.Name) and object.Parent.Parent~=workspace then--or object.Name=="WalkThru" then
 					return "Door", object.Parent.Parent
 				elseif table.find(doorNames,object.Parent.Parent.Name) then
 					return "Door", object.Parent.Parent.Parent

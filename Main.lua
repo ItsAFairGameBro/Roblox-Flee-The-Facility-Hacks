@@ -6498,10 +6498,10 @@ C.AvailableHacks ={
 								local state = human:GetState()
 								
 								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.LeftControl)
-									or C.AvailableHacks.Beast[2].IsCrawling--TODO HERE
+									or C.AvailableHacks.Beast[2].IsCrawling
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then
-										basepart.CanCollide=canCollide
+										C.SetCollide(basepart,"wallclip",canCollide)
 									end
 								end
 							end

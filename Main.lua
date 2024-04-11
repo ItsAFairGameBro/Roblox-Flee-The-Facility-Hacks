@@ -6501,7 +6501,7 @@ C.AvailableHacks ={
 									or C.AvailableHacks.Beast[2].IsCrawling
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then
-										C.SetCollide(basepart,"wallclip",canCollide)
+										C.SetCollide(basepart,"wallclip",not canCollide)
 									end
 								end
 							end

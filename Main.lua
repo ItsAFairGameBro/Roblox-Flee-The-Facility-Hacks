@@ -6482,7 +6482,7 @@ C.AvailableHacks ={
 		[24]={
 			["Type"]="ExTextButton",
 			["Title"]="Better Wall Clip",
-			["Desc"]="Allows walking through walls; disabled while crawl; hold Left Ctrl to disable",
+			["Desc"]="Allows walking through walls; disabled while crawl; hold Q to temp disable",
 			["Shortcut"]="Basic_NoClip",
 			["Default"]=false,
 			["Universes"]={"Global"},
@@ -6498,8 +6498,9 @@ C.AvailableHacks ={
 							if human and human.Health>0 then
 								local state = human:GetState()
 								
-								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.LeftControl)
+								local canCollide = state == Enum.HumanoidStateType.Climbing or UIS:IsKeyDown(Enum.KeyCode.Q)
 									or C.AvailableHacks.Beast[2].IsCrawling
+								print(canCollide)
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then
 										C.SetCollide(basepart,"wallclip",canCollide,true)

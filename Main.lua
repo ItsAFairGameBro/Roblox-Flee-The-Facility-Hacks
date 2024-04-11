@@ -2191,7 +2191,24 @@ C.CommandFunctions = {
 			end
 			return true, results
 		end,
-	}
+	},
+	["teleport"]={
+		Type="Player",
+		AfterTxt="",
+		Run=function(args)
+			local theirPlr = args[1][1]
+			local theirChar = theirPlr.Character
+			if not theirChar then
+				return false, `Character not found for {theirPlr.Name}`
+			end
+			local HRP = theirChar:FindFirstChild("HumanoidRootPart")
+			if not HRP then
+				return false, `HRP not found for {theirPlr.Name}`
+			end
+			teleportMyself(HRP.CFrame * CFrame.new(0,0,-1))
+			return true
+		end,
+	},
 }
 
 --SAVE/LOAD MODULE
@@ -11936,12 +11953,15 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 		end
 		local canRunFunction = true
 		local ChosenPlr = args[1]
-		if CommandData.Type=="Players" then
+		if CommandData.Type=="Players" or CommandData.Type=="Player" then
 			if ChosenPlr=="all" then
 				args[1] = PS:GetPlayers()
 			elseif ChosenPlr == "others" then
 				args[1] = PS:GetPlayers()
 				table.remove(args[1],table.find(args[1],plr))
+				if #args[1]==0 then
+					canRunFunction = C.CreateSysMessage(`No other players found`)
+				end
 			elseif ChosenPlr == "me" or ChosenPlr == "" then
 				args[1] = {plr}
 			elseif ChosenPlr == "random" then
@@ -11958,6 +11978,9 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 				else
 					canRunFunction = C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
 				end
+			end
+			if CommandData.Type=="Player" and #ChosenPlr>1 then
+				canRunFunction = C.CreateSysMessage(`{command} only supports a single player`)
 			end
 		elseif CommandData.Type~=false then
 			canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}, {tostring(CommandData.Type)}`)

@@ -256,8 +256,9 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 	return newText, totalReplacements
 end
 function C.CreateSysMessage(message,color)
-	SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
-		Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
+	TCS:DisplaySystemMessage(message)
+	--SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
+	--	Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
 end
 getgenv().Hooks = getgenv().Hooks or {}
 function C.Hook(root,method,functName,functData)
@@ -2219,7 +2220,7 @@ C.CommandFunctions = {
 			if not theirChar then
 				return false, `Character not found for {theirPlr.Name}`
 			end
-			local HRP = theirChar:FindFirstChild("HumanoidRootPart")
+			local HRP = theirPlr.PrimaryPart
 			if not HRP then
 				return false, `HRP not found for {theirPlr.Name}`
 			end
@@ -2233,7 +2234,7 @@ C.CommandFunctions = {
 			RunS:UnbindFromRenderStep("Follow")
 			RunS:BindToRenderStep("Follow",69,function()
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
-					teleportMyself(HRP.CFrame * CFrame.new(0,getHumanoidHeight(C.char),dist))
+				teleportMyself(CFrame.new(HRP.Position + Vector3.new(0,0,dist)),HRP.Position)-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
 					--task.wait()
 				--end
 				--if isFollowing == theirPlr then
@@ -11459,6 +11460,8 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("CloseMenu"..C.saveIndex)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
+	
+	RunS:UnbindFromRenderStep("Follow")
 
 
 	for num, thing2Clear in pairs({"objectFuncts"}) do

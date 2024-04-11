@@ -130,7 +130,7 @@ local absMinTimeBetweenPCs=15 --abs min time to hack, overrides minspeed
 local botBeastBreakMin=13.5 --in minutes
 local waitForChildTimout = 20
 local max_tpStackSize = 1
-local minTimeBetweenTeleport = .5
+local minTimeBetweenTeleport = .005
 local defaultCharacterWalkSpeed=SP.CharacterWalkSpeed
 local defaultCharacterJumpPower=SP.CharacterJumpPower
 
@@ -2230,7 +2230,7 @@ C.CommandFunctions = {
 			isFollowing = theirPlr
 			local saveChar = C.char
 			task.spawn(function()
-				while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent do
+				while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
 					teleportMyself(HRP.CFrame * CFrame.new(0,0,dist))
 					task.wait()
 				end

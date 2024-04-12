@@ -4775,7 +4775,7 @@ C.AvailableHacks ={
 
 
 
-				C.SetTempValue("Util_ForceAllowSpectate",function(caller,theirPlr,instance_name,instance_value)
+				C.SetTempValue("Util_ForceAllowSpectate",function(theirPlr,caller,instance_name,instance_value)
 					print("util_forceallowspectate")
 					local canContinue = false
 					if not canContinue and C.enHacks.Util_ForceAllowSpectate then

@@ -3463,7 +3463,7 @@ if gameUniverse=="Flee" then
 			end
 			return instance_value
 		end
-		theTSM_Module.Get = TempPlayerStatsModule
+		theTSM_Module.GetValue = TempPlayerStatsModule
 		--[[theTSM_Module.GetValue = function(val)
 			local instance = TempPlayerStatsModule(val)
 			return instance and instance.Value or nil
@@ -12574,7 +12574,7 @@ local function PlayerAdded(theirPlr)
 				end))
 			end;
 		end;
-		C.ConnectPlrTSM(theirPlr,require(theirTSM))
+		C.ConnectPlrTSM(theirPlr,getscriptfunction(theirTSM))
 	end
 	--end
 end;

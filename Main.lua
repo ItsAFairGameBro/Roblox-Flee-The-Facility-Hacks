@@ -4779,9 +4779,9 @@ C.AvailableHacks ={
 					local canContinue = false
 					if not canContinue and C.enHacks.Util_ForceAllowSpectate and caller.Name=="LocalGuiScript" then
 						local debugTraceBack = debug.traceback("",1)
-						if theirPlr ~= plr then
-							print(debugTraceBack)
-						end
+						--if theirPlr ~= plr then
+							--print(debugTraceBack)
+						--end
 						for num, str in ipairs(allowedEndValues) do
 							if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
 								canContinue = true

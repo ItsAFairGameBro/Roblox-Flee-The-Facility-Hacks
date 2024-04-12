@@ -3455,7 +3455,7 @@ if gameUniverse=="Flee" then
 
 			for str, funct in pairs(C.myTSM_Get_Hooks) do
 				local result = funct(theirPlr,caller,instance_name,instance_value)
-				if result then
+				if result ~= nil then
 					return result
 				end
 			end
@@ -4775,8 +4775,7 @@ C.AvailableHacks ={
 
 
 
-				C.SetTempValue("Util_ForceAllowSpectate",function(theirPlr,caller,instance_name,instance_value)
-					print("util_forceallowspectate")
+				C.SetTempValue("Util_ForceAllowSpectate",newValue and function(theirPlr,caller,instance_name,instance_value)
 					local canContinue = false
 					if not canContinue and C.enHacks.Util_ForceAllowSpectate then
 						local debugTraceBack = debug.traceback("",1)
@@ -4789,11 +4788,8 @@ C.AvailableHacks ={
 					end
 
 					if caller.Name == "LocalGuiScript" then
-						print('Local')
 						if canContinue then
-							print('cont')
 							if theirPlr == plr then
-								print('plr')
 								if instance_name=="Health" then
 									return 0
 								elseif instance_name=="IsBeast" then
@@ -9668,12 +9664,15 @@ C.AvailableHacks ={
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()
 					end
-					myTSM.Ragdoll.Value = false
-					--TODO HERE
+					C.SetTempValue("Runner_AntiRagdoll",function(theirPlr,caller,instance_name,instance_value)
+						if theirPlr == plr and instance_name == "Ragdoll" then
+							return false
+						end
+					end)
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Fire(false)
 					end
-					myTSM.Ragdoll.Value = true
+					C.SetTempValue("Runner_AntiRagdoll",nil)
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Enable()
 					end

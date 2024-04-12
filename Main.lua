@@ -308,7 +308,7 @@ local function StartBetterConsole()
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
 		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done",
-		
+
 		"attempt to index nil with 'Name'"
 	}
 
@@ -1017,7 +1017,7 @@ function C.SetCollide(object,id,toEnabled,alwaysUpd)
 	local org = object:GetAttribute(C.OriginalCollideName)
 	--local _DEBUG = object:FindFirstChild("SurfaceGui") and object.Name == "Part" and object.SurfaceGui:FindFirstChild("TextLabel")
 	--if _DEBUG then
-		--print("OLD:",object.SurfaceGui:GetFullName(),org)
+	--print("OLD:",object.SurfaceGui:GetFullName(),org)
 	--end
 	local toDisabled = not toEnabled
 	local oldID = object:GetAttribute(id)
@@ -1031,7 +1031,7 @@ function C.SetCollide(object,id,toEnabled,alwaysUpd)
 			org = (org or 0) + 1
 			object:SetAttribute(C.OriginalCollideName,org)
 			--if _DEBUG then
-				--print("SET:",object.SurfaceGui:GetFullName(),org)
+			--print("SET:",object.SurfaceGui:GetFullName(),org)
 			--end
 		end
 		object.CanCollide=false
@@ -2254,7 +2254,7 @@ C.CommandFunctions = {
 			if not dist then
 				return false, `Invalid Number {args[2]}`
 			end
-			
+
 			isFollowing = theirPlr
 			local saveChar = C.char
 			RunS:UnbindFromRenderStep("Follow")
@@ -2266,7 +2266,7 @@ C.CommandFunctions = {
 					teleportMyself(CFrame.new(HRP.CFrame * Vector3.new(0,0,dist),HRP.Position))
 				end
 				-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
-					--task.wait()
+				--task.wait()
 				--end
 				--if isFollowing == theirPlr then
 				--	isFollowing = false
@@ -3446,7 +3446,6 @@ if gameUniverse=="Flee" then
 	end
 	function C.ConnectPlrTSM(theirPlr,theTSM_Module)
 		local function TempPlayerStatsModule(instance_name)
-			print(theirPlr.Name,instance_name)
 			local instance = myTSM:FindFirstChild(instance_name)
 			if not instance then
 				return
@@ -4090,9 +4089,9 @@ C.AvailableHacks ={
 					end
 				end
 				C.objectFuncts[ToggleButton]={MouseButton1Up={ToggleButton.MouseButton1Up:Connect(setToggleFunction)},
-					CapturedTorso={CapturedTorso.Changed:Connect(setVisible)},
-					ActionSign={ActionSign.Changed:Connect(setVisible)},
-					CarriedTorso={carriedTorso.Event:Connect(setVisible)},
+				CapturedTorso={CapturedTorso.Changed:Connect(setVisible)},
+				ActionSign={ActionSign.Changed:Connect(setVisible)},
+				CarriedTorso={carriedTorso.Event:Connect(setVisible)},
 				}
 				setVisible()
 			end,
@@ -4186,8 +4185,8 @@ C.AvailableHacks ={
 					ToggleButton.Visible = theirRagdollValue.Value
 				end
 				C.objectFuncts[ToggleButton]={MouseButton1Up={ToggleButton.MouseButton1Up:Connect(setToggleFunction)},
-					CarriedTorso={carriedTorso.Event:Connect(setVisible)},
-					RagdollChanged={theirRagdollValue.Changed:Connect(setVisible)},
+				CarriedTorso={carriedTorso.Event:Connect(setVisible)},
+				RagdollChanged={theirRagdollValue.Changed:Connect(setVisible)},
 				}
 				setVisible()
 			end,
@@ -4542,7 +4541,7 @@ C.AvailableHacks ={
 							while actionSign.Value==0 do
 								actionSign.Changed:Wait()
 							end
-								trigger_setTriggers("RemoteDoorControl",true)
+							trigger_setTriggers("RemoteDoorControl",true)
 						end
 						task.spawn(TaskSpawnDelayedFunction)
 					end
@@ -4772,14 +4771,17 @@ C.AvailableHacks ={
 					"PlayerGui.ScreenGui.LocalGuiScript:735\n",
 					"PlayerGui.ScreenGui.LocalGuiScript:739\n",
 				}
-				
+
 
 
 
 				C.SetTempValue("Util_ForceAllowSpectate",newValue and function(theirPlr,caller,instance_name,instance_value)
 					local canContinue = false
-					if not canContinue and C.enHacks.Util_ForceAllowSpectate then
+					if not canContinue and C.enHacks.Util_ForceAllowSpectate and caller.Name=="LocalGuiScript" then
 						local debugTraceBack = debug.traceback("",1)
+						if theirPlr ~= plr then
+							print(debugTraceBack)
+						end
 						for num, str in ipairs(allowedEndValues) do
 							if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
 								canContinue = true
@@ -4870,7 +4872,7 @@ C.AvailableHacks ={
 						end or TheirPlayerNormalFunction
 					end
 				end--]]
-				
+
 				--TODO HERE C.GetTempValue(identification,funct)
 			end,
 			["MyPlayerAdded"]=function()
@@ -4901,7 +4903,7 @@ C.AvailableHacks ={
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Utility[5].ActivateFunction(C.enHacks.Util_ForceAllowSpectate)
-				
+
 				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName")
 				local function updateSpectatorFrameColor3()
 					local theirPlr = PS:FindFirstChild(spectatorName.Text)
@@ -5528,7 +5530,7 @@ C.AvailableHacks ={
 						if not topParent:HasTag("Capsule") then
 							return
 						end
-						
+
 						RemoteEvent:FireServer("Input", "Action", true)
 						myTSM.ActionInput.Value = true
 						RunS.RenderStepped:Wait()
@@ -5792,7 +5794,7 @@ C.AvailableHacks ={
 						if not flying then
 							--object.CanCollide=not object:GetAttribute(C.OriginalCollideName) or object.CanCollide
 						else
-							
+
 						end
 						C.SetCollide(object,"noclip",not flying)
 					end
@@ -6493,7 +6495,7 @@ C.AvailableHacks ={
 					end
 					--object:SetAttribute("WeirdCanCollide",not object.CanCollide)
 					object:AddTag("InviWalls")
-					
+
 					object.CastShadow = false
 					object.Transparency = C.enHacks.Basic_InviWalls=="Invisible" and 1 or .6
 					if isDoor then
@@ -6597,16 +6599,16 @@ C.AvailableHacks ={
 						if C.char then
 							if human and human.Health>0 then
 								local state = human:GetState()
-								
+
 								local hasRDown = UIS:IsKeyDown(Enum.KeyCode.R)
-								
+
 								local hasFDown = (newValue=="Hold" and hasRDown)
 								if newValue=="Toggle" and hasRDown and not wasLastFrameHolding then
 									C.AvailableHacks.Basic[24].IsHoldingF = not C.AvailableHacks.Basic[24].IsHoldingF
 								end
 								hasFDown = hasFDown or C.AvailableHacks.Basic[24].IsHoldingF
 								wasLastFrameHolding = hasRDown
-								
+
 								local canCollide = state == Enum.HumanoidStateType.Climbing or hasFDown
 									or C.AvailableHacks.Beast[2].IsCrawling
 								for num, basepart in ipairs(C.char:GetDescendants()) do
@@ -6766,9 +6768,9 @@ C.AvailableHacks ={
 								if not HRP then
 									return
 								end
-								
+
 								local toTouch
-								
+
 								if TouchToggle.Toggle.Text == "Activate" then
 									TouchToggle.Toggle.Text = "DeActivate"
 									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(255,0,80)
@@ -6786,7 +6788,7 @@ C.AvailableHacks ={
 								firetouchinterest(parent,HRP, toTouch)
 								RunS.RenderStepped:Wait()
 								task.wait(.5)
-								
+
 								if TouchToggle.Parent then
 									parent.CanTouch = false
 								end
@@ -6882,7 +6884,7 @@ C.AvailableHacks ={
 				end) or nil)
 			end),
 		} or nil),
-		
+
 
 		[30]={
 			["Type"]="ExTextButton",
@@ -9252,8 +9254,8 @@ C.AvailableHacks ={
 					if not retValue and not noReset then--CLEANUP CHECK!
 						trigger_setTriggers("Beast_CaptureAllSurvivors",true)
 					end
-					
-					
+
+
 					return retValue
 				end
 				local function canRunPlr(theirPlr)
@@ -9265,7 +9267,7 @@ C.AvailableHacks ={
 				local function teleportFunct(theirChar,theirHuman)
 					local offset = (theirHuman.MoveDirection.Magnitude>0 and theirChar:GetPivot() * Vector3.new(0,0,-1) or theirChar:GetPivot().Position+theirHuman.MoveDirection*5)
 					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + offset)
-						--+ Vector3.new(0,getHumanoidHeight(C.char)))
+					--+ Vector3.new(0,getHumanoidHeight(C.char)))
 				end
 				while true do
 					if not canRun() then return end
@@ -9286,7 +9288,7 @@ C.AvailableHacks ={
 									teleportFunct(theirChar,theirHuman)
 									while canRun(true) and canRunPlr(theirPlr) 
 										and not theirTSM.Ragdoll.Value do
-										
+
 										if not C.AvailableHacks.Beast[66].HitFunction(Hammer,Handle,theirChar) then
 											teleportFunct(theirChar,theirHuman)
 											--TELEPORT IF IT RETURNS FALSE (WE'RE OUT OF RANGE!)
@@ -9690,7 +9692,7 @@ C.AvailableHacks ={
 				setChangedProperty(human,"StateChanged",newValue and human.StateChanged:Connect(function()
 					task.wait(1)
 					C.AvailableHacks.Runner[83].ChangedFunction()
-					end),"Runner_AntiRagdoll")
+				end),"Runner_AntiRagdoll")
 				--setChangedProperty(myTSM.Ragdoll,"Changed",newValue and myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
 			end,
 			["MyStartUp"]=function()
@@ -9793,7 +9795,7 @@ C.AvailableHacks ={
 						return false;
 					end
 					--if Humanoid.WalkSpeed ~= SlowWalkSpeed then
-						BeastEvent:FireServer("Jumped");
+					BeastEvent:FireServer("Jumped");
 					--end
 					return true;
 				end
@@ -10026,7 +10028,7 @@ C.AvailableHacks ={
 					return Check1 and Check2 and Check3;
 				end
 				C.AvailableHacks.Bot[15].CanRun=canRun;
-				
+
 				local InGameOwnershipPlrs = {}
 				for num, theirPlr in ipairs(PS:GetPlayers()) do
 					if owernshipUsers[theirPlr.Name:lower() or ""] then
@@ -11615,7 +11617,7 @@ C.clear = function(isManualClear)
 		getrenv().print = oldPrint
 		--getgenv().currentDesc = nil -- clear the cashe
 		--getgenv().JoinPlayerMorphId = nil -- clear the join player id
-		
+
 		if gameUniverse == "Flee" then
 			if gameUniverse=="FleeMain" then
 				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName",.5)
@@ -11726,7 +11728,7 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("CloseMenu"..C.saveIndex)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
-	
+
 	RunS:UnbindFromRenderStep("Follow")
 
 

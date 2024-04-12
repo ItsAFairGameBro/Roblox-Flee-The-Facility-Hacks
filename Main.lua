@@ -4037,7 +4037,7 @@ C.AvailableHacks ={
 				local function setToggleFunction()
 					if isBeast.Value then
 						local theirChar = C.Beast.CarriedTorso.Value.Parent
-						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, true)
+						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, Capsule, true)
 					else
 						if myTSM.Health.Value > 0 then
 							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
@@ -6531,13 +6531,14 @@ C.AvailableHacks ={
 			},
 			["Universes"]={"Global"},
 			["Funct"]=nil,
+			["IsHoldingF"]=false,
 			["ActivateFunction"]=function(newValue)
 				if C.AvailableHacks.Basic[24].Funct then
 					C.AvailableHacks.Basic[24].Funct:Disconnect()
 					C.AvailableHacks.Basic[24].Funct=nil
 				end
 				if newValue then
-					local isHoldF = false
+					C.AvailableHacks.Basic[24].IsHoldingF = false --local isHoldF = false
 					local wasLastFrameHolding = false
 					C.AvailableHacks.Basic[24].Funct=RunS.Stepped:Connect(function()
 						if C.char then
@@ -6548,9 +6549,9 @@ C.AvailableHacks ={
 								
 								local hasFDown = (newValue=="Hold" and hasRDown)
 								if newValue=="Toggle" and hasRDown and not wasLastFrameHolding then
-									isHoldF = not isHoldF
+									C.AvailableHacks.Basic[24].IsHoldingF = not C.AvailableHacks.Basic[24].IsHoldingF
 								end
-								hasFDown = hasFDown or isHoldF
+								hasFDown = hasFDown or C.AvailableHacks.Basic[24].IsHoldingF
 								wasLastFrameHolding = hasRDown
 								
 								local canCollide = state == Enum.HumanoidStateType.Climbing or hasFDown
@@ -8877,7 +8878,7 @@ C.AvailableHacks ={
 				setChangedProperty(TSM_IsBeast, "Value", inputChangedAttribute_INPUT);
 				C.AvailableHacks.Beast[60].ChangedFunction();
 			end),
-			["CaptureSurvivor"] = function(theirPlr,theirChar,override)
+			["CaptureSurvivor"] = function(theirPlr,theirChar,chosenCapsule,override)
 				local TSM=theirPlr:WaitForChild("TempPlayerStatsModule")
 				if not TSM:WaitForChild("IsBeast") or not C.Beast then
 					return
@@ -8889,17 +8890,32 @@ C.AvailableHacks ={
 					return
 				end
 				--if C.enHacks.AutoCapture=="Me" and theirPlr~=plr then return end
-				local capsule,closestDist=nil,math.huge
-				for num,cap in ipairs(CS:GetTagged("Capsule")) do
-					--print("PP",cap.PrimaryPart)
+				local function doCapsulePreCheck(cap)
 					if cap.PrimaryPart then
+						if (cap:FindFirstChild("PodTrigger") 
+							and cap.PodTrigger:FindFirstChild("CapturedTorso") and not cap.PodTrigger.CapturedTorso.Value) then
+							return true
+						end
+					end
+				end
+				local capsule,closestDist=nil,math.huge
+				if chosenCapsule then
+					if not doCapsulePreCheck(chosenCapsule) then
+						warn("Invalid Input Capsule",chosenCapsule)
+						return
+					else
+						capsule,closestDist = chosenCapsule, 0
+					end
+				end
+				for num,cap in ipairs(CS:GetTagged("Capsule")) do
+					if doCapsulePreCheck(cap) then
 						local dist=(cap.PrimaryPart.Position-theirChar.PrimaryPart.Position).magnitude
 						--print(dist,cap:FindFirstChild("PodTrigger"))
-						if (dist<closestDist and cap:FindFirstChild("PodTrigger") 
-							and cap.PodTrigger:FindFirstChild("CapturedTorso") and not cap.PodTrigger.CapturedTorso.Value) then
+						if (dist<closestDist) then
 							capsule,closestDist=cap,dist
 						end
 					end
+					--print("PP",cap.PrimaryPart)
 				end
 				--print("Capturing survivor!")
 				if not capsule then
@@ -8950,27 +8966,27 @@ C.AvailableHacks ={
 									and cap:FindFirstChild("PodTrigger")
 									and cap.PodTrigger:FindFirstChild("CapturedTorso") and not cap.PodTrigger.CapturedTorso.Value then
 									hasValid = true
-									print("Valid Cap Found!",cap.Name)
+									--print("Valid Cap Found!",cap.Name)
 									break
 								else
 									--CAPSULE IS STILL LOADING, SO WAIT!
-									warn("Invalid Capsule At",cap)
+									--warn("Invalid Capsule At",cap)
 								end
 							end
 							if hasValid then
 								break
 							elseif #capsuleList==0 then
-								print("Waiting For More Cap")
+								--print("Waiting For More Cap")
 								CS:GetInstanceAddedSignal("Capsule"):Wait()
 							end
 							task.wait(.25)
-							print("LOOPINg")
+							--print("LOOPINg")
 						end
 						if not canRun(saveTorso) then
-							print("Exited for sm reason")
+							--print("Exited for sm reason")
 							return
 						end
-						C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
+						C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char,nil)
 					end
 					local input = C.enHacks.AutoCapture and captureSurvivorFunction
 					setChangedProperty(CarriedTorso,"Value",input)
@@ -9238,7 +9254,7 @@ C.AvailableHacks ={
 									end
 									if not canRun() then return elseif not canRunPlr(theirPlr) then break end
 									while canRun(true) and canRunPlr(theirPlr) and theirTSM.Ragdoll.Value and CarriedTorso.Value and CarriedTorso.Value.Parent == theirChar and not theirTSM.Captured.Value do
-										C.AvailableHacks.Beast[60].CaptureSurvivor(theirPlr,theirChar,true)
+										C.AvailableHacks.Beast[60].CaptureSurvivor(theirPlr,theirChar,nil,true)
 										print("Capturing")
 										RunS.RenderStepped:Wait()
 									end
@@ -9534,6 +9550,45 @@ C.AvailableHacks ={
 				end
 			end,
 		},
+		[83]={
+			["Type"]="ExTextButton",
+			["Title"]="Anti Ragdoll",
+			["Desc"]="Undoes your Ragdoll",
+			["Shortcut"]="Runner_AntiRagdoll",
+			["Default"]=false,
+			["ChangedFunction"]=function()
+				if not myTSM.Ragdoll.Value then
+					return
+				end
+				local RagdollConnections = getgenv().GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
+				local human_state = human:GetState()
+				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Ragdoll then
+					human:ChangeState(Enum.HumanoidStateType.GettingUp)
+					task.wait(.10)
+					for num, connection in ipairs(RagdollConnections) do
+						connection:Disable()
+					end
+					myTSM.Ragdoll.Value = false
+					for num, connection in ipairs(RagdollConnections) do
+						connection:Fire()
+					end
+					myTSM.Ragdoll.Value = true
+					for num, connection in ipairs(RagdollConnections) do
+						connection:Enable()
+					end
+				elseif not C.enHacks.Runner_AntiRagdoll and human_state ~= Enum.HumanoidStateType.Ragdoll then
+					for num, connection in ipairs(RagdollConnections) do
+						connection:Fire()
+					end
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				if newValue then
+					C.AvailableHacks.Runner[83].ChangedFunction()
+				end
+				setChangedProperty(myTSM,"Ragdoll",newValue and C.AvailableHacks.Runner[83],"Runner_AntiRagdoll")
+			end,
+		},
 		[86]=
 			({
 				["Type"]="ExTextButton",
@@ -9600,56 +9655,59 @@ C.AvailableHacks ={
 				end--]]
 				end),
 			}),
-		[90]=
-			{
-				["Type"]="ExTextButton",
-				["Title"]="Perma Slow Beast",
-				["Desc"]="Perm Slows Beast when its not u",
-				["Shortcut"]="PermSlowBeast",
-				["Default"]=false,
-				["ActivateFunction"]=function()
-					if C.Beast~=nil and C.Beast~=C.char then
+		[90]={
+			["Type"]="ExTextButton",
+			["Title"]="Perma Slow Beast",
+			["Desc"]="Perm Slows Beast when its not u",
+			["Shortcut"]="PermSlowBeast",
+			["Default"]=false,
+			["ActivateFunction"]=function()
+				if C.Beast~=nil and C.Beast~=C.char then
 					C.AvailableHacks.Runner[90].OthersBeastAdded(nil,C.Beast);
 				end;
-				end,
-				["OthersBeastAdded"] = function(nun,beastChar)
-					local Humanoid=beastChar:WaitForChild("Humanoid",(waitForChildTimout))
-					if ((not Humanoid) or ((Humanoid.Health) <=0)) then
+			end,
+			["OthersBeastAdded"] = function(nun,beastChar)
+				local Humanoid=beastChar:WaitForChild("Humanoid",(waitForChildTimout))
+				if ((not Humanoid) or ((Humanoid.Health) <=0)) then
 					return
 				end
 
-					local function changeSpeed()
-						local BeastPowers = beastChar:WaitForChild("BeastPowers", (waitForChildTimout));
-						if (not BeastPowers) then
+				local function changeSpeed()
+					local BeastPowers = beastChar:WaitForChild("BeastPowers", (waitForChildTimout));
+					if (not BeastPowers) then
 						return false;
 					end
-						local BeastEvent = BeastPowers:WaitForChild("PowersEvent", (waitForChildTimout)) ;
-						if not BeastEvent then
+					local BeastEvent = BeastPowers:WaitForChild("PowersEvent", (waitForChildTimout)) ;
+					if not BeastEvent then
 						return false;
 					end;
-						if ((not C.enHacks.PermSlowBeast) or (not (workspace:IsAncestorOf(BeastEvent)))) then
+					if ((not C.enHacks.PermSlowBeast) or (not (workspace:IsAncestorOf(BeastEvent)))) then
 						return false;
 					end
+					--if Humanoid.WalkSpeed ~= SlowWalkSpeed then
 						BeastEvent:FireServer("Jumped");
-						return true;
-					end
-					local setChangedPropertyUpdate_INPUT = (C.enHacks.PermSlowBeast and changeSpeed) ;
-					setChangedProperty(Humanoid,"WalkSpeed", setChangedPropertyUpdate_INPUT);
-					while (C.enHacks.PermSlowBeast and (changeSpeed())) do
-					task.wait();
-				end;
-				end,
-				["OthersBeastRemoved"] = function(nun,beastChar)
-					if beastChar==nil then
+					--end
+					return true;
+				end
+				local setChangedPropertyUpdate_INPUT = (C.enHacks.PermSlowBeast and changeSpeed) ;
+				setChangedProperty(Humanoid,"WalkSpeed", setChangedPropertyUpdate_INPUT);
+				--[[while (C.enHacks.PermSlowBeast and (changeSpeed())) do
+					RunS.RenderStepped:Wait()
+				end;--]]
+				
+				--TODO HERE
+			end,
+			["OthersBeastRemoved"] = function(nun,beastChar)
+				if beastChar==nil then
 					return
 				end
-					local Humanoid = beastChar:WaitForChild("Humanoid", 20)
-					if Humanoid==nil or Humanoid.Health<=0 then
+				local Humanoid = beastChar:WaitForChild("Humanoid", 20)
+				if Humanoid==nil or Humanoid.Health<=0 then
 					return
 				end
-					setChangedProperty(Humanoid,"WalkSpeed",nil)
-				end,
-			},
+				setChangedProperty(Humanoid,"WalkSpeed",nil)
+			end,
+		},
 
 	},
 	["Bot"] = {
@@ -12517,6 +12575,7 @@ local function updateCurrentMap(newMap,firstRun)
 			updateCurrentMap(nil)
 		end))
 	elseif C.Map and not newMap then
+		task.wait(2) -- Delay this to avoid lag spikes
 		local clonedMap = C.Map
 		C.Map = nil; C.Beast = nil;
 		defaultFunction("CleanUp",{clonedMap})

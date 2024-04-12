@@ -4039,7 +4039,7 @@ C.AvailableHacks ={
 						local theirChar = C.Beast.CarriedTorso.Value.Parent
 						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, Capsule, true)
 					else
-						if myTSM.Health.Value > 0 or true then
+						if myTSM.Health.Value > 0 then
 							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
 						else
 							print("You aren't a runner, so you can't rescue!")
@@ -9598,7 +9598,7 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["ChangedFunction"]=function()
 				if not myTSM.Ragdoll.Value then
-					return
+					return print("Not Ragdodlling")
 				end
 				local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
 				local human_state = human:GetState()
@@ -9611,7 +9611,7 @@ C.AvailableHacks ={
 					end
 					myTSM.Ragdoll.Value = false
 					for num, connection in ipairs(RagdollConnections) do
-						connection:Fire()
+						connection:Fire(false)
 					end
 					myTSM.Ragdoll.Value = true
 					for num, connection in ipairs(RagdollConnections) do
@@ -9619,7 +9619,7 @@ C.AvailableHacks ={
 					end
 				elseif not C.enHacks.Runner_AntiRagdoll and human_state ~= Enum.HumanoidStateType.Physics then
 					for num, connection in ipairs(RagdollConnections) do
-						connection:Fire()
+						connection:Fire(true)
 					end
 				end
 			end,

@@ -9603,8 +9603,8 @@ C.AvailableHacks ={
 				local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
 				local human_state = human:GetState()
 				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics then
-					local orgCF,height = C.char:GetPivot(),getHumanoidHeight(C.char)
-					local result, hitPart = raycast(orgCF.Position,orgCF.Position-Vector3.new(0,1),{C.char},height+1,false,true)
+					local orgCF,height = C.char:GetPivot()+Vector3.new(0,2),getHumanoidHeight(C.char)
+					local result, hitPart = raycast(orgCF.Position,orgCF.Position-Vector3.new(0,1),{C.char},height+4,false,true)
 					if result then
 						print("UP!")
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))

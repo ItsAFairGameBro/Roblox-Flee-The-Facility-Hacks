@@ -3442,10 +3442,11 @@ if gameUniverse=="Flee" then
 	C.myTSM_Get_Hooks = getgenv().TSMGetHooks
 	if not C.myTSM_Get_Hooks then
 		C.myTSM_Get_Hooks = {}
-		myTSM_Module.GetHooks = getgenv().TSMGetHooks
+		--myTSM_Module.GetHooks = getgenv().TSMGetHooks
 	end
 	function C.ConnectPlrTSM(theirPlr,theTSM_Module)
 		local function TempPlayerStatsModule(instance_name)
+			print(theirPlr.Name,instance_name)
 			local instance = myTSM:FindFirstChild(instance_name)
 			if not instance then
 				return
@@ -8697,10 +8698,9 @@ C.AvailableHacks ={
 		},
 	},
 	["Beast"]={
-
 		[2]={
 			["Type"]="ExTextButton",
-			["Title"]="Crawl as Beast",
+			["Title"]="Always Allow Crawl",
 			["Desc"]="Very obvious",
 			["Shortcut"]="OverrideCrawl",
 			["LoadedAnim"]=nil,

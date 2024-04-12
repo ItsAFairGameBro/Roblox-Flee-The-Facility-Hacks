@@ -9606,7 +9606,8 @@ C.AvailableHacks ={
 					local orgPos,height = C.char:GetPivot().Position,getHumanoidHeight(C.char)
 					local result, hitPart = raycast(orgPos,orgPos-Vector3.new(0,1),{C.char},height+1,false,true)
 					if result then
-						teleportMyself(C.char:GetPivot()+Vector3.new(0,height))
+						print("UP!")
+						teleportMyself(result+Vector3.new(0,height))
 					end
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					--human.WalkSpeed = 16

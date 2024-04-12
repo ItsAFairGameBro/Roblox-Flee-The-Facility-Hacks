@@ -9693,8 +9693,8 @@ C.AvailableHacks ={
 					return true;
 				end
 				local setChangedPropertyUpdate_INPUT = (C.enHacks.PermSlowBeast and changeSpeed) ;
-				setChangedProperty(Humanoid,"WalkSpeed", setChangedPropertyUpdate_INPUT);
-				--[[while (C.enHacks.PermSlowBeast and (changeSpeed())) do
+				--setChangedProperty(Humanoid,"WalkSpeed", setChangedPropertyUpdate_INPUT);
+				while (C.enHacks.PermSlowBeast and (changeSpeed())) do
 					RunS.RenderStepped:Wait()
 				end;--]]
 				

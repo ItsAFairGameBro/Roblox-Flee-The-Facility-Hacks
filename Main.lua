@@ -8934,25 +8934,29 @@ C.AvailableHacks ={
 							local capsuleList = CS:GetTagged("Capsule")
 							local hasValid = false
 							for _, cap in ipairs(capsuleList) do
-								if cap and cap.Parent and cap.Parent.Parent 
+								if cap and cap:IsDescendantOf(C.Map) 
 									and cap.PrimaryPart 
 									and cap:FindFirstChild("PodTrigger")
 									and cap.PodTrigger:FindFirstChild("CapturedTorso") and not cap.PodTrigger.CapturedTorso.Value then
 									hasValid = true
+									print("Valid Cap Found!",cap.Name)
 									break
-									--else
+								else
 									--CAPSULE IS STILL LOADING, SO WAIT!
-									--warn("Invalid Capsule At",cap)
+									warn("Invalid Capsule At",cap)
 								end
 							end
 							if hasValid then
 								break
 							elseif #capsuleList==0 then
+								print("Waiting For More Cap")
 								CS:GetInstanceAddedSignal("Capsule"):Wait()
 							end
 							task.wait(.25)
+							print("LOOPINg")
 						end
 						if not canRun(saveTorso) then
+							print("Exited for sm reason")
 							return
 						end
 						C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char)
@@ -9894,7 +9898,7 @@ C.AvailableHacks ={
 						end)
 					end
 					while not RS.CurrentMap.Value do
-						print("[Bot Runner]: Waiting For C.Map!")
+						print("[Bot Runner]: Waiting For Map!")
 						RS.CurrentMap.Changed:Wait()
 					end
 					--print(#CS:GetTagged("Computer"),string.sub(RS.GameStatus.Value,1,2),string.sub(RS.GameStatus.Value,1,2)=="15")

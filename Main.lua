@@ -2238,7 +2238,12 @@ C.CommandFunctions = {
 			RunS:UnbindFromRenderStep("Follow")
 			RunS:BindToRenderStep("Follow",69,function()
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
-				teleportMyself(CFrame.new(HRP.CFrame * Vector3.new(0,0,dist),HRP.Position))-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
+				if dist == 0 then
+					teleportMyself(HRP.CFrame)
+				else
+					teleportMyself(CFrame.new(HRP.CFrame * Vector3.new(0,0,dist),HRP.Position))
+				end
+				-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
 					--task.wait()
 				--end
 				--if isFollowing == theirPlr then

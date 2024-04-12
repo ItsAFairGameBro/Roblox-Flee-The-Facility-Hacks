@@ -9560,7 +9560,7 @@ C.AvailableHacks ={
 				if not myTSM.Ragdoll.Value then
 					return
 				end
-				local RagdollConnections = getgenv().GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
+				local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
 				local human_state = human:GetState()
 				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Ragdoll then
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)

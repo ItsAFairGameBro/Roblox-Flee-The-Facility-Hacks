@@ -2217,7 +2217,7 @@ C.CommandFunctions = {
 	},
 	["follow"]={
 		Type="Player",
-		AfterTxt="%s",
+		AfterTxt="",
 		Run=function(args)
 			local theirPlr = args[1][1]
 			local theirChar = theirPlr.Character
@@ -2238,7 +2238,7 @@ C.CommandFunctions = {
 			RunS:UnbindFromRenderStep("Follow")
 			RunS:BindToRenderStep("Follow",69,function()
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
-				teleportMyself(CFrame.new(HRP.Position + Vector3.new(0,0,dist)),HRP.Position)-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
+				teleportMyself(CFrame.new(HRP.CFrame * Vector3.new(0,0,dist),HRP.Position))-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
 					--task.wait()
 				--end
 				--if isFollowing == theirPlr then
@@ -2247,7 +2247,7 @@ C.CommandFunctions = {
 			end)
 			--task.spawn(function()
 			--end)
-			return true,theirPlr.Name
+			return true
 		end,
 	},
 	["unfollow"]={
@@ -5173,12 +5173,20 @@ C.AvailableHacks ={
 				if not myTSM.IsBeast.Value then
 					return
 				end
-				local Hammer = C.char:WaitForChild("Hammer",30)
-				if not Hammer then
-					if C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
-						warn("Hammer Not Found, Hacks Bro!")
+				local Hammer
+				local Timer = os.clock()
+				while true do
+					Hammer = C.char:FindFirstChild("Hammer")
+					if Hammer then
+						break
+					elseif os.clock() - Timer >= 30 then
+						if C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
+							warn("Hammer Not Found, Hacks Bro!")
+						end
+						return
 					end
-					return
+				end
+				if not Hammer then
 				end
 				local LocalClubScript = Hammer:WaitForChild("LocalClubScript",5)
 				if not LocalClubScript then

@@ -3438,6 +3438,38 @@ local lastHackedPC,lastHackedPosition=nil,Vector3.new(100,100,100)
 if gameUniverse=="Flee" then
 	myTSM=plr:WaitForChild("TempPlayerStatsModule");
 	mySSM=plr:WaitForChild("SavedPlayerStatsModule");
+	local myTSM_Module = require(myTSM);
+	C.myTSM_Get_Hooks = getgenv().TSMGetHooks
+	if not C.myTSM_Get_Hooks then
+		C.myTSM_Get_Hooks = {}
+		myTSM_Module.GetHooks = getgenv().TSMGetHooks
+	end
+	function C.ConnectPlrTSM(theirPlr,theTSM_Module)
+		local function TempPlayerStatsModule(instance_name)
+			local instance = myTSM:FindFirstChild(instance_name)
+			if not instance then
+				return
+			end
+			local caller = getcallingscript()
+			local instance_value = instance.Value
+
+			for str, funct in pairs(C.myTSM_Get_Hooks) do
+				local result = funct(theirPlr,caller,instance_name,instance_value)
+				if result then
+					return result
+				end
+			end
+			return instance
+		end
+		theTSM_Module.Get = TempPlayerStatsModule
+		theTSM_Module.GetValue = function(val)
+			local instance = TempPlayerStatsModule(val)
+			return instance and instance.Value or nil
+		end
+	end
+	function C.SetTempValue(identification,funct)
+		C.myTSM_Get_Hooks[identification] = funct or nil
+	end
 end;
 if gameName=="FleeMain" then
 	if plr:WaitForChild("IsCheckingLoadData").Value then
@@ -4726,7 +4758,7 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["Functs"]={},
 			["ActivateFunction"]=function(newValue)
-				local TSMModule = require(myTSM)
+				--local TSMModule = require(myTSM)
 				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName")
 
 				local allowedEndValues = {
@@ -4739,31 +4771,47 @@ C.AvailableHacks ={
 					"PlayerGui.ScreenGui.LocalGuiScript:735\n",
 					"PlayerGui.ScreenGui.LocalGuiScript:739\n",
 				}
-				local function NormalFunction(valName)
+				
+
+
+
+				C.SetTempValue("Util_ForceAllowSpectate",function(caller,theirPlr,instance_name,instance_value)
+					local canContinue = false
+					if not canContinue and C.enHacks.Util_ForceAllowSpectate then
+						local debugTraceBack = debug.traceback("",1)
+						for num, str in ipairs(allowedEndValues) do
+							if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
+								canContinue = true
+								break
+							end
+						end
+					end
+
+					if caller.Name == "LocalGuiScript" then
+						if canContinue then
+							if theirPlr == plr then
+								if instance_name=="Health" then
+									return 0
+								elseif instance_name=="IsBeast" then
+									return false
+								end
+							else
+								if instance_name=="Health" then
+									return 100
+								elseif instance_name=="IsBeast" then
+									return
+								end
+							end
+						end
+					end
+				end)
+
+				--[[local function NormalFunction(valName)
 					return myTSM:FindFirstChild(valName).Value
 				end
 
 				TSMModule.GetValue = newValue and function(valName)
 					local caller = getcallingscript()
-					if caller.Name == "LocalGuiScript" then
-						local canContinue = false
-						if not canContinue and C.enHacks.Util_ForceAllowSpectate then
-							local debugTraceBack = debug.traceback("",1)
-							for num, str in ipairs(allowedEndValues) do
-								if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
-									canContinue = true
-									break
-								end
-							end
-						end
-						if canContinue then
-							if valName=="Health" then
-								return 0
-							elseif valName=="IsBeast" then
-								return false
-							end
-						end
-					end
 
 					return NormalFunction(valName)
 				end or NormalFunction
@@ -4820,7 +4868,9 @@ C.AvailableHacks ={
 							return TheirPlayerNormalFunction(valName)
 						end or TheirPlayerNormalFunction
 					end
-				end
+				end--]]
+				
+				--TODO HERE C.GetTempValue(identification,funct)
 			end,
 			["MyPlayerAdded"]=function()
 				local DefaultLightning = game.ReplicatedStorage:FindFirstChild("DefaultLightingSettings") or game.ReplicatedStorage:FindFirstChild("NotDefaultLightingSettings")
@@ -11613,6 +11663,7 @@ C.clear = function(isManualClear)
 	else
 		getgenv().enHacks = table.clone(C.enHacks)
 	end
+	C.myTSM_Get_Hooks = {}
 	saveSaveData()--save before we delete stuff!
 	for hackName,enabled in pairs(C.enHacks) do
 		C.enHacks[hackName]=nil;  --disables all running hacks to stop them!
@@ -12166,6 +12217,7 @@ local function CharacterAdded(theirChar,firstRun)
 	end)}
 	if gameUniverse=="Flee" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
+		local theirTSM_module = require(theirTSM);
 		if theirTSM then
 			local isBeastValue = theirTSM:WaitForChild("IsBeast");
 			if isBeastValue and isBeastValue.Value then
@@ -12180,6 +12232,9 @@ local function CharacterAdded(theirChar,firstRun)
 				print("My Teleport Function :P")
 			end
 		end
+		getgenv().TSMGetHooks = C.myTSM_Get_Hooks
+		C.ConnectPlrTSM(theirPlr,theirTSM_module)
+		--C.myTSM_Get_Hooks
 	end
 end
 local function CharacterRemoving(theirPlr,theirChar)

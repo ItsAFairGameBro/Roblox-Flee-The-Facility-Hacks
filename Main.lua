@@ -9564,6 +9564,7 @@ C.AvailableHacks ={
 				local human_state = human:GetState()
 				print(C.enHacks.Runner_AntiRagdoll,human_state)
 				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics then
+					print("Activated")
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					task.wait(.10)
 					for num, connection in ipairs(RagdollConnections) do

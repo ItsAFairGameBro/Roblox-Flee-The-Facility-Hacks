@@ -9529,26 +9529,26 @@ C.AvailableHacks ={
 				end
 			end,
 			["CanActive"]=function(capsule)
-				print("CanActive Began")
+				--print("CanActive Began")
 				local MinTime = Random.new():NextNumber(1,3)
 				local StartCountdown
 				local Trigger=capsule:FindFirstChild("PodTrigger")
 				while C.enHacks.AutoRescue and workspace:IsAncestorOf(Trigger) and Trigger.CapturedTorso.Value 
 					and C.Beast and C.Beast.PrimaryPart do
 					local Dist = (Trigger.Position - C.Beast:GetPivot().Position).Magnitude
-					print("Beast Dist",Dist)
-					if (C.enHacks.AutoRescue=="Close" and Dist >= 8) or Dist >= 12 then
+					--print("Beast Dist",Dist)
+					if (C.enHacks.AutoRescue=="Close" and Dist >= 14) or Dist >= 24 then
 						if StartCountdown then
 							if os.clock()-StartCountdown>=MinTime then
 								return true
 							end
 						else
 							StartCountdown = os.clock()
-							print("Started Timer!")
+							--print("Started Timer!")
 						end
 					else
 						StartCountdown = nil
-						print("Reset Timer!")
+						--print("Reset Timer!")
 					end
 					RunS.RenderStepped:Wait()
 				end

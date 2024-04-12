@@ -1049,7 +1049,7 @@ function C.FireSignal(instance,signal,Settings,...)
 	local success, result = pcall(function()
 		for _, data in ipairs(C.GetHardValue(instance,signal,{yield=true})) do
 			--if data.Enabled then
-			task.spawn(data.Function,table.unpack(elements))
+			task.spawn(data.Fire,data,table.unpack(elements))
 			print("Connection Found, Fired Signal!")
 			fired+=1
 			--end
@@ -9615,8 +9615,9 @@ C.AvailableHacks ={
 						connection:Disable()
 					end
 					myTSM.Ragdoll.Value = false
+					--TODO HERE
 					for num, connection in ipairs(RagdollConnections) do
-						connection.Function(false)
+						connection:Fire(false)
 					end
 					myTSM.Ragdoll.Value = true
 					for num, connection in ipairs(RagdollConnections) do
@@ -9624,7 +9625,7 @@ C.AvailableHacks ={
 					end
 				elseif not C.enHacks.Runner_AntiRagdoll and human_state ~= Enum.HumanoidStateType.Physics then
 					for num, connection in ipairs(RagdollConnections) do
-						connection.Function(true)
+						connection:Fire(true)
 					end
 				end
 			end,

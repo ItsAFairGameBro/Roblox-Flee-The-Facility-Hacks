@@ -9634,7 +9634,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Runner[83].ChangedFunction()
 				--end
 				setChangedProperty(human,"StateChanged",newValue and human.StateChanged:Connect(function()
-					task.wait(.5)
+					task.wait(1)
 					C.AvailableHacks.Runner[83].ChangedFunction()
 					end),"Runner_AntiRagdoll")
 				--setChangedProperty(myTSM.Ragdoll,"Changed",newValue and myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")

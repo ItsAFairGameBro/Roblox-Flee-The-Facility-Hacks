@@ -12234,8 +12234,6 @@ local function CharacterAdded(theirChar,firstRun)
 				print("My Teleport Function :P")
 			end
 		end
-		C.ConnectPlrTSM(theirPlr,theirTSM_module)
-		--C.myTSM_Get_Hooks
 	end
 end
 local function CharacterRemoving(theirPlr,theirChar)
@@ -12576,6 +12574,7 @@ local function PlayerAdded(theirPlr)
 				end))
 			end;
 		end;
+		C.ConnectPlrTSM(theirPlr,require(theirTSM))
 	end
 	--end
 end;

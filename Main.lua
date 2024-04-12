@@ -4868,8 +4868,8 @@ C.AvailableHacks ={
 					end
 					spectatorName.TextColor3 = Color3.fromRGB(255,255,255)
 				end
-				table.insert(C.AvailableHacks.Utility[5].Functs,
-					spectatorName:GetPropertyChangedSignal("Text"):Connect(updateSpectatorFrameColor3))
+				table.insert(C.AvailableHacks.Utility[5].Functs,spectatorName:GetPropertyChangedSignal("Text"):Connect(updateSpectatorFrameColor3))
+				table.insert(C.AvailableHacks.Utility[5].Functs,RS.IsGameActive.Changed:Connect(updateSpectatorFrameColor3))
 				updateSpectatorFrameColor3()
 
 			end,
@@ -9461,45 +9461,57 @@ C.AvailableHacks ={
 				C.AvailableHacks.Runner[71].Triggered()
 			end,
 		},
-		[76] = (
-			{
-				["Type"]="ExTextButton",
-				["Title"]="Respawn Before Hit",
-				["Desc"]="Despawns and respawns character before hit",
-				["Shortcut"]="RespawnBeforeHit",
-				["Default"]=false,
-				["OthersBeastAdded"] = function(myBeastPlr,myBeast)
-					local TSM=plr:WaitForChild("TempPlayerStatsModule")
-					while (myBeast~=nil and workspace:IsAncestorOf(myBeast) and myBeast:FindFirstChild("HumanoidRootPart") 
-						and not isCleared and myBeast==C.Beast and C.char~=myBeast) do
-						if (not TSM.Ragdoll.Value and C.enHacks.RespawnBeforeHit and not TSM.Captured.Value) then
-							local whieList = {"Whitelist",C.Map,myBeast}
-							local didHit,instance=raycast(C.char.PrimaryPart.Position,myBeast:GetPivot().Position,whieList,18,nil,true)
-							if (didHit and myBeast:IsAncestorOf(instance) and not TSM.Ragdoll.Value and not TSM.Captured.Value) then
-								C.AvailableHacks.Commands[24].ActivateFunction(true)
+		[76] = {
+			["Type"]="ExTextButton",
+			["Title"]="Respawn Before Hit",
+			["Desc"]="Despawns and respawns character before hit",
+			["Shortcut"]="RespawnBeforeHit",
+			["Default"]=false,
+			["OthersBeastAdded"] = function(myBeastPlr,myBeast)
+				local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				while (myBeast~=nil and workspace:IsAncestorOf(myBeast) and myBeast:FindFirstChild("HumanoidRootPart") 
+					and not isCleared and myBeast==C.Beast and C.char~=myBeast) do
+					if (not TSM.Ragdoll.Value and C.enHacks.RespawnBeforeHit and not TSM.Captured.Value) then
+						local whieList = {"Whitelist",C.Map,myBeast}
+						local didHit,instance=raycast(C.char.PrimaryPart.Position,myBeast:GetPivot().Position,whieList,18,nil,true)
+						if (didHit and myBeast:IsAncestorOf(instance) and not TSM.Ragdoll.Value and not TSM.Captured.Value) then
+							C.AvailableHacks.Commands[24].ActivateFunction(true)
 
 
 
 
-								local newChar = plr.CharacterAdded:Wait()
-								repeat
-									RunS.RenderStepped:Wait()
-								until newChar.PrimaryPart
-							end
-						elseif not C.enHacks.RespawnBeforeHit then
-							hackChanged.Event:Wait()
+							local newChar = plr.CharacterAdded:Wait()
+							repeat
+								RunS.RenderStepped:Wait()
+							until newChar.PrimaryPart
 						end
-						RunS.RenderStepped:Wait()
+					elseif not C.enHacks.RespawnBeforeHit then
+						hackChanged.Event:Wait()
 					end
-				end,
-			}
-		),
+					RunS.RenderStepped:Wait()
+				end
+			end,
+		},
 		[80]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto Rescue",
-			["Desc"]="Instantly rescue when NOT beast",
+			["Desc"]="Instantly rescues survivors. Requires To Be Alive and Interactable",
 			["Shortcut"]="AutoRescue",
 			["Default"]=false,
+			["Options"]={
+				[false]={
+					["Title"]="OFF",
+					["TextColor"]=newColor3(255),
+				},
+				["Close"]={
+					["Title"]="CLOSE",
+					["TextColor"]=newColor3(0,0,255),
+				},
+				["Far"]={
+					["Title"]="FAR",
+					["TextColor"]=newColor3(255, 255, 0),
+				},
+			},
 			["ActivateFunction"]=function(newValue)
 				for num, capsule in pairs(CS:GetTagged("Capsule")) do
 					local PodTrigger = capsule:FindFirstChild("PodTrigger")
@@ -9516,10 +9528,30 @@ C.AvailableHacks ={
 					end
 				end
 			end,
+			["CanActive"]=function(capsule)
+				local MinTime = Random.new():NextNumber(1,3)
+				local StartCountdown
+				local Trigger=capsule:FindFirstChild("PodTrigger")
+				while C.enHacks.AutoRescue and not workspace:IsAncestorOf(Trigger) and Trigger.CapturedTorso.Value do
+					local Dist = (Trigger.Position - C.Beast:GetPivot().Position).Magnitude
+					if (C.enHacks.AutoRescue=="Close" and Dist >= 8) or Dist >= 12 then
+						if StartCountdown then
+							if os.clock()-StartCountdown>=MinTime then
+								return true
+							end
+						else
+							StartCountdown = os.clock()
+						end
+					else
+						StartCountdown = nil
+					end
+					RunS.RenderStepped:Wait()
+				end
+			end,
 			["RescueSurvivor"]=function(capsule,override)
 				if not capsule or not capsule:FindFirstChild("PodTrigger")
 					or not capsule.PodTrigger.CapturedTorso.Value then return end
-				if not C.enHacks.AutoRescue and not override then return end
+				if not override and C.AvailableHacks[80].CanActive(capsule) then return end
 				if C.char:FindFirstChild("Hammer")~=nil and myTSM.Health.Value > 0 then return end
 				local Trigger=capsule:FindFirstChild("PodTrigger")
 				if not Trigger then return end
@@ -9542,7 +9574,7 @@ C.AvailableHacks ={
 			end,
 			["CapsuleAdded"]=function(capsule)
 				task.wait(.5)
-				local PodTrigger = capsule:FindFirstChild("PodTrigger")
+				local PodTrigger = capsule:WaitForChild("PodTrigger",10)
 				if PodTrigger and PodTrigger:FindFirstChild("CapturedTorso") then
 					setChangedProperty(
 						PodTrigger.CapturedTorso,

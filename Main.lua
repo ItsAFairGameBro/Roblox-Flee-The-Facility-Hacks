@@ -1889,20 +1889,23 @@ function stopCurrentAction(override)
 end
 
 function C.GetBeastHammerFunct(theirPlr)
+	local theirTSM = theirPlr:FindFirstChild("TempPlayerStatsModule")
 	local Hammer
 	local Timer = os.clock()
 	while true do
 		local theirChar = theirPlr.Character
 		Hammer = theirChar and theirChar:FindFirstChild("Hammer")
-		print("loop",theirChar,Hammer)
 		if Hammer then
 			break
-		elseif os.clock() - Timer >= 30 then
+		elseif not theirPlr.Parent or not theirTSM or not theirTSM.IsBeast.Value then
+			return
+		elseif os.clock() - Timer >= 90 then
 			if theirChar and theirChar.Parent then -- make sure a new beast didn't spawn or it doesn't exist
 				debug.traceback("Hammer Not Found, Hacks Bro!")
 			end
 			return
 		end
+		RunS.RenderStepped:Wait()
 	end
 	return Hammer
 end

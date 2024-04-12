@@ -9532,7 +9532,7 @@ C.AvailableHacks ={
 				local MinTime = Random.new():NextNumber(1,3)
 				local StartCountdown
 				local Trigger=capsule:FindFirstChild("PodTrigger")
-				while C.enHacks.AutoRescue and not workspace:IsAncestorOf(Trigger) and Trigger.CapturedTorso.Value 
+				while C.enHacks.AutoRescue and workspace:IsAncestorOf(Trigger) and Trigger.CapturedTorso.Value 
 					and C.Beast and C.Beast.PrimaryPart do
 					local Dist = (Trigger.Position - C.Beast:GetPivot().Position).Magnitude
 					--print("Beast Dist",Dist)

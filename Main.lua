@@ -3446,7 +3446,6 @@ if gameUniverse=="Flee" then
 	end
 	function C.ConnectPlrTSM(theirPlr,theTSM_Module)
 		local function TempPlayerStatsModule(instance_name)
-			print(instance_name,"Called!")
 			local instance = myTSM:FindFirstChild(instance_name)
 			if not instance then
 				return
@@ -3455,7 +3454,6 @@ if gameUniverse=="Flee" then
 			local instance_value = instance.Value
 
 			for str, funct in pairs(C.myTSM_Get_Hooks) do
-				print("Calling",str,"!")
 				local result = funct(theirPlr,caller,instance_name,instance_value)
 				if result then
 					return result
@@ -4778,6 +4776,7 @@ C.AvailableHacks ={
 
 
 				C.SetTempValue("Util_ForceAllowSpectate",function(caller,theirPlr,instance_name,instance_value)
+					print("util_forceallowspectate")
 					local canContinue = false
 					if not canContinue and C.enHacks.Util_ForceAllowSpectate then
 						local debugTraceBack = debug.traceback("",1)
@@ -4790,8 +4789,11 @@ C.AvailableHacks ={
 					end
 
 					if caller.Name == "LocalGuiScript" then
+						print('Local')
 						if canContinue then
+							print('cont')
 							if theirPlr == plr then
+								print('plr')
 								if instance_name=="Health" then
 									return 0
 								elseif instance_name=="IsBeast" then

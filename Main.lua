@@ -9660,7 +9660,7 @@ C.AvailableHacks ={
 					end
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					--human.WalkSpeed = 16
-					task.wait(.25)
+					task.wait(.5)
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()
 					end

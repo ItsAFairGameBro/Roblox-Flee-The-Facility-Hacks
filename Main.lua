@@ -9598,12 +9598,12 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["ChangedFunction"]=function()
 				if not myTSM.Ragdoll.Value then
-					return print("Not Ragdodlling")
+					return
 				end
 				local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
 				local human_state = human:GetState()
 				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics then
-					print("Enalbing")
+					teleportMyself(C.char:GetPivot()+Vector3.new(0,getHumanoidHeight(C.char)))
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					--human.WalkSpeed = 16
 					task.wait(.25)
@@ -9619,16 +9619,15 @@ C.AvailableHacks ={
 						connection:Enable()
 					end
 				elseif not C.enHacks.Runner_AntiRagdoll and human_state ~= Enum.HumanoidStateType.Physics then
-					print("Disabling")
 					for num, connection in ipairs(RagdollConnections) do
 						connection.Function(true)
 					end
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				if newValue then
-					C.AvailableHacks.Runner[83].ChangedFunction()
-				end
+				--if newValue then
+				C.AvailableHacks.Runner[83].ChangedFunction()
+				--end
 				setChangedProperty(human,"StateChanged",newValue and human.StateChanged:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
 				--setChangedProperty(myTSM.Ragdoll,"Changed",newValue and myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
 			end,

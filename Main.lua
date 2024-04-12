@@ -4039,7 +4039,7 @@ C.AvailableHacks ={
 						local theirChar = C.Beast.CarriedTorso.Value.Parent
 						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, Capsule, true)
 					else
-						if myTSM.Health.Value > 0 then
+						if myTSM.Health.Value > 0 or true then
 							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
 						else
 							print("You aren't a runner, so you can't rescue!")
@@ -9557,7 +9557,7 @@ C.AvailableHacks ={
 				if not capsule or not capsule:FindFirstChild("PodTrigger")
 					or not capsule.PodTrigger.CapturedTorso.Value then return end
 				if not override and not C.AvailableHacks.Runner[80].CanActive(capsule) then return end
-				if C.char:FindFirstChild("Hammer")~=nil and myTSM.Health.Value > 0 then return end
+				if C.char:FindFirstChild("Hammer")~=nil or myTSM.Health.Value <= 0 then return end
 				local Trigger=capsule:FindFirstChild("PodTrigger")
 				if not Trigger then return end
 				for s=5,1,-1 do

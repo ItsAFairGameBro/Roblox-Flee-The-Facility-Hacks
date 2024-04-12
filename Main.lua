@@ -9563,7 +9563,7 @@ C.AvailableHacks ={
 				local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
 				local human_state = human:GetState()
 				print(C.enHacks.Runner_AntiRagdoll,human_state)
-				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Ragdoll then
+				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics then
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					task.wait(.10)
 					for num, connection in ipairs(RagdollConnections) do
@@ -9577,7 +9577,7 @@ C.AvailableHacks ={
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Enable()
 					end
-				elseif not C.enHacks.Runner_AntiRagdoll and human_state ~= Enum.HumanoidStateType.Ragdoll then
+				elseif not C.enHacks.Runner_AntiRagdoll and human_state ~= Enum.HumanoidStateType.Physics then
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Fire()
 					end

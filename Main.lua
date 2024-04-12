@@ -4847,6 +4847,10 @@ C.AvailableHacks ={
 				table.insert(C.AvailableHacks.Utility[5].Functs,LS:GetPropertyChangedSignal("ClockTime"):Connect(upd))
 				table.insert(C.AvailableHacks.Utility[5].Functs,RS.IsGameActive.Changed:Connect(updMap))
 				upd() updMap()
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Utility[5].ActivateFunction(C.enHacks.Util_ForceAllowSpectate)
+				
 				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName")
 				local function updateSpectatorFrameColor3()
 					local theirPlr = PS:FindFirstChild(spectatorName.Text)
@@ -4867,9 +4871,7 @@ C.AvailableHacks ={
 				table.insert(C.AvailableHacks.Utility[5].Functs,
 					spectatorName:GetPropertyChangedSignal("Text"):Connect(updateSpectatorFrameColor3))
 				updateSpectatorFrameColor3()
-			end,
-			["MyStartUp"]=function()
-				C.AvailableHacks.Utility[5].ActivateFunction(C.enHacks.Util_ForceAllowSpectate)
+
 			end,
 			["MapAdded"]=function()
 				C.AvailableHacks.Utility[5].MyPlayerAdded()

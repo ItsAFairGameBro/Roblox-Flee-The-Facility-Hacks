@@ -1888,6 +1888,24 @@ function stopCurrentAction(override)
 	end
 end
 
+function C.GetBeastHammerFunct(theirPlr)
+	local Hammer
+	local Timer = os.clock()
+	while true do
+		local theirChar = theirPlr.Character
+		Hammer = theirChar and theirChar:FindFirstChild("Hammer")
+		if Hammer then
+			break
+		elseif os.clock() - Timer >= 30 then
+			if theirChar and theirChar.Parent then -- make sure a new beast didn't spawn or it doesn't exist
+				warn("Hammer Not Found, Hacks Bro!")
+			end
+			return
+		end
+	end
+	return Hammer
+end
+
 --COMMANDS
 --COMMANDS CONTROL
 local function checkFriendsPCALLFunction(inputName)
@@ -5178,20 +5196,9 @@ C.AvailableHacks ={
 				if not myTSM.IsBeast.Value then
 					return
 				end
-				local Hammer
-				local Timer = os.clock()
-				while true do
-					Hammer = C.char:FindFirstChild("Hammer")
-					if Hammer then
-						break
-					elseif os.clock() - Timer >= 30 then
-						if C.char == C.Beast and C.char.Parent then -- make sure a new beast didn't spawn or it doesn't exist
-							warn("Hammer Not Found, Hacks Bro!")
-						end
-						return
-					end
-				end
+				local Hammer = C.GetBeastHammerFunct(plr)
 				if not Hammer then
+					return
 				end
 				local LocalClubScript = Hammer:WaitForChild("LocalClubScript",5)
 				if not LocalClubScript then
@@ -11534,7 +11541,7 @@ C.clear = function(isManualClear)
 			end
 		end
 	end
-	for num,funct in ipairs(C.functs) do
+	for num,funct in pairs(C.functs) do
 		funct:Disconnect()
 		funct=nil
 	end
@@ -11990,8 +11997,9 @@ getgenv().currentDesc = getgenv().currentDesc or {}
 
 --HACK CONTROL
 local function BeastAdded(theirPlr,theirChar)
-	local Hammer = theirChar:WaitForChild("Hammer",30)
+	local Hammer = C.GetBeastHammerFunct(theirPlr)
 	if not Hammer or not theirChar.Parent or not Hammer.Parent then
+		print("(Event BeastAdded) Hammer Not Found:",theirPlr)
 		return
 	end
 	C.Beast=theirChar;
@@ -12493,6 +12501,7 @@ local function registerObject(object,registerfunct,shouldntWait)
 	end
 end
 local function updateCurrentMap(newMap,firstRun)
+	if isCleared then return end
 	if newMap ~= C.Map and newMap then
 		C.Map = newMap;
 		task.wait(1);

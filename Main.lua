@@ -9556,15 +9556,14 @@ C.AvailableHacks ={
 			["Desc"]="Undoes your Ragdoll",
 			["Shortcut"]="Runner_AntiRagdoll",
 			["Default"]=false,
+			["DontActivate"]=true,
 			["ChangedFunction"]=function()
 				if not myTSM.Ragdoll.Value then
 					return
 				end
 				local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
 				local human_state = human:GetState()
-				print(C.enHacks.Runner_AntiRagdoll,human_state)
 				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics then
-					print("Activated")
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					--human.WalkSpeed = 16
 					task.wait(.25)
@@ -9589,7 +9588,11 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Runner[83].ChangedFunction()
 				end
-				setChangedProperty(myTSM.Ragdoll,"Changed",newValue and myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
+				setChangedProperty(human,"StateChanged",newValue and human.StateChanged:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
+				--setChangedProperty(myTSM.Ragdoll,"Changed",newValue and myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Runner[83].ActivateFunction(C.enHacks.Runner_AntiRagdoll)
 			end,
 		},
 		[86]=
@@ -9696,9 +9699,7 @@ C.AvailableHacks ={
 				--setChangedProperty(Humanoid,"WalkSpeed", setChangedPropertyUpdate_INPUT);
 				while (C.enHacks.PermSlowBeast and (changeSpeed())) do
 					RunS.RenderStepped:Wait()
-				end;--]]
-				
-				--TODO HERE
+				end;
 			end,
 			["OthersBeastRemoved"] = function(nun,beastChar)
 				if beastChar==nil then

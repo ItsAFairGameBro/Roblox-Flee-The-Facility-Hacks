@@ -9659,9 +9659,9 @@ C.AvailableHacks ={
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))
 					end
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
-					human:ChangeState(Enum.HumanoidStateType.Jumping)
 					--human.WalkSpeed = 16
 					task.wait(.5)
+					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()
 					end

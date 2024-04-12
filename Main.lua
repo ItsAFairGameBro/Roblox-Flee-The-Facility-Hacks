@@ -9586,7 +9586,7 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Runner[83].ChangedFunction()
 				end
-				setChangedProperty(myTSM.Ragdoll,"Changed",newValue and C.AvailableHacks.Runner[83],"Runner_AntiRagdoll")
+				setChangedProperty(myTSM.Ragdoll,"Changed",newValue and myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83],"Runner_AntiRagdoll"))
 			end,
 		},
 		[86]=

@@ -4802,7 +4802,7 @@ C.AvailableHacks ={
 								if instance_name=="Health" then
 									return 100
 								elseif instance_name=="IsBeast" then
-									return
+									return true
 								end
 							end
 						end

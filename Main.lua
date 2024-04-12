@@ -9606,7 +9606,6 @@ C.AvailableHacks ={
 					local orgCF,height = C.char:GetPivot()+Vector3.new(0,2),getHumanoidHeight(C.char)
 					local result, hitPart = raycast(orgCF.Position,orgCF.Position-Vector3.new(0,1),{C.char},height+4,false,true)
 					if result then
-						print("UP!")
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))
 					end
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
@@ -9633,7 +9632,10 @@ C.AvailableHacks ={
 				--if newValue then
 				C.AvailableHacks.Runner[83].ChangedFunction()
 				--end
-				setChangedProperty(human,"StateChanged",newValue and human.StateChanged:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
+				setChangedProperty(human,"StateChanged",newValue and human.StateChanged:Connect(function()
+					task.wait(.5)
+					C.AvailableHacks.Runner[83].ChangedFunction()
+					end),"Runner_AntiRagdoll")
 				--setChangedProperty(myTSM.Ragdoll,"Changed",newValue and myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
 			end,
 			["MyStartUp"]=function()

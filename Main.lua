@@ -1894,11 +1894,12 @@ function C.GetBeastHammerFunct(theirPlr)
 	while true do
 		local theirChar = theirPlr.Character
 		Hammer = theirChar and theirChar:FindFirstChild("Hammer")
+		print("loop",theirChar,Hammer)
 		if Hammer then
 			break
 		elseif os.clock() - Timer >= 30 then
 			if theirChar and theirChar.Parent then -- make sure a new beast didn't spawn or it doesn't exist
-				warn("Hammer Not Found, Hacks Bro!")
+				debug.traceback("Hammer Not Found, Hacks Bro!")
 			end
 			return
 		end
@@ -11999,7 +12000,6 @@ getgenv().currentDesc = getgenv().currentDesc or {}
 local function BeastAdded(theirPlr,theirChar)
 	local Hammer = C.GetBeastHammerFunct(theirPlr)
 	if not Hammer or not theirChar.Parent or not Hammer.Parent then
-		print("(Event BeastAdded) Hammer Not Found:",theirPlr)
 		return
 	end
 	C.Beast=theirChar;

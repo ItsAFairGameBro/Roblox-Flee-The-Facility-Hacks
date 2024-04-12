@@ -3446,6 +3446,7 @@ if gameUniverse=="Flee" then
 	end
 	function C.ConnectPlrTSM(theirPlr,theTSM_Module)
 		local function TempPlayerStatsModule(instance_name)
+			print(instance_name,"Called!")
 			local instance = myTSM:FindFirstChild(instance_name)
 			if not instance then
 				return
@@ -3454,18 +3455,19 @@ if gameUniverse=="Flee" then
 			local instance_value = instance.Value
 
 			for str, funct in pairs(C.myTSM_Get_Hooks) do
+				print("Calling",str,"!")
 				local result = funct(theirPlr,caller,instance_name,instance_value)
 				if result then
 					return result
 				end
 			end
-			return instance
+			return instance_value
 		end
 		theTSM_Module.Get = TempPlayerStatsModule
-		theTSM_Module.GetValue = function(val)
+		--[[theTSM_Module.GetValue = function(val)
 			local instance = TempPlayerStatsModule(val)
 			return instance and instance.Value or nil
-		end
+		end--]]
 	end
 	function C.SetTempValue(identification,funct)
 		C.myTSM_Get_Hooks[identification] = funct or nil
@@ -11663,7 +11665,7 @@ C.clear = function(isManualClear)
 	else
 		getgenv().enHacks = table.clone(C.enHacks)
 	end
-	C.myTSM_Get_Hooks = {}
+	getgenv().TSMGetHooks = {}
 	saveSaveData()--save before we delete stuff!
 	for hackName,enabled in pairs(C.enHacks) do
 		C.enHacks[hackName]=nil;  --disables all running hacks to stop them!
@@ -12232,7 +12234,6 @@ local function CharacterAdded(theirChar,firstRun)
 				print("My Teleport Function :P")
 			end
 		end
-		getgenv().TSMGetHooks = C.myTSM_Get_Hooks
 		C.ConnectPlrTSM(theirPlr,theirTSM_module)
 		--C.myTSM_Get_Hooks
 	end

@@ -4782,7 +4782,7 @@ C.AvailableHacks ={
 						--if theirPlr ~= plr then
 							--print(debugTraceBack)
 						--end
-						for num, str in ipairs(allowedEndValues) do
+						for num, str in ipairs(theirPlr == plr and allowedEndValues or allowedEndValues2) do
 							if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
 								canContinue = true
 								break

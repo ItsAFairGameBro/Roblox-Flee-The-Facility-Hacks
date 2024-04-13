@@ -265,6 +265,7 @@ function C.CreateSysMessage(message,color)
 end
 getgenv().Hooks = getgenv().Hooks or {}
 function C.Hook(root,method,functName,functData)
+	local hookfunction = hookfunction
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 	local tblPack,tblUnpack = table.pack,table.unpack
 
@@ -274,21 +275,29 @@ function C.Hook(root,method,functName,functData)
 	if not getgenv().Hooks[root][method] then
 		local myData = {}
 		getgenv().Hooks[root][method] = myData
+		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
-		OldFunction = hookmetamethod(root,method, newcclosure(function(...)
+		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root,method, newcclosure(function(...)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
 				for functName, theirRun in pairs(myData) do
 					if method == functName then
 						local results = tblPack(theirRun(method,...))
-						for key, val in ipairs(results) do
-							return select(2,tblUnpack(results))
-						end
+						return select(2,tblUnpack(results))
 					end
 				end
 			end
 
+			return OldFunction(...)
+		end)) or MethodFunction(method,newcclosure(function(...)
+			print("Intercepted",...)
+			for functName, theirRun in pairs(myData) do
+				local results = tblPack(theirRun(method,...))
+				if results[1] ~= nil then
+					return tblUnpack(results)
+				end
+			end
 			return OldFunction(...)
 		end))
 	end
@@ -945,7 +954,7 @@ local function StartBetterConsole()
 		BetterConsole_onMessageOut("LogService:GetLogHistory has failed: "..tostring(logResult),Enum.MessageType.MessageError)
 	end
 end
-C.CashedHardValues = {}
+getgenv().CashedHardValues = getgenv().CashedHardValues or {}
 C.RequestedHardValues = {}
 C.YieldCacheRunning = false
 function C.YieldCacheValues()
@@ -963,7 +972,7 @@ function C.YieldCacheValues()
 			signal = loadstring(code2Run)()
 			data = getconnections(signal)
 		end
-		C.CashedHardValues[instance] = data
+		getgenv().CashedHardValues[instance] = data
 		local event = nextIndex[3]
 		if event then
 			event.Name = "Complete"
@@ -976,8 +985,8 @@ function C.YieldCacheValues()
 	C.YieldCacheRunning = false
 end
 function C.GetHardValue(instance,signal,Settings)
-	if C.CashedHardValues[instance] and not Settings.noCache then
-		return C.CashedHardValues[instance]
+	if getgenv().CashedHardValues[instance] and not Settings.noCache then
+		return getgenv().CashedHardValues[instance]
 	else
 		local myEvent
 		for num, theirData in ipairs(C.RequestedHardValues) do
@@ -988,7 +997,7 @@ function C.GetHardValue(instance,signal,Settings)
 					if myEvent.Name~="Complete" then
 						myEvent.Event:Wait()
 					end
-					return C.CashedHardValues[instance]
+					return getgenv().CashedHardValues[instance]
 				else
 					return -- already in the cache
 				end
@@ -1007,13 +1016,16 @@ function C.GetHardValue(instance,signal,Settings)
 			if myEvent.Name~="Complete" then
 				myEvent.Event:Wait()
 			end
-			return C.CashedHardValues[instance]
+			return getgenv().CashedHardValues[instance]
 		end
 	end
 end
 getgenv().GetHardValue = C.GetHardValue
 C.OriginalCollideName = "WeirdCanCollide"
 function C.SetCollide(object,id,toEnabled,alwaysUpd)
+	if gameUniverse=="Flee" and object.Name=="Weight" then
+		return -- don't touch it AT ALL!
+	end
 	local org = object:GetAttribute(C.OriginalCollideName)
 	--local _DEBUG = object:FindFirstChild("SurfaceGui") and object.Name == "Part" and object.SurfaceGui:FindFirstChild("TextLabel")
 	--if _DEBUG then
@@ -6349,6 +6361,9 @@ C.AvailableHacks ={
 										closestPC,closestDist = pc, newDist;
 									end;
 								end;
+								if not closestPC then
+									return
+								end
 								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[closestPC]()
 							else
 								inputPosition = mouse.Hit.Position;
@@ -6622,7 +6637,7 @@ C.AvailableHacks ={
 				else
 					for num, basepart in ipairs(C.char:GetDescendants()) do
 						if basepart and basepart:IsA("BasePart") then
-							C.SetCollide(basepart,"wallclip",true)
+							C.SetCollide(basepart,"wallclip",true,true)
 						end
 					end
 				end
@@ -6884,7 +6899,6 @@ C.AvailableHacks ={
 				end) or nil)
 			end),
 		}) or nil),
-
 
 		[30]={
 			["Type"]="ExTextButton",
@@ -9641,6 +9655,28 @@ C.AvailableHacks ={
 				end
 			end,
 		},
+		[82]={
+			["Type"] = "ExTextButton",
+			["Title"] = "Super Flop",
+			["Desc"] = "Allows you to flop far and without limitations",
+			["Shortcut"] = "Runner_SuperFlop",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["ActivateFunction"]=(function(newValue)
+				local CharacterScriptInstance = StringWaitForChild(C.char,"LocalPlayerScript")
+				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true})
+				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
+					if inputState == Enum.UserInputState.Begin then
+						print("inputbegan")
+						return true
+					end
+				end) or nil)
+			end),
+			["MyStartUp"]=function()
+				task.wait(1)
+				C.AvailableHacks.Runner[82].ActivateFunction(C.enHacks.Runner_SuperFlop)
+			end,
+		},
 		[83]={
 			["Type"]="ExTextButton",
 			["Title"]="Anti Ragdoll",
@@ -9699,72 +9735,71 @@ C.AvailableHacks ={
 				C.AvailableHacks.Runner[83].ActivateFunction(C.enHacks.Runner_AntiRagdoll)
 			end,
 		},
-		[86]=
-			({
-				["Type"]="ExTextButton",
-				["Title"]="Auto Beast Troll",
-				["Desc"]="Trolls beast automatically",
-				["Shortcut"]="AutoTroll",
-				["IsRunning"]=false,
-				["Default"]=false,
-				["CleanUp"]=(function()
-					C.AvailableHacks.Runner[86].IsRunning=false
-				end),
-				["ActivateFunction"]=(function(enabled)
-					if enabled then
-					C.AvailableHacks.Runner[86].OthersBeastAdded()
-				end
-				end),
-				["OthersBeastAdded"]=(function()
-					if C.AvailableHacks.Runner[86].IsRunning then
-					return
-				end
-					if C.Beast==C.char then
-					return
-				end
-					C.AvailableHacks.Runner[86].IsRunning=true
-					while C.AvailableHacks.Runner[86].IsRunning and C.Beast~=nil and workspace:IsAncestorOf(C.Beast) and C.enHacks.AutoTroll do
-					local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),C.Beast.HumanoidRootPart.Position,20,1.5)
-					if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
-						and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
-						--print("closed door")
-						--RemoteEvent:FireServer("Input", "Action", false)
-						--RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-						--task.wait()
-						--RemoteEvent:FireServer("Input", "Action", true)
-						--RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
-						--task.wait()
-						--C.AvailableHacks.Blatant[10].CloseDoor(Trigger)
-						local wasClosed = Trigger.ActionSign.Value ~= 11 
-						C.AvailableHacks.Blatant[15].DoorFuncts[Trigger.Parent]()
-						if wasClosed then
-							task.wait(2/3)
-							RS.RemoteEvent:FireServer("Input", "Trigger", false)
-						else
-							RunS.RenderStepped:Wait()
-						end
+		[86]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Beast Troll",
+			["Desc"]="Trolls beast automatically",
+			["Shortcut"]="AutoTroll",
+			["IsRunning"]=false,
+			["Default"]=false,
+			["CleanUp"]=(function()
+				C.AvailableHacks.Runner[86].IsRunning=false
+			end),
+			["ActivateFunction"]=(function(enabled)
+				if enabled then
+				C.AvailableHacks.Runner[86].OthersBeastAdded()
+			end
+			end),
+			["OthersBeastAdded"]=(function()
+				if C.AvailableHacks.Runner[86].IsRunning then
+				return
+			end
+				if C.Beast==C.char then
+				return
+			end
+				C.AvailableHacks.Runner[86].IsRunning=true
+				while C.AvailableHacks.Runner[86].IsRunning and C.Beast~=nil and workspace:IsAncestorOf(C.Beast) and C.enHacks.AutoTroll do
+				local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),C.Beast.HumanoidRootPart.Position,20,1.5)
+				if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
+					and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
+					--print("closed door")
+					--RemoteEvent:FireServer("Input", "Action", false)
+					--RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+					--task.wait()
+					--RemoteEvent:FireServer("Input", "Action", true)
+					--RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
+					--task.wait()
+					--C.AvailableHacks.Blatant[10].CloseDoor(Trigger)
+					local wasClosed = Trigger.ActionSign.Value ~= 11 
+					C.AvailableHacks.Blatant[15].DoorFuncts[Trigger.Parent]()
+					if wasClosed then
+						task.wait(2/3)
+						RS.RemoteEvent:FireServer("Input", "Trigger", false)
 					else
 						RunS.RenderStepped:Wait()
 					end
+				else
+					RunS.RenderStepped:Wait()
 				end
-					C.AvailableHacks.Runner[86].IsRunning=false
-				--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
-				local myChar=C.char
-				while myChar~=nil and workspace:IsAncestorOf(myChar) 
-					and myChar.PrimaryPart~=nil and plr.Character==myChar and not isCleared do
-					if C.Beast~=nil and C.Beast~=C.char  
-						and C.enHacks.AutoCamp and TSM.Captured.Value then
-						teleportMyself(CFrame.new(C.Beast.PrimaryPart.CFrame*newVector3(0,0,-3)))
-						--C.AvailableHacks.Basic[12].TeleportFunction(C.Beast.PrimaryPart.CFrame*newVector3(0,0,-3))
-					elseif not C.enHacks.AutoCamp then
-						hackChanged.Event:Wait()
-					else
-						workspace.DescendantAdded:Wait() wait(1/3)
-					end
-					wait()
-				end--]]
-				end),
-			}),
+			end
+				C.AvailableHacks.Runner[86].IsRunning=false
+			--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
+			local myChar=C.char
+			while myChar~=nil and workspace:IsAncestorOf(myChar) 
+				and myChar.PrimaryPart~=nil and plr.Character==myChar and not isCleared do
+				if C.Beast~=nil and C.Beast~=C.char  
+					and C.enHacks.AutoCamp and TSM.Captured.Value then
+					teleportMyself(CFrame.new(C.Beast.PrimaryPart.CFrame*newVector3(0,0,-3)))
+					--C.AvailableHacks.Basic[12].TeleportFunction(C.Beast.PrimaryPart.CFrame*newVector3(0,0,-3))
+				elseif not C.enHacks.AutoCamp then
+					hackChanged.Event:Wait()
+				else
+					workspace.DescendantAdded:Wait() wait(1/3)
+				end
+				wait()
+			end--]]
+			end),
+		},
 		[90]={
 			["Type"]="ExTextButton",
 			["Title"]="Perma Slow Beast",
@@ -11719,6 +11754,16 @@ C.clear = function(isManualClear)
 	for name,data in pairs(C.CommandFunctions or {}) do
 		for num, funct in ipairs(data.Functs or {}) do
 			funct:Disconnect()
+		end
+	end
+	--HOOK UNBINDING
+	for instance,hookData in pairs(getgenv().Hooks) do
+		for root, methodData in pairs(hookData) do
+			for method, methodFuncts in pairs(methodData) do
+				for index,funct in pairs(methodFuncts) do
+					methodFuncts[index] = nil -- Remove the instances, we don't need to clear anything else!
+				end
+			end
 		end
 	end
 	hackChanged:Fire()

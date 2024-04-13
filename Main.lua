@@ -6865,7 +6865,7 @@ C.AvailableHacks ={
 				end
 			end,
 		},
-		[27]=(gameUniverse ~= "Flee" and {
+		[27]=(gameUniverse ~= "Flee" and ({
 			["Type"] = "ExTextButton",
 			["Title"] = ("Anti Kick"),
 			["Desc"] = ("Works in most cases"),
@@ -6883,7 +6883,7 @@ C.AvailableHacks ={
 					return false, nil
 				end) or nil)
 			end),
-		} or nil),
+		}) or nil),
 
 
 		[30]={

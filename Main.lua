@@ -9665,12 +9665,12 @@ C.AvailableHacks ={
 			["ActivateFunction"]=(function(newValue)
 				local CharacterScriptInstance = StringWaitForChild(C.char,"LocalPlayerScript")
 				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true})
-				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
+				--[[C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
 					if inputState == Enum.UserInputState.Begin then
 						print("inputbegan")
 						return true
 					end
-				end) or nil)
+				end) or nil)--]]
 			end),
 			["MyStartUp"]=function()
 				task.wait(1)

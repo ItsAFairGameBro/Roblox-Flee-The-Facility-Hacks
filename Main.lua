@@ -11778,11 +11778,11 @@ C.clear = function(isManualClear)
 	print(getgenv().Hooks)
 	for instance, hookData in pairs(getgenv().Hooks or {}) do
 		for root, methodData in pairs(hookData) do
-			for method, methodFuncts in pairs(methodData) do
-				for index,funct in pairs(methodFuncts) do
+			for index, indexFunct in pairs(methodData) do
+				--for index,funct in pairs(methodFuncts) do
 					print("Disabled",index,funct)
-					methodFuncts[index] = nil -- Remove the instances, we don't need to clear anything else!
-				end
+					methodData[index] = nil -- Remove the instances, we don't need to clear anything else!
+				--end
 			end
 		end
 	end

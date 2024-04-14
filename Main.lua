@@ -303,7 +303,7 @@ function C.Hook(root,method,functName,functData)
 			--print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then
 				--for s = 1, #myData.List, 1 do --for functName, theirRun in inPairs(myData) do
-					local functName,theirRun = tblUnpack(myData.List)
+					--local functName,theirRun = tblUnpack(myData.List)
 					--local result,values = theirRun(method,...)
 					--[[for num, val in ipairs(results) do
 						if val ~= nil then

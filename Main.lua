@@ -263,23 +263,23 @@ function C.CreateSysMessage(message,color)
 			Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
 	end
 end
-getgenv().Hooks = getgenv().Hooks or {}
+getgenv().RBXHooks = getgenv().RBXHooks or {}
 function C.Hook(root,method,functName,functData)
 	local hookfunction = hookfunction
 	local getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 	local tblPack,tblUnpack = table.pack,table.unpack
 
-	if not getgenv().Hooks[root] then
-		getgenv().Hooks[root] = {}
+	if not getgenv().RBXHooks[root] then
+		getgenv().RBXHooks[root] = {}
 	end
-	if not getgenv().Hooks[root][method] then
+	if not getgenv().RBXHooks[root][method] then
 		print("New Hook",root)
 		local myData = {}
-		getgenv().Hooks[root][method] = myData
+		getgenv().RBXHooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
 		if C.saveIndex == 1 then
-			OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
+			OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
 				local canDefault = checkcaller()
 				if not canDefault then
 					local method = stringlower(getnamecallmethod())
@@ -293,23 +293,26 @@ function C.Hook(root,method,functName,functData)
 
 				return OldFunction(...)
 			end)) or MethodFunction(method,(function(...)
-				--print("Intercepted",...)
-			--[[for functName, theirRun in pairs(myData) do
-				local results = tblPack(theirRun(method,...))
-				for num, val in ipairs(results) do
-					if val ~= nil then
-						return tblUnpack(results)
-					else
-						break
-					end
+				local canDefault = checkcaller()
+				if not canDefault then
+					--print("Intercepted",...)
+					--[[for functName, theirRun in pairs(myData) do
+						local results = tblPack(theirRun(method,...))
+						for num, val in ipairs(results) do
+							if val ~= nil then
+								return tblUnpack(results)
+							else
+								break
+							end
+						end
+					end--]]
 				end
-			end--]]
 				return OldFunction(...)
 			end))
 		end
 	end
-	getgenv().Hooks[root][method][functName] = functData
-	print(getgenv().Hooks)
+	getgenv().RBXHooks[root][method][functName] = functData
+	print(getgenv().RBXHooks)
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()
@@ -2060,8 +2063,10 @@ C.CommandFunctions = {
 				oldChar_ForceField.Parent = targetChar:FindFirstChild("HumanoidRootPart")
 			end
 			for num, instance in ipairs(Instances2Restore) do
-				instance.Parent = targetChar
-				instance:RemoveTag("RemoveOnDestroy")
+				if not instance.Locked then
+					instance.Parent = targetChar
+					instance:RemoveTag("RemoveOnDestroy")
+				end
 			end
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
@@ -11775,8 +11780,8 @@ C.clear = function(isManualClear)
 		end
 	end
 	--HOOK UNBINDING
-	print(getgenv().Hooks)
-	for instance, hookData in pairs(getgenv().Hooks or {}) do
+	print(getgenv().RBXHooks)
+	for instance, hookData in pairs(getgenv().RBXHooks or {}) do
 		print(instance)
 		for root, methodData in pairs(hookData) do
 			print(root)

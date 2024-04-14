@@ -312,9 +312,9 @@ function C.Hook(root,method,functName,functData)
 							break
 						end
 					end--]]
-					if result then
-						return tblUnpack(values)
-					end
+					--if result then
+					--	return tblUnpack(values)
+					--end
 				--end--]]
 				--print("Intercepted",...)
 			end

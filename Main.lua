@@ -329,7 +329,7 @@ function C.Hook(root,method,functName,functData)
 		end
 	end
 	RBXHooks[root][method][functName] = functData
-	print(RBXHooks)
+	print("RBXHooks",RBXHooks)
 	table.insert(RBXHooks[root][method].List,{functName,functData})
 	--print(RBXHooks)
 end

@@ -266,7 +266,7 @@ end
 getgenv().Hooks = getgenv().Hooks or {}
 function C.Hook(root,method,functName,functData)
 	local hookfunction = hookfunction
-	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+	local getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 	local tblPack,tblUnpack = table.pack,table.unpack
 
 	if not getgenv().Hooks[root] then

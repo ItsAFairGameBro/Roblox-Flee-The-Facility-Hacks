@@ -6781,7 +6781,7 @@ C.AvailableHacks ={
 							TouchToggle.Toggle.Text = "Enable"
 							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 						end
-						table.insert(insertTbl[5],TouchToggle.Toggle.MouseButton1Up:Connect(function()
+						local function clickfunction()
 							if Type=="Part" then
 								local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
 								if not HRP then
@@ -6827,7 +6827,9 @@ C.AvailableHacks ={
 								end
 								parent.CanTouch = not parent.CanTouch
 							end
-						end))
+						end
+						table.insert(insertTbl[5],TouchToggle.Toggle.MouseButton1Up:Connect(clickfunction))
+						clickfunction()
 						table.insert(insertTbl[5],parent.AncestryChanged:Connect(function(child,newParent)
 							if not newParent then
 								task.wait(1)

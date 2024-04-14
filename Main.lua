@@ -297,8 +297,8 @@ function C.Hook(root,method,functName,functData)
 			return OldFunction(...)
 		end)) or MethodFunction(method,(function(...)
 			local canDefault = checkcaller()
+			print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then
-				print("Intercepted",...)
 				for functName, theirRun in pairs(myData) do
 					local results = tblPack(theirRun(method,...))
 					for num, val in ipairs(results) do

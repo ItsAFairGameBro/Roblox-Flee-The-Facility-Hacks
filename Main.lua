@@ -309,7 +309,6 @@ function C.Hook(root,method,functName,functData)
 		end
 	end
 	getgenv().Hooks[root][method][functName] = functData
-	print(getgenv().Hooks)
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()

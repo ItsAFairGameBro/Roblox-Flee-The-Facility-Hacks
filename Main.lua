@@ -2303,6 +2303,8 @@ C.CommandFunctions = {
 	["follow"]={
 		Type="Player",
 		AfterTxt="",
+		ForcePlayAnimations={},
+		MyPlayingAnimations={},
 		Run=function(args)
 			local theirPlr = args[1][1]
 			local theirChar = theirPlr.Character
@@ -2320,13 +2322,29 @@ C.CommandFunctions = {
 
 			isFollowing = theirPlr
 			local saveChar = C.char
-			RunS:UnbindFromRenderStep("Follow")
+			C.CommandFunctions.unfollow.Run()
 			RunS:BindToRenderStep("Follow",69,function()
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
 				if dist == 0 then
 					teleportMyself(HRP.CFrame)
 				else
 					teleportMyself(CFrame.new(HRP.CFrame * Vector3.new(0,0,dist),HRP.Position))
+				end
+				for num, animTrack in ipairs(saveChar.Humanoid.Animator:GetPlayingAnimationTracks()) do
+					if animTrack then
+						local myAnimTrack = C.CommandFunctions.follow.MyPlayingAnimations[animTrack]
+						if not table.find(C.CommandFunctions.follow.ForcePlayAnimations,animTrack) then
+							myAnimTrack = C.human.Animator:LoadAnimation(animTrack.Animation)
+							table.insert(C.CommandFunctions.follow.ForcePlayAnimations,animTrack)--C.human:LoadAnimation(animTrack.Animator)
+							C.CommandFunctions.follow.MyPlayingAnimations[animTrack] = myAnimTrack
+						end
+						myAnimTrack:AdjustSpeed(animTrack.Speed)
+						if animTrack.IsPlaying then
+							myAnimTrack:Play()
+						else
+							myAnimTrack:Stop()
+						end
+					end
 				end
 				-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
 				--task.wait()
@@ -2350,6 +2368,11 @@ C.CommandFunctions = {
 			local str = `{isFollowing.Name}`
 			isFollowing = false
 			RunS:UnbindFromRenderStep("Follow")
+			for num, myAnimTrack in ipairs(C.CommandFunctions.follow.MyPlayingAnimations) do
+				myAnimTrack:Stop(0)
+			end
+			C.CommandFunctions.follow.MyPlayingAnimations = {}
+			C.CommandFunctions.follow.ForcePlayAnimations = {}
 			return true,str
 		end,
 	},

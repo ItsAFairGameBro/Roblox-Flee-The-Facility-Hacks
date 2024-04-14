@@ -9694,6 +9694,7 @@ C.AvailableHacks ={
 						return true
 					end
 				end) or nil)--]]
+				print(getgenv().RBXHooks)
 			end),
 			["MyStartUp"]=function()
 				task.wait(1)

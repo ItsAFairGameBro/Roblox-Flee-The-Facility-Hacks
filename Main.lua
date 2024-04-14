@@ -299,7 +299,7 @@ function C.Hook(root,method,functName,functData)
 			end
 
 			return OldFunction(...)
-		end)) or MethodFunction(method,newcclosure(function(...)
+		end)) or MethodFunction(method,(function(...)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then
@@ -321,7 +321,7 @@ function C.Hook(root,method,functName,functData)
 				--RBXHooks[root][method][functName].loadstring()(...)
 				--for s = 1, #myData_List, 1 do
 					--local runFunct = tblUnpack(myData_List)
-				local result, values = myData.Run(...)--functData(...)
+				local result, values = functData(...)--functData(...)
 				if result then
 					return true--tblUnpack(values)
 				end

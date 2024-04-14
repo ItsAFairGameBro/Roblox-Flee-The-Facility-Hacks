@@ -294,8 +294,12 @@ function C.Hook(root,method,functName,functData)
 			print("Intercepted",...)
 			for functName, theirRun in pairs(myData) do
 				local results = tblPack(theirRun(method,...))
-				if results[1] ~= nil then
-					return tblUnpack(results)
+				for num, val in ipairs(results) do
+					if val ~= nil then
+						return tblUnpack(results)
+					else
+						break
+					end
 				end
 			end
 			return OldFunction(...)

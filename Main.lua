@@ -9728,7 +9728,7 @@ C.AvailableHacks ={
 				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true})
 				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
 					if inputState == Enum.UserInputState.Begin then
-						local Torso = C.char.Torso--:FindFirstChild("Torso")
+						local Torso = C.char:FindFirstChild("Torso")
 						if Torso then
 							local bodyForce = Instance.new("BodyForce")
 							local Direction = Torso.CFrame.p - workspace.Camera.CFrame.p
@@ -9737,7 +9737,7 @@ C.AvailableHacks ={
 							if Magnitude~=0 then
 								Force /= Magnitude
 							end
-							bodyForce.Force = Force * 1e4
+							bodyForce.Force = (Force * 1e4) + 1e2 * Vector3.new(0,1,0)
 							bodyForce.Parent = Torso
 							DS:AddItem(bodyForce,1)
 						end
@@ -12149,7 +12149,7 @@ local initilizationTypes = ({
 		end
 		local isDown
 		local function hackFrameToggleButtonFunction()
-			if (not isDown or os.clock() - isDown>.5) then
+			if (not isDown or os.clock() - isDown > .5) then
 				return
 			end
 			isDown = nil

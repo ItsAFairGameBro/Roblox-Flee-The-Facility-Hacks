@@ -11774,6 +11774,7 @@ C.clear = function(isManualClear)
 		end
 	end
 	--HOOK UNBINDING
+	print("Clear Hook",getgenv().Hooks)
 	for instance,hookData in pairs(getgenv().Hooks or {}) do
 		for root, methodData in pairs(hookData) do
 			for method, methodFuncts in pairs(methodData) do

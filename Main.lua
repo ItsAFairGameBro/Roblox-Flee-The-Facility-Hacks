@@ -11775,7 +11775,8 @@ C.clear = function(isManualClear)
 		for root, methodData in pairs(hookData) do
 			for method, methodFuncts in pairs(methodData) do
 				for index,funct in pairs(methodFuncts) do
-					methodFuncts[index] = {} -- Remove the instances, we don't need to clear anything else!
+					print("Disabled",index,funct)
+					methodFuncts[index] = nil -- Remove the instances, we don't need to clear anything else!
 				end
 			end
 		end

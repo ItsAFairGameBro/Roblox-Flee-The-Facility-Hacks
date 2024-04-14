@@ -277,7 +277,7 @@ function C.Hook(root,method,functName,functData)
 		getgenv().Hooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
-		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root,method, (function(...)
+		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
@@ -11775,7 +11775,7 @@ C.clear = function(isManualClear)
 		for root, methodData in pairs(hookData) do
 			for method, methodFuncts in pairs(methodData) do
 				for index,funct in pairs(methodFuncts) do
-					methodFuncts[index] = nil -- Remove the instances, we don't need to clear anything else!
+					methodFuncts[index] = {} -- Remove the instances, we don't need to clear anything else!
 				end
 			end
 		end

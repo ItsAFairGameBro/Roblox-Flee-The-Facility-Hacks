@@ -277,7 +277,7 @@ function C.Hook(root,method,functName,functData)
 		getgenv().Hooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
-		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root,method, newcclosure(function(...)
+		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root,method, (function(...)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
@@ -290,7 +290,7 @@ function C.Hook(root,method,functName,functData)
 			end
 
 			return OldFunction(...)
-		end)) or MethodFunction(method,newcclosure(function(...)
+		end)) or MethodFunction(method,(function(...)
 			print("Intercepted",...)
 			for functName, theirRun in pairs(myData) do
 				local results = tblPack(theirRun(method,...))
@@ -9665,7 +9665,7 @@ C.AvailableHacks ={
 			["ActivateFunction"]=(function(newValue)
 				local CharacterScriptInstance = StringWaitForChild(C.char,"LocalPlayerScript")
 				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true})
-				--[[C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
+				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
 					if inputState == Enum.UserInputState.Begin then
 						print("inputbegan")
 						return true

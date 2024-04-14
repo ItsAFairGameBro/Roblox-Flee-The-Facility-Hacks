@@ -273,6 +273,7 @@ function C.Hook(root,method,functName,functData)
 		getgenv().Hooks[root] = {}
 	end
 	if not getgenv().Hooks[root][method] then
+		print("New Hook",root)
 		local myData = {}
 		getgenv().Hooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction

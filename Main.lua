@@ -281,6 +281,7 @@ function C.Hook(root,method,functName,functData)
 		local myData = {}
 		myData.List = {}
 		RBXHooks[root][method] = myData
+		--local myData_List = myData.List
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
 		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
@@ -318,15 +319,18 @@ function C.Hook(root,method,functName,functData)
 				--end--]]
 				--print("Intercepted",...)
 				--RBXHooks[root][method][functName].loadstring()(...)
-				local result, values = myData.Run(...)
-				if result then
-					return tblUnpack(values)
-				end
+				--for s = 1, #myData_List, 1 do
+					--local runFunct = tblUnpack(myData_List)
+					local result, values = functData(...)
+					if result then
+						return tblUnpack(values)
+					end
+				--end
 			end
 			return OldFunction(...)
 		end))
 	end
-	--[[local oldFunct = RBXHooks[root][method][functName]
+	local oldFunct = RBXHooks[root][method][functName]
 	if not RBXHooks[root][method][functName].List then
 		RBXHooks[root][method][functName].List = {}
 	end
@@ -11835,7 +11839,13 @@ C.clear = function(isManualClear)
 			for index, indexFunct in pairs(methodData) do
 				--for index,funct in pairs(methodFuncts) do
 					--print("Disabled",index,indexFunct)
-				methodData[index] = nil -- Remove the instances, we don't need to clear anything else!
+				if index=="List" then
+					for index2, funct in pairs(indexFunct.List) do
+						indexFunct.List[index2] = nil
+					end
+				else
+					methodData[index] = nil -- Remove the instances, we don't need to clear anything else!
+				end
 				--end
 			end
 		end

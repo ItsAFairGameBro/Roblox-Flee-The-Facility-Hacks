@@ -318,7 +318,7 @@ function C.Hook(root,method,functName,functData)
 				--end--]]
 				--print("Intercepted",...)
 				--RBXHooks[root][method][functName].loadstring()(...)
-				local result, values = RBXHooks[root][method][functName](...)
+				local result, values = myData.Run(...)
 				if result then
 					return tblUnpack(values)
 				end
@@ -336,7 +336,7 @@ function C.Hook(root,method,functName,functData)
 			table.remove(RBXHooks[root][method].List,oldKey)
 		end
 	end--]]
-	RBXHooks[root][method][functName] = functData
+	RBXHooks[root][method][method == "__namecall" and functName or "Run"] = functData
 	--table.insert(RBXHooks[root][method].List,{functName,functData})
 	
 	--[[local loadStr = "function(...)"

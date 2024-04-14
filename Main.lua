@@ -291,7 +291,7 @@ function C.Hook(root,method,functName,functData)
 
 			return OldFunction(...)
 		end)) or MethodFunction(method,(function(...)
-			print("Intercepted",...)
+			--print("Intercepted",...)
 			--[[for functName, theirRun in pairs(myData) do
 				local results = tblPack(theirRun(method,...))
 				for num, val in ipairs(results) do
@@ -6800,7 +6800,11 @@ C.AvailableHacks ={
 									toTouch = 0
 								else
 									TouchToggle.Toggle.Text = "Activate"
-									TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
+									if parent.CanCollide then
+										TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0, 255, 238)
+									else
+										TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
+									end
 									toTouch = 1
 								end
 

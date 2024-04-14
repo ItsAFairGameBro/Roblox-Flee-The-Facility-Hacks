@@ -296,9 +296,9 @@ function C.Hook(root,method,functName,functData)
 
 			return OldFunction(...)
 		end)) or MethodFunction(method,(function(...)
-			local canDefault = checkcaller()
-			print("Intercepted","Caller:",canDefault,...)
-			if not canDefault then
+			--local canDefault = checkcaller()
+			--print("Intercepted","Caller:",canDefault,...)
+			--if not canDefault then
 				for functName, theirRun in pairs(myData) do
 					local results = tblPack(theirRun(method,...))
 					for num, val in ipairs(results) do
@@ -309,7 +309,7 @@ function C.Hook(root,method,functName,functData)
 						end
 					end
 				end--]]
-			end
+			--end
 			return OldFunction(...)
 		end))
 	end
@@ -2065,7 +2065,7 @@ C.CommandFunctions = {
 				oldChar_ForceField.Parent = targetChar:FindFirstChild("HumanoidRootPart")
 			end
 			for num, instance in ipairs(Instances2Restore) do
-				if not instance.RobloxLocked then
+				if instance.Parent then
 					instance.Parent = targetChar
 					instance:RemoveTag("RemoveOnDestroy")
 				end

@@ -278,21 +278,22 @@ function C.Hook(root,method,functName,functData)
 		getgenv().Hooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
-		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
-			local canDefault = checkcaller()
-			if not canDefault then
-				local method = stringlower(getnamecallmethod())
-				for functName, theirRun in pairs(myData) do
-					if method == functName then
-						local results = tblPack(theirRun(method,...))
-						return select(2,tblUnpack(results))
+		if C.saveIndex == 1 then
+			OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
+				local canDefault = checkcaller()
+				if not canDefault then
+					local method = stringlower(getnamecallmethod())
+					for functName, theirRun in pairs(myData) do
+						if method == functName then
+							local results = tblPack(theirRun(method,...))
+							return select(2,tblUnpack(results))
+						end
 					end
 				end
-			end
 
-			return OldFunction(...)
-		end)) or MethodFunction(method,(function(...)
-			--print("Intercepted",...)
+				return OldFunction(...)
+			end)) or MethodFunction(method,(function(...)
+				--print("Intercepted",...)
 			--[[for functName, theirRun in pairs(myData) do
 				local results = tblPack(theirRun(method,...))
 				for num, val in ipairs(results) do
@@ -303,8 +304,9 @@ function C.Hook(root,method,functName,functData)
 					end
 				end
 			end--]]
-			return OldFunction(...)
-		end))
+				return OldFunction(...)
+			end))
+		end
 	end
 	getgenv().Hooks[root][method][functName] = functData
 end

@@ -302,7 +302,7 @@ function C.Hook(root,method,functName,functData)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then
-				for s = 1, #myData.List, 1 do --for functName, theirRun in inPairs(myData) do
+				--for s = 1, #myData.List, 1 do --for functName, theirRun in inPairs(myData) do
 					local functName,theirRun = tblUnpack(myData.List)
 					local result,values = theirRun(method,...)
 					--[[for num, val in ipairs(results) do
@@ -315,7 +315,7 @@ function C.Hook(root,method,functName,functData)
 					if result then
 						return tblUnpack({})--values)
 					end
-				end--]]
+				--end--]]
 				--print("Intercepted",...)
 			end
 			return OldFunction(...)

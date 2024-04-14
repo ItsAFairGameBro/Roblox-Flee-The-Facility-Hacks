@@ -2368,7 +2368,7 @@ C.CommandFunctions = {
 			local str = `{isFollowing.Name}`
 			isFollowing = false
 			RunS:UnbindFromRenderStep("Follow")
-			for num, myAnimTrack in ipairs(C.CommandFunctions.follow.MyPlayingAnimations) do
+			for num, myAnimTrack in pairs(C.CommandFunctions.follow.MyPlayingAnimations) do
 				myAnimTrack:Stop(0)
 			end
 			C.CommandFunctions.follow.MyPlayingAnimations = {}

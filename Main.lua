@@ -6775,8 +6775,12 @@ C.AvailableHacks ={
 						CS:AddTag(parent,"TouchDisabled")
 
 						if Type=="Part" then
+							if parent.CanCollide then
+								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0, 255, 238)
+							else
+								TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
+							end
 							TouchToggle.Toggle.Text = "Activate"
-							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
 						else
 							TouchToggle.Toggle.Text = "Enable"
 							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
@@ -6829,7 +6833,7 @@ C.AvailableHacks ={
 							end
 						end
 						table.insert(insertTbl[5],TouchToggle.Toggle.MouseButton1Up:Connect(clickfunction))
-						firetouchinterest(parent,HRP, toTouch)
+						--firetouchinterest(parent,HRP, toTouch)
 						table.insert(insertTbl[5],parent.AncestryChanged:Connect(function(child,newParent)
 							if not newParent then
 								task.wait(1)

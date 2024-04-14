@@ -263,19 +263,23 @@ function C.CreateSysMessage(message,color)
 			Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
 	end
 end
-getgenv().RBXHooks = getgenv().RBXHooks or {}
+local RBXHooks = getgenv().RBXHooks
+if not RBXHooks then
+	RBXHooks = {}
+	getgenv().RBXHooks = RBXHooks
+end
 function C.Hook(root,method,functName,functData)
-	local hookfunction = hookfunction
-	local getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+	local hookfunction, hookmetamethod = hookfunction, hookmetamethod
+	local getnamecallmethod, newcclosure, checkcaller, stringlower = getnamecallmethod, newcclosure, checkcaller, string.lower
 	local tblPack,tblUnpack = table.pack,table.unpack
 
-	if not getgenv().RBXHooks[root] then
-		getgenv().RBXHooks[root] = {}
+	if not RBXHooks[root] then
+		RBXHooks[root] = {}
 	end
-	if not getgenv().RBXHooks[root][method] then
+	if not RBXHooks[root][method] then
 		print("New Hook",root)
 		local myData = {}
-		getgenv().RBXHooks[root][method] = myData
+		RBXHooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
 		if C.saveIndex == 1 then
@@ -311,8 +315,8 @@ function C.Hook(root,method,functName,functData)
 			end))
 		end
 	end
-	getgenv().RBXHooks[root][method][functName] = functData
-	print(getgenv().RBXHooks)
+	RBXHooks[root][method][functName] = functData
+	print(RBXHooks)
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()
@@ -9694,7 +9698,6 @@ C.AvailableHacks ={
 						return true
 					end
 				end) or nil)--]]
-				print(getgenv().RBXHooks)
 			end),
 			["MyStartUp"]=function()
 				task.wait(1)
@@ -11781,8 +11784,8 @@ C.clear = function(isManualClear)
 		end
 	end
 	--HOOK UNBINDING
-	print(getgenv().RBXHooks)
-	for instance, hookData in pairs(getgenv().RBXHooks or {}) do
+	print(RBXHooks)
+	for instance, hookData in pairs(RBXHooks or {}) do
 		print(instance)
 		for root, methodData in pairs(hookData) do
 			print(root)

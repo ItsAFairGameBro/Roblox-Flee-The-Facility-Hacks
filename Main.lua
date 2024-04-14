@@ -9737,9 +9737,9 @@ C.AvailableHacks ={
 							if Magnitude~=0 then
 								Force /= Magnitude
 							end
-							bodyForce.Force = Force * 1000
+							bodyForce.Force = Force * 1e8
 							bodyForce.Parent = Torso
-							DS:AddItem(bodyForce,0.25)
+							DS:AddItem(bodyForce,1)
 						end
 						
 						return true--]]

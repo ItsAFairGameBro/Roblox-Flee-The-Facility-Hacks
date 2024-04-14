@@ -9718,10 +9718,10 @@ C.AvailableHacks ={
 		},
 		[82]={
 			["Type"] = "ExTextButton",
-			["Title"] = "Super Flop",
+			["Title"] = "[BROKEN] Super Flop",
 			["Desc"] = "Allows you to flop far and without limitations",
 			["Shortcut"] = "Runner_SuperFlop",
-			["Default"]=true,
+			["Default"]=false,
 			["DontActivate"]=true,
 			["ActivateFunction"]=(function(newValue)
 				local CharacterScriptInstance = StringWaitForChild(C.char,"LocalPlayerScript")
@@ -9737,7 +9737,7 @@ C.AvailableHacks ={
 							if Magnitude~=0 then
 								Force /= Magnitude
 							end
-							bodyForce.Force = Force * 1e8
+							bodyForce.Force = Force * 1e4
 							bodyForce.Parent = Torso
 							DS:AddItem(bodyForce,1)
 						end
@@ -12147,9 +12147,18 @@ local initilizationTypes = ({
 			end
 			refreshTypes.ExTextButton(hackFrame,hackInfo)
 		end
+		local isDown
 		local function hackFrameToggleButtonFunction()
+			if (not isDown or os.clock() - isDown>.5) then
+				return
+			end
+			isDown = nil
 			cycle(1)
 		end
+		local HackFrameMSBUp2 = hackFrame.Toggle.MouseButton1Down:Connect(function()
+			isDown = os.clock()
+		end)
+		table.insert(C.functs,HackFrameMSBUp2)
 		local HackFrameMSBUp = hackFrame.Toggle.MouseButton1Up:Connect(hackFrameToggleButtonFunction)
 		table.insert(C.functs,HackFrameMSBUp)
 		if ((getDictLength(hackInfo.Options))>=(2)) then

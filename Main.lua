@@ -280,6 +280,7 @@ function C.Hook(root,method,functName,functData)
 		print("New Hook",root)
 		local myData = {}
 		RBXHooks[root][method] = myData
+		myData.List = {}
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
 		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
@@ -301,8 +302,9 @@ function C.Hook(root,method,functName,functData)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then
-				for functName, theirRun in inPairs(myData) do
-					local result,values = (function() print('yo') end)()--theirRun(method,...)
+				for s = 1, #myData.List, 1 do --for functName, theirRun in inPairs(myData) do
+					local functName,theirRun = tblUnpack(myData.List)
+					local result,values = theirRun(method,...)
 					--[[for num, val in ipairs(results) do
 						if val ~= nil then
 							return tblUnpack(results)
@@ -310,16 +312,24 @@ function C.Hook(root,method,functName,functData)
 							break
 						end
 					end--]]
-					--if result then
+					if result then
 						return tblUnpack({})--values)
-					--end
+					end
 				end--]]
 				--print("Intercepted",...)
 			end
 			return OldFunction(...)
 		end))
 	end
+	local oldFunct = RBXHooks[root][method][functName]
+	if oldFunct then
+		local oldKey = table.find(RBXHooks[root][method].List,oldFunct)
+		if oldKey then
+			table.remove(RBXHooks[root][method].List,oldKey)
+		end
+	end
 	RBXHooks[root][method][functName] = functData
+	table.insert(RBXHooks[root][method].List,{functName,functData})
 	--print(RBXHooks)
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))

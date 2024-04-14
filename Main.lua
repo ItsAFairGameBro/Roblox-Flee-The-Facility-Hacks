@@ -6829,7 +6829,7 @@ C.AvailableHacks ={
 							end
 						end
 						table.insert(insertTbl[5],TouchToggle.Toggle.MouseButton1Up:Connect(clickfunction))
-						clickfunction()
+						firetouchinterest(parent,HRP, toTouch)
 						table.insert(insertTbl[5],parent.AncestryChanged:Connect(function(child,newParent)
 							if not newParent then
 								task.wait(1)

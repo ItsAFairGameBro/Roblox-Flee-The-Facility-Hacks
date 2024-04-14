@@ -288,8 +288,10 @@ function C.Hook(root,method,functName,functData)
 				local method = stringlower(getnamecallmethod())
 				for functName, theirRun in pairs(myData) do
 					if method == functName then
-						local results = tblPack(theirRun(method,...))
-						return select(2,tblUnpack(results))
+						local result,values = theirRun(method,...)
+						if result then
+							return tblUnpack(values)
+						end
 					end
 				end
 			end
@@ -300,13 +302,16 @@ function C.Hook(root,method,functName,functData)
 			--print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then
 				for functName, theirRun in pairs(myData) do
-					local results = tblPack(theirRun(method,...))
-					for num, val in ipairs(results) do
+					local result,values = theirRun(method,...)
+					--[[for num, val in ipairs(results) do
 						if val ~= nil then
 							return tblUnpack(results)
 						else
 							break
 						end
+					end--]]
+					if result then
+						return tblUnpack(values)
 					end
 				end--]]
 				--print("Intercepted",...)

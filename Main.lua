@@ -279,8 +279,8 @@ function C.Hook(root,method,functName,functData)
 	if not RBXHooks[root][method] then
 		print("New Hook",root)
 		local myData = {}
-		RBXHooks[root][method] = myData
 		myData.List = {}
+		RBXHooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
 		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
@@ -329,6 +329,7 @@ function C.Hook(root,method,functName,functData)
 		end
 	end
 	RBXHooks[root][method][functName] = functData
+	print(RBXHooks)
 	table.insert(RBXHooks[root][method].List,{functName,functData})
 	--print(RBXHooks)
 end

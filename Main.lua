@@ -321,10 +321,10 @@ function C.Hook(root,method,functName,functData)
 				--RBXHooks[root][method][functName].loadstring()(...)
 				--for s = 1, #myData_List, 1 do
 					--local runFunct = tblUnpack(myData_List)
-					local result, values = functData(...)
-					if result then
-						return tblUnpack(values)
-					end
+				local result, values = functData(...)
+				if result then
+					return true--tblUnpack(values)
+				end
 				--end
 			end
 			return OldFunction(...)

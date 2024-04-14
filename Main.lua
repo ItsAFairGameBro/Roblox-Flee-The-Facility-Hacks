@@ -309,6 +309,7 @@ function C.Hook(root,method,functName,functData)
 		end
 	end
 	getgenv().Hooks[root][method][functName] = functData
+	print(getgenv().Hooks)
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()
@@ -11774,7 +11775,6 @@ C.clear = function(isManualClear)
 		end
 	end
 	--HOOK UNBINDING
-	print("Hooks",getgenv().Hooks)
 	for instance,hookData in pairs(getgenv().Hooks or {}) do
 		for root, methodData in pairs(hookData) do
 			for method, methodFuncts in pairs(methodData) do

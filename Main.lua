@@ -277,7 +277,7 @@ function C.Hook(root,method,functName,functData)
 		RBXHooks[root] = {}
 	end
 	if not RBXHooks[root][method] then
-		--print("New Hook",root)
+		print("New Hook",root)
 		local myData = {}
 		RBXHooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
@@ -296,9 +296,9 @@ function C.Hook(root,method,functName,functData)
 
 			return OldFunction(...)
 		end)) or MethodFunction(method,(function(...)
-			--local canDefault = checkcaller()
+			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
-			--if not canDefault then
+			if not canDefault then
 				--[[for functName, theirRun in pairs(myData) do
 					local results = tblPack(theirRun(method,...))
 					for num, val in ipairs(results) do
@@ -309,8 +309,8 @@ function C.Hook(root,method,functName,functData)
 						end
 					end
 				end--]]
-			print(...)
-			--end
+				print("Intercepted",...)
+			end
 			return OldFunction(...)
 		end))
 	end

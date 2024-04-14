@@ -318,7 +318,10 @@ function C.Hook(root,method,functName,functData)
 				--end--]]
 				--print("Intercepted",...)
 				--RBXHooks[root][method][functName].loadstring()(...)
-				functData(...)
+				local result, values = functData(...)
+				if result then
+					return tblUnpack(values)
+				end
 			end
 			return OldFunction(...)
 		end))
@@ -9721,7 +9724,20 @@ C.AvailableHacks ={
 				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true})
 				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
 					if inputState == Enum.UserInputState.Begin then
-						print("inputbegan")
+						local Torso = C.char:FindFirstChild("Torso")
+						if Torso then
+							local bodyForce = Instance.new("BodyForce")
+							local Direction = Torso.CFrame.p - workspace.Camera.CFrame.p
+							local Force = Vector3.new(Direction.X, 0, Direction.Z)
+							local Magnitude = Force.Magnitude
+							if Magnitude~=0 then
+								Force /= Magnitude
+							end
+							bodyForce.Force = Force * 1000
+							bodyForce.Parent = Torso
+							DS:AddItem(bodyForce,0.25)
+						end
+						
 						return true
 					end
 				end) or nil)--]]

@@ -302,7 +302,7 @@ function C.Hook(root,method,functName,functData)
 			--print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then
 				--for functName, theirRun in pairs(myData) do
-					--local result,values = theirRun(method,...)
+					local result,values = (function() print('yo') end)()--theirRun(method,...)
 					--[[for num, val in ipairs(results) do
 						if val ~= nil then
 							return tblUnpack(results)

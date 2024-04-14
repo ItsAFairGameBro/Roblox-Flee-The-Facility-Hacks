@@ -11777,10 +11777,12 @@ C.clear = function(isManualClear)
 	--HOOK UNBINDING
 	print(getgenv().Hooks)
 	for instance, hookData in pairs(getgenv().Hooks or {}) do
+		print(instance)
 		for root, methodData in pairs(hookData) do
+			print(root)
 			for index, indexFunct in pairs(methodData) do
 				--for index,funct in pairs(methodFuncts) do
-					print("Disabled",index,funct)
+					print("Disabled",index,indexFunct)
 					methodData[index] = nil -- Remove the instances, we don't need to clear anything else!
 				--end
 			end

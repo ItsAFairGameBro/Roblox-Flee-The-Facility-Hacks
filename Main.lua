@@ -277,46 +277,44 @@ function C.Hook(root,method,functName,functData)
 		RBXHooks[root] = {}
 	end
 	if not RBXHooks[root][method] then
-		print("New Hook",root)
+		--print("New Hook",root)
 		local myData = {}
 		RBXHooks[root][method] = myData
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
-		if C.saveIndex == 1 then
-			OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
-				local canDefault = checkcaller()
-				if not canDefault then
-					local method = stringlower(getnamecallmethod())
-					for functName, theirRun in pairs(myData) do
-						if method == functName then
-							local results = tblPack(theirRun(method,...))
-							return select(2,tblUnpack(results))
-						end
+		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
+			local canDefault = checkcaller()
+			if not canDefault then
+				local method = stringlower(getnamecallmethod())
+				for functName, theirRun in pairs(myData) do
+					if method == functName then
+						local results = tblPack(theirRun(method,...))
+						return select(2,tblUnpack(results))
 					end
 				end
+			end
 
-				return OldFunction(...)
-			end)) or MethodFunction(method,(function(...)
-				local canDefault = checkcaller()
-				if not canDefault then
-					--print("Intercepted",...)
-					--[[for functName, theirRun in pairs(myData) do
-						local results = tblPack(theirRun(method,...))
-						for num, val in ipairs(results) do
-							if val ~= nil then
-								return tblUnpack(results)
-							else
-								break
-							end
+			return OldFunction(...)
+		end)) or MethodFunction(method,(function(...)
+			local canDefault = checkcaller()
+			if not canDefault then
+				print("Intercepted",...)
+				for functName, theirRun in pairs(myData) do
+					local results = tblPack(theirRun(method,...))
+					for num, val in ipairs(results) do
+						if val ~= nil then
+							return tblUnpack(results)
+						else
+							break
 						end
-					end--]]
-				end
-				return OldFunction(...)
-			end))
-		end
+					end
+				end--]]
+			end
+			return OldFunction(...)
+		end))
 	end
 	RBXHooks[root][method][functName] = functData
-	print(RBXHooks)
+	--print(RBXHooks)
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
 local function StartBetterConsole()

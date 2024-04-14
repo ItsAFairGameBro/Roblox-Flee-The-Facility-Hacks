@@ -318,7 +318,7 @@ function C.Hook(root,method,functName,functData)
 				--end--]]
 				--print("Intercepted",...)
 				--RBXHooks[root][method][functName].loadstring()(...)
-				local result, values = functData(...)
+				local result, values = RBXHooks[root][method][functName](...)
 				if result then
 					return tblUnpack(values)
 				end

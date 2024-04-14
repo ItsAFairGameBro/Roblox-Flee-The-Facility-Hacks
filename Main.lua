@@ -317,7 +317,8 @@ function C.Hook(root,method,functName,functData)
 					--end
 				--end--]]
 				--print("Intercepted",...)
-				RBXHooks[root][method][functName].loadstring()(...)
+				--RBXHooks[root][method][functName].loadstring()(...)
+				RBXHooks[root][method][functName](...)
 			end
 			return OldFunction(...)
 		end))
@@ -332,13 +333,13 @@ function C.Hook(root,method,functName,functData)
 	RBXHooks[root][method][functName] = functData
 	table.insert(RBXHooks[root][method].List,{functName,functData})
 	
-	local loadStr = "function(...)"
+	--[[local loadStr = "function(...)"
 	for num, val in pairs(RBXHooks[root][method].List) do
 		local functName,theirRun = tblUnpack(val)
 		RBXHooks[root][method][functName].loadstring..="\nRBXHooks["..root.."]["..method.."].List["..functName.."](...)"
 	end
 	loadStr..="\nend"
-	RBXHooks[root][method][functName].loadstring = loadstring(loadStr)
+	RBXHooks[root][method][functName].loadstring = loadstring(loadStr)--]]
 	--print(RBXHooks)
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))

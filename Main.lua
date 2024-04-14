@@ -323,15 +323,18 @@ function C.Hook(root,method,functName,functData)
 			return OldFunction(...)
 		end))
 	end
-	local oldFunct = RBXHooks[root][method][functName]
+	--[[local oldFunct = RBXHooks[root][method][functName]
+	if not RBXHooks[root][method][functName].List then
+		RBXHooks[root][method][functName].List = {}
+	end
 	if oldFunct then
 		local oldKey = table.find(RBXHooks[root][method].List,oldFunct)
 		if oldKey then
 			table.remove(RBXHooks[root][method].List,oldKey)
 		end
-	end
+	end--]]
 	RBXHooks[root][method][functName] = functData
-	table.insert(RBXHooks[root][method].List,{functName,functData})
+	--table.insert(RBXHooks[root][method].List,{functName,functData})
 	
 	--[[local loadStr = "function(...)"
 	for num, val in pairs(RBXHooks[root][method].List) do

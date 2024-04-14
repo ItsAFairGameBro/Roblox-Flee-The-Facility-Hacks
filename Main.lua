@@ -318,7 +318,7 @@ function C.Hook(root,method,functName,functData)
 				--end--]]
 				--print("Intercepted",...)
 				--RBXHooks[root][method][functName].loadstring()(...)
-				functData.Run(...)
+				functData(...)
 			end
 			return OldFunction(...)
 		end))

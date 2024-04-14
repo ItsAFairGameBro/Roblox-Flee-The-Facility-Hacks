@@ -9728,7 +9728,7 @@ C.AvailableHacks ={
 				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true})
 				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
 					if inputState == Enum.UserInputState.Begin then
-						--[[local Torso = C.char.Torso--:FindFirstChild("Torso")
+						local Torso = C.char.Torso--:FindFirstChild("Torso")
 						if Torso then
 							local bodyForce = Instance.new("BodyForce")
 							local Direction = Torso.CFrame.p - workspace.Camera.CFrame.p

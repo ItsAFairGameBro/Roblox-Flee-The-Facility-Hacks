@@ -292,7 +292,7 @@ function C.Hook(root,method,functName,functData)
 			return OldFunction(...)
 		end)) or MethodFunction(method,(function(...)
 			print("Intercepted",...)
-			for functName, theirRun in pairs(myData) do
+			--[[for functName, theirRun in pairs(myData) do
 				local results = tblPack(theirRun(method,...))
 				for num, val in ipairs(results) do
 					if val ~= nil then
@@ -301,7 +301,7 @@ function C.Hook(root,method,functName,functData)
 						break
 					end
 				end
-			end
+			end--]]
 			return OldFunction(...)
 		end))
 	end

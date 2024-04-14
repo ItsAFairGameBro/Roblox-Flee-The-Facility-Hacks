@@ -2334,7 +2334,7 @@ C.CommandFunctions = {
 					if animTrack then
 						local myAnimTrack = C.CommandFunctions.follow.MyPlayingAnimations[animTrack]
 						if not table.find(C.CommandFunctions.follow.ForcePlayAnimations,animTrack) then
-							myAnimTrack = C.human.Animator:LoadAnimation(animTrack.Animation)
+							myAnimTrack = human.Animator:LoadAnimation(animTrack.Animation)
 							table.insert(C.CommandFunctions.follow.ForcePlayAnimations,animTrack)--C.human:LoadAnimation(animTrack.Animator)
 							C.CommandFunctions.follow.MyPlayingAnimations[animTrack] = myAnimTrack
 						end

@@ -277,7 +277,7 @@ function C.Hook(root,method,functName,functData)
 		RBXHooks[root] = {}
 	end
 	if not RBXHooks[root][method] then
-		print("New Hook",root)
+		print("New2 Hook",root)
 		local myData = {}
 		myData.List = {}
 		RBXHooks[root][method] = myData
@@ -304,7 +304,7 @@ function C.Hook(root,method,functName,functData)
 			if not canDefault then
 				--for s = 1, #myData.List, 1 do --for functName, theirRun in inPairs(myData) do
 					local functName,theirRun = tblUnpack(myData.List)
-					local result,values = theirRun(method,...)
+					--local result,values = theirRun(method,...)
 					--[[for num, val in ipairs(results) do
 						if val ~= nil then
 							return tblUnpack(results)
@@ -313,7 +313,7 @@ function C.Hook(root,method,functName,functData)
 						end
 					end--]]
 					if result then
-						return tblUnpack({})--values)
+						return tblUnpack(values)
 					end
 				--end--]]
 				--print("Intercepted",...)

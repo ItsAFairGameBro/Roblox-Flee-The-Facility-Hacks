@@ -11784,15 +11784,15 @@ C.clear = function(isManualClear)
 		end
 	end
 	--HOOK UNBINDING
-	print(RBXHooks)
+	--print(RBXHooks)
 	for instance, hookData in pairs(RBXHooks or {}) do
-		print(instance)
+		--print(instance)
 		for root, methodData in pairs(hookData) do
-			print(root)
+			--print(root)
 			for index, indexFunct in pairs(methodData) do
 				--for index,funct in pairs(methodFuncts) do
-					print("Disabled",index,indexFunct)
-					methodData[index] = nil -- Remove the instances, we don't need to clear anything else!
+					--print("Disabled",index,indexFunct)
+				methodData[index] = nil -- Remove the instances, we don't need to clear anything else!
 				--end
 			end
 		end

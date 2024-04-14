@@ -299,7 +299,7 @@ function C.Hook(root,method,functName,functData)
 			end
 
 			return OldFunction(...)
-		end)) or MethodFunction(method,newclosure(function(...)
+		end)) or MethodFunction(method,newcclosure(function(...)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then

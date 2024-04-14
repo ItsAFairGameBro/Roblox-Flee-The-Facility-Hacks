@@ -2063,7 +2063,7 @@ C.CommandFunctions = {
 				oldChar_ForceField.Parent = targetChar:FindFirstChild("HumanoidRootPart")
 			end
 			for num, instance in ipairs(Instances2Restore) do
-				if not instance.Locked then
+				if not instance.RobloxLocked then
 					instance.Parent = targetChar
 					instance:RemoveTag("RemoveOnDestroy")
 				end

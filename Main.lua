@@ -257,7 +257,7 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 end
 function C.CreateSysMessage(message,color)
 	if TCS.ChatVersion == Enum.ChatVersion.TextChatService then
-		TCS:FindFirstChildWhichIsA("TextChannel"):DisplaySystemMessage(message)
+		(TCS:FindFirstChild("RBXGeneral",true) or TCS:FindFirstChildWhichIsA("TextChannel",true)):DisplaySystemMessage(message)
 	else
 		SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
 			Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
@@ -2333,7 +2333,7 @@ C.CommandFunctions = {
 				for num, animTrack in ipairs(saveChar.Humanoid.Animator:GetPlayingAnimationTracks()) do
 					if animTrack then
 						local myAnimTrack = C.CommandFunctions.follow.MyPlayingAnimations[animTrack]
-						if not table.find(C.CommandFunctions.follow.ForcePlayAnimations,animTrack) then
+						if not myAnimTrack then
 							myAnimTrack = human.Animator:LoadAnimation(animTrack.Animation)
 							table.insert(C.CommandFunctions.follow.ForcePlayAnimations,animTrack)--C.human:LoadAnimation(animTrack.Animator)
 							C.CommandFunctions.follow.MyPlayingAnimations[animTrack] = myAnimTrack
@@ -11006,7 +11006,7 @@ C.AvailableHacks ={
 				setChangedProperty(RS.GameStatus, "Value", (RSUpdateGameStatusFunction))
 			end,
 		},--]]
-		[28]={
+		[28]=(false and {
 			["Type"]="ExTextButton",
 			["Title"]="Auto Vote For Random Map",
 			["Desc"]="Votes for maps synchronously",
@@ -11079,7 +11079,7 @@ C.AvailableHacks ={
 				end
 				setChangedProperty(RS.GameStatus, "Value", (RSUpdateGameStatusFunction))
 			end,
-		},
+		}),
 		[30]={
 			["Type"]="ExTextButton",
 			["Title"]="Reset After "..tostring(botBeastBreakMin).."m or exit open",

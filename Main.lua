@@ -9523,7 +9523,7 @@ C.AvailableHacks ={
 							C.char.Torso.CanTouch = false
 							trigger_setTriggers("Typing",{AllowExceptions={actionValue.Parent.Parent}})
 							C.AvailableHacks.Runner[4].Changed = myTSM.CurrentAnimation.Changed:Connect(function()
-								RunS.RenderStepped:Wait()
+								task.wait(1)--RunS.RenderStepped:Wait()
 								actionValue.Parent.Parent.Screen.SoundTyping:Stop()
 								myTSM.CurrentAnimation.Value = ""
 								if C.AvailableHacks.Runner[4].Changed then

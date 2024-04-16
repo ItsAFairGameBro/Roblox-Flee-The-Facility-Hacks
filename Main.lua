@@ -9828,15 +9828,13 @@ C.AvailableHacks ={
 						if not new then
 							return
 						end
-						print("START")
-						while isJumpBeingHeld and C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value do
+						while isJumpBeingHeld and C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value and not isCleared do
 							if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or os.clock()-lastGround>.25) then
 								human:ChangeState(Enum.HumanoidStateType.Jumping)
 								lastGround = os.clock()
 							end
 							RunS.RenderStepped:Wait()
 						end
-						print("END")
 					end)
 				end
 				local human_state = human:GetState()
@@ -12123,7 +12121,6 @@ GuiCreationFunction = nil;
 --JUMP CONTROL
 jumpChangedEvent = Instance.new("BindableEvent")
 function jumpAction(actionName, inputState, inputObject)
-	print("State",inputState)
 	if inputState == Enum.UserInputState.Begin and not isJumpBeingHeld then
 		isJumpBeingHeld = true
 	elseif (inputState == Enum.UserInputState.End or inputState==Enum.UserInputState.Cancel) and isJumpBeingHeld then

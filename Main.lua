@@ -9817,12 +9817,14 @@ C.AvailableHacks ={
 				
 				if not myTSM.Ragdoll.Value or not C.enHacks.Runner_AntiRagdoll then
 					if C.AvailableHacks.Runner[83].Funct then
+						CAS:UnbindAction("hack_jump2"..C.saveIndex)
 						C.AvailableHacks.Runner[83].Funct:Disconnect()
 						C.AvailableHacks.Runner[83].Funct=nil
 					end
 				elseif myTSM.Ragdoll.Value and C.enHacks.Runner_AntiRagdoll and not C.AvailableHacks.Runner[83].Funct then
 					local lastGround
 					local mySignal
+					CAS:BindActionAtPriority("hack_jump2"..C.saveIndex,jumpAction,false,9999999,Enum.KeyCode.Space)
 					C.AvailableHacks.Runner[83].Funct = mySignal
 					mySignal = jumpChangedEvent.Event:Connect(function(new)
 						if not new then
@@ -12147,7 +12149,6 @@ end)
 CS:AddTag(jumpChangedEvent,"RemoveOnDestroy")
 
 CAS:BindAction("hack_jump"..C.saveIndex,jumpAction,false, Enum.PlayerActions.CharacterJump)
-CAS:BindActionAtPriority("hack_jump2"..C.saveIndex,jumpAction,false,9999999,Enum.KeyCode.Space)
 
 --GUI CODING
 local refreshTypes = ({

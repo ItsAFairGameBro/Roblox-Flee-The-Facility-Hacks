@@ -335,7 +335,7 @@ function C.Hook(root,method,functName,functData)
 			local bindableEvent = myData.Event or Instance.new("BindableEvent")
 			myData.Event = bindableEvent
 			bindableEvent.Event:Connect(function(new)
-				functName = new
+				functData = new
 			end)
 		end
 	elseif RBXHooks[root][method].Event then	
@@ -9763,8 +9763,12 @@ C.AvailableHacks ={
 			["ActivateFunction"]=(function(newValue)
 				local CharacterScriptInstance = StringWaitForChild(C.char,"LocalPlayerScript")
 				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true})
-				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and (function(_,inputState)
+				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",true and (function(_,inputState)
 					if inputState == Enum.UserInputState.Begin then
+						print("Flop:",inputState.Name)
+						if not C.enHacks.Runner_SuperFlop then
+							return
+						end
 						local Torso = C.char:FindFirstChild("Torso")
 						if Torso then
 							local bodyForce = Instance.new("BodyForce")

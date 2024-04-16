@@ -9827,7 +9827,7 @@ C.AvailableHacks ={
 					if not C.AvailableHacks.Runner[83].Funct then
 						C.AvailableHacks.Runner[83].Funct = UIS.JumpRequest:Connect(function()
 							if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or lastGround-os.clock()>.25) then
-								human:ChangeState(Enum.HumnaoidStateType.Jumping)
+								human:ChangeState(Enum.HumanoidStateType.Jumping)
 								lastGround = os.clock()
 							end
 						end)

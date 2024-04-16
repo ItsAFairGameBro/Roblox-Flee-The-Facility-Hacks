@@ -9814,11 +9814,11 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["ChangedFunction"]=function()
 				if not myTSM.Ragdoll.Value then
-					return
+					--return
 				end
-				local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
+				--local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
 				local human_state = human:GetState()
-				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics then
+				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics and myTSM.Ragdoll.Value then
 					local orgCF,height = C.char:GetPivot()+Vector3.new(0,2),getHumanoidHeight(C.char)
 					local result, hitPart = raycast(orgCF.Position,orgCF.Position-Vector3.new(0,1),{C.char},height+4,false,true)
 					if result then
@@ -9832,7 +9832,7 @@ C.AvailableHacks ={
 						C.AvailableHacks.Runner[83].Funct = mySignal
 						mySignal = jumpChangedEvent.Event:Connect(function()
 							print("Space Held")
-							while isJumpBeingHeld and C.AvailableHacks.Runner[83].Funct==mySignal do 
+							while isJumpBeingHeld and C.AvailableHacks.Runner[83].Funct do 
 								if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or lastGround-os.clock()>.25) then
 									human:ChangeState(Enum.HumanoidStateType.Jumping)
 									lastGround = os.clock()
@@ -9868,13 +9868,15 @@ C.AvailableHacks ={
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Enable()
 					end--]]
-				elseif not C.enHacks.Runner_AntiRagdoll then-- and human_state ~= Enum.HumanoidStateType.Physics then
+				elseif not C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value then-- and human_state ~= Enum.HumanoidStateType.Physics then
 					--[[for num, connection in ipairs(RagdollConnections) do
 						print("Fired",num)
 						connection:Fire(true)
 					end--]]
 					human:ChangeState(Enum.HumanoidStateType.Physics)
 					human.JumpPower = 0
+				end
+				if not myTSM.Ragdoll.Value or not C.enHacks.Runner_AntiRagdoll then
 					if C.AvailableHacks.Runner[83].Funct then
 						C.AvailableHacks.Runner[83].Funct:Disconnect()
 						C.AvailableHacks.Runner[83].Funct=nil

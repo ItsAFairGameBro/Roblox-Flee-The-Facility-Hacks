@@ -9824,14 +9824,19 @@ C.AvailableHacks ={
 					local lastGround
 					local mySignal
 					C.AvailableHacks.Runner[83].Funct = mySignal
-					mySignal = jumpChangedEvent.Event:Connect(function()
-						while isJumpBeingHeld and mySignal==C.AvailableHacks.Runner[83].Funct and C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value do
+					mySignal = jumpChangedEvent.Event:Connect(function(new)
+						if not new then
+							return
+						end
+						print("START")
+						while isJumpBeingHeld and C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value do
 							if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or os.clock()-lastGround>.25) then
 								human:ChangeState(Enum.HumanoidStateType.Jumping)
 								lastGround = os.clock()
 							end
 							RunS.RenderStepped:Wait()
 						end
+						print("END")
 					end)
 				end
 				local human_state = human:GetState()

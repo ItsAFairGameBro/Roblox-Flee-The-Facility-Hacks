@@ -9821,8 +9821,17 @@ C.AvailableHacks ={
 					if result then
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))
 					end
-					human:ChangeState(Enum.HumanoidStateType.Running)
+					human:ChangeState(Enum.HumanoidStateType.Jumping)
 					human.JumpPower = defaultCharacterJumpPower
+					local lastGround
+					if not C.AvailableHacks.Runner[83].Funct then
+						C.AvailableHacks.Runner[83].Funct = UIS.JumpRequest:Connect(function()
+							if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or lastGround-os.clock()>.25) then
+								human:ChangeState(Enum.HumnaoidStateType.Jumping)
+								lastGround = os.clock()
+							end
+						end)
+					end
 					--human.WalkSpeed = 16
 					task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
@@ -9856,6 +9865,10 @@ C.AvailableHacks ={
 					end--]]
 					human:ChangeState(Enum.HumanoidStateType.Physics)
 					human.JumpPower = 0
+					if C.AvailableHacks.Runner[83].Funct then
+						C.AvailableHacks.Runner[83].Funct:Disconnect()
+						C.AvailableHacks.Runner[83].Funct=nil
+					end
 				end
 			end,
 			["ActivateFunction"]=function(newValue)

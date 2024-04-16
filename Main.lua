@@ -9203,6 +9203,9 @@ C.AvailableHacks ={
 				}
 			},
 			["HitFunction"]=function(Hammer,Handle,theirChar)
+				if not theirChar.PrimaryPart then
+					return
+				end
 				local Dist=(Handle.Position-theirChar.PrimaryPart.Position).magnitude
 				if Dist<15 then
 					local closestPart, closestDist = nil, 10 -- Test Success: Hit Part Must Be < 8 Studs of Hammer
@@ -9826,6 +9829,7 @@ C.AvailableHacks ={
 					local lastGround
 					if not C.AvailableHacks.Runner[83].Funct then
 						local mySignal
+						C.AvailableHacks.Runner[83].Funct = mySignal
 						mySignal = jumpChangedEvent.Event:Connect(function()
 							while isJumpBeingHeld and C.AvailableHacks.Runner[83].Funct==mySignal do 
 								if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or lastGround-os.clock()>.25) then
@@ -9835,7 +9839,6 @@ C.AvailableHacks ={
 								RunS.RenderStepped:Wait()
 							end
 						end)
-						C.AvailableHacks.Runner[83].Funct = mySignal
 					end
 					--human.WalkSpeed = 16
 					task.wait(.2)

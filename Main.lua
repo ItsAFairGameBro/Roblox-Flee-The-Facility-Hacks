@@ -9821,14 +9821,14 @@ C.AvailableHacks ={
 					if result then
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))
 					end
-					human:ChangeState(Enum.HumanoidStateType.GettingUp)
+					human:ChangeState(Enum.HumanoidStateType.Running)
 					--human.WalkSpeed = 16
 					task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
-					human:ChangeState(Enum.HumanoidStateType.GettingUp)
+					human:ChangeState(Enum.HumanoidStateType.Running)
 					task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
-					human:ChangeState(Enum.HumanoidStateType.GettingUp)
+					human:ChangeState(Enum.HumanoidStateType.Running)
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()
 					end

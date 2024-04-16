@@ -9761,9 +9761,10 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["DontActivate"]=true,
 			["ActivateFunction"]=(function(newValue)
-				local CharacterScriptInstance = StringWaitForChild(C.char,"LocalPlayerScript")
-				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true})
-				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",true and (function(_,inputState)
+				local RagdollValue = myTSM:WaitForChild("Ragdoll")
+				local CharacterScriptInstance = C.char:WaitForChild("LocalPlayerScript")
+				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true,noCache=true})
+				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and RagdollValue.Value and (function(_,inputState)
 					if inputState == Enum.UserInputState.Begin then
 						print("Flop:",inputState.Name)
 						if not C.enHacks.Runner_SuperFlop then
@@ -9788,8 +9789,17 @@ C.AvailableHacks ={
 				end) or nil)--]]
 			end),
 			["MyStartUp"]=function()
-				task.wait(1)
 				C.AvailableHacks.Runner[82].ActivateFunction(C.enHacks.Runner_SuperFlop)
+			end,
+			["MyPlayerAdded"]=function()
+				task.wait(3)
+				local myTSM_Module = getscriptfunction(myTSM)
+				local RagdollValue = myTSM:WaitForChild("Ragdoll")
+				table.insert(C.functs,RagdollValue.Changed:Connect(function(new)
+					if myTSM_Module.Get("Ragdoll") then
+						C.AvailableHacks.Runner[82].ActivateFunction(C.enHacks.Runner_SuperFlop)
+					end
+				end))
 			end,
 		},
 		[83]={

@@ -9822,14 +9822,15 @@ C.AvailableHacks ={
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))
 					end
 					human:ChangeState(Enum.HumanoidStateType.Running)
+					human.JumpPower = defaultCharacterJumpPower
 					--human.WalkSpeed = 16
-					--[[task.wait(.2)
+					task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
 					human:ChangeState(Enum.HumanoidStateType.Running)
 					task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
 					human:ChangeState(Enum.HumanoidStateType.Running)--]]
-					human.JumpPower = defaultCharacterJumpPower
+					
 					--[[for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()
 					end

@@ -9793,12 +9793,12 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				task.wait(3)
-				local myTSM_Module = getscriptfunction(myTSM)
+				--local myTSM_Module = getscriptfunction(myTSM)
 				local RagdollValue = myTSM:WaitForChild("Ragdoll")
 				table.insert(C.functs,RagdollValue.Changed:Connect(function(new)
-					if myTSM_Module.Get("Ragdoll") then
+					--if myTSM_Module.Get("Ragdoll") then
 						C.AvailableHacks.Runner[82].ActivateFunction(C.enHacks.Runner_SuperFlop)
-					end
+					--end
 				end))
 			end,
 		},
@@ -9823,17 +9823,22 @@ C.AvailableHacks ={
 					end
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					--human.WalkSpeed = 16
-					task.wait(.5)
+					task.wait(.2)
+					if not C.enHacks.Runner_AntiRagdoll then return end
+					human:ChangeState(Enum.HumanoidStateType.GettingUp)
+					task.wait(.2)
+					if not C.enHacks.Runner_AntiRagdoll then return end
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()
 					end
 					C.SetTempValue("Runner_AntiRagdoll",function(theirPlr,caller,instance_name,instance_value)
-						if theirPlr == plr and instance_name == "Ragdoll" then
+						if theirPlr == plr and instance_name == "Ragdoll" and C.enHacks.Runner_AntiRagdoll then
 							return false
 						end
 					end)
 					for num, connection in ipairs(RagdollConnections) do
+						if not C.enHacks.Runner_AntiRagdoll then break end
 						connection:Fire(false)
 					end
 					C.SetTempValue("Runner_AntiRagdoll",nil)

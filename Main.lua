@@ -9813,10 +9813,27 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["DontActivate"]=true,
 			["ChangedFunction"]=function()
-				if not myTSM.Ragdoll.Value then
-					--return
-				end
 				--local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
+				
+				if not myTSM.Ragdoll.Value or not C.enHacks.Runner_AntiRagdoll then
+					if C.AvailableHacks.Runner[83].Funct then
+						C.AvailableHacks.Runner[83].Funct:Disconnect()
+						C.AvailableHacks.Runner[83].Funct=nil
+					end
+				elseif myTSM.Ragdoll.Value and C.enHacks.Runner_AntiRagdoll and not C.AvailableHacks.Runner[83].Funct then
+					local lastGround
+					local mySignal
+					C.AvailableHacks.Runner[83].Funct = mySignal
+					mySignal = jumpChangedEvent.Event:Connect(function()
+						while isJumpBeingHeld and mySignal==C.AvailableHacks.Runner[83].Funct and C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value do
+							if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or os.clock()-lastGround>.25) then
+								human:ChangeState(Enum.HumanoidStateType.Jumping)
+								lastGround = os.clock()
+							end
+							RunS.RenderStepped:Wait()
+						end
+					end)
+				end
 				local human_state = human:GetState()
 				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics and myTSM.Ragdoll.Value then
 					local orgCF,height = C.char:GetPivot()+Vector3.new(0,2),getHumanoidHeight(C.char)
@@ -9826,20 +9843,6 @@ C.AvailableHacks ={
 					end
 					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					human.JumpPower = defaultCharacterJumpPower
-					local lastGround
-					if not C.AvailableHacks.Runner[83].Funct then
-						local mySignal
-						C.AvailableHacks.Runner[83].Funct = mySignal
-						mySignal = jumpChangedEvent.Event:Connect(function()
-							while isJumpBeingHeld and C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value do
-								if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or os.clock()-lastGround>.25) then
-									human:ChangeState(Enum.HumanoidStateType.Jumping)
-									lastGround = os.clock()
-								end
-								RunS.RenderStepped:Wait()
-							end
-						end)
-					end
 					--human.WalkSpeed = 16
 					task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
@@ -9873,12 +9876,6 @@ C.AvailableHacks ={
 					end--]]
 					human:ChangeState(Enum.HumanoidStateType.Physics)
 					human.JumpPower = 0
-				end
-				if not myTSM.Ragdoll.Value or not C.enHacks.Runner_AntiRagdoll then
-					if C.AvailableHacks.Runner[83].Funct then
-						C.AvailableHacks.Runner[83].Funct:Disconnect()
-						C.AvailableHacks.Runner[83].Funct=nil
-					end
 				end
 			end,
 			["ActivateFunction"]=function(newValue)

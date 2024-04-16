@@ -9829,13 +9829,13 @@ C.AvailableHacks ={
 					task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
 					human:ChangeState(Enum.HumanoidStateType.Running)
-					for num, connection in ipairs(RagdollConnections) do
+					--[[for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()
 					end
 					C.SetTempValue("Runner_AntiRagdoll",function(theirPlr,caller,instance_name,instance_value)
 						print("FOund",caller)
 						if theirPlr == plr and instance_name == "Ragdoll" and C.enHacks.Runner_AntiRagdoll then
-							warn("Sp00f",instance_namer)
+							warn("Sp00f",instance_name)
 							return false
 						end
 					end)
@@ -9851,7 +9851,7 @@ C.AvailableHacks ={
 					for num, connection in ipairs(RagdollConnections) do
 						print("Fired",num)
 						connection:Fire(true)
-					end
+					end--]]
 				end
 			end,
 			["ActivateFunction"]=function(newValue)

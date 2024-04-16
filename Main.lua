@@ -9823,12 +9823,13 @@ C.AvailableHacks ={
 					end
 					human:ChangeState(Enum.HumanoidStateType.Running)
 					--human.WalkSpeed = 16
-					task.wait(.2)
+					--[[task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
 					human:ChangeState(Enum.HumanoidStateType.Running)
 					task.wait(.2)
 					if not C.enHacks.Runner_AntiRagdoll then return end
-					human:ChangeState(Enum.HumanoidStateType.Running)
+					human:ChangeState(Enum.HumanoidStateType.Running)--]]
+					human.JumpPower = defaultCharacterJumpPower
 					--[[for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()
 					end
@@ -9846,12 +9847,14 @@ C.AvailableHacks ={
 					C.SetTempValue("Runner_AntiRagdoll",nil)
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Enable()
-					end
+					end--]]
 				elseif not C.enHacks.Runner_AntiRagdoll then-- and human_state ~= Enum.HumanoidStateType.Physics then
-					for num, connection in ipairs(RagdollConnections) do
+					--[[for num, connection in ipairs(RagdollConnections) do
 						print("Fired",num)
 						connection:Fire(true)
 					end--]]
+					human:ChangeState(Enum.HumanoidStateType.Physics)
+					human.JumpPower = 0
 				end
 			end,
 			["ActivateFunction"]=function(newValue)

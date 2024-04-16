@@ -9831,6 +9831,7 @@ C.AvailableHacks ={
 						local mySignal
 						C.AvailableHacks.Runner[83].Funct = mySignal
 						mySignal = jumpChangedEvent.Event:Connect(function()
+							print("Space Held")
 							while isJumpBeingHeld and C.AvailableHacks.Runner[83].Funct==mySignal do 
 								if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or lastGround-os.clock()>.25) then
 									human:ChangeState(Enum.HumanoidStateType.Jumping)
@@ -9838,6 +9839,7 @@ C.AvailableHacks ={
 								end
 								RunS.RenderStepped:Wait()
 							end
+							print("Space End")
 						end)
 					end
 					--human.WalkSpeed = 16

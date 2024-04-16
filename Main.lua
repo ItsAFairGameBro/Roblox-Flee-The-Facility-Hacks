@@ -279,7 +279,7 @@ function C.Hook(root,method,functName,functData)
 	if not RBXHooks[root][method] then
 		print("New2 Hook",root)
 		local myData = {}
-		myData.List = {}
+		--myData.List = {}
 		RBXHooks[root][method] = myData
 		--local myData_List = myData.List
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
@@ -321,14 +321,25 @@ function C.Hook(root,method,functName,functData)
 				--RBXHooks[root][method][functName].loadstring()(...)
 				--for s = 1, #myData_List, 1 do
 					--local runFunct = tblUnpack(myData_List)
-				local result, values = functData(...)--functData(...)
-				if result then
-					return true--tblUnpack(values)
+				if functData then
+					local result, values = functData(...)--functData(...)
+					if result then
+						return true--tblUnpack(values)
+					end
 				end
 				--end
 			end
 			return OldFunction(...)
 		end))
+		if MethodFunction ~= hookmetamethod then
+			local bindableEvent = myData.Event or Instance.new("BindableEvent")
+			myData.Event = bindableEvent
+			bindableEvent.Event:Connect(function(new)
+				functName = new
+			end)
+		end
+	elseif RBXHooks[root][method].Event then	
+		RBXHooks[root][method].Event:Fire(functData)
 	end
 	--[[local oldFunct = RBXHooks[root][method][functName]
 	if not RBXHooks[root][method][functName].List then
@@ -11869,6 +11880,8 @@ C.clear = function(isManualClear)
 					for index2, funct in pairs(indexFunct) do
 						indexFunct.List[index2] = nil
 					end
+				elseif index=="Event" then
+					indexFunct:Fire(nil)
 				else
 					methodData[index] = nil -- Remove the instances, we don't need to clear anything else!
 				end

@@ -12147,7 +12147,7 @@ task.spawn(function()
 end)
 CS:AddTag(jumpChangedEvent,"RemoveOnDestroy")
 
-CAS:BindAction("hack_jump"..C.saveIndex,jumpAction,false, Enum.PlayerActions.CharacterJump)
+CAS:BindAction("hack_jump"..C.saveIndex,jumpAction,false, Enum.PlayerActions.CharacterJump, Enum.KeyCode.Space)
 
 --GUI CODING
 local refreshTypes = ({

@@ -11947,6 +11947,7 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("CloseMenu"..C.saveIndex)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
+	CAS:UnbindAction("hack_jump2"..C.saveIndex)
 
 	RunS:UnbindFromRenderStep("Follow")
 
@@ -12147,7 +12148,8 @@ task.spawn(function()
 end)
 CS:AddTag(jumpChangedEvent,"RemoveOnDestroy")
 
-CAS:BindAction("hack_jump"..C.saveIndex,jumpAction,false, Enum.PlayerActions.CharacterJump, Enum.KeyCode.Space)
+CAS:BindAction("hack_jump"..C.saveIndex,jumpAction,false, Enum.PlayerActions.CharacterJump)
+CAS:BindAction("hack_jump2"..C.saveIndex,jumpAction,false, Enum.KeyCode.Space)
 
 --GUI CODING
 local refreshTypes = ({

@@ -12123,6 +12123,7 @@ GuiCreationFunction = nil;
 --JUMP CONTROL
 jumpChangedEvent = Instance.new("BindableEvent")
 function jumpAction(actionName, inputState, inputObject)
+	print("State",inputState)
 	if inputState == Enum.UserInputState.Begin and not isJumpBeingHeld then
 		isJumpBeingHeld = true
 	elseif inputState == Enum.UserInputState.End and isJumpBeingHeld then

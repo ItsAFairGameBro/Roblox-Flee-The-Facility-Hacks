@@ -9845,8 +9845,9 @@ C.AvailableHacks ={
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Enable()
 					end
-				elseif not C.enHacks.Runner_AntiRagdoll and human_state ~= Enum.HumanoidStateType.Physics then
+				elseif not C.enHacks.Runner_AntiRagdoll then-- and human_state ~= Enum.HumanoidStateType.Physics then
 					for num, connection in ipairs(RagdollConnections) do
+						print("Fired",num)
 						connection:Fire(true)
 					end
 				end

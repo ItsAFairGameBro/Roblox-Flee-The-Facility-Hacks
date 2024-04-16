@@ -12126,7 +12126,7 @@ function jumpAction(actionName, inputState, inputObject)
 	print("State",inputState)
 	if inputState == Enum.UserInputState.Begin and not isJumpBeingHeld then
 		isJumpBeingHeld = true
-	elseif inputState == Enum.UserInputState.End and isJumpBeingHeld then
+	elseif (inputState == Enum.UserInputState.End or inputState==Enum.UserInputState.Cancel) and isJumpBeingHeld then
 		isJumpBeingHeld = false
 	else
 		return
@@ -12150,7 +12150,7 @@ end)
 CS:AddTag(jumpChangedEvent,"RemoveOnDestroy")
 
 CAS:BindAction("hack_jump"..C.saveIndex,jumpAction,false, Enum.PlayerActions.CharacterJump)
-CAS:BindAction("hack_jump2"..C.saveIndex,jumpAction,false, Enum.KeyCode.Space)
+CAS:BindActionAtPriority("hack_jump2"..C.saveIndex,jumpAction,false,9999999,Enum.KeyCode.Space)
 
 --GUI CODING
 local refreshTypes = ({

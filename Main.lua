@@ -9833,7 +9833,9 @@ C.AvailableHacks ={
 						connection:Disable()
 					end
 					C.SetTempValue("Runner_AntiRagdoll",function(theirPlr,caller,instance_name,instance_value)
+						print("FOund",caller)
 						if theirPlr == plr and instance_name == "Ragdoll" and C.enHacks.Runner_AntiRagdoll then
+							warn("Sp00f",instance_namer)
 							return false
 						end
 					end)

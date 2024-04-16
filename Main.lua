@@ -11866,7 +11866,7 @@ C.clear = function(isManualClear)
 				--for index,funct in pairs(methodFuncts) do
 					--print("Disabled",index,indexFunct)
 				if index=="List" then
-					for index2, funct in pairs(indexFunct.List) do
+					for index2, funct in pairs(indexFunct) do
 						indexFunct.List[index2] = nil
 					end
 				else

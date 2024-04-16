@@ -9831,16 +9831,13 @@ C.AvailableHacks ={
 						local mySignal
 						C.AvailableHacks.Runner[83].Funct = mySignal
 						mySignal = jumpChangedEvent.Event:Connect(function()
-							print("jumpie start")
 							while isJumpBeingHeld and C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value do
-								print("LOOP")
-								if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or lastGround-os.clock()>.25) then
+								if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or os.clock()-lastGround>.25) then
 									human:ChangeState(Enum.HumanoidStateType.Jumping)
 									lastGround = os.clock()
 								end
 								RunS.RenderStepped:Wait()
 							end
-							print("jumpie end")
 						end)
 					end
 					--human.WalkSpeed = 16
@@ -12131,7 +12128,6 @@ function jumpAction(actionName, inputState, inputObject)
 	else
 		return
 	end
-	print("INTERANL JUMp",isJumpBeingHeld)
 	jumpChangedEvent:Fire(isJumpBeingHeld)
 end
 task.spawn(function()

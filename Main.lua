@@ -12130,6 +12130,7 @@ function jumpAction(actionName, inputState, inputObject)
 	else
 		return
 	end
+	print("INTERANL JUMp",isJumpBeingHeld)
 	jumpChangedEvent:Fire(isJumpBeingHeld)
 end
 task.spawn(function()

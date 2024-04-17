@@ -2721,7 +2721,8 @@ function raycast(from, target, filter, distance, passThroughTransparency,passThr
 		result = workspace:Raycast(from, direction.Unit*(distance or direction.magnitude+.5), raycastParams);
 		--print(result~=nil and result.Instance or "no hit")
 		--print(result,passThroughTransparency,passThroughTransparency,passThroughCanCollide)
-		if raycastParams.FilterType==Enum.RaycastFilterType.Include or (result==nil or result.Instance==nil) or ((not passThroughTransparency or result.Instance.Transparency<(passThroughTransparency or 1)) and (not passThroughCanCollide or result.Instance.CanCollide)) then
+		if raycastParams.FilterType==Enum.RaycastFilterType.Include or (result==nil or result.Instance==nil) or ((not passThroughTransparency or result.Instance.Transparency<(passThroughTransparency or 1)) 
+			and (not passThroughCanCollide or result.Instance.CanCollide or result.Instance:SetAttribute(C.OriginalCollideName)==false)) then
 			break;
 		elseif result~=nil and lastInstance==result.Instance then
 			break;

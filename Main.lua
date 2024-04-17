@@ -3821,13 +3821,14 @@ C.AvailableHacks ={
 					return
 				end
 				local function changeVisibility(Place,Trans,Color)
-					Place.FillTransparency = Trans
+					--[[Place.FillTransparency = Trans
 					Place.OutlineTransparency = Trans>.99 and 1 or 0
 					if Color then
 						Place.FillColor = Color
-					end
+					end--]]
 				end
 				local robloxHighlight = Instance.new("Highlight")
+				robloxHighlight.DepthMode = Enum.HighlightDepthMode.Occluded
 				robloxHighlight.Parent = theirChar
 				CS:AddTag(robloxHighlight,"RemoveOnDestroy")
 				--local theirViewportChar=VPF:WaitForChild("Model")
@@ -4585,11 +4586,15 @@ C.AvailableHacks ={
 				if not actionSign then
 					return
 				end
+				local WalkThru = door:WaitForChild("WalkThru",69)
+				if not WalkThru then
+					return
+				end
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 1, 0)
-				newTag.Adornee=door:WaitForChild("WalkThru")
+				newTag.Adornee=WalkThru
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"HackDisplay2")
 				task.wait()

@@ -3848,9 +3848,9 @@ C.AvailableHacks ={
 								local didHit,instance=raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil,function(result)
 									if result and result.Parent and 
 										(result.Parent:FindFirstChild("Humanoid") or (result.Parent.Parent and result.Parent.Parent:FindFirstChild("Humanoid"))) then
-										return true
+										return false
 									end
-									return false
+									return true
 								end)
 								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,nameTag_UserName.TextColor3)
 								--(C.Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))

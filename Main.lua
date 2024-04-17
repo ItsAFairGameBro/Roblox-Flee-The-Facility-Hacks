@@ -199,7 +199,12 @@ function C.StringStartsWith(tbl,name)
 	local closestMatch, results = math.huge, {}
 	for index, theirValue in pairs(tbl) do
 		local itsIndex = tostring((typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index)
-		if itsIndex:lower():sub(1,name:len()) == name then
+		local canPass = itsIndex:lower():sub(1,name:len()) == name
+		if not canPass then
+			itsIndex = (typeof(index)=="Instance" and theirValue.ClassName=="Player" and theirValue.DisplayName) or itsIndex
+			canPass = itsIndex:lower():sub(1,name:len()) == name
+		end
+		if canPass then
 			if itsIndex:len() < closestMatch then
 				closestMatch = itsIndex:len() / (typeof(theirValue)=="table" and theirValue.Priority or 1)
 				results = {index,theirValue}
@@ -2296,7 +2301,7 @@ C.CommandFunctions = {
 	},
 	["teleport"]={
 		Type="Player",
-		AfterTxt="Teleported to %s",
+		AfterTxt="",
 		Run=function(args)
 			local theirPlr = args[1][1]
 			local theirChar = theirPlr.Character
@@ -2308,7 +2313,7 @@ C.CommandFunctions = {
 				return false, `HRP not found for {theirPlr.Name}`
 			end
 			teleportMyself(HRP.CFrame * CFrame.new(0,0,3))
-			return true,theirPlr.Name
+			return true,nil--theirPlr.Name
 		end,
 	},
 	["follow"]={

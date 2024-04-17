@@ -3846,8 +3846,9 @@ C.AvailableHacks ={
 							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({isInGame(theirChar)})[1])==({isInGame(camera.CameraSubject.Parent)})[1] then
 								--local didHit,instance=true,theirChar.PrimaryPart
 								local didHit,instance=raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil,function(result)
-									if result and result.Parent and 
-										(result.Parent:FindFirstChild("Humanoid") or (result.Parent.Parent and result.Parent.Parent:FindFirstChild("Humanoid"))) then
+									local instance = result and result.Instance
+									if instance and instance.Parent and 
+										(instance.Parent:FindFirstChild("Humanoid") or (instance.Parent.Parent and instance.Parent.Parent:FindFirstChild("Humanoid"))) then
 										return false
 									end
 									return true

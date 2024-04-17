@@ -6710,7 +6710,7 @@ C.AvailableHacks ={
 								wasLastFrameHolding = hasRDown
 
 								local canCollide = state == Enum.HumanoidStateType.Climbing or hasFDown
-									or C.AvailableHacks.Beast[2].IsCrawling
+									or (C.AvailableHacks.Beast[2] and C.AvailableHacks.Beast[2].IsCrawling)
 								for num, basepart in ipairs(C.char:GetDescendants()) do
 									if basepart and basepart:IsA("BasePart") then
 										C.SetCollide(basepart,"wallclip",canCollide,true)
@@ -9816,15 +9816,15 @@ C.AvailableHacks ={
 				--local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
 				
 				if not myTSM.Ragdoll.Value or not C.enHacks.Runner_AntiRagdoll then
+					CAS:UnbindAction("hack_jumpANTI_RAGDOLL"..C.saveIndex)
 					if C.AvailableHacks.Runner[83].Funct then
-						CAS:UnbindAction("hack_jump2"..C.saveIndex)
 						C.AvailableHacks.Runner[83].Funct:Disconnect()
 						C.AvailableHacks.Runner[83].Funct=nil
 					end
 				elseif myTSM.Ragdoll.Value and C.enHacks.Runner_AntiRagdoll and not C.AvailableHacks.Runner[83].Funct then
 					local lastGround
 					local mySignal
-					CAS:BindActionAtPriority("hack_jump2"..C.saveIndex,jumpAction,false,9999999,Enum.KeyCode.Space)
+					CAS:BindActionAtPriority("hack_jumpANTI_RAGDOLL"..C.saveIndex,jumpAction,false,9999999,Enum.KeyCode.Space)
 					C.AvailableHacks.Runner[83].Funct = mySignal
 					mySignal = jumpChangedEvent.Event:Connect(function(new)
 						if not new then
@@ -9895,6 +9895,9 @@ C.AvailableHacks ={
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Runner[83].ActivateFunction(C.enHacks.Runner_AntiRagdoll)
+			end,
+			["CleanUp"]=function()
+				C.AvailableHacks.Runner[83].ChangedFunction()
 			end,
 		},
 		[86]={

@@ -201,7 +201,7 @@ function C.StringStartsWith(tbl,name)
 		local itsIndex = tostring((typeof(theirValue)=="table" and theirValue.SortName) or (typeof(index)=="number" and theirValue) or index)
 		local canPass = itsIndex:lower():sub(1,name:len()) == name
 		if not canPass then
-			itsIndex = (typeof(index)=="Instance" and theirValue.ClassName=="Player" and theirValue.DisplayName) or itsIndex
+			itsIndex = (typeof(theirValue)=="Instance" and theirValue.ClassName=="Player" and theirValue.DisplayName) or itsIndex
 			canPass = itsIndex:lower():sub(1,name:len()) == name
 		end
 		if canPass then
@@ -12534,7 +12534,8 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 				args[1] = PS:GetPlayers()
 				table.remove(args[1],table.find(args[1],plr))
 				if #args[1]==0 then
-					canRunFunction = C.CreateSysMessage(`No other players found`)
+					canRunFunction = false
+					C.CreateSysMessage(`No other players found`)
 				end
 			elseif ChosenPlr == "me" or ChosenPlr == "" then
 				args[1] = {plr}
@@ -12542,7 +12543,8 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 				args[1] = {PS:GetPlayers()[Random.new():NextInteger(1,#PS:GetPlayers())]}
 			elseif ChosenPlr == "new" then
 				if not CommandData.SupportsNew then
-					canRunFunction = C.CreateSysMessage(`{command} doesn't support "new" players`)
+					canRunFunction = false
+					C.CreateSysMessage(`{command} doesn't support "new" players`)
 				end
 				args[1] = "new"
 			else
@@ -12550,16 +12552,19 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 				if ChosenPlr then
 					args[1] = {ChosenPlr}
 				else
-					canRunFunction = C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
+					canRunFunction = false
+					C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
 				end
 			end
 			if CommandData.Type=="Player" and #args[1]>1 then
-				canRunFunction = C.CreateSysMessage(`{command} only supports a single player`)
+				canRunFunction = false
+				C.CreateSysMessage(`{command} only supports a single player`)
 			end
 		elseif CommandData.Type=="" then
 			--do nothing
 		elseif CommandData.Type~=false then
-			canRunFunction = C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}, {tostring(CommandData.Type)}`)
+			canRunFunction = false
+			C.CreateSysMessage(`Internal Error: Command Implemented But Not Supported: {command}, {tostring(CommandData.Type)}`)
 		end
 		if canRunFunction then
 			local function yieldFunction()

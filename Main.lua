@@ -6806,7 +6806,7 @@ C.AvailableHacks ={
 			end,
 			["UndoTransmitter"]=function(index)
 				local data = C.AvailableHacks.Basic[25].TouchTransmitters[index]
-				local object, parent, Type, TouchToggle = table.unpack(data)
+				local object, parent, Type, TouchToggle = table.unpack(data or {})
 				if parent and parent.Parent and not C.AvailableHacks.Basic[25].CanBeEnabled(object,Type) then
 						--[[if typeof(parent)=="table" then
 							for num, connection in ipairs(parent) do

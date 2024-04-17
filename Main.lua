@@ -2301,7 +2301,7 @@ C.CommandFunctions = {
 	},
 	["teleport"]={
 		Type="Player",
-		AfterTxt="",
+		AfterTxt="to %s",
 		Run=function(args)
 			local theirPlr = args[1][1]
 			local theirChar = theirPlr.Character

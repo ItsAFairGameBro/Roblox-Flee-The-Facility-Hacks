@@ -2685,7 +2685,7 @@ end;
 
 local raycast;
 
-function raycast(from, target, filter, distance, passThroughTransparency,passThroughCanCollide)
+function raycast(from, target, filter, distance, passThroughTransparency,passThroughCanCollide,breakFunct)
 	local raycastParams = RaycastParams.new();
 	raycastParams.FilterType = Enum.RaycastFilterType.Include;
 	if filter[1]~=nil and (filter[1]=="Whitelist" or filter[1]=="Blacklist" or filter[1]=="Include" or filter[1]=="Exclude") then
@@ -2724,6 +2724,8 @@ function raycast(from, target, filter, distance, passThroughTransparency,passThr
 		if raycastParams.FilterType==Enum.RaycastFilterType.Include or (result==nil or result.Instance==nil) or ((not passThroughTransparency or result.Instance.Transparency<(passThroughTransparency or 1)) and (not passThroughCanCollide or result.Instance.CanCollide)) then
 			break;
 		elseif result~=nil and lastInstance==result.Instance then
+			break;
+		elseif breakFunct and breakFunct(result) then
 			break;
 		else
 			from = result.Position:lerp(target,.01);
@@ -3821,14 +3823,13 @@ C.AvailableHacks ={
 					return
 				end
 				local function changeVisibility(Place,Trans,Color)
-					--[[Place.FillTransparency = Trans
+					Place.FillTransparency = Trans
 					Place.OutlineTransparency = Trans>.99 and 1 or 0
 					if Color then
 						Place.FillColor = Color
-					end--]]
+					end
 				end
 				local robloxHighlight = Instance.new("Highlight")
-				robloxHighlight.DepthMode = Enum.HighlightDepthMode.Occluded
 				robloxHighlight.Parent = theirChar
 				CS:AddTag(robloxHighlight,"RemoveOnDestroy")
 				--local theirViewportChar=VPF:WaitForChild("Model")
@@ -3844,7 +3845,13 @@ C.AvailableHacks ={
 						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
 							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({isInGame(theirChar)})[1])==({isInGame(camera.CameraSubject.Parent)})[1] then
 								--local didHit,instance=true,theirChar.PrimaryPart
-								local didHit,instance=raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001)
+								local didHit,instance=raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil,function(result)
+									if result and result.Parent and 
+										(result.Parent:FindFirstChild("Humanoid") or (result.Parent.Parent and result.Parent.Parent:FindFirstChild("Humanoid"))) then
+										return true
+									end
+									return false
+								end)
 								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,nameTag_UserName.TextColor3)
 								--(C.Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
 								--myRenderer:step(0)

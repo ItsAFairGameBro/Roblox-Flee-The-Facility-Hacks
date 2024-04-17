@@ -3848,7 +3848,8 @@ C.AvailableHacks ={
 								local didHit,instance=raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil,function(result)
 									local instance = result and result.Instance
 									if instance and instance.Parent and 
-										(instance.Parent:FindFirstChild("Humanoid") or (instance.Parent.Parent and instance.Parent.Parent:FindFirstChild("Humanoid"))) then
+										(instance.Parent:FindFirstChild("Humanoid") or (instance.Parent.Parent and instance.Parent.Parent:FindFirstChild("Humanoid"))
+											or (instance.Parent.Parent.Parent and instance.Parent.Parent.Parent:FindFirstChild("Humanoid"))) then
 										return false
 									end
 									return true

@@ -2722,7 +2722,7 @@ function raycast(from, target, filter, distance, passThroughTransparency,passThr
 		--print(result~=nil and result.Instance or "no hit")
 		--print(result,passThroughTransparency,passThroughTransparency,passThroughCanCollide)
 		if raycastParams.FilterType==Enum.RaycastFilterType.Include or (result==nil or result.Instance==nil) or ((not passThroughTransparency or result.Instance.Transparency<(passThroughTransparency or 1)) 
-			and (not passThroughCanCollide or result.Instance.CanCollide or result.Instance:SetAttribute(C.OriginalCollideName)==false)) then
+			and (not passThroughCanCollide or result.Instance.CanCollide or result.Instance:SetAttribute(C.OriginalCollideName))) then
 			break;
 		elseif result~=nil and lastInstance==result.Instance then
 			break;

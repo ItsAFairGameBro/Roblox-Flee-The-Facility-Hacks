@@ -6822,7 +6822,8 @@ C.AvailableHacks ={
 						TouchToggle:Destroy()
 					end
 					parent:RemoveTag("TouchDisabled")
-					table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
+					C.AvailableHacks.Basic[25].TouchTransmitters[index]=nil
+					--table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
 					--end
 				end
 			end,

@@ -2301,7 +2301,7 @@ C.CommandFunctions = {
 	},
 	["teleport"]={
 		Type="Player",
-		AfterTxt="to %s",
+		AfterTxt="",
 		Run=function(args)
 			local theirPlr = args[1][1]
 			local theirChar = theirPlr.Character
@@ -2379,7 +2379,7 @@ C.CommandFunctions = {
 		AfterTxt="%s",
 		Run=function(args)
 			if not isFollowing then
-				return false, "Not Following Any User"
+				return false, "Not Following Any User ("..tostring(isFollowing)..")"
 			end
 			local str = `{isFollowing.Name}`
 			isFollowing = false
@@ -13034,6 +13034,12 @@ if gameName=="FleeMain" then
 	updateAnimation()
 	trigger_setTriggers("StartUp",{Computer=false})
 	task.delay(5,trigger_setTriggers,"StartUp",{Computer=true})--careful with computers at the start!
+	table.insert(C.functs,myTSM:WaitForChild("ActionProgress").Changed:Connect(function(newVal)
+		if newVal > .95 and (C.char and not isInGame(C.char,true)) and myTSM.CurrentAnimation.Value == "Typing" then
+			print("Stop Hacking PC")
+			stopCurrentAction()
+		end
+	end))
 
 
 	local totalXPEarned = 0;

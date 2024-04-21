@@ -2343,11 +2343,12 @@ C.CommandFunctions = {
 			local saveChar = C.char
 			C.CommandFunctions.unfollow.Run()
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()
-				print(plr:GetAttribute("isFollowing") ~= theirPlr.UserId,plr:GetAttribute("isFollowing"),theirPlr.UserId)
+				--print(plr:GetAttribute("isFollowing") ~= theirPlr.UserId,plr:GetAttribute("isFollowing"),theirPlr.UserId)
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
-				if (plr:GetAttribute("isFollowing") ~= theirPlr.UserId or not HRP or not HRP.Parent or isCleared) then
-					return
-				end
+				--if (plr:GetAttribute("isFollowing") ~= theirPlr.UserId or not HRP or not HRP.Parent or isCleared) then
+				--	return
+				--end
+				
 				if dist == 0 then
 					teleportMyself(HRP.CFrame)
 				else

@@ -2338,10 +2338,13 @@ C.CommandFunctions = {
 
 			--C.CommandFunctions.follow.isFollowing = theirPlr.UserId
 			--print("Set To",C.CommandFunctions.follow.isFollowing,theirPlr.UserId)
-			plr:SetAttribute("isFollowing",theirPlr.UserId)
 			
 			local saveChar = C.char
 			C.CommandFunctions.unfollow.Run()
+			if theirPlr then
+				return
+			end
+			C.isFollowing = theirPlr
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()
 				--print(plr:GetAttribute("isFollowing") ~= theirPlr.UserId,plr:GetAttribute("isFollowing"),theirPlr.UserId)
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
@@ -2386,12 +2389,12 @@ C.CommandFunctions = {
 		Type="",
 		AfterTxt="%s",
 		Run=function(args)
-			if not C.CommandFunctions.follow.isFollowing then
-				return false, "Not Following Any User ("..tostring(C.CommandFunctions.follow.isFollowing)..")"
+			if not C.isFollowing then
+				return false, "Not Following Any User ("..tostring(C.isFollowing)..")"
 			end
-			local theirPlr = PS:GetPlayerByUserId(C.CommandFunctions.follow.isFollowing)
+			local theirPlr = PS:GetPlayerByUserId(C.isFollowing)
 			local str = `{theirPlr or 'Unknown'}`
-			plr:SetAttribute("isFollowing",nil)
+			C.isFollowing = nil
 			--C.CommandFunctions.follow.isFollowing = -1
 			RunS:UnbindFromRenderStep("Follow"..C.saveIndex)
 			for num, myAnimTrack in pairs(C.CommandFunctions.follow.MyPlayingAnimations) do
@@ -12566,7 +12569,7 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 					C.CreateSysMessage(`Player(s) Not Found: {command}; allowed: all, others, me, <plrName>`)
 				end
 			end
-			if CommandData.Type=="Player" and #args[1]>1 then
+			if canRunFunction and CommandData.Type=="Player" and #args[1]>1 then
 				canRunFunction = false
 				C.CreateSysMessage(`{command} only supports a single player`)
 			end

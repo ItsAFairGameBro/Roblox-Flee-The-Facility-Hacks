@@ -8950,7 +8950,7 @@ C.AvailableHacks ={
 					task.wait(1)
 				end
 				for num, instance in ipairs(C.Map:GetChildren()) do
-					if instance.Name == "Vent" then
+					if instance.Name == "Vent" or instance.Name=="AirVent" then
 						local VentBlock = instance:FindFirstChild("VentBlock")
 						if VentBlock then
 							VentBlock:Destroy()

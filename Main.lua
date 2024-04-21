@@ -2006,7 +2006,6 @@ local function checkFriendsPCALLFunction(inputName)
 		return friendsTable
 	end
 end
-C.isFollowing = nil
 C.CommandFunctions = {
 	["refresh"]={
 		Type=false,
@@ -2319,6 +2318,7 @@ C.CommandFunctions = {
 	["follow"]={
 		Type="Player",
 		AfterTxt="",
+		isFollowing=nil,
 		ForcePlayAnimations={},
 		MyPlayingAnimations={},
 		Run=function(args)
@@ -2336,13 +2336,14 @@ C.CommandFunctions = {
 				return false, `Invalid Number {args[2]}`
 			end
 
-			C.isFollowing = theirPlr
+			C.CommandFunctions.follow.isFollowing = theirPlr
+			print("Set To",C.CommandFunctions.follow.isFollowing)
 			local saveChar = C.char
 			C.CommandFunctions.unfollow.Run()
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()
-				print("Run",args,C.isFollowing,HRP,isCleared)
+				print("Run",args,C.CommandFunctions.follow.isFollowing,HRP,isCleared)
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
-				if (C.isFollowing ~= theirPlr or not HRP or not HRP.Parent or isCleared) then
+				if (C.CommandFunctions.follow.isFollowing ~= theirPlr or not HRP or not HRP.Parent or isCleared) then
 					return
 				end
 				if dist == 0 then
@@ -2382,11 +2383,11 @@ C.CommandFunctions = {
 		Type="",
 		AfterTxt="%s",
 		Run=function(args)
-			if not C.isFollowing then
-				return false, "Not Following Any User ("..tostring(C.isFollowing)..")"
+			if not C.CommandFunctions.follow.isFollowing then
+				return false, "Not Following Any User ("..tostring(C.CommandFunctions.follow.isFollowing)..")"
 			end
-			local str = `{C.isFollowing.Name}`
-			C.isFollowing = nil
+			local str = `{C.CommandFunctions.follow.isFollowing.Name}`
+			C.CommandFunctions.follow.isFollowing = nil
 			RunS:UnbindFromRenderStep("Follow"..C.saveIndex)
 			for num, myAnimTrack in pairs(C.CommandFunctions.follow.MyPlayingAnimations) do
 				myAnimTrack:Stop(0)

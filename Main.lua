@@ -2340,6 +2340,7 @@ C.CommandFunctions = {
 			local saveChar = C.char
 			C.CommandFunctions.unfollow.Run()
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()
+				print("Run",C.CommandFunctions.follow.isFollowing,theirPlr.UserId,HRP,isCleared)
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
 				if (C.CommandFunctions.follow.isFollowing ~= theirPlr.UserId or not HRP or not HRP.Parent or isCleared) then
 					return

@@ -2336,14 +2336,15 @@ C.CommandFunctions = {
 				return false, `Invalid Number {args[2]}`
 			end
 
-			C.CommandFunctions.follow.isFollowing = theirPlr.UserId
-			print("Set To",C.CommandFunctions.follow.isFollowing,theirPlr.UserId)
+			--C.CommandFunctions.follow.isFollowing = theirPlr.UserId
+			--print("Set To",C.CommandFunctions.follow.isFollowing,theirPlr.UserId)
+			plr:SetAttribute("isFollowing",theirPlr.UserId)
+			
 			local saveChar = C.char
 			C.CommandFunctions.unfollow.Run()
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()
-				print("Run",C.CommandFunctions.follow.isFollowing,theirPlr.UserId,HRP,isCleared)
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
-				if (C.CommandFunctions.follow.isFollowing ~= theirPlr.UserId or not HRP or not HRP.Parent or isCleared) then
+				if (plr:GetAttribute("isFollowing") ~= theirPlr.UserId or not HRP or not HRP.Parent or isCleared) then
 					return
 				end
 				if dist == 0 then
@@ -2388,7 +2389,8 @@ C.CommandFunctions = {
 			end
 			local theirPlr = PS:GetPlayerByUserId(C.CommandFunctions.follow.isFollowing)
 			local str = `{theirPlr or 'Unknown'}`
-			C.CommandFunctions.follow.isFollowing = -1
+			plr:SetAttribute("isFollowing",nil)
+			--C.CommandFunctions.follow.isFollowing = -1
 			RunS:UnbindFromRenderStep("Follow"..C.saveIndex)
 			for num, myAnimTrack in pairs(C.CommandFunctions.follow.MyPlayingAnimations) do
 				myAnimTrack:Stop(0)

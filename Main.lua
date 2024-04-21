@@ -2341,8 +2341,8 @@ C.CommandFunctions = {
 			
 			local saveChar = C.char
 			C.CommandFunctions.unfollow.Run()
-			if theirPlr then
-				return
+			if not theirPlr then
+				return true
 			end
 			C.isFollowing = theirPlr
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()

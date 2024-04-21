@@ -2339,8 +2339,11 @@ C.CommandFunctions = {
 			isFollowing = theirPlr
 			local saveChar = C.char
 			C.CommandFunctions.unfollow.Run()
-			RunS:BindToRenderStep("Follow",69,function()
+			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()
 				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
+				if not (isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared) then
+					return
+				end
 				if dist == 0 then
 					teleportMyself(HRP.CFrame)
 				else
@@ -2383,7 +2386,7 @@ C.CommandFunctions = {
 			end
 			local str = `{isFollowing.Name}`
 			isFollowing = false
-			RunS:UnbindFromRenderStep("Follow")
+			RunS:UnbindFromRenderStep("Follow"..C.saveIndex)
 			for num, myAnimTrack in pairs(C.CommandFunctions.follow.MyPlayingAnimations) do
 				myAnimTrack:Stop(0)
 			end
@@ -11973,7 +11976,7 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
 	CAS:UnbindAction("hack_jump2"..C.saveIndex)
 
-	RunS:UnbindFromRenderStep("Follow")
+	RunS:UnbindFromRenderStep("Follow"..C.saveIndex)
 
 
 	for num, thing2Clear in pairs({"objectFuncts"}) do
@@ -12044,7 +12047,7 @@ getgenv()["ActiveScript"..getID] = getgenv()["ActiveScript"..getID] or {}
 if previousCopy then
 	local changedEvent=Instance.new("BindableEvent",script)
 	local startTime=os.clock()
-	local maxWaitTime=3
+	local maxWaitTime=5
 	local function maxWaitTimeReturnFunction()
 		if not changedEvent or not changedEvent.Parent then
 			return

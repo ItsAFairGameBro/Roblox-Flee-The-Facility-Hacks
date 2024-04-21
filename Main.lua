@@ -2384,7 +2384,8 @@ C.CommandFunctions = {
 			if not C.CommandFunctions.follow.isFollowing then
 				return false, "Not Following Any User ("..tostring(C.CommandFunctions.follow.isFollowing)..")"
 			end
-			local str = `{C.CommandFunctions.follow.isFollowing.Name}`
+			local theirPlr = PS:GetPlayerByUserId(C.CommandFunctions.follow.isFollowing)
+			local str = `{theirPlr or 'Unknown'}`
 			C.CommandFunctions.follow.isFollowing = -1
 			RunS:UnbindFromRenderStep("Follow"..C.saveIndex)
 			for num, myAnimTrack in pairs(C.CommandFunctions.follow.MyPlayingAnimations) do

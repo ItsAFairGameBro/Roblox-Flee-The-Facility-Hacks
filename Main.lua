@@ -2337,6 +2337,7 @@ C.CommandFunctions = {
 			end
 
 			C.CommandFunctions.follow.isFollowing = theirPlr.UserId
+			print("Set To",C.CommandFunctions.follow.isFollowing,theirPlr.UserId)
 			local saveChar = C.char
 			C.CommandFunctions.unfollow.Run()
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()

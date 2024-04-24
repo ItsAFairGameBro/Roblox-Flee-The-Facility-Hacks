@@ -2101,8 +2101,8 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
 			end
-			local accessories = humanDesc:GetAccessories(true)
-			local ids2Add = {15093053680}
+			--[[local accessories = humanDesc:GetAccessories(true)
+			--local ids2Add = {15093053680}
 			for num, accessory in ipairs(accessories) do
 				local removeKey = table.find(ids2Add,accessory.AssetId)
 				if removeKey then
@@ -2110,9 +2110,10 @@ C.CommandFunctions = {
 				end
 			end
 			for num, id in ipairs(ids2Add) do
-				table.insert(accessories,{AssetId=id,AccessoryType=(game:GetService("AvatarEditorService"):GetAccessoryType(Enum.AvatarAssetType.DynamicHead)) })
+				table.insert(accessories,{AssetId=id,AccessoryType=Enum.AccessoryType. })
 			end
-			humanDesc:SetAccessories(accessories,true)
+			humanDesc:SetAccessories(accessories,true)--]]
+			humanDesc.Head = 15093053680
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)
 			end

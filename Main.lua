@@ -2110,7 +2110,7 @@ C.CommandFunctions = {
 				end
 			end
 			for num, id in ipairs(ids2Add) do
-				table.insert(accessories,{AssetId=id})
+				table.insert(accessories,{AssetId=id,AccessoryType=(game:GetService("AvatarEditorService"):GetAccessoryType(Enum.AvatarAssetType.DynamicHead)) })
 			end
 			humanDesc:SetAccessories(accessories,true)
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do

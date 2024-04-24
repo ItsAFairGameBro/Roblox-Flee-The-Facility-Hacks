@@ -2101,6 +2101,18 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
 			end
+			local accessories = humanDesc:GetAccessories(true)
+			local ids2Add = {15093053680}
+			for num, accessory in ipairs(accessories) do
+				local removeKey = table.find(ids2Add,accessory.AssetId)
+				if removeKey then
+					table.remove(ids2Add,removeKey)
+				end
+			end
+			for num, id in ipairs(ids2Add) do
+				table.insert(accessories,{AssetId=id})
+			end
+			humanDesc:SetAccessories(accessories,true)
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)
 			end

@@ -11821,7 +11821,8 @@ C.AvailableHacks ={
 					if C.enHacks.Commands_ChatSpy then
 						local hidden = true
 						local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
-							if packet.SpeakerUserId==theirPlr.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") then
+							if packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") then
+								--packet.SpeakerUserId==theirPlr.UserId
 								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
 								hidden = false
 							end

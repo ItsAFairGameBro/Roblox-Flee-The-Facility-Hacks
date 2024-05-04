@@ -2229,7 +2229,7 @@ C.CommandFunctions = {
 			local savedDescription = selectedName~="no" 
 				and C.CommandFunctions.morph.GetHumanoidDesc(selectedName.UserId,args[3] and outfitData.id)
 			--((args[3] and PS:GetHumanoidDescriptionFromOutfitId(outfitData.id)) or PS:GetHumanoidDescriptionFromUserId(selectedName.UserId))
-			if args[1]=="new" then
+			if args[1]=="new" or args[1]=="others" or args[1]=="all" then
 				if getgenv().JoinPlayerMorphDesc and getgenv().JoinPlayerMorphDesc ~= savedDescription then
 					getgenv().JoinPlayerMorphDesc:Destroy()
 				end
@@ -2238,7 +2238,8 @@ C.CommandFunctions = {
 				else
 					getgenv().JoinPlayerMorphDesc = savedDescription
 				end
-			else
+			end
+			if args[1]~="new" then
 				for num, theirPlr in ipairs(args[1]) do
 					if args[3] and not outfitData then
 						return false, `Outfit {args[3]} not found for player {theirPlr.Name}`

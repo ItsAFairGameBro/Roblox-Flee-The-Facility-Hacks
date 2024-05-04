@@ -6688,6 +6688,11 @@ C.AvailableHacks ={
 				--print(("search completed after %.2f"):format(os.clock()-start))
 			end,
 			["MapAdded"]=function(newMap)
+				local BasePlate = workspace:FindFirstChild("MapBaseplate")
+				if BasePlate then
+					BasePlate.CanCollide = true
+				end
+				
 				if not C.AvailableHacks.Basic[20].FirstClean then
 					C.AvailableHacks.Basic[20].FirstClean=true
 					C.AvailableHacks.Basic[20].ActivateFunction(false)
@@ -6706,10 +6711,6 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[20].ApplyInvi(newMap)
 			end,
 			["ActivateFunction"]=function(newValue)
-				local BasePlate = workspace:FindFirstChild("MapBaseplate")
-				if BasePlate then
-					BasePlate.CanCollide = newValue
-				end
 				if newValue then
 					C.AvailableHacks.Basic[20].ApplyInvi(workspace)
 				else

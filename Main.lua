@@ -9583,7 +9583,7 @@ C.AvailableHacks ={
 						end
 					end
 				end
-				CAS:BindAction("AutoRemoveRope"..C.saveIndex,function() end, false, Enum.KeyCode.U)
+				CAS:BindAction("AutoRemoveRope"..C.saveIndex,ToRunFunct, false, Enum.KeyCode.U)
 			end,
 			--["MyBeastAdded"]=function(...)
 			--	C.AvailableHacks.Runner[3].OthersBeastAdded(...)

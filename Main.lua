@@ -2113,7 +2113,9 @@ C.CommandFunctions = {
 				table.insert(accessories,{AssetId=id,AccessoryType=Enum.AccessoryType. })
 			end
 			humanDesc:SetAccessories(accessories,true)--]]
-			humanDesc.Head = 15093053680
+			if not isDefault then
+				humanDesc.Head = 15093053680
+			end
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)
 			end

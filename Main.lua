@@ -2367,13 +2367,16 @@ C.CommandFunctions = {
 				--if (plr:GetAttribute("isFollowing") ~= theirPlr.UserId or not HRP or not HRP.Parent or isCleared) then
 				--	return
 				--end
+				if isTeleporting then
+					return
+				end
 				
 				if dist == 0 then
 					teleportMyself(HRP.CFrame)
 				else
 					teleportMyself(CFrame.new(HRP.CFrame * Vector3.new(0,0,dist),HRP.Position))
 				end
-				for num, animTrack in ipairs(saveChar.Humanoid.Animator:GetPlayingAnimationTracks()) do
+				--[[for num, animTrack in ipairs(saveChar.Humanoid.Animator:GetPlayingAnimationTracks()) do
 					if animTrack then
 						local myAnimTrack = C.CommandFunctions.follow.MyPlayingAnimations[animTrack]
 						if not myAnimTrack then
@@ -2388,7 +2391,10 @@ C.CommandFunctions = {
 							myAnimTrack:Stop()
 						end
 					end
-				end
+				end--]]
+				
+				
+				
 				-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
 				--task.wait()
 				--end

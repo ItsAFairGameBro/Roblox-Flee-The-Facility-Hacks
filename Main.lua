@@ -2336,9 +2336,6 @@ C.CommandFunctions = {
 		MyPlayingAnimations={},
 		Run=function(args)
 			local theirPlr = args[1][1]
-			if theirPlr == plr then
-				return false, "Cannot Follow Yourself!"
-			end
 			local theirChar = theirPlr.Character
 			if not theirChar then
 				return false, `Character not found for {theirPlr.Name}`
@@ -2359,6 +2356,9 @@ C.CommandFunctions = {
 			C.CommandFunctions.unfollow.Run()
 			if not theirPlr then
 				return true
+			end
+			if theirPlr == plr then
+				return false, "Cannot Follow Yourself!"
 			end
 			C.isFollowing = theirPlr
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()
@@ -4087,7 +4087,7 @@ C.AvailableHacks ={
 				if not closestPC then
 					closestPC = checkPC()
 				end
-				if (closestPC~=nil) then
+				if (closestPC~=nil and closestPC.PrimaryPart and closestPC.PrimaryPart:FindFirstChild("NameTagEx")) then
 					C.AvailableHacks.Render[7].SetBar(closestPC,ActionProgress.Value)
 				end
 			end,
@@ -9572,6 +9572,19 @@ C.AvailableHacks ={
 				end) or false)
 				C.AvailableHacks.Runner[3].ChangedFunction()
 			end,
+			["MyPlayerAdded"]=function()
+				local function ToRunFunct(actionName,actionState)
+					if actionState == Enum.UserInputState.Begin then
+						if C.enHacks.AutoRemoveRope == false then
+							C.refreshEnHack["AutoRemoveRope"]("Everyone")
+						else
+							--TODO HERE
+							C.refreshEnHack["AutoRemoveRope"](false)
+						end
+					end
+				end
+				CAS:BindAction("AutoRemoveRope"..C.saveIndex,function() end, false, Enum.KeyCode.U)
+			end,
 			--["MyBeastAdded"]=function(...)
 			--	C.AvailableHacks.Runner[3].OthersBeastAdded(...)
 			--end
@@ -12007,6 +12020,7 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("PushSlash"..C.saveIndex)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
 	CAS:UnbindAction("hack_jump2"..C.saveIndex)
+	CAS:UnbindAction("AutoRemoveRope"..C.saveIndex)
 
 	RunS:UnbindFromRenderStep("Follow"..C.saveIndex)
 

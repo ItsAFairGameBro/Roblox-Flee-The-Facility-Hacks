@@ -5695,6 +5695,38 @@ C.AvailableHacks ={
 				end
 			end
 		},
+		[26]={
+			["Type"]="ExTextButton",
+			["Title"]="Chat Spy",
+			["Desc"]="Spies for private messages",
+			["Shortcut"]="Utility_ChatSpy",
+			["Default"]=true,
+			["PlayerAdded"]=function(theirPlr)
+				print(theirPlr,"regstitered")
+				local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
+					print(theirPlr,msg)
+					if C.enHacks.Utility_ChatSpy then
+						print("one")
+						local hidden = true
+						local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+							if packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") then
+								--packet.SpeakerUserId==theirPlr.UserId
+								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+								hidden = false
+								print("not hidden")
+							end
+						end)
+						task.wait(1)
+						conn:Disconnect()
+						if hidden then
+							C.CreateSysMessage("["..theirPlr.Name.."]: "..msg,Color3.fromRGB(0,255))
+						end
+					end
+				end))
+			end,
+		},
+
 	},
 	["Basic"]={
 		[1]={
@@ -11807,33 +11839,6 @@ C.AvailableHacks ={
 					task.wait(.5)
 					C.AvailableHacks.Commands[35].CoreFunction(LoopValue)
 				end
-			end,
-		},
-		[36]={
-			["Type"]="ExTextButton",
-			["Title"]="Chat Spy",
-			["Desc"]="Spies for private messages",
-			["Shortcut"]="Commands_ChatSpy",
-			["Default"]=true,
-			["PlayerAdded"]=function(theirPlr)
-				local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
-				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
-					if C.enHacks.Commands_ChatSpy then
-						local hidden = true
-						local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
-							if packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") then
-								--packet.SpeakerUserId==theirPlr.UserId
-								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
-								hidden = false
-							end
-						end)
-						task.wait(1)
-						conn:Disconnect()
-						if hidden then
-							C.CreateSysMessage("["..theirPlr.Name.."]: "..msg,Color3.fromRGB(0,255))
-						end
-					end
-				end))
 			end,
 		},
 	}

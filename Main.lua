@@ -5703,7 +5703,7 @@ C.AvailableHacks ={
 			["Default"]=true,
 			["PlayerAdded"]=function(theirPlr)
 				print(theirPlr,"regstitered")
-				local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+				local getmsg = RS:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
 				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
 					print(theirPlr,msg)
 					if C.enHacks.Utility_ChatSpy then
@@ -5724,6 +5724,12 @@ C.AvailableHacks ={
 						end
 					end
 				end))
+			end,
+			["MyPlayerAdded"]=function(myPlr)
+				C.AvailableHacks.Utility[26].PlayerAdded(myPlr)
+			end,
+			["OthersPlayerAdded"]=function(theirPlr)
+				C.AvailableHacks.Utility[26].PlayerAdded(theirPlr)
 			end,
 		},
 

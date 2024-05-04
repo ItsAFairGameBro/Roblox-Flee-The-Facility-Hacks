@@ -260,11 +260,11 @@ function C.BetterGSub(orgString,searchString,replacement,settings)
 	end
 	return newText, totalReplacements
 end
-function C.CreateSysMessage(message,color)
+function C.CreateSysMessage(message,color,typeText)
 	if TCS.ChatVersion == Enum.ChatVersion.TextChatService then
 		(TCS:FindFirstChild("RBXGeneral",true) or TCS:FindFirstChildWhichIsA("TextChannel",true)):DisplaySystemMessage(message)
 	else
-		SG:SetCore("ChatMakeSystemMessage",  { Text = `[Sys] {message}`, Color = color or Color3.fromRGB(255), 
+		SG:SetCore("ChatMakeSystemMessage",  { Text = `[{typeText or "Sys"}] {message}`, Color = color or Color3.fromRGB(255), 
 			Font = Enum.Font.SourceSansBold, FontSize = Enum.FontSize.Size24 } )
 	end
 end
@@ -5702,25 +5702,21 @@ C.AvailableHacks ={
 			["Shortcut"]="Utility_ChatSpy",
 			["Default"]=true,
 			["PlayerAdded"]=function(theirPlr)
-				print(theirPlr,"regstitered")
 				local getmsg = RS:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
 				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
-					print(theirPlr,msg)
 					if C.enHacks.Utility_ChatSpy then
-						print("one")
 						local hidden = true
 						local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
 							if packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") then
 								--packet.SpeakerUserId==theirPlr.UserId
 								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
 								hidden = false
-								print("not hidden")
 							end
 						end)
 						task.wait(1)
 						conn:Disconnect()
 						if hidden then
-							C.CreateSysMessage("["..theirPlr.Name.."]: "..msg,Color3.fromRGB(0,255))
+							C.CreateSysMessage("["..theirPlr.Name.."]: "..msg,Color3.fromRGB(0,255),"Spy")
 						end
 					end
 				end))

@@ -2336,6 +2336,9 @@ C.CommandFunctions = {
 		MyPlayingAnimations={},
 		Run=function(args)
 			local theirPlr = args[1][1]
+			if theirPlr == plr then
+				return false, "Cannot Follow Yourself!"
+			end
 			local theirChar = theirPlr.Character
 			if not theirChar then
 				return false, `Character not found for {theirPlr.Name}`
@@ -2405,7 +2408,7 @@ C.CommandFunctions = {
 			if not C.isFollowing then
 				return false, "Not Following Any User ("..tostring(C.isFollowing)..")"
 			end
-			local theirPlr = PS:GetPlayerByUserId(C.isFollowing)
+			local theirPlr = C.isFollowing
 			local str = `{theirPlr or 'Unknown'}`
 			C.isFollowing = nil
 			--C.CommandFunctions.follow.isFollowing = -1

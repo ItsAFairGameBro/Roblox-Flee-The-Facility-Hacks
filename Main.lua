@@ -11767,9 +11767,75 @@ C.AvailableHacks ={
 				C.refreshEnHack["Commands_GetFrozen"](false)
 			end,
 		},
-
+		[35]={
+			["Type"]="ExTextButton",
+			["Title"]="ClickDetectors",
+			["Desc"]="Activates All Possible ClickDetectors",
+			["Shortcut"]="Commands_ClickDetectors",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[true]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=newColor3(0,0,170),
+				},
+			},
+			["CoreFunction"]=function(loopInstance)
+				local fireclickdetector = fireclickdetector
+				for num, obj in ipairs(loopInstance:GetDescendants()) do
+					if obj:IsA("ClickDetector") then
+						if obj.MaxActivationDistance > 0 then
+							fireclickdetector(obj,1)
+							task.spawn(fireclickdetector,obj,0)
+						end 
+						print("Activated",obj.Parent:GetFullName(),obj.Name)
+					end
+					if num%1000==0 then
+						task.wait(.1)
+					end
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				local LoopValue
+				if gameUniverse == "Flee" then
+					LoopValue = RS:WaitForChild("CurrentMap").Value
+				else
+					LoopValue = workspace
+				end
+				C.AvailableHacks.Commands[35].CoreFunction(LoopValue)
+				if gameUniverse == "Flee" then
+					task.wait(.5)
+					C.AvailableHacks.Commands[35].CoreFunction(LoopValue)
+				end
+			end,
+		},
+		[36]={
+			["Type"]="ExTextButton",
+			["Title"]="Chat Spy",
+			["Desc"]="Spies for private messages",
+			["Shortcut"]="Commands_ChatSpy",
+			["Default"]=true,
+			["PlayerAdded"]=function(theirPlr)
+				local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
+					if C.enHacks.Commands_ChatSpy then
+						local hidden = true
+						local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+							if packet.SpeakerUserId==theirPlr.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") then
+								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+								hidden = false
+							end
+						end)
+						task.wait(1)
+						conn:Disconnect()
+						if hidden then
+							C.CreateSysMessage("["..theirPlr.Name.."]: "..msg,Color3.fromRGB(0,255))
+						end
+					end
+				end))
+			end,
+		},
 	}
-
 }
 local function defaultFunction(functName,args)
 	if not C.AvailableHacks then

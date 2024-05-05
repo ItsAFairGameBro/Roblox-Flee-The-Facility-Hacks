@@ -5714,6 +5714,9 @@ C.AvailableHacks ={
 								--packet.SpeakerUserId==theirPlr.UserId
 								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
 								hidden = false
+							else
+								msg = packet.Message
+								print("Fond and Hidden")
 							end
 						end)
 						task.wait(1)

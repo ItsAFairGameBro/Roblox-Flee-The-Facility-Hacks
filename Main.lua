@@ -5205,10 +5205,12 @@ C.AvailableHacks ={
 						C.AvailableHacks.Utility[3].Funct=nil
 					end
 					CAS:UnbindAction("PushSlash"..C.saveIndex)
-					if UIS.TouchEnabled then
-						chatTextLabel.Text = "Tap here to chat"
-					else
-						chatTextLabel.Text = 'To chat click here or press "/" key'
+					if chatTextLabel then
+						if UIS.TouchEnabled then
+							chatTextLabel.Text = "Tap here to chat"
+						else
+							chatTextLabel.Text = 'To chat click here or press "/" key'
+						end
 					end
 				end
 				local function cameraChanged()
@@ -5700,8 +5702,9 @@ C.AvailableHacks ={
 			["Title"]="Chat Spy",
 			["Desc"]="Spies for private messages",
 			["Shortcut"]="Utility_ChatSpy",
+			["Universes"]={"Global"},
 			["Default"]=true,
-			["PlayerAdded"]=function(theirPlr)
+			["OthersPlayerAdded"]=function(theirPlr)
 				local getmsg = RS:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
 				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
 					if C.enHacks.Utility_ChatSpy then
@@ -5721,12 +5724,12 @@ C.AvailableHacks ={
 					end
 				end))
 			end,
-			["MyPlayerAdded"]=function(myPlr)
+			--[[["MyPlayerAdded"]=function(myPlr)
 				C.AvailableHacks.Utility[26].PlayerAdded(myPlr)
 			end,
 			["OthersPlayerAdded"]=function(theirPlr)
 				C.AvailableHacks.Utility[26].PlayerAdded(theirPlr)
-			end,
+			end,--]]
 		},
 
 	},

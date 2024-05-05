@@ -5705,24 +5705,21 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=true,
 			["OthersPlayerAdded"]=function(theirPlr)
+				--local Config = {public = false}
 				local getmsg = RS:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
 				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
 					if C.enHacks.Utility_ChatSpy then
 						local hidden = true
 						local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
-							if packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") then
-								--packet.SpeakerUserId==theirPlr.UserId
-								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+							if (packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") and packet.SpeakerUserId==theirPlr.UserId) then
+								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team) then
 								hidden = false
-							else
-								msg = packet.Message
-								print("Fond and Hidden")
 							end
 						end)
 						task.wait(1)
 						conn:Disconnect()
 						if hidden then
-							C.CreateSysMessage("["..theirPlr.Name.."]: "..msg,Color3.fromRGB(0,255),"Spy")
+							C.CreateSysMessage("["..theirPlr.Name.."]: "..msg,Color3.fromRGB(0,175),"Chat Spy")
 						end
 					end
 				end))

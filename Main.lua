@@ -2046,20 +2046,21 @@ C.CommandFunctions = {
 		AnimationEffectFunctions={
 			Fade = {
 				Tween = function(targetChar,visible,instant)
+					print("Tween",visible,instant)
 					local newTransparency = visible and 0 or 1
 					for num, part in ipairs(targetChar:GetDescendants()) do
 						if part:IsA("BasePart") then
 							if instant then
-								part.Transparency = newTransparency
+								part.LocalTransparencyModifier = newTransparency
 							else
-								TS:Create(part,TweenInfo.new(.6),{Transparency = newTransparency}):Play();
+								TS:Create(part,TweenInfo.new(.6),{LocalTransparencyModifier = newTransparency}):Play();
 							end
 						end
 					end
 				end,
 				Start = function(targetChar)
-					--Run Fade Animation Effect
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,false,false)
+					task.wait(0.6)
 				end,
 				Update = function(targetChar)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,false,true)

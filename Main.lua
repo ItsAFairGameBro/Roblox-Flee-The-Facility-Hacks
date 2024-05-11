@@ -2083,6 +2083,10 @@ C.CommandFunctions = {
 			if not targetHuman or targetHuman.Health <=0 or not targetHRP then
 				return
 			end
+			if AnimationEffectData then
+				AnimationEffectData.Start(targetChar)
+			end
+
 			--local wasAnchored = targetHRP.Anchored
 			--humanDesc.Name = "CharacterDesc"
 			if not dontUpdate then
@@ -2152,13 +2156,12 @@ C.CommandFunctions = {
 				humanDesc.Head = 15093053680
 			end
 			local AnimationUpdateConnection
-			if AnimationEffectData then
+			if AnimationEffectData and AnimationEffectData.Update then
 				AnimationUpdateConnection = targetChar.DescendantAdded:Connect(function(part)
-					AnimationEffectData.Update(targetChar,part)
+					if part:IsA("BasePart") then
+						AnimationEffectData.Update(targetChar,part)
+					end
 				end)
-			end
-			if AnimationEffectData then
-				AnimationEffectData.Start(targetChar)
 			end
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)

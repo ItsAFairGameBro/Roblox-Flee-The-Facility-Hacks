@@ -2152,7 +2152,7 @@ C.CommandFunctions = {
 				table.insert(accessories,{AssetId=id,AccessoryType=Enum.AccessoryType. })
 			end
 			humanDesc:SetAccessories(accessories,true)--]]
-			if not isDefault then
+			if humanDesc.Head ~= 0 then--not isDefault then
 				humanDesc.Head = 15093053680
 			end
 			local AnimationUpdateConnection

@@ -2327,6 +2327,7 @@ C.CommandFunctions = {
 			if not HRP then
 				return false, `HRP not found for {theirPlr.Name}`
 			end
+			C.CommandFunctions.unfollow.Run()
 			teleportMyself(HRP.CFrame * CFrame.new(0,0,3))
 			return true,nil--theirPlr.Name
 		end,
@@ -4948,6 +4949,12 @@ C.AvailableHacks ={
 					if caller.Name == "LocalGuiScript" then
 						if canContinue then
 							if theirPlr == plr then
+								if instance_name=="Health" then
+									return 0
+								elseif instance_name=="IsBeast" then
+									return false
+								end
+							elseif not theirPlr.Character or not theirPlr.Character:FindFirstChild("Torso") or not theirPlr.Character:FindFirstChild("Head") then
 								if instance_name=="Health" then
 									return 0
 								elseif instance_name=="IsBeast" then

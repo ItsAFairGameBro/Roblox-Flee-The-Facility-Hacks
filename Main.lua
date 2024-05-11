@@ -2049,7 +2049,7 @@ C.CommandFunctions = {
 					--print("Tween",visible,instant)
 					local newTransparency = visible and 0 or 1
 					local property = targetChar == plr.Character and "LocalTransparencyModifier" or "Transparency"
-					for num, part in ipairs() do
+					for num, part in ipairs(loopList) do
 						if part:IsA("BasePart") then
 							if instant then
 								part[property] = newTransparency

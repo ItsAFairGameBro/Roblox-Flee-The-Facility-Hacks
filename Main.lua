@@ -6429,6 +6429,7 @@ C.AvailableHacks ={
 				CAS:UnbindAction("up"..C.saveIndex)
 				CAS:UnbindAction("down"..C.saveIndex)
 				human:SetStateEnabled(Enum.HumanoidStateType.Seated,true)
+				human:ChangeState(Enum.HumanoidStateType.GettingUp)
 				local JetpackGUI=plr.PlayerGui:FindFirstChild("JetpackGUI")
 				if JetpackGUI~=nil then 
 					JetpackGUI:Destroy()

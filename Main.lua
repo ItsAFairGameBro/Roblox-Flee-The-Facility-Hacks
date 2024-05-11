@@ -2048,12 +2048,13 @@ C.CommandFunctions = {
 				Tween = function(targetChar,visible,instant)
 					print("Tween",visible,instant)
 					local newTransparency = visible and 0 or 1
+					local property = targetChar == plr.Character and "LocalTransparencyModifier" or "Transparency"
 					for num, part in ipairs(targetChar:GetDescendants()) do
 						if part:IsA("BasePart") then
 							if instant then
-								part.LocalTransparencyModifier = newTransparency
+								part[property] = newTransparency
 							else
-								TS:Create(part,TweenInfo.new(.6),{LocalTransparencyModifier = newTransparency}):Play();
+								TS:Create(part,TweenInfo.new(2),{[property] = newTransparency}):Play();
 							end
 						end
 					end
@@ -2064,6 +2065,7 @@ C.CommandFunctions = {
 				end,
 				Update = function(targetChar)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,false,true)
+					task.wait(1)
 				end,
 				End = function(targetChar)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,true,false)

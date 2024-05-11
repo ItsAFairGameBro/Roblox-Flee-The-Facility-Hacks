@@ -2069,7 +2069,6 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,{part},false,true)
 				end,
 				End = function(targetChar)
-					game:GetService("ContentProvider"):PreloadAsync({targetChar})
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),true,false)
 				end,
 			}

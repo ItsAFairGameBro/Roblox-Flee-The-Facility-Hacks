@@ -2049,7 +2049,7 @@ C.CommandFunctions = {
 					local newTransparency = visible and 0 or 1
 					local property = "Transparency"--targetChar == plr.Character and "LocalTransparencyModifier" or "Transparency"
 					for num, part in ipairs(loopList) do
-						if part.Name ~= "Weight" and (part:IsA("BasePart") or part:IsA("Decal")) then
+						if part.Name ~= "Weight" and part.Name ~= "HumanoidRootPart" and (part:IsA("BasePart") or part:IsA("Decal"))  then
 							if instant then
 								part[property] = newTransparency
 							else

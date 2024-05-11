@@ -7114,9 +7114,23 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["Active"] = false,
 			["Universes"]={"Global"},
+			["Options"]={
+				[false]={
+					["Title"]="DISABLED",
+					["TextColor"]=newColor3(255, 0, 0),
+				},
+				["Partial"]={
+					["Title"]="Partial",
+					["TextColor"]=newColor3(170,170,170),
+				},
+				[true]={
+					["Title"]="ALL",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
+			},
 			["Functs"]={},
 			["Deb"]=0.5,
-			["HiddenLocation"] = Vector3.new(0,8,0),
+			["HiddenLocation"] = Vector3.new(0,70,0),
 			["LastTeleportLocation"] = CFrame.new(),
 			["ApplyChange"] = function(newHuman,oldHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
@@ -8609,14 +8623,14 @@ C.AvailableHacks ={
 				end
 				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(updateCamera))
 				updateCamera()
-				if gameName == "FleeMain" then
+				--if gameName == "FleeMain" then
 					--local charEnv = C.GetHardValue(orgChar.LocalPlayerScript, "env", {yield=true})
 					for num, part in ipairs(clonedChar:GetChildren()) do
 						local RelativePart = orgChar:FindFirstChild(part.Name)
 						if part:IsA("BasePart") and RelativePart then
 							table.insert(connections,part.Touched:Connect(function(instance)
 								--charEnv.TriggerTouch(instance,true)
-								if instance.CanTouch then
+								if instance.CanTouch and (part.Name==CenterPart.Name or C.enHacks.Basic_InvisibleChar==true) then
 									firetouchinterest(RelativePart,instance,0)
 								end
 							end))
@@ -8626,7 +8640,7 @@ C.AvailableHacks ={
 							end))
 						end
 					end
-				end
+				--end
 				--[[table.insert(connections,RemoteEvent.OnClientEvent:Connect(function(thing)
 					if thing=="FadeBlackTransition" then
 						local lastPosition = clonedChar:GetPrimaryPartCFrame().Position
@@ -8761,6 +8775,9 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Basic[30].Active = enabled
 				if enabled then
+					if C.rchar then
+						return
+					end
 					C.AvailableHacks.Basic[30].RunFunction(C.AvailableHacks.Basic[30].Functs)
 				else
 					for index = #C.AvailableHacks.Basic[30].Functs, 1, -1 do

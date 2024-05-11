@@ -3247,8 +3247,11 @@ local function LocalClubScriptFunction(Original_LocalClubScript)
 	end
 	ShowEmptyFreezePodBillboardIcons = function()
 		ClearFreezeConnection()
-		local v70 = v10.CurrentMap
-		for v69, v74 in ipairs(v70.Value:GetChildren()) do
+		local v70 = v10.CurrentMap.Value
+		if not v70 or v70 == TS then
+			return
+		end
+		for v69, v74 in ipairs(v70:GetChildren()) do
 			local v73 = v74.Name
 			local podTrigger = v74:FindFirstChild("PodTrigger")
 			if podTrigger and podTrigger:FindFirstChild("ActionSign") then
@@ -9469,17 +9472,16 @@ C.AvailableHacks ={
 					end
 					if isFinished then
 						retValue = false
+						if C.enHacks.Beast_CaptureAllSurvivors=="In Progress" then
+							warn("<font color='rgb(255,255,0)'>Finished Capturing!</font>")
+							C.refreshEnHack["Beast_CaptureAllSurvivors"](true)
+						end
 					end
 
 					if not retValue and not noReset then--CLEANUP CHECK!
 						trigger_setTriggers("Beast_CaptureAllSurvivors",true)
 					end
 					
-					if not retValue then
-						warn("<font color='rgb(255,255,0)'>Finished Capturing!</font>")
-						C.refreshEnHack["Beast_CaptureAllSurvivors"](true)
-					end
-
 
 					return retValue
 				end
@@ -9487,6 +9489,7 @@ C.AvailableHacks ={
 					return theirPlr and theirPlr.Parent and theirPlr.Character and theirPlr.Character.PrimaryPart
 						and theirPlr.Character:FindFirstChild("Humanoid") and theirPlr.Character.Humanoid.Health>0
 				end
+				if not canRun() then return end
 				C.refreshEnHack["Beast_CaptureAllSurvivors"]("In Progress")
 				trigger_setTriggers("Beast_CaptureAllSurvivors",false)
 				local function teleportFunct(theirChar,theirHuman)
@@ -9551,7 +9554,6 @@ C.AvailableHacks ={
 					RunS.RenderStepped:Wait()
 					print("OUTside loop1!")
 				end
-				--if not canRun() then return end
 			end,
 			["MyBeastAdded"]=function()
 				C.AvailableHacks.Beast[77].ActivateFunction(C.enHacks.Beast_CaptureAllSurvivors)
@@ -10392,7 +10394,7 @@ C.AvailableHacks ={
 							C.AvailableHacks.Beast[2].Crawl(C.AvailableHacks.Beast[2].IsCrawling) --RS.IsGameActive.Changed:Wait() --wait(1)
 						end)
 					end
-					while not RS.CurrentMap.Value do
+					while canRun(true) and (RS.CurrentMap.Value==nil or RS.CurrentMap.Value==TS) do
 						print("[Bot Runner]: Waiting For Map!")
 						RS.CurrentMap.Changed:Wait()
 					end
@@ -13082,6 +13084,7 @@ local function updateCurrentMap(newMap,firstRun)
 			updateCurrentMap(nil)
 		end))
 	elseif C.Map and not newMap then
+		RS.CurrentMap.Value = TS
 		task.wait(2) -- Delay this to avoid lag spikes
 		local clonedMap = C.Map
 		C.Map = nil; C.Beast = nil;

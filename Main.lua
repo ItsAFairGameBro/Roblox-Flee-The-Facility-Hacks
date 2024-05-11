@@ -2073,6 +2073,7 @@ C.CommandFunctions = {
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, dontAddCap, isDefault)
 			
 			local AnimationEffectData = C.CommandFunctions.morph.AnimationEffectFunctions[C.CommandFunctions.morph.DoAnimationEffect or false]
+			print(C.CommandFunctions.morph.DoAnimationEffect,C.CommandFunctions.morph.AnimationEffectFunctions,dontAddCap)
 			if dontAddCap and AnimationEffectData then
 				AnimationEffectData.Start(targetChar)
 			end

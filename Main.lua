@@ -6429,7 +6429,6 @@ C.AvailableHacks ={
 				CAS:UnbindAction("up"..C.saveIndex)
 				CAS:UnbindAction("down"..C.saveIndex)
 				human:SetStateEnabled(Enum.HumanoidStateType.Seated,true)
-				human:ChangeState(Enum.HumanoidStateType.GettingUp)
 				local JetpackGUI=plr.PlayerGui:FindFirstChild("JetpackGUI")
 				if JetpackGUI~=nil then 
 					JetpackGUI:Destroy()
@@ -8535,11 +8534,11 @@ C.AvailableHacks ={
 				clonedChar.Name = "InviClone"
 				clonedChar:AddTag("RemoveOnDestroy")
 
-
+				local orgHuman = human
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 				clonedChar:SetPrimaryPartCFrame(saveLoc)
-				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,human)
+				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,orgHuman)
 				removeAllClasses(clonedChar,"Sound")
 				local CLONEDHammer = clonedChar:FindFirstChild("Hammer")
 				if CLONEDHammer then
@@ -8565,16 +8564,19 @@ C.AvailableHacks ={
 						attachment.Name = "FloatAttachment"
 						attachment.Parent = orgChar.HumanoidRootPart
 
-						human.PlatformStand = true
+						orgHuman.PlatformStand = true
 
 						--orgChar.PrimaryPart.Anchored = true
-						--human:ChangeState(Enum.HumanoidStateType.Landed)
+						--orgHuman:ChangeState(Enum.HumanoidStateType.Landed)
 					end
 				end
 				C.AvailableHacks.Basic[30].LastTeleportLocation = saveLoc + C.AvailableHacks.Basic[30].HiddenLocation
 				teleportMyself(C.AvailableHacks.Basic[30].LastTeleportLocation)
 				C.rchar = orgChar
 				C.char = clonedChar
+				C.rhuman = orgHuman
+				human = clonedHuman
+				
 
 
 				task.spawn(teleportMyCharacterAway,saveLoc)
@@ -8618,7 +8620,7 @@ C.AvailableHacks ={
 					:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				table.insert(connections,HRP:GetPropertyChangedSignal("CFrame"):Connect(doCFrameChanged))
 				local function updateCamera()
-					if camera.CameraSubject == human then
+					if camera.CameraSubject == orgHuman then
 						camera.CameraSubject = clonedHuman
 					end
 				end
@@ -8668,7 +8670,7 @@ C.AvailableHacks ={
 					while clonedChar and clonedHuman and clonedChar.Parent do
 						local MoveDirection = C.PlayerControlModule:GetMoveVector()
 						clonedHuman:Move(MoveDirection,true)
-						human:GetPropertyChangedSignal("MoveDirection"):Wait()
+						orgHuman:GetPropertyChangedSignal("MoveDirection"):Wait()
 					end
 				end)
 				task.spawn(function()
@@ -8719,7 +8721,7 @@ C.AvailableHacks ={
 					end
 				end
 				local SavedAnimsTracks = {}
-				local runningSpeed = human.MoveDirection.Magnitude > 1e-3 and 3 or 0
+				local runningSpeed = orgHuman.MoveDirection.Magnitude > 1e-3 and 3 or 0
 				local canRun = false
 				local function animTrackAdded(animTrack,instant)
 					local animation = animTrack.Animation
@@ -8752,8 +8754,8 @@ C.AvailableHacks ={
 						myTrack:Play()
 					end
 				end
-				table.insert(connections, human.Animator.AnimationPlayed:Connect(animTrackAdded))
-				task.spawn(doAnimate[human.RigType],clonedChar,connections)
+				table.insert(connections, orgHuman.Animator.AnimationPlayed:Connect(animTrackAdded))
+				task.spawn(doAnimate[orgHuman.RigType],clonedChar,connections)
 				table.insert(connections, clonedHuman.Running:Connect(function(speed)
 					local myTrack = SavedAnimsTracks["rbxassetid://961932719"]
 					if not myTrack then
@@ -8766,7 +8768,7 @@ C.AvailableHacks ={
 						myTrack:AdjustSpeed(0)
 					end
 				end))
-				for _, animTrack in ipairs(human.Animator:GetPlayingAnimationTracks()) do
+				for _, animTrack in ipairs(orgHuman.Animator:GetPlayingAnimationTracks()) do
 					animTrackAdded(animTrack,true)--the "true" is for it to be instant!
 				end
 			end,
@@ -8787,13 +8789,14 @@ C.AvailableHacks ={
 						table.remove(C.AvailableHacks.Basic[30].Functs,index)
 					end
 					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.rchar and C.rchar.Parent then
+						local orgHuman = C.rhuman
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
-						human:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
+						orgHuman:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
 						task.delay(1,function()
-							human:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
+							orgHuman:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
 						end)
-						if human then
-							human.PlatformStand = false
+						if orgHuman then
+							orgHuman.PlatformStand = false
 						end
 						if C.rchar:FindFirstChild("HumanoidRootPart") then
 							C.rchar:SetPrimaryPartCFrame(C.ClonedChar:GetPrimaryPartCFrame())
@@ -8811,13 +8814,13 @@ C.AvailableHacks ={
 								end
 							end
 						end--]]
-						camera.CameraSubject = human
+						camera.CameraSubject = orgHuman
 						C.char = C.rchar
 						C.rchar = nil
 						--for s = 2, 1, -1 do
 						--RunS.RenderStepped:Wait()
 						--end
-						C.AvailableHacks.Basic[30].ApplyChange(human,clonedHuman)
+						C.AvailableHacks.Basic[30].ApplyChange(orgHuman,clonedHuman)
 					end
 					if C.ClonedChar then
 						C.ClonedChar:Destroy()

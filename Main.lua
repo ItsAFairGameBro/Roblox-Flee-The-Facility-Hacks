@@ -5718,14 +5718,15 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=true,
 			["OthersPlayerAdded"]=function(theirPlr)
-				--local Config = {public = false}
+				local Config = {public = false}
 				local getmsg = RS:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
 				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
 					if C.enHacks.Utility_ChatSpy then
+						msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ') -- CLIP THE MESSAGE (important!)
 						local hidden = true
 						local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
-							if (packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") and packet.SpeakerUserId==theirPlr.UserId) then
-								--or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team) then
+							if (packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All") and packet.SpeakerUserId==theirPlr.UserId)
+								or (channel=="Team" and Config.public==false and PS[packet.FromSpeaker].Team==plr.Team) then
 								hidden = false
 							end
 						end)

@@ -2049,11 +2049,14 @@ C.CommandFunctions = {
 					local newTransparency = visible and 0 or 1
 					local property = "Transparency"--targetChar == plr.Character and "LocalTransparencyModifier" or "Transparency"
 					for num, part in ipairs(loopList) do
-						if part.Name ~= "Weight" and part.Name ~= "HumanoidRootPart" and (part:IsA("BasePart") or part:IsA("Decal"))  then
+						if ((not visible and part.Transparency<1) or (part:GetAttribute("PreviousTransparency")))
+							and (part:IsA("BasePart") or part:IsA("Decal"))  then
+							local PreviousTransparency = part:GetAttribute('PreviousTransparency') or part.Transparency
+							part:SetAttribute("PreviousTransparency",PreviousTransparency)
 							if instant then
-								part[property] = newTransparency
+								part[property] = visible and PreviousTransparency or newTransparency
 							else
-								TS:Create(part,TweenInfo.new(.6),{[property] = newTransparency}):Play();
+								TS:Create(part,TweenInfo.new(.6),{[property] = visible and PreviousTransparency or newTransparency}):Play();
 							end
 						end
 					end
@@ -2063,9 +2066,6 @@ C.CommandFunctions = {
 					task.wait(0.6 + (os.clock()-math.floor(os.clock())))
 				end,
 				Update = function(targetChar,part)
-					if not part:IsA("BasePart") then
-						return
-					end
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,{part},false,true)
 				end,
 				End = function(targetChar)

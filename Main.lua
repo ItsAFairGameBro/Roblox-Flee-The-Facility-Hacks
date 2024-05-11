@@ -8816,7 +8816,9 @@ C.AvailableHacks ={
 						end--]]
 						camera.CameraSubject = orgHuman
 						C.char = C.rchar
+						human = C.rhuman
 						C.rchar = nil
+						C.rhuman = nil
 						--for s = 2, 1, -1 do
 						--RunS.RenderStepped:Wait()
 						--end

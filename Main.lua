@@ -7113,11 +7113,12 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Functs"]={},
 			["Deb"]=0.5,
-			["HiddenLocation"] = Vector3.new(0,70,0),
+			["HiddenLocation"] = Vector3.new(0,30,0),
 			["LastTeleportLocation"] = CFrame.new(),
 			["ApplyChange"] = function(oldHuman,newHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				--newHuman:ChangeState(oldHuman:GetState())
+				oldHuman:ChangeState(Enum.HumanoidStateType.Physics)
 				newHuman:ChangeState(Enum.HumanoidStateType.Running)
 				local clonedHRP, currentHRP = clonedChar:FindFirstChild("HumanoidRootPart"), currentChar:FindFirstChild("HumanoidRootPart")
 				if clonedHRP and currentHRP then
@@ -9473,6 +9474,11 @@ C.AvailableHacks ={
 					if not retValue and not noReset then--CLEANUP CHECK!
 						trigger_setTriggers("Beast_CaptureAllSurvivors",true)
 					end
+					
+					if not retValue then
+						warn("<font color='rgb(255,255,0)'>Finished Capturing!</font>")
+						C.refreshEnHack["Beast_CaptureAllSurvivors"](true)
+					end
 
 
 					return retValue
@@ -9545,9 +9551,7 @@ C.AvailableHacks ={
 					RunS.RenderStepped:Wait()
 					print("OUTside loop1!")
 				end
-				if not canRun() then return end
-				warn("<font color='rgb(255,255,0)'>Finished Capturing!</font>")
-				C.refreshEnHack["Beast_CaptureAllSurvivors"](true)
+				--if not canRun() then return end
 			end,
 			["MyBeastAdded"]=function()
 				C.AvailableHacks.Beast[77].ActivateFunction(C.enHacks.Beast_CaptureAllSurvivors)
@@ -9963,15 +9967,12 @@ C.AvailableHacks ={
 					if result then
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))
 					end
-					human:ChangeState(Enum.HumanoidStateType.GettingUp)
 					human.JumpPower = defaultCharacterJumpPower
 					--human.WalkSpeed = 16
-					task.wait(.2)
-					if not C.enHacks.Runner_AntiRagdoll then return end
-					human:ChangeState(Enum.HumanoidStateType.GettingUp)
-					task.wait(.2)
-					if not C.enHacks.Runner_AntiRagdoll then return end
-					human:ChangeState(Enum.HumanoidStateType.GettingUp)--]]
+					while C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value and human:GetState()~=Enum.HumanoidStateType.Running do
+						human:ChangeState(Enum.HumanoidStateType.GettingUp)
+						task.wait(.2)
+					end
 					
 					--[[for num, connection in ipairs(RagdollConnections) do
 						connection:Disable()

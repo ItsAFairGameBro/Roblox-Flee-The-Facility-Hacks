@@ -2068,6 +2068,7 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,{part},false,true)
 				end,
 				End = function(targetChar)
+					task.wait(1)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),true,false)
 				end,
 			}

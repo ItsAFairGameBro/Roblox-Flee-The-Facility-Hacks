@@ -7153,7 +7153,10 @@ C.AvailableHacks ={
 					currentHRP.AssemblyLinearVelocity = Vector3.new()
 					currentHRP.AssemblyAngularVelocity = Vector3.new()
 				end
-				C.refreshEnHack["Movement"](C.enHacks.Movement)
+				
+				local saveMovement = C.enHacks.Movement
+				C.refreshEnHack["Movement"](false)
+				C.refreshEnHack["Movement"](saveMovement)
 			end,
 			["ReplicateProperties"]={
 				{"Humanoid","HipHeight"},

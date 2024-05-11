@@ -2068,7 +2068,7 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,{part},false,true)
 				end,
 				End = function(targetChar)
-					task.wait(5)
+					task.wait(2)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),true,false)
 				end,
 			}
@@ -2158,6 +2158,7 @@ C.CommandFunctions = {
 			local AnimationUpdateConnection
 			if AnimationEffectData and AnimationEffectData.Update then
 				AnimationUpdateConnection = targetChar.DescendantAdded:Connect(function(part)
+					print("Added",part)
 					if part:IsA("BasePart") then
 						AnimationEffectData.Update(targetChar,part)
 					end

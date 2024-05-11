@@ -8536,6 +8536,13 @@ C.AvailableHacks ={
 				C.ClonedChar = clonedChar
 				clonedChar.Name = "InviClone"
 				clonedChar:AddTag("RemoveOnDestroy")
+				
+				for num, child in ipairs(clonedChar:GetDescendants()) do
+					if child:GetAttribute("RemoveOnDestroy") then
+						child:Destroy()
+					end
+				end
+				
 
 				local orgHuman = human
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")

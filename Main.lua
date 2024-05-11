@@ -2049,7 +2049,7 @@ C.CommandFunctions = {
 					local newTransparency = visible and 0 or 1
 					local property = "Transparency"--targetChar == plr.Character and "LocalTransparencyModifier" or "Transparency"
 					for num, part in ipairs(loopList) do
-						if part:IsA("BasePart") then
+						if part.Name ~= "Weight" and (part:IsA("BasePart") or part:IsA("Decal")) then
 							if instant then
 								part[property] = newTransparency
 							else
@@ -2060,6 +2060,7 @@ C.CommandFunctions = {
 				end,
 				Start = function(targetChar)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),false,false)
+					task.wait(0.6)
 				end,
 				Update = function(targetChar,part)
 					if not part:IsA("BasePart") then
@@ -2068,7 +2069,7 @@ C.CommandFunctions = {
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,{part},false,true)
 				end,
 				End = function(targetChar)
-					task.wait(2)
+					game:GetService("ContentProvider"):PreloadAsync({targetChar})
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),true,false)
 				end,
 			}

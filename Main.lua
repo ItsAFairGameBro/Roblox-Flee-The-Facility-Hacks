@@ -5410,10 +5410,13 @@ C.AvailableHacks ={
 					ClearFreezePodBillboardIcons()
 				end
 				local hammerAnims = {"AnimSwing","AnimWipe","AnimArmIdle"}
-				for _, track in ipairs(human:WaitForChild("Animator"):GetPlayingAnimationTracks()) do
-					if table.find(hammerAnims,track.Animation.Name) then
-						track:Stop(0)
-						track:Destroy()
+				local Animator = human and human:FindFirstChild("Animator")
+				if Animator then
+					for _, track in ipairs(human:WaitForChild("Animator"):GetPlayingAnimationTracks()) do
+						if table.find(hammerAnims,track.Animation.Name) then
+							track:Stop(0)
+							track:Destroy()
+						end
 					end
 				end
 			end,

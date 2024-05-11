@@ -7127,9 +7127,14 @@ C.AvailableHacks ={
 				if clonedHRP and currentHRP then
 					clonedHRP.AssemblyLinearVelocity = currentHRP.AssemblyLinearVelocity
 					clonedHRP.AssemblyAngularVelocity = currentHRP.AssemblyAngularVelocity
-				elseif clonedHRP then
+				end
+				if clonedHRP then
 					clonedHRP.AssemblyLinearVelocity = Vector3.new()
 					clonedHRP.AssemblyAngularVelocity = Vector3.new()
+				end
+				if currentHRP then
+					currentHRP.AssemblyLinearVelocity = Vector3.new()
+					currentHRP.AssemblyAngularVelocity = Vector3.new()
 				end
 			end,
 			["ReplicateProperties"]={

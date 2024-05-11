@@ -8610,12 +8610,16 @@ C.AvailableHacks ={
 				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(updateCamera))
 				updateCamera()
 				if gameName == "FleeMain" then
-					local charEnv = C.GetHardValue(orgChar.LocalPlayerScript, "env", {yield=true})
+					--local charEnv = C.GetHardValue(orgChar.LocalPlayerScript, "env", {yield=true})
 					table.insert(connections,clonedChar.Torso.Touched:Connect(function(instance)
-						charEnv.TriggerTouch(instance,true)
+						--charEnv.TriggerTouch(instance,true)
+						if instance.CanTouch then
+							firetouchinterest(CenterPart,instance,0)
+						end
 					end))
 					table.insert(connections,clonedChar.Torso.TouchEnded:Connect(function(instance)
-						charEnv.TriggerTouch(instance,false)
+						--charEnv.TriggerTouch(instance,false)
+						firetouchinterest(CenterPart,instance,1)
 					end))
 				end
 				--[[table.insert(connections,RemoteEvent.OnClientEvent:Connect(function(thing)

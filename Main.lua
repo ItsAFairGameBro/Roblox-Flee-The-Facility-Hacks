@@ -2077,9 +2077,6 @@ C.CommandFunctions = {
 			
 			local AnimationEffectData = C.CommandFunctions.morph.AnimationEffectFunctions[C.CommandFunctions.morph.DoAnimationEffect or false]
 			--print(C.CommandFunctions.morph.DoAnimationEffect,C.CommandFunctions.morph.AnimationEffectFunctions,dontAddCap)
-			if AnimationEffectData then
-				AnimationEffectData.Start(targetChar)
-			end
 			
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
@@ -2159,6 +2156,9 @@ C.CommandFunctions = {
 				AnimationUpdateConnection = targetChar.DescendantAdded:Connect(function(part)
 					AnimationEffectData.Update(targetChar,part)
 				end)
+			end
+			if AnimationEffectData then
+				AnimationEffectData.Start(targetChar)
 			end
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)

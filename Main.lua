@@ -8611,16 +8611,21 @@ C.AvailableHacks ={
 				updateCamera()
 				if gameName == "FleeMain" then
 					--local charEnv = C.GetHardValue(orgChar.LocalPlayerScript, "env", {yield=true})
-					table.insert(connections,clonedChar.Torso.Touched:Connect(function(instance)
-						--charEnv.TriggerTouch(instance,true)
-						if instance.CanTouch then
-							firetouchinterest(CenterPart,instance,0)
+					for num, part in ipairs(clonedChar:GetChildren()) do
+						local RelativePart = orgChar:FindFirstChild(part.Name)
+						if part:IsA("BasePart") and RelativePart then
+							table.insert(connections,part.Touched:Connect(function(instance)
+								--charEnv.TriggerTouch(instance,true)
+								if instance.CanTouch then
+									firetouchinterest(RelativePart,instance,0)
+								end
+							end))
+							table.insert(connections,part.TouchEnded:Connect(function(instance)
+								--charEnv.TriggerTouch(instance,false)
+								firetouchinterest(RelativePart,instance,1)
+							end))
 						end
-					end))
-					table.insert(connections,clonedChar.Torso.TouchEnded:Connect(function(instance)
-						--charEnv.TriggerTouch(instance,false)
-						firetouchinterest(CenterPart,instance,1)
-					end))
+					end
 				end
 				--[[table.insert(connections,RemoteEvent.OnClientEvent:Connect(function(thing)
 					if thing=="FadeBlackTransition" then

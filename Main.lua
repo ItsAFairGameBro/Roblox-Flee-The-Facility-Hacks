@@ -2046,7 +2046,7 @@ C.CommandFunctions = {
 		AnimationEffectFunctions={
 			Fade = {
 				Tween = function(targetChar,visible,instant)
-					print("Tween",visible,instant)
+					--print("Tween",visible,instant)
 					local newTransparency = visible and 0 or 1
 					local property = targetChar == plr.Character and "LocalTransparencyModifier" or "Transparency"
 					for num, part in ipairs(targetChar:GetDescendants()) do
@@ -2055,6 +2055,7 @@ C.CommandFunctions = {
 								part[property] = newTransparency
 							else
 								TS:Create(part,TweenInfo.new(2),{[property] = newTransparency}):Play();
+								print("Tween-ED",part,property,newTransparency)
 							end
 						end
 					end

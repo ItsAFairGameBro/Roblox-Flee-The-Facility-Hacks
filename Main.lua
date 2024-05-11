@@ -8525,8 +8525,6 @@ C.AvailableHacks ={
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 				clonedChar:SetPrimaryPartCFrame(saveLoc)
 				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,human)
-				C.rchar = orgChar
-				C.char = clonedChar
 				removeAllClasses(clonedChar,"Sound")
 				local CLONEDHammer = clonedChar:FindFirstChild("Hammer")
 				if CLONEDHammer then
@@ -8560,6 +8558,9 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Basic[30].LastTeleportLocation = saveLoc + C.AvailableHacks.Basic[30].HiddenLocation
 				teleportMyself(C.AvailableHacks.Basic[30].LastTeleportLocation)
+				C.rchar = orgChar
+				C.char = clonedChar
+
 
 				task.spawn(teleportMyCharacterAway,saveLoc)
 

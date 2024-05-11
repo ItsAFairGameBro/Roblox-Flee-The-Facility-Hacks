@@ -2042,7 +2042,40 @@ C.CommandFunctions = {
 			desc.Name = userID .. (outfitId and ("/"..outfitId) or "")
 			return  desc
 		end,
+		DoAnimationEffect = "Fade",
+		AnimationEffectFunctions={
+			Fade = {
+				Tween = function(targetChar,visible,instant)
+					local newTransparency = visible and 0 or 1
+					for num, part in ipairs(targetChar:GetDescendants()) do
+						if part:IsA("BasePart") then
+							if instant then
+								part.Transparency = newTransparency
+							else
+								TS:Create(part,TweenInfo.new(.6),{Transparency = newTransparency}):Play();
+							end
+						end
+					end
+				end,
+				Start = function(targetChar)
+					--Run Fade Animation Effect
+					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,false,false)
+				end,
+				Update = function(targetChar)
+					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,false,true)
+				end,
+				End = function(targetChar)
+					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,true,false)
+				end,
+			}
+		},
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, dontAddCap, isDefault)
+			
+			local AnimationEffectData = C.CommandFunctions.morph.AnimationEffectFunctions[C.CommandFunctions.morph.DoAnimationEffect or false]
+			if dontAddCap and AnimationEffectData then
+				AnimationEffectData.Start(targetChar)
+			end
+			
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
 			local targetHRP = targetChar:FindFirstChild("HumanoidRootPart")
 			if not targetHuman or targetHuman.Health <=0 or not targetHRP then
@@ -2119,6 +2152,9 @@ C.CommandFunctions = {
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)
 			end
+			if dontAddCap and AnimationEffectData then
+				AnimationEffectData.Update(targetChar)
+			end
 			--if oldHuman:FindFirstChild("HumanoidDescription") then
 			--	oldHuman.HumanoidDescription:Destroy()
 			--end
@@ -2138,6 +2174,9 @@ C.CommandFunctions = {
 			end
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
+			if dontAddCap and AnimationEffectData then
+				AnimationEffectData.End(targetChar)
+			end
 		end,
 		Functs={},
 		CapsuleAdded=function(capsule,noAddFunct)
@@ -9942,10 +9981,13 @@ C.AvailableHacks ={
 			["Shortcut"] = "Runner_SuperFlop",
 			["Default"]=false,
 			["DontActivate"]=true,
-			["ActivateFunction"]=(function(newValue)
+			["ActivateFunction"]=(function(newValue,passed)
 				local RagdollValue = myTSM:WaitForChild("Ragdoll")
 				local CharacterScriptInstance = C.char:WaitForChild("LocalPlayerScript")
 				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true,noCache=true})
+				if not CharacterScriptEnv then
+					task.delay(1,C.AvailableHacks.Runner[82].ActivateFunction,C.enHacks.Runner_SuperFlop,true)
+				end
 				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and RagdollValue.Value and (function(_,inputState)
 					if inputState == Enum.UserInputState.Begin then
 						print("Flop:",inputState.Name)

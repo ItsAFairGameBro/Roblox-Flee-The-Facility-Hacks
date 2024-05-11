@@ -2045,31 +2045,32 @@ C.CommandFunctions = {
 		DoAnimationEffect = "Fade",
 		AnimationEffectFunctions={
 			Fade = {
-				Tween = function(targetChar,visible,instant)
+				Tween = function(targetChar,loopList,visible,instant)
 					--print("Tween",visible,instant)
 					local newTransparency = visible and 0 or 1
 					local property = targetChar == plr.Character and "LocalTransparencyModifier" or "Transparency"
-					for num, part in ipairs(targetChar:GetDescendants()) do
+					for num, part in ipairs() do
 						if part:IsA("BasePart") then
 							if instant then
 								part[property] = newTransparency
 							else
-								TS:Create(part,TweenInfo.new(2),{[property] = newTransparency}):Play();
+								TS:Create(part,TweenInfo.new(.6),{[property] = newTransparency}):Play();
 								print("Tween-ED",part,property,newTransparency)
 							end
 						end
 					end
 				end,
 				Start = function(targetChar)
-					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,false,false)
-					task.wait(0.6)
+					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),false,false)
 				end,
-				Update = function(targetChar)
-					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,false,true)
-					task.wait(1)
+				Update = function(targetChar,part)
+					if not part:IsA("BasePart") then
+						return
+					end
+					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,{part},false,true)
 				end,
 				End = function(targetChar)
-					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,true,false)
+					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),true,false)
 				end,
 			}
 		},
@@ -2154,11 +2155,14 @@ C.CommandFunctions = {
 			if not isDefault then
 				humanDesc.Head = 15093053680
 			end
+			local AnimationUpdateConnection
+			if AnimationEffectData then
+				AnimationUpdateConnection = targetChar.DescendantAdded:Connect(function(part)
+					AnimationEffectData.Update(targetChar,part)
+				end)
+			end
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)
-			end
-			if AnimationEffectData then
-				AnimationEffectData.Update(targetChar)
 			end
 			--if oldHuman:FindFirstChild("HumanoidDescription") then
 			--	oldHuman.HumanoidDescription:Destroy()
@@ -2181,6 +2185,9 @@ C.CommandFunctions = {
 			DS:AddItem(newHuman,3)
 			if AnimationEffectData then
 				AnimationEffectData.End(targetChar)
+			end
+			if AnimationUpdateConnection then
+				AnimationUpdateConnection:Disconnect()
 			end
 		end,
 		Functs={},

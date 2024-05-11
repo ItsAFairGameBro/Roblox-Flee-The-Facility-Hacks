@@ -7153,6 +7153,7 @@ C.AvailableHacks ={
 					currentHRP.AssemblyLinearVelocity = Vector3.new()
 					currentHRP.AssemblyAngularVelocity = Vector3.new()
 				end
+				C.refreshEnHack["Movement"](C.enHacks.Movement)
 			end,
 			["ReplicateProperties"]={
 				{"Humanoid","HipHeight"},
@@ -8548,7 +8549,6 @@ C.AvailableHacks ={
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 				clonedChar:SetPrimaryPartCFrame(saveLoc)
-				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,orgHuman)
 				removeAllClasses(clonedChar,"Sound")
 				local CLONEDHammer = clonedChar:FindFirstChild("Hammer")
 				if CLONEDHammer then
@@ -8587,7 +8587,7 @@ C.AvailableHacks ={
 				C.rhuman = orgHuman
 				human = clonedHuman
 				
-
+				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,orgHuman)
 
 				task.spawn(teleportMyCharacterAway,saveLoc)
 

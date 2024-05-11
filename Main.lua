@@ -2158,7 +2158,6 @@ C.CommandFunctions = {
 			local AnimationUpdateConnection
 			if AnimationEffectData and AnimationEffectData.Update then
 				AnimationUpdateConnection = targetChar.DescendantAdded:Connect(function(part)
-					print("Added",part)
 					if part:IsA("BasePart") then
 						AnimationEffectData.Update(targetChar,part)
 					end

@@ -11003,7 +11003,7 @@ C.AvailableHacks ={
 					CS:AddTag(newPart,"RemoveOnDestroy")
 					CS:AddTag(newPart,partName)
 				end
-				local Data=C.AvailableHacks.Bot[15].MapData[C.Map.Name]
+				local Data=C.AvailableHacks.Bot[15].MapData[C.Map and C.Map.Name or ""]
 				if Data~=nil then
 					--print("Found C.Map Data For "..C.Map.Name)
 					createBoxPart(Data.Vents,Data.DefaultVentSize,"VentPartWalkThru","Vent",newColor3(165, 0, 2),true)
@@ -13128,23 +13128,23 @@ local function registerObject(object,registerfunct,shouldntWait)
 end
 local function updateCurrentMap(newMap,firstRun)
 	if isCleared then return end
-	if newMap ~= C.Map and newMap then
+	if newMap ~= C.Map and newMap and newMap ~= TS then
 		C.Map = newMap;
 		task.wait(1);
 		if isCleared then return end
 		local inputArray = {newMap};
 		defaultFunction("MapAdded",{newMap,firstRun});
-		task.spawn(registerObject,newMap,MapChildAdded)
+		task.spawn(registerObject,newMap,MapChildAdded);
 		table.insert(C.functs,newMap.Destroying:Connect(function(newParent)
-			task.wait(2)--give a hefty wait time before deleting components, so that individual children can be erased first!
-			updateCurrentMap(nil)
+			task.wait(2);--give a hefty wait time before deleting components, so that individual children can be erased first!
+			updateCurrentMap(nil);
 		end))
-	elseif C.Map and not newMap then
-		RS.CurrentMap.Value = TS
-		task.wait(2) -- Delay this to avoid lag spikes
-		local clonedMap = C.Map
+	elseif C.Map and not newMap and newMap ~= TS then
+		RS.CurrentMap.Value = TS;
+		task.wait(2); -- Delay this to avoid lag spikes
+		local clonedMap = C.Map;
 		C.Map = nil; C.Beast = nil;
-		defaultFunction("CleanUp",{clonedMap})
+		defaultFunction("CleanUp",{clonedMap});
 	end
 end
 

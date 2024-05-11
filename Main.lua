@@ -8543,7 +8543,7 @@ C.AvailableHacks ={
 				
 				for num, child in ipairs(clonedChar:GetDescendants()) do
 					if child:GetAttribute("RemoveOnDestroy") then
-						child:Destroy()
+						--child:Destroy()
 					end
 				end
 				

@@ -2077,7 +2077,7 @@ C.CommandFunctions = {
 			
 			local AnimationEffectData = C.CommandFunctions.morph.AnimationEffectFunctions[C.CommandFunctions.morph.DoAnimationEffect or false]
 			--print(C.CommandFunctions.morph.DoAnimationEffect,C.CommandFunctions.morph.AnimationEffectFunctions,dontAddCap)
-			if dontAddCap and AnimationEffectData then
+			if AnimationEffectData then
 				AnimationEffectData.Start(targetChar)
 			end
 			
@@ -2157,7 +2157,7 @@ C.CommandFunctions = {
 			while not pcall(newHuman.ApplyDescriptionReset,newHuman,humanDesc) do
 				task.wait(1)
 			end
-			if dontAddCap and AnimationEffectData then
+			if AnimationEffectData then
 				AnimationEffectData.Update(targetChar)
 			end
 			--if oldHuman:FindFirstChild("HumanoidDescription") then
@@ -2179,7 +2179,7 @@ C.CommandFunctions = {
 			end
 			newHuman.Parent = nil
 			DS:AddItem(newHuman,3)
-			if dontAddCap and AnimationEffectData then
+			if AnimationEffectData then
 				AnimationEffectData.End(targetChar)
 			end
 		end,

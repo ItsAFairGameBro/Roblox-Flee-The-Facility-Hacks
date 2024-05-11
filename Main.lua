@@ -7118,7 +7118,7 @@ C.AvailableHacks ={
 			["Deb"]=0.5,
 			["HiddenLocation"] = Vector3.new(0,8,0),
 			["LastTeleportLocation"] = CFrame.new(),
-			["ApplyChange"] = function(oldHuman,newHuman)
+			["ApplyChange"] = function(newHuman,oldHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
 				--newHuman:ChangeState(oldHuman:GetState())
 				oldHuman:ChangeState(Enum.HumanoidStateType.Physics)

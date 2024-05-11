@@ -8609,7 +8609,7 @@ C.AvailableHacks ={
 				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(updateCamera))
 				updateCamera()
 				if gameName == "FleeMain" then
-					local charEnv = C.GetHardValue(C.char.LocalPlayerScript, "env", {yield=true})
+					local charEnv = C.GetHardValue(orgChar.LocalPlayerScript, "env", {yield=true})
 					table.insert(connections,clonedChar.Torso.Touched:Connect(function(instance)
 						charEnv.TriggerTouch(instance,true)
 					end))

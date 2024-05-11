@@ -8525,6 +8525,8 @@ C.AvailableHacks ={
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 				clonedChar:SetPrimaryPartCFrame(saveLoc)
 				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,human)
+				C.rchar = orgChar
+				C.char = clonedChar
 				removeAllClasses(clonedChar,"Sound")
 				local CLONEDHammer = clonedChar:FindFirstChild("Hammer")
 				if CLONEDHammer then
@@ -8756,7 +8758,7 @@ C.AvailableHacks ={
 						connection:Disconnect()
 						table.remove(C.AvailableHacks.Basic[30].Functs,index)
 					end
-					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.char and C.char.Parent then
+					if not characterSpawn and C.ClonedChar and C.ClonedChar.Parent and C.rchar and C.rchar.Parent then
 						local clonedHuman = C.ClonedChar:FindFirstChild("Humanoid")
 						human:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
 						task.delay(1,function()
@@ -8765,16 +8767,16 @@ C.AvailableHacks ={
 						if human then
 							human.PlatformStand = false
 						end
-						if C.char:FindFirstChild("HumanoidRootPart") then
-							C.char:SetPrimaryPartCFrame(C.ClonedChar:GetPrimaryPartCFrame())
-							--teleportMyself(C.ClonedChar:GetPivot())--C.char:PivotTo(C.ClonedChar:GetPivot())
-							if C.char.HumanoidRootPart:FindFirstChild("FloatAttachment") then
-								C.char.HumanoidRootPart.FloatAttachment:Destroy()
+						if C.rchar:FindFirstChild("HumanoidRootPart") then
+							C.rchar:SetPrimaryPartCFrame(C.ClonedChar:GetPrimaryPartCFrame())
+							--teleportMyself(C.ClonedChar:GetPivot())--C.rchar:PivotTo(C.ClonedChar:GetPivot())
+							if C.rchar.HumanoidRootPart:FindFirstChild("FloatAttachment") then
+								C.rchar.HumanoidRootPart.FloatAttachment:Destroy()
 							end	
 						end
 
 						if C.ClonedChar.Humanoid.FloorMaterial ~= Enum.Material.Air then
-							for num, animTrack in ipairs(C.char.Humanoid.Animator:GetPlayingAnimationTracks()) do
+							for num, animTrack in ipairs(C.rchar.Humanoid.Animator:GetPlayingAnimationTracks()) do
 								if animTrack.Animation.AnimationId~="rbxassetid://961932719"
 									and animTrack.Animation.AnimationId~="rbxassetid://1416947241" then
 									animTrack:Stop(0)
@@ -8782,6 +8784,8 @@ C.AvailableHacks ={
 							end
 						end--]]
 						camera.CameraSubject = human
+						C.char = C.rchar
+						C.rchar = nil
 						--for s = 2, 1, -1 do
 						--RunS.RenderStepped:Wait()
 						--end
@@ -8798,7 +8802,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Basic[30].ActivateFunction(false,true)
 				end
 				local Start = os.clock()
-				game:GetService("ContentProvider"):PreloadAsync({C.char})
+				game:GetService("ContentProvider"):PreloadAsync({C.rchar})
 				--print(("Character Appearence Loaded In %.2f!"):format(os.clock()-Start))
 				--task.wait(.5)
 				if C.enHacks["Basic_InvisibleChar"] then

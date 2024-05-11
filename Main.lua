@@ -2060,7 +2060,7 @@ C.CommandFunctions = {
 				end,
 				Start = function(targetChar)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),false,false)
-					task.wait(0.6)
+					task.wait(0.6 + (os.clock()-math.floor(os.clock())))
 				end,
 				Update = function(targetChar,part)
 					if not part:IsA("BasePart") then

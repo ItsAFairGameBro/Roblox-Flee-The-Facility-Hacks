@@ -102,6 +102,6 @@ return function(C,_SETTINGS)
 	end
 	getgenv().isInGame = C.isInGame
 	if C.gameUniverse=="Flee" then
-		RemoteEvent = RS:WaitForChild("RemoteEvent")
+		C.RemoteEvent = RS:WaitForChild("RemoteEvent")
 	end
 end

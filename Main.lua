@@ -1470,9 +1470,9 @@ if C.gameUniverse=="Flee" then
 	C.myTSM=plr:WaitForChild("TempPlayerStatsModule");
 	C.mySSM=plr:WaitForChild("SavedPlayerStatsModule");
 	local myTSM_Module = require(C.myTSM);
-	C.C.myTSM_Get_Hooks = getgenv().TSMGetHooks
-	if not C.C.myTSM_Get_Hooks then
-		C.C.myTSM_Get_Hooks = {}
+	C.myTSM_Get_Hooks = getgenv().TSMGetHooks
+	if not C.myTSM_Get_Hooks then
+		C.myTSM_Get_Hooks = {}
 		--C.myTSM_Module.GetHooks = getgenv().TSMGetHooks
 	end
 	function C.ConnectPlrTSM(theirPlr,theTSM_Module)
@@ -1484,7 +1484,7 @@ if C.gameUniverse=="Flee" then
 			local caller = getcallingscript()
 			local instance_value = instance.Value
 
-			for str, funct in pairs(C.C.myTSM_Get_Hooks) do
+			for str, funct in pairs(C.myTSM_Get_Hooks) do
 				local result = funct(theirPlr,caller,instance_name,instance_value)
 				if result ~= nil then
 					return result
@@ -1499,7 +1499,7 @@ if C.gameUniverse=="Flee" then
 		end--]]
 	end
 	function C.SetTempValue(identification,funct)
-		C.C.myTSM_Get_Hooks[identification] = funct or nil
+		C.myTSM_Get_Hooks[identification] = funct or nil
 	end
 end;
 if C.gameName=="FleeMain" then

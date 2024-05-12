@@ -9844,14 +9844,14 @@ C.AvailableHacks ={
 						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent]
 						if clickfunction then
 							task.spawn(clickfunction)
-							task.delay(2,clickfunction)
+							task.delay(5,clickfunction)
 						else
 							firetouchinterest(C.char.PrimaryPart,parent,0)
 							task.spawn(firetouchinterest,C.char.PrimaryPart,parent,1)
 						end
 						print("TouchActivated",obj.Parent:GetFullName(),obj.Name)
 					end
-					if num%100==0 then
+					if num%300==0 then
 						task.wait(.1)
 					end
 				end

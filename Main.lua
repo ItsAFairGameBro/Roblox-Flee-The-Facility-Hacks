@@ -9846,7 +9846,7 @@ C.AvailableHacks ={
 							task.delay(.2,clickfunction)
 						else
 							firetouchinterest(C.char.PrimaryPart,parent,0)
-							task.spawn(firetouchinterest,parent,1)
+							task.spawn(firetouchinterest,C.char.PrimaryPart,parent,1)
 						end
 						print("TouchActivated",obj.Parent:GetFullName(),obj.Name)
 					end

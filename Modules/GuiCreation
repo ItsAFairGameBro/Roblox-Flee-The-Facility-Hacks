@@ -1,7 +1,6 @@
 local RS = game:GetService("ReplicatedStorage")
-return function(createToggleButton,textFont,textFont2,textFont3,mainZIndex)
+return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	local GuiElements = {}
-	local C = {}
 	
 	--local Instance.new = Instance["new"];
 	local ExTextButton = Instance.new("Frame");
@@ -412,4 +411,5 @@ return function(createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	C.CommandBarLine.RichText = true
 	C.CommandBarLine.TextWrapped = true
 
+	return GuiElements
 end

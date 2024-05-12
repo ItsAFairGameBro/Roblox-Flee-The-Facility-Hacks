@@ -22,27 +22,25 @@ local PathfindingService = game:GetService("PathfindingService")
 local TCS=game:GetService("TextChatService")
 
 
-local gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") 
-	or (game.PlaceId==1962086868 and "TowerMain") or (game.PlaceId==3582763398 and "TowerPro")
-	or (game.PlaceId==5253186791 and "TowerAppeals") or "Unknown")
-local gameUniverse=(gameName:find("Tower") and "Tower") or (gameName:find("Flee") and "Flee") or "Unknown"
 newVector3, newColor3 = Vector3.new, Color3.fromRGB
 isStudio=RunS:IsStudio()
 --C.functs,C.refreshEnHack = {}, {}
 
 local C={enHacks = {},playerEvents={},objectFuncts={},attributeFuncts={},functs={},refreshEnHack={},
 Map=nil,char=nil,Beast=nil,TestPart=nil,ToggleTag=nil,clear=nil,saveIndex=nil,AvailableHacks=nil,ResetEvent=nil,
-CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil,textBoxSize=24}
+CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil,textBoxSize=24,isCleared=false,human=nil}
 --local C.Map,C.char,C.Beast,C.TestPart,C.C.ToggleTag,clear,C.saveIndex,C.AvailableHacks,ResetEvent,C.C.C.CommandBarLine,C.Console,C.ConsoleButton,C.PlayerControlModule
 --= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
---comma_value=nil
+--C.comma_value=nil
 --local clear,C.saveIndex,C.AvailableHacks
-local myTSM,mySSM
+C.gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") 
+	or (game.PlaceId==1962086868 and "TowerMain") or (game.PlaceId==3582763398 and "TowerPro")
+	or (game.PlaceId==5253186791 and "TowerAppeals") or "Unknown")
+C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or "Unknown"
+--C.myTSM,C.mySSM
 local plr = PS.LocalPlayer
-local human
 local PlayerGui = plr:WaitForChild("PlayerGui");
-local isActionProgress=false
-local isCleared=false
+C.isActionProgress=false
 local isJumpBeingHeld = false
 
 local lastRunningEnv = getfenv()
@@ -99,7 +97,6 @@ local isfile = not isStudio and isfile
 local makefolder = not isStudio and makefolder
 local writefile = not isStudio and writefile
 
---TODO HERE
 --DEBUG--
 local _SETTINGS
 _SETTINGS={
@@ -159,7 +156,6 @@ end
 
 --INTERFACE/GUI CREATION
 --local MainListEx,myList,PropertiesEx,Properties,ServerCreditsGained,Main;
-local BetterConsole_ClearConsoleFunction;
 --local TextBoxExamples, CreditsGained,ServerXPGained,XPGained;
 local GuiElements = {}
 C.hackGUIParent = gethui()
@@ -168,7 +164,13 @@ C.Modules = {}
 function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
 	
-	local ModuleNames = {"GuiCreation"}
+	local ModuleNames = {"GuiCreation","BetterConsole","DraggableModule","Env","SimplePathfinding","Raycast"}
+	if C.gameName == "FleeMain" then
+		table.insert(ModuleNames,C.gameName)
+		if C.gameName == "FleeMain" then
+			table.insert(ModuleNames,"LocalClubScript")
+		end
+	end
 	for num, moduleName in ipairs(ModuleNames) do
 		if isStudio then
 			C.Modules[moduleName] = require(script:WaitForChild(moduleName))
@@ -406,660 +408,12 @@ function C.Hook(root,method,functName,functData)
 	--print(RBXHooks)
 end
 --print("Test: Org=>",C.BetterGSub("Org","Org","New"))
-local function StartBetterConsole()
+--local function StartBetterConsole()
 	--GUI CREATION FOR BETTER CONSOLE:
 	--ERROR LOGGING
 	--CONSOLE LOGGING
 	--BETTERCONSOLE LOGGING
-	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load ",
-		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:","MeshContentProvider failed to process ",
-		"invisible is not a valid member of Model","player is not a valid member of TextButton ",
-		"set scale to ",
-	}
-	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
-	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
-		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done",
-
-		"attempt to index nil with 'Name'"
-	}
-
-	local BetterConsole = Instance.new("Frame")
-	C.BetterConsole = BetterConsole
-	local SearchConsoleTextBox = Instance.new("TextBox")
-	local SearchConsoleResults = Instance.new("TextLabel")
-	local FilterCheckBoxes = Instance.new("Frame")
-	local UIGridLayout = Instance.new("UIGridLayout")
-	local BetterConsoleFilterBox = Instance.new("Frame")
-	local InviClicker = Instance.new("TextButton")
-	local CheckboxImage = Instance.new("ImageLabel")
-	local FilterBoxName = Instance.new("TextLabel")
-	local BetterConsoleList = Instance.new("ScrollingFrame")
-	local UIListLayout = Instance.new("UIListLayout")
-	local BetterConsoleTextEx = Instance.new("TextLabel")
-	local BetterConsoleDesc = Instance.new("TextLabel")
-	local BetterConsoleQuitButton = Instance.new("ImageButton")
-	local Buttons = Instance.new("Frame")
-	local UIGridLayout_2 = Instance.new("UIGridLayout")
-	local Clear = Instance.new("TextButton")
-	local Bottom = Instance.new("TextButton")
-	local Top = Instance.new("TextButton")
-	local UIStroke = Instance.new("UIStroke")
-	local UICorner = Instance.new("UICorner")
-
-	UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	UICorner.CornerRadius = UDim.new(0,40)
-
-	BetterConsole.Name = "BetterConsole"
-	BetterConsole.Parent = GuiElements.HackGUI
-	BetterConsole.AnchorPoint = Vector2.new(0.5, 0.5)
-	BetterConsole.BackgroundColor3 = Color3.new(0.203922, 0.203922, 0.203922)
-	BetterConsole.BackgroundTransparency = 0.25
-	BetterConsole.BorderColor3 = Color3.new(0, 0, 0)
-	BetterConsole.BorderSizePixel = 0
-	BetterConsole.Position = UDim2.new(0.5, 0, 0.5, 0)
-	BetterConsole.Size = UDim2.new(0.600000024, 0, 0.560000002, 0)
-	BetterConsole.Visible = false
-	BetterConsole.ZIndex = 5000
-	UIStroke:Clone().Parent=BetterConsole
-	UICorner:Clone().Parent=BetterConsole
-
-	SearchConsoleTextBox.Name = "SearchConsoleTextBox"
-	SearchConsoleTextBox.Parent = BetterConsole
-	SearchConsoleTextBox.BackgroundColor3 = Color3.new(0, 0.65098, 1)
-	SearchConsoleTextBox.BorderColor3 = Color3.new(0, 0, 0)
-	SearchConsoleTextBox.BorderSizePixel = 0
-	SearchConsoleTextBox.Position = UDim2.new(0.0199999996, 0, 0, 0)
-	SearchConsoleTextBox.Size = UDim2.new(0.320734084, 0, 0.0500000007, 0)
-	SearchConsoleTextBox.ShowNativeInput = true
-	SearchConsoleTextBox.ZIndex = 5001
-	SearchConsoleTextBox.Font = Enum.Font.Arial
-	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(1,1,1)
-	SearchConsoleTextBox.PlaceholderText = "Filter Search Results"
-	SearchConsoleTextBox.Text = ""
-	SearchConsoleTextBox.TextColor3 = Color3.new(1,1,1)
-	SearchConsoleTextBox.TextScaled = true
-	SearchConsoleTextBox.TextSize = C.textBoxSize
-	SearchConsoleTextBox.TextStrokeColor3 = Color3.new(0,0,0)
-	SearchConsoleTextBox.TextStrokeTransparency = 0
-	SearchConsoleTextBox.TextWrapped = true
-	SearchConsoleTextBox.RichText = true
-	UIStroke:Clone().Parent=SearchConsoleTextBox
-	UICorner:Clone().Parent=SearchConsoleTextBox
-
-	SearchConsoleResults.Name = "SearchConsoleResults"
-	SearchConsoleResults.Parent = BetterConsole
-	SearchConsoleResults.AnchorPoint = Vector2.new(0.5, 0)
-	SearchConsoleResults.BackgroundColor3 = Color3.new(1, 1, 1)
-	SearchConsoleResults.BackgroundTransparency = 1
-	SearchConsoleResults.BorderColor3 = Color3.new(0, 0, 0)
-	SearchConsoleResults.BorderSizePixel = 0
-	SearchConsoleResults.Position = UDim2.new(0.5, 0, 0.0590000004, 0)
-	SearchConsoleResults.Size = UDim2.new(0.937323153, 0, 0.0528666973, 0)
-	SearchConsoleResults.ZIndex = 5002
-	SearchConsoleResults.Font = Enum.Font.Arial
-	SearchConsoleResults.RichText = true
-	SearchConsoleResults.Text = "<font color='rgb(0,255,0)'>1,402</font> search results for found \"potato\""
-	SearchConsoleResults.TextColor3 = Color3.new(1, 1, 1)
-	SearchConsoleResults.TextScaled = true
-	SearchConsoleResults.TextSize = 14
-	SearchConsoleResults.TextStrokeTransparency = 0
-	SearchConsoleResults.TextWrapped = true
-
-	FilterCheckBoxes.Name = "FilterCheckBoxes"
-	FilterCheckBoxes.Parent = BetterConsole
-	FilterCheckBoxes.BackgroundColor3 = Color3.new(1, 1, 1)
-	FilterCheckBoxes.BackgroundTransparency = 1
-	FilterCheckBoxes.BorderColor3 = Color3.new(0, 0, 0)
-	FilterCheckBoxes.BorderSizePixel = 0
-	FilterCheckBoxes.Position = UDim2.new(0.565277815, 0, -7.26609031e-08, 0)
-	FilterCheckBoxes.Size = UDim2.new(0.40223217, 0, 0.0500000007, 0)
-	FilterCheckBoxes.ZIndex = 5002
-
-	UIGridLayout.Parent = FilterCheckBoxes
-	UIGridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-	UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	UIGridLayout.CellPadding = UDim2.new(0, 0, 0, 0)
-	UIGridLayout.CellSize = UDim2.new(0.200000003, 0, 1, 0)
-
-	BetterConsoleFilterBox.Name = "BetterConsoleFilterBox"
-	BetterConsoleFilterBox.Parent = nil
-	BetterConsoleFilterBox.BackgroundColor3 = Color3.new(0.219608, 0.219608, 0.219608)
-	BetterConsoleFilterBox.BorderColor3 = Color3.new(0, 0, 0)
-	BetterConsoleFilterBox.BorderSizePixel = 0
-	BetterConsoleFilterBox.Size = UDim2.new(0, 100, 0, 100)
-	BetterConsoleFilterBox.ZIndex = 5003
-	BetterConsoleFilterBox:AddTag("RemoveOnDestroy")
-	UIStroke:Clone().Parent=BetterConsoleFilterBox
-	UICorner:Clone().Parent=BetterConsoleFilterBox
-
-
-	InviClicker.Name = "InviClicker"
-	InviClicker.Parent = BetterConsoleFilterBox
-	InviClicker.AnchorPoint = Vector2.new(0.5, 0)
-	InviClicker.BackgroundColor3 = Color3.new(1, 1, 1)
-	InviClicker.BackgroundTransparency = 1
-	InviClicker.BorderColor3 = Color3.new(0, 0, 0)
-	InviClicker.BorderSizePixel = 0
-	InviClicker.Position = UDim2.new(0.5, 0, 0, 0)
-	InviClicker.Size = UDim2.new(0.899999976, 0, 1, 0)
-	InviClicker.ZIndex = 5004
-	InviClicker.Font = Enum.Font.SourceSans
-	InviClicker.Text = " "
-	InviClicker.TextColor3 = Color3.new(0, 0, 0)
-	InviClicker.TextSize = 14
-
-	CheckboxImage.Name = "CheckboxImage"
-	CheckboxImage.Parent = BetterConsoleFilterBox
-	CheckboxImage.BackgroundColor3 = Color3.new(1, 1, 1)
-	CheckboxImage.BackgroundTransparency = 1
-	CheckboxImage.BorderColor3 = Color3.new(0, 0, 0)
-	CheckboxImage.BorderSizePixel = 0
-	CheckboxImage.Size = UDim2.new(0.300000012, 0, 1, 0)
-	CheckboxImage.ZIndex = 5004
-	CheckboxImage.Image = "rbxassetid://4458804262"
-	CheckboxImage.ImageColor3 = Color3.new(0.0509804, 1, 0)
-	CheckboxImage.ScaleType = Enum.ScaleType.Fit
-
-	FilterBoxName.Name = "FilterBoxName"
-	FilterBoxName.Parent = BetterConsoleFilterBox
-	FilterBoxName.AnchorPoint = Vector2.new(1, 0)
-	FilterBoxName.BackgroundColor3 = Color3.new(1, 1, 1)
-	FilterBoxName.BackgroundTransparency = 1
-	FilterBoxName.BorderColor3 = Color3.new(0, 0, 0)
-	FilterBoxName.BorderSizePixel = 0
-	FilterBoxName.Position = UDim2.new(1, 0, 0, 0)
-	FilterBoxName.Size = UDim2.new(0.699999988, 0, 1, 0)
-	FilterBoxName.ZIndex = 5004
-	FilterBoxName.Font = Enum.Font.SourceSans
-	FilterBoxName.Text = "Errors"
-	FilterBoxName.TextColor3 = Color3.new(1, 1, 1)
-	FilterBoxName.TextScaled = true
-	FilterBoxName.TextSize = 14
-	FilterBoxName.TextStrokeTransparency = 0
-	FilterBoxName.TextWrapped = true
-
-	BetterConsoleList.Name = "BetterConsoleList"
-	BetterConsoleList.Parent = BetterConsole
-	BetterConsoleList.Active = false
-	BetterConsoleList.AnchorPoint = Vector2.new(0, 1)
-	BetterConsoleList.BackgroundColor3 = Color3.new(1, 1, 1)
-	BetterConsoleList.BackgroundTransparency = 1
-	BetterConsoleList.BorderColor3 = Color3.new(0, 0, 0)
-	BetterConsoleList.BorderSizePixel = 0
-	BetterConsoleList.Position = UDim2.new(0, 0, 0.958246052, 0)
-	BetterConsoleList.Size = UDim2.new(1, 0, 0.846379399, 0)
-	BetterConsoleList.CanvasSize = UDim2.new(0, 0, 0, 0)
-	BetterConsoleList.ZIndex = 5001
-	BetterConsoleList.ElasticBehavior = Enum.ElasticBehavior.Always
-	BetterConsoleList.ScrollingDirection = Enum.ScrollingDirection.Y
-	BetterConsoleList.AutomaticCanvasSize = Enum.AutomaticSize.Y
-	BetterConsoleList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
-
-	UIListLayout.Parent = BetterConsoleList
-	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-	BetterConsoleTextEx.Name = "BetterConsole"
-	BetterConsoleTextEx.Parent = nil
-	BetterConsoleTextEx.AutoLocalize = false
-	BetterConsoleTextEx.BackgroundColor3 = Color3.new(1, 1, 1)
-	BetterConsoleTextEx.BackgroundTransparency = 1
-	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
-	BetterConsoleTextEx.BorderSizePixel = 0
-	BetterConsoleTextEx.Size = UDim2.new(1, -10, 0, 0)
-	BetterConsoleTextEx.RichText = true
-	BetterConsoleTextEx.AutomaticSize = Enum.AutomaticSize.Y
-	BetterConsoleTextEx.ZIndex = 5001
-	BetterConsoleTextEx.Font = Enum.Font.Arial
-	BetterConsoleTextEx.Text = " <font color='rgb(200,50,50)'>[6:29:29 PM, Game]:</font> Random errorr occured!"
-	BetterConsoleTextEx.TextColor3 = Color3.new(1, 1, 1)
-	BetterConsoleTextEx.TextSize = 22
-	BetterConsoleTextEx.TextStrokeTransparency = 0
-	BetterConsoleTextEx.TextWrapped = true
-	BetterConsoleTextEx.TextXAlignment = Enum.TextXAlignment.Left
-	BetterConsoleTextEx:AddTag("RemoveOnDestroy")
-
-	BetterConsoleDesc.Name = "BetterConsoleDesc"
-	BetterConsoleDesc.Parent = BetterConsole
-	BetterConsoleDesc.BackgroundColor3 = Color3.new(1, 1, 1)
-	BetterConsoleDesc.BackgroundTransparency = 1
-	BetterConsoleDesc.BorderColor3 = Color3.new(0, 0, 0)
-	BetterConsoleDesc.BorderSizePixel = 0
-	BetterConsoleDesc.Position = UDim2.new(0, 0, 0.958246052, 0)
-	BetterConsoleDesc.Size = UDim2.new(1, 0, 0.0404888801, 0)
-	BetterConsoleDesc.ZIndex = 5001
-	BetterConsoleDesc.Font = Enum.Font.Arial
-	BetterConsoleDesc.Text = `Press "M" or the mobile button to open/close`
-	BetterConsoleDesc.TextColor3 = Color3.new(1, 1, 1)
-	BetterConsoleDesc.TextScaled = true
-	BetterConsoleDesc.TextSize = 14
-	BetterConsoleDesc.TextStrokeTransparency = 0
-	BetterConsoleDesc.TextWrapped = true
-
-	BetterConsoleQuitButton.Name = "BetterConsoleQuitButton"
-	BetterConsoleQuitButton.Parent = BetterConsole
-	BetterConsoleQuitButton.AnchorPoint = Vector2.new(1, 0)
-	BetterConsoleQuitButton.BackgroundColor3 = Color3.new(1, 1, 1)
-	BetterConsoleQuitButton.BackgroundTransparency = 1
-	BetterConsoleQuitButton.BorderColor3 = Color3.new(0, 0, 0)
-	BetterConsoleQuitButton.BorderSizePixel = 0
-	BetterConsoleQuitButton.Position = UDim2.new(1.017, 0, -0.03, 0)
-	BetterConsoleQuitButton.Rotation = 0
-	BetterConsoleQuitButton.Size = UDim2.new(0.052, 0, 0.1, 0)
-	BetterConsoleQuitButton.ZIndex = 5001
-	BetterConsoleQuitButton.Image = "rbxassetid://5100480132"
-	BetterConsoleQuitButton.ScaleType = Enum.ScaleType.Fit
-
-	Buttons.Name = "Buttons"
-	Buttons.Parent = BetterConsole
-	Buttons.BackgroundColor3 = Color3.new(1, 1, 1)
-	Buttons.BackgroundTransparency = 1
-	Buttons.BorderColor3 = Color3.new(0, 0, 0)
-	Buttons.BorderSizePixel = 0
-	Buttons.Position = UDim2.new(0.340734154, 0, -7.25641485e-08, 0)
-	Buttons.Size = UDim2.new(0.224543512, 0, 0.0500000007, 0)
-	Buttons.ZIndex = 5002
-
-	UIGridLayout_2.Parent = Buttons
-	UIGridLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
-	UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
-	UIGridLayout_2.CellPadding = UDim2.new(0, 0, 0, 0)
-	UIGridLayout_2.CellSize = UDim2.new(0.333333343, 0, 1, 0)
-
-	Clear.Name = "Clear"
-	Clear.Parent = Buttons
-	Clear.BackgroundColor3 = Color3.new(1, 0, 0)
-	Clear.BorderColor3 = Color3.new(0, 0, 0)
-	Clear.BorderSizePixel = 0
-	Clear.Size = UDim2.new(0, 200, 0, 50)
-	Clear.ZIndex = 5001
-	Clear.Font = Enum.Font.Arial
-	Clear.Text = "Clear"
-	Clear.TextColor3 = Color3.new(1, 1, 1)
-	Clear.TextScaled = true
-	Clear.TextSize = 14
-	Clear.TextStrokeTransparency = 0
-	Clear.TextWrapped = true
-	UIStroke:Clone().Parent=Clear
-	UICorner:Clone().Parent=Clear
-
-	Bottom.Name = "Bottom"
-	Bottom.Parent = Buttons
-	Bottom.BackgroundColor3 = Color3.new(0, 0.533333, 1)
-	Bottom.BorderColor3 = Color3.new(0, 0, 0)
-	Bottom.BorderSizePixel = 0
-	Bottom.LayoutOrder = 1
-	Bottom.Size = UDim2.new(0, 200, 0, 50)
-	Bottom.ZIndex = 5001
-	Bottom.Font = Enum.Font.Arial
-	Bottom.Text = "Bottom"
-	Bottom.TextColor3 = Color3.new(1, 1, 1)
-	Bottom.TextScaled = true
-	Bottom.TextSize = 14
-	Bottom.TextStrokeTransparency = 0
-	Bottom.TextWrapped = true
-	UIStroke:Clone().Parent=Bottom
-	UICorner:Clone().Parent=Bottom
-
-	Top.Name = "Top"
-	Top.Parent = Buttons
-	Top.BackgroundColor3 = Color3.new(0.0156863, 1, 0)
-	Top.BorderColor3 = Color3.new(0, 0, 0)
-	Top.BorderSizePixel = 0
-	Top.LayoutOrder = 2
-	Top.Size = UDim2.new(0, 200, 0, 50)
-	Top.ZIndex = 5001
-	Top.Font = Enum.Font.Arial
-	Top.Text = "Top"
-	Top.TextColor3 = Color3.new(1, 1, 1)
-	Top.TextScaled = true
-	Top.TextSize = 14
-	Top.TextStrokeTransparency = 0
-	Top.TextWrapped = true
-	UIStroke:Clone().Parent=Top
-	UICorner:Clone().Parent=Top
-
-	--CODING FOR BETTER CONSOLE:
-
-	local allMessages, visibleMessages = 0, 0
-	local isSorted = false
-	local wasMainFrameVisible 
-	local function BetterConsoleFrameToggle(_,inputState)
-		if inputState == Enum.UserInputState.Begin then
-			local newVisible = not BetterConsole.Visible
-			BetterConsole.Visible = newVisible
-			if newVisible then
-				wasMainFrameVisible = GuiElements.Main.Visible
-				GuiElements.Main.Visible = false
-			elseif wasMainFrameVisible then
-				GuiElements.Main.Visible = true
-			end
-		end
-	end
-	CAS:BindActionAtPriority("OpenBetterConsole"..C.saveIndex,BetterConsoleFrameToggle,true,1e4,Enum.KeyCode.M)
-	CAS:SetImage("OpenBetterConsole"..C.saveIndex,"rbxassetid://12350781258")
-	CAS:SetTitle("OpenBetterConsole"..C.saveIndex,"")
-	table.insert(C.functs,BetterConsoleQuitButton.MouseButton1Up:Connect(function()
-		BetterConsoleFrameToggle("OpenBetterConsole"..C.saveIndex,Enum.UserInputState.Begin)
-	end))
-	local MessageTypeSettings = {
-		[Enum.MessageType.MessageOutput.Name] = {Text="Outs",Color='<font color="rgb(170,170,170)">',Layout=0,Active=true},
-		[Enum.MessageType.MessageInfo.Name] = {Text="Info",Color='<font color="rgb(255,0,255)">',Layout=1,Active=true},
-		[Enum.MessageType.MessageWarning.Name] = {Text="Warn",Color='<font color="rgb(255,255,0)">',Layout=2,Active=true},
-		[Enum.MessageType.MessageError.Name] = {Text="Error",Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
-		["FromGMEGame"] = {Text="Game",Color="<font color='rgb(70,70,170)'>",Layout=4,Active=false},
-	}
-	local forceAtBottom = false
-	local noMessagesFound = BetterConsoleTextEx:Clone()
-	noMessagesFound.RichText = false
-	noMessagesFound.TextXAlignment = Enum.TextXAlignment.Center
-	noMessagesFound.Parent = BetterConsole
-	noMessagesFound.AnchorPoint = BetterConsoleList.AnchorPoint
-	noMessagesFound.Size = BetterConsoleList.Size
-	noMessagesFound.Position = BetterConsoleList.Position
-	noMessagesFound.ZIndex = BetterConsoleList.ZIndex + 1
-	noMessagesFound.Visible = false
-	noMessagesFound.Name = "NoMessagesFound"
-	noMessagesFound:AddTag("RemoveOnDestroy")
-	local SearchCasesFound = 0
-	local function BetterConsole_SetMessagesVisibility(MessageLabel)
-		if isCleared then return end
-		if not MessageLabel then
-			visibleMessages = 0
-			SearchCasesFound = 0
-		end
-		local searchingONE = MessageLabel~=nil -- if MessageLabel is specified, we're not searching much of anyone
-		local currentText = SearchConsoleTextBox.Text:lower()
-		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
-		local current,total = 0,searchingONE and 1 or (#BetterConsoleList:GetChildren()-1)
-		local lastText
-		isSorted = not includeALL
-		if total ~= 0 then
-			if not searchingONE then
-				SearchConsoleResults.Text = "Loading..."--In Case Still Visible
-				BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
-				SearchConsoleResults.Text = includeALL and `Displaying Messages({current}/{total})`
-					or `Filtering "{currentText}" ({current}/{total})`
-				lastText = SearchConsoleResults.Text
-			end
-		else
-			--BetterConsoleList:TweenSize(UDim2.fromScale(1,.846),"Out","Quad",.6,true)
-			SearchConsoleResults.Text = ""--In Case Still Visible
-			lastText = ""
-		end
-		for _, object in ipairs((searchingONE and {} or BetterConsoleList:GetChildren())) do
-			if SearchConsoleResults.Text ~= lastText and not searchingONE then
-				return -- out of order!
-			end
-			if object:IsA("TextLabel") then
-				object.Visible = false
-			end
-		end
-		for _, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
-			if SearchConsoleResults.Text ~= lastText and not searchingONE then
-				return -- out of order!
-			end
-			if object:IsA("TextLabel") then
-				local theirText=object:GetAttribute("OrgText")
-				local newText,newFound = C.BetterGSub(theirText,currentText,{'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">','</stroke>'},{IgnoreRichText = true, IgnoreCase = true, NoUndoFormat = true})
-				local willBeVisible = includeALL or newFound > 0
-				--local willBeVisible = includeALL or object.ContentText:lower():match(C.ApplyRichTextEscapeCharacters(currentText,true,C.DefaultStringEscapeCharacters))
-				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
-					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
-				if willBeVisible then
-					if includeALL then
-						object.Text = theirText 
-
-					else
-						local lastChars = ""
-						object.Text=newText
-						willBeVisible = newText ~= theirText--make sure we found an ACTUAL occurance!
-						SearchCasesFound += newFound
-					end
-				end
-				object.Visible = willBeVisible
-				if willBeVisible then
-					visibleMessages += 1
-				end
-				current += 1
-				SearchConsoleResults.Text = includeALL and `Displaying Messages"\n({current}/{total})`
-					or `Filtering "{currentText}" ({current}/{total})`
-				lastText = SearchConsoleResults.Text
-				if (current%20)==0 then
-					RunS.RenderStepped:Wait()
-				end
-			end
-		end
-		if workspace:IsAncestorOf(BetterConsoleList) then
-			BetterConsoleList:TweenSize((includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
-		else
-			BetterConsoleList.Size = (includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
-		end
-		--BetterConsoleDesc.Text = `{tostring(visibleMessages)} {lastText} | {SearchConsoleResults.Text} /// {tostring(lastText==SearchConsoleResults.Text)}`
-		if lastText == SearchConsoleResults.Text or searchingONE then
-			if visibleMessages==0 then
-				if allMessages > 0 then
-					noMessagesFound.Text = "No Messages Found!"
-					noMessagesFound.TextColor3 = Color3.fromRGB(200,50,50)
-				else
-					noMessagesFound.Text = "No Messages Yet!"
-					noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
-				end
-				noMessagesFound.Visible = true
-			else
-				noMessagesFound.Visible = false
-			end
-		else
-			noMessagesFound.Visible = false
-		end
-		SearchConsoleResults.Text = (includeALL or total==0) and "" 
-			or '<font color="rgb(0,255,0)">'..comma_value(SearchCasesFound) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
-	end
-	for messageType, messageData in pairs(MessageTypeSettings) do
-		local BoxFrame = BetterConsoleFilterBox:Clone()
-		BoxFrame:WaitForChild("FilterBoxName").Text = messageData.Text--messageType:sub(8)
-		local R, G, B = table.unpack(messageData.Color:sub(messageData.Color:find("%(")+1,messageData.Color:find("%)")-1):split(","))
-		BoxFrame:WaitForChild("FilterBoxName").TextColor3 = Color3.fromRGB(tonumber(R),tonumber(G),tonumber(B))
-		BoxFrame.LayoutOrder = messageData.Layout
-		local tweenInstance
-		local updImage = BoxFrame:WaitForChild("CheckboxImage")
-		local function update()
-			if tweenInstance and tweenInstance.PlaybackState == Enum.PlaybackState.Playing then
-				tweenInstance:Cancel()
-				tweenInstance:Destroy()
-			end
-			local active = messageData.Active
-			local tweenObj = TweenInfo.new(.5)
-			local myTweenInstance = TS:Create(updImage,tweenObj,{ImageColor3=(active and Color3.fromRGB(13,255) or Color3.fromRGB(255,13))})
-			tweenInstance = myTweenInstance
-			task.delay(.2,function()
-				if myTweenInstance ~= tweenInstance then
-					return
-				end
-				if active then
-					updImage.Image = "rbxassetid://4458804262"
-				else
-					updImage.Image = "rbxassetid://4458801905"
-				end
-			end)
-			tweenInstance:AddTag("RemoveOnDestroy")
-			tweenInstance:Play()
-		end
-		table.insert(C.functs,BoxFrame:WaitForChild("InviClicker").MouseButton1Up:Connect(function()
-			messageData.Active = not messageData.Active
-			update()
-			BetterConsole_SetMessagesVisibility()
-		end))
-		update()
-		BoxFrame.Parent = FilterCheckBoxes
-	end
-	table.insert(C.functs,SearchConsoleTextBox:GetPropertyChangedSignal("Text"):Connect(BetterConsole_SetMessagesVisibility))
-	function BetterConsole_ClearConsoleFunction()
-		allMessages, visibleMessages = 0, 0
-		for num, object in ipairs(BetterConsoleList:GetChildren()) do
-			if object:IsA("TextLabel") and object ~= noMessagesFound then
-				object:Destroy()
-			end
-		end
-		BetterConsole_SetMessagesVisibility()
-	end
-	local BetterConsole_TweenList
-	local function BetterConsole_DoCmd(msg,instant)
-		if msg == "/clear" then
-			C.AvailableHacks.Commands[2].ActivateFunction(true)
-			task.spawn(function()
-				--delay this!
-				SearchConsoleTextBox.Text = ""
-			end)
-			BetterConsole_SetMessagesVisibility(nil)
-		elseif msg=="/top" or msg=="/bottom" then
-			if BetterConsole_TweenList and BetterConsole_TweenList.PlaybackState == Enum.PlaybackState then
-				BetterConsole_TweenList:SetAttribute("NoChange",true)
-				BetterConsole_TweenList:Cancel()
-				BetterConsole_TweenList:Destroy()
-			end
-			forceAtBottom = msg == "/bottom" and not instant
-			local targetPosition = msg=="/top" and Vector2.new(0,0) 
-				or Vector2.new(0,math.max(0,BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y+10))
-			if instant then
-				BetterConsoleList.CanvasPosition = targetPosition
-			else
-				local duration = math.clamp(math.abs(targetPosition.Y - BetterConsoleList.CanvasPosition.Y)/1200,.2,1)
-				BetterConsole_TweenList = TS:Create(BetterConsoleList,TweenInfo.new(duration),{["CanvasPosition"] = targetPosition})
-				BetterConsole_TweenList:Play()
-				BetterConsole_TweenList:SetAttribute("NoChange",nil)
-				if msg == "/bottom" then
-					BetterConsole_TweenList.Completed:Connect(function(state)
-						if not BetterConsole_TweenList:GetAttribute("NoChange") then
-							forceAtBottom = false
-						end
-					end)
-				end
-			end
-		end
-	end
-	table.insert(C.functs,SearchConsoleTextBox.FocusLost:Connect(function(enterPressed)
-		local currentText = SearchConsoleTextBox.Text
-		if enterPressed then
-			BetterConsole_DoCmd(currentText:lower())
-		end
-	end))
-	table.insert(C.functs,Clear.MouseButton1Up:Connect(function()
-		BetterConsole_DoCmd("/clear")
-	end))
-	table.insert(C.functs,Top.MouseButton1Up:Connect(function()
-		BetterConsole_DoCmd("/top")
-	end))
-	table.insert(C.functs,Bottom.MouseButton1Up:Connect(function()
-		BetterConsole_DoCmd("/bottom")
-	end))
-	--if isStudio then
-	--CHECKCALLER is not working correctly, so we'll take over from here
-	local function checkmycaller(msg)
-		for _, text in ipairs(BetterConsole_CheckCaller_MsgExact) do
-			if text==msg then
-				return false
-			end
-		end
-		for _, text in ipairs(BetterConsole_CheckCaller_MsgStart) do
-			if msg:sub(1,text:len()) == text then
-				return false
-			end
-		end
-		for _, text in ipairs(BetterConsole_CheckCaller_MsgEnd) do
-			if msg:sub(msg:len()-text:len()+1) == text then
-				return false
-			end
-		end
-		return isStudio or checkcaller()
-	end
-	--end
-	local function printFunction(message,messageType,isFromMe)
-		if isCleared then return end
-		allMessages += 1
-		local wasAtBottom = forceAtBottom or BetterConsoleList.CanvasPosition.Y+5 >= BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y
-		local MessageLabel = BetterConsoleTextEx:Clone()
-		if not isFromMe then
-			MessageLabel:SetAttribute("IsGame",true)
-		end
-		MessageLabel:SetAttribute("Type",messageType.Name)
-		MessageLabel:SetAttribute("OrgText",message)
-		MessageLabel.Text = message
-		MessageLabel.LayoutOrder = allMessages
-		MessageLabel.Name = allMessages
-		MessageLabel.Parent = BetterConsoleList
-		BetterConsole_SetMessagesVisibility(MessageLabel)
-		if wasAtBottom then -- and MessageLabel.Visible
-			BetterConsole_DoCmd("/bottom",true)
-		end
-	end
-	local function formatMessage(beforeMessage,message,messageType,isFromMe,customTime)
-		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
-		printFunction(beforeMessage:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", ""))..message,messageType,isFromMe)
-	end
-
-	local function processMessage(message, messageType,...)
-		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
-			message = C.ApplyRichTextEscapeCharacters(message,true)
-		end
-		local myMessageData = MessageTypeSettings[messageType.Name]
-		local isFromMe = checkmycaller(message)
-		local beforeMessage = myMessageData.Color .. "[%s"
-		local inputMessage = 
-			" ".. myMessageData.Text .. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageData.Color))
-			.."] ".. "</font>" .. (message:sub(1,1)==":" and "<b>Hack.Unk</b>" or "") .. message
-		formatMessage(beforeMessage,inputMessage,messageType,isFromMe,...)
-	end
-
-	local function BetterConsole_wasFromMe(message)
-		if message:match("BetterConsole_onMessageOut") or message:match("BetterConsole_onErrorOut") then
-			return true
-		end
-	end
-	local function BetterConsole_onMessageOut(message, messageType,...)
-		if messageType==Enum.MessageType.MessageError or BetterConsole_wasFromMe(message) then
-			return--Handle these in the "onErrorOut" request!
-		end
-		processMessage(message,messageType,...)
-	end
-	local function BetterConsole_onErrorOut(message, Trace, theirScript)
-		if BetterConsole_wasFromMe(message) then
-			return
-		end
-		if message:sub(1,1)==":" then
-			message = "<b>Hack."..theirScript.Name .. "</b>" .. message
-		end
-		if theirScript.Name == "LocalPlayerScript" and message:find("attempt to index nil with 'Value'") then
-			if human then
-				task.delay(1,function()
-					human:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
-					warn("JUMP FIX APPLIED!")
-				end)
-			end
-		end
-		message = `{message}\n\tStack Begin\n\tScript ''{Trace:gsub("\n, ","\n\tScript '', "):gsub("line","Line")}\tStack End`
-		processMessage(message,Enum.MessageType.MessageError)
-	end
-	table.insert(C.functs,LogS.MessageOut:Connect(BetterConsole_onMessageOut))
-	table.insert(C.functs,SC.Error:Connect(BetterConsole_onErrorOut))
-	local logSuccess,logResult = pcall(function()
-		local logHistory = LogS:GetLogHistory()
-		if logHistory then -- it should exist, right?
-			--for num, logData in ipairs(logHistory) do
-			for index = math.max(#logHistory-50,1), #logHistory, 1 do
-				local logData = logHistory[index]
-				if checkmycaller(logData.message) then -- only if the message wasn't from "game!"
-					processMessage(logData.message,logData.messageType,logData.timestamp)
-				end
-				if index%50==0 then
-					RunS.RenderStepped:Wait()
-				end
-			end
-		end
-	end)
-	if not logSuccess then
-		BetterConsole_onMessageOut("LogService:GetLogHistory has failed: "..tostring(logResult),Enum.MessageType.MessageError)
-	end
-end
+--end
 getgenv().CashedHardValues = getgenv().CashedHardValues or {}
 C.RequestedHardValues = {}
 C.YieldCacheRunning = false
@@ -1129,7 +483,7 @@ end
 getgenv().GetHardValue = C.GetHardValue
 C.OriginalCollideName = "WeirdCanCollide"
 function C.SetCollide(object,id,toEnabled,alwaysUpd)
-	if gameUniverse=="Flee" and object.Name=="Weight" then
+	if C.gameUniverse=="Flee" and object.Name=="Weight" then
 		return -- don't touch it AT ALL!
 	end
 	local org = object:GetAttribute(C.OriginalCollideName)
@@ -1181,13 +535,17 @@ function C.FireSignal(instance,signal,Settings,...)
 	return success
 end
 local function GuiCreationFunction()
-	if isCleared then return end
+	if C.isCleared then return end
 	GuiElements = C.Modules.GuiCreation(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	--GuiElements = GuiElementsNew
 	--for key, val in pairs(newC) do
 	--	C[key] = val
 	--end
-	StartBetterConsole()
+	C.Modules.BetterConsole(C,GuiElements,C.comma_value,checkcaller)
+	if C.Modules[C.gameName] then
+		C.Modules[C.gameName](C,_SETTINGS)
+	end
+	--StartBetterConsole()
 end
 
 --BIGGIE FUNCTIONS
@@ -1200,8 +558,8 @@ local function teleport_module_teleportQueue()
 		local currentTP = TPStack[1]
 		if os.clock()-(plr:GetAttribute("LastTP") or 0) >= _SETTINGS.minTimeBetweenTeleport then
 			local teleportPart = C.char.PrimaryPart or 
-				(human.RigType == Enum.HumanoidRigType.R6 and C.char:FindFirstChild("Torso"))
-				or (human.RigType == Enum.HumanoidRigType.R15 and C.char:FindFirstChild("UpperTorso"))
+				(C.human.RigType == Enum.HumanoidRigType.R6 and C.char:FindFirstChild("Torso"))
+				or (C.human.RigType == Enum.HumanoidRigType.R15 and C.char:FindFirstChild("UpperTorso"))
 			if C.char.PrimaryPart then
 				C.char:SetPrimaryPartCFrame(currentTP)
 				plr:SetAttribute("LastTP",os.clock())
@@ -1232,61 +590,11 @@ local function StringWaitForChild(instance,str2Parse,duration)
 	end
 	return instance
 end
-local function getgenv()
-	return _G
-end--]]
-local function isInGame(theirChar,noDefactoAllowed)
-	--[[local a=Vector3.new(410.495, 59.4767, -197.00)
-	local b=Vector3.new(-54.505, 59.4767, -547.007)
-	return (point.X >= a.X and point.X <= b.X) and (point.Z >= a.Z and point.Z <= b.Z)--]]
-	if theirChar and theirChar.Name == "InviClone" then
-		theirChar = C.char
-	end
-	if gameName~="FleeMain" then
-		return false,"Lobby"
-	end
-	if theirChar~=nil and
-		theirChar:FindFirstChild("Hammer")~=nil or (C.Map~=nil and C.Map:IsAncestorOf(theirChar)) then
-		--print("beast ", theirChar.Name)
-		return true,"Beast"
-	end
-	--for num,textLabel in pairs(PS.LocalPlayer.PlayerGui:WaitForChild("ScreenGui")
-	--	:WaitForChild("StatusBars"):GetChildren()) do
-	local player=PS:GetPlayerFromCharacter(theirChar)
-	if player==nil then
-		return false, "Unknown"
-	end
-	local TSM=player:WaitForChild("TempPlayerStatsModule",4)
-	if TSM==nil then
-		return false,"Unknown"
-	end
 
-	--if theirChar~=nil and textLabel.ClassName=="TextLabel"
-	--	and textLabel.Text==theirChar.Name
-	--	and textLabel.Bar.Size.X.Scale>=.001
-	--	and textLabel.Bar.Visible then
-	if TSM.Health.Value>0
-		or (not noDefactoAllowed and theirChar.PrimaryPart and 
-			(theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
-			< (theirChar:GetPivot().Position-workspace.LobbyMusicBox.Position).Magnitude
-			and (theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
-			< (theirChar:GetPivot().Position-workspace.BeastCaveMusicBox.Position).Magnitude
-			and RS.IsGameActive.Value) then
-		return true,"Runner"
-	end
-	--print("runner ", theirChar.Name, "true")
-
-	--end
-	--print(textLabel.Bar.Size.X.Scale)
-	--end
-	--print("runner ", theirChar.Name, "false")
-	return false,"Lobby"--]]
-end
-getgenv().isInGame = isInGame
 local jumpChangedEvent
 
 --CLOSEST POINT ON PART
-local function ClosestPointOnPart(Part, Point)
+function C.ClosestPointOnPart(Part, Point)
 	local Transform = Part.CFrame:pointToObjectSpace(Point) -- Transform into local space
 	local HalfSize = Part.Size * 0.5
 	return Part.CFrame * Vector3.new( -- Clamp & transform into world space
@@ -1295,150 +603,27 @@ local function ClosestPointOnPart(Part, Point)
 		math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
 	)
 end
-local function RemoveAllTags(obj)
+function C.RemoveAllTags(obj)
 	for _, tag in ipairs(obj:GetTags()) do
 		obj:RemoveTag(tag)
 	end
 end
-local function DestroyInstance(instance)
-	RemoveAllTags(instance)
+function C.DestroyInstancelTags(instance)
+	C.RemoveAllTags(instance)
 	instance:Destroy()
 end
-local function DestroyAllTaggedObjects(tag)
+function C.DestroyAllTaggedObjects(tag)
 	for _, obj in ipairs(CS:GetTagged(tag)) do
-		DestroyInstance(obj)
+		C.DestroyInstancelTags(obj)
 	end
 end
---PRINT ENVIRONMENT START
-local function printInstances(...)
-	local printVal = ""
-	for num, val in pairs({...}) do
-		if num~=1 then
-			printVal ..= " "
-		end
-		local print4Instance = val
-		if typeof(print4Instance) == "Instance" then--"userdata" then
-			print4Instance = select(2,pcall(val.GetFullName,val))
-		end
-		printVal ..= tostring(print4Instance)
-	end
-	return (printVal)
-end
-local function recurseLoopPrint(leftTbl,str,depth)
-	local totalValues = #leftTbl
-	for num, val in pairs(leftTbl) do
-		str..=string.rep("\t",depth)
-		local isTable = typeof(val)=="table"
-		if isTable then
-			str..=("tbl "..printInstances(num)..":	{\n")
-			str..=recurseLoopPrint(val,"",depth+1)
-			str..=("\n	}")
-		else
-			if depth ~= 0 and (totalValues>=1 or num~=1) then
-				str..=printInstances(num).." = "..printInstances(val)
-			else
-				str..=printInstances(val)
-			end
-		end
-		if totalValues ~= num then
-			str..=" "
-			if isTable then
-				str..="\n"
-			end
-		end
-	end
-	return str
-end
-local oldWarn = getgenv().oldWarn
-if not oldWarn then
-	getgenv().oldWarn = warn
-	oldWarn = warn
-end
-local oldPrint = getgenv().oldPrint
-if not oldPrint then
-	getgenv().oldPrint = print
-	oldPrint = print
-end
-local function warn(...)
-	oldWarn(recurseLoopPrint({...},"",0))
-end
-local function print(...)
-	oldPrint(recurseLoopPrint({...},"",0))
-end
-if not isStudio then
-	getrenv().warn = warn
-	getrenv().print = print
-end
-local RemoteEvent
-if gameUniverse=="Flee" then
-	RemoteEvent = RS:WaitForChild("RemoteEvent")
-end
---PRINT ENVIRONMENT END
-local function findClosestObj(objs,poso,maxDist,yMult)
-	local closest,closestDist=nil,maxDist or 2000
-	for num,current in ipairs(objs) do
-		local dist=((poso-current.Position)*Vector3.new(1,yMult or 1,1)).magnitude
-		if dist<=closestDist then
-			closest,closestDist=current,dist
-		end
-	end
-	return closest,closestDist
-end
-local function createModifer(obj,label,passThru)
-	local modifer=Instance.new("PathfindingModifier")
-	modifer.Label=label
-	modifer.PassThrough=passThru
-	modifer.Parent=obj
-	CS:AddTag(modifer,"RemoveOnDestroy")
-end
-local function createTestPart(position,timer)
-	if not _SETTINGS.hitBoxesEnabled then
-		return
-	end
-	local newPart=C.TestPart:Clone()
-	newPart.Position=position
-	newPart.Parent=workspace.Camera
-	DS:AddItem(newPart,5)
-end
-local function getHumanoidHeight(model)
-	local Humanoid=model:WaitForChild("Humanoid")
-	local RootPart=model:WaitForChild("HumanoidRootPart")
-	if Humanoid.RigType==Enum.HumanoidRigType.R15 then
-		return (0.5 * RootPart.Size.Y) + Humanoid.HipHeight
-	elseif Humanoid.RigType==Enum.HumanoidRigType.R6 then
-		return model:WaitForChild("Left Leg").Size.Y + (0.5 * RootPart.Size.Y) + Humanoid.HipHeight
-	end
-end
-local function getDictLength(dict)
-	local num=0
-	for key,val in pairs(dict) do
-		num = num + 1
-	end
-	return num
-end
-local function ShuffleArray(tabl)
-	for i=1,#tabl-1 do
-		local ran = Random.new():NextInteger(i,#tabl)
-		tabl[i],tabl[ran] = tabl[ran],tabl[i]
-	end return tabl
-end
-function comma_value(amount)
-	local k
-	local formatted = amount
-	while true do  
-		formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
-		if (k==0) then
-			break
-		end
-	end
-	return formatted
-end
+local print, warn = C.Modules.Env(C,_SETTINGS)
 --Commands Control
 
 local CommandCountIndex = 0
 local CommandInstances = {}
 
-local function createCommandLine(message,printType)
+function C.createCommandLine(message,printType)
 	CommandCountIndex=(CommandCountIndex+1)%1000;
 	local CommandClone = C.CommandBarLine:Clone();
 	CommandClone.Text = message;
@@ -1461,7 +646,7 @@ local function createCommandLine(message,printType)
 		table.remove(CommandInstances,1);
 	end;
 end;
-local function clearCommandLines()
+function C.clearCommandLines()
 	for num, textLabel in ipairs(C.Console:GetChildren()) do
 		if textLabel:IsA("TextLabel") then
 			textLabel:Destroy()
@@ -1496,7 +681,7 @@ local function trigger_updateException(object,previously,allowed_setTriggerParam
 	object:AddTag("Trigger_AllowException")
 end
 local function trigger_setTriggers(name,setTriggerParams)
-	if isCleared and name ~= "Override" then return end
+	if C.isCleared and name ~= "Override" then return end
 	local beforeAltar = table.clone(trigger_params)
 	if setTriggerParams==true then
 		setTriggerParams = table.clone(trigger_allEnabled)
@@ -1528,7 +713,7 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	local newTouch = {}
 	local loseTouch = {}
-	local currentEvent = myTSM and myTSM:WaitForChild("ActionEvent").Value
+	local currentEvent = C.myTSM and C.myTSM:WaitForChild("ActionEvent").Value
 	local beforeEn,afterEn
 	for num,trigger in ipairs(CS:GetTagged("Trigger")) do
 		if trigger and trigger:IsA("BasePart") and workspace:IsAncestorOf(trigger) then
@@ -1557,8 +742,8 @@ local function trigger_setTriggers(name,setTriggerParams)
 	end
 	if currentEvent then
 		if beforeEn and not afterEn then
-			--myTSM.ActionInput.Value = false
-			--myTSM.ActionEvent.Value = nil
+			--C.myTSM.ActionInput.Value = false
+			--C.myTSM.ActionEvent.Value = nil
 			task.spawn(stopCurrentAction)
 		end
 	end
@@ -1588,16 +773,16 @@ end
 
 getgenv().setTriggers=trigger_setTriggers
 function stopCurrentAction(override)
-	if not override and myTSM.ActionEvent.Value and myTSM.ActionEvent.Value.Parent and 
-		(trigger_params[trigger_gettype(myTSM.ActionEvent.Value.Parent.Parent)] or -1) > 0 then
+	if not override and C.myTSM.ActionEvent.Value and C.myTSM.ActionEvent.Value.Parent and 
+		(trigger_params[trigger_gettype(C.myTSM.ActionEvent.Value.Parent.Parent)] or -1) > 0 then
 		return
 	end
 	for s = 2, 1, -1 do
-		RemoteEvent:FireServer("Input", "Action", false)
-		RemoteEvent:FireServer("Input", "Trigger", false)
-		myTSM:WaitForChild("DisableInteraction").Value = true
+		C.RemoteEvent:FireServer("Input", "Action", false)
+		C.RemoteEvent:FireServer("Input", "Trigger", false)
+		C.myTSM:WaitForChild("DisableInteraction").Value = true
 		RunS.RenderStepped:Wait()
-		myTSM:WaitForChild("DisableInteraction").Value = false
+		C.myTSM:WaitForChild("DisableInteraction").Value = false
 		RunS.RenderStepped:Wait()
 	end
 end
@@ -1772,7 +957,7 @@ C.CommandFunctions = {
 					end
 				end
 			end
-			if not dontAddCap and gameName == "FleeMain" then
+			if not dontAddCap and C.gameName == "FleeMain" then
 				for num, capsule in ipairs(CS:GetTagged("Capsule")) do
 					C.CommandFunctions.morph.CapsuleAdded(capsule,true)
 				end
@@ -2057,8 +1242,8 @@ C.CommandFunctions = {
 			C.isFollowing = theirPlr
 			RunS:BindToRenderStep("Follow"..C.saveIndex,69,function()
 				--print(plr:GetAttribute("isFollowing") ~= theirPlr.UserId,plr:GetAttribute("isFollowing"),theirPlr.UserId)
-				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not isCleared do
-				--if (plr:GetAttribute("isFollowing") ~= theirPlr.UserId or not HRP or not HRP.Parent or isCleared) then
+				--while isFollowing == theirPlr and HRP and HRP.Parent and saveChar.Parent and not C.C.isCleared do
+				--if (plr:GetAttribute("isFollowing") ~= theirPlr.UserId or not HRP or not HRP.Parent or C.C.isCleared) then
 				--	return
 				--end
 				if isTeleporting then
@@ -2074,8 +1259,8 @@ C.CommandFunctions = {
 					if animTrack then
 						local myAnimTrack = C.CommandFunctions.follow.MyPlayingAnimations[animTrack]
 						if not myAnimTrack then
-							myAnimTrack = human.Animator:LoadAnimation(animTrack.Animation)
-							table.insert(C.CommandFunctions.follow.ForcePlayAnimations,animTrack)--C.human:LoadAnimation(animTrack.Animator)
+							myAnimTrack = C.human.Animator:LoadAnimation(animTrack.Animation)
+							table.insert(C.CommandFunctions.follow.ForcePlayAnimations,animTrack)--C.C.human:LoadAnimation(animTrack.Animator)
 							C.CommandFunctions.follow.MyPlayingAnimations[animTrack] = myAnimTrack
 						end
 						myAnimTrack:AdjustSpeed(animTrack.Speed)
@@ -2089,7 +1274,7 @@ C.CommandFunctions = {
 				
 				
 				
-				-- * CFrame.new(0,getHumanoidHeight(C.char),dist))
+				-- * CFrame.new(0,C.getHumanoidHeight(C.char),dist))
 				--task.wait()
 				--end
 				--if isFollowing == theirPlr then
@@ -2156,7 +1341,7 @@ C.SaveGenvData = {["currentDesc"] = {
 local loadedEnData = {}
 local function loadSaveData()
 	if isStudio then return end
-	local path = getID.."/enHacks/"..gameName..".txt"
+	local path = getID.."/enHacks/"..C.gameName..".txt"
 	if isfile(path) then
 		local success, result = pcall(readfile,path)
 		if success then
@@ -2208,67 +1393,15 @@ local function saveSaveData()
 	if not isfolder(getID.."/enHacks") then
 		makefolder(getID.."/enHacks")
 	end
-	writefile(getID.."/enHacks/"..gameName..".txt",result)
+	writefile(getID.."/enHacks/"..C.gameName..".txt",result)
 end
 
-local function requireModule(module: ModuleScript): Table
+function C.requireModule(module: ModuleScript): Table
 	return require(module)
 end
-
 --Module 0: XP + Stats
-local LevelingXpCurve=gameUniverse=="Flee" and requireModule(RS:WaitForChild("LevelingXpCurve"))
 
-local function getTotalXP(Level,CurrentXP)
-	local totalXP=0
-	for level=1,Level-1,1 do
-		totalXP = totalXP + (LevelingXpCurve[level] or 4000)
-	end
-	totalXP = totalXP + CurrentXP
-	return totalXP
-end
-local function sortPlayersByXPThenCredits(plrList)
-	plrList = plrList or PS:GetPlayers()
-
-
-	table.sort(plrList,	function(a,b)
-		local aStats=a:FindFirstChild("SavedPlayerStatsModule")
-		local bStats=b:FindFirstChild("SavedPlayerStatsModule")
-		local doesExistA, doesExistB = aStats and aStats.Parent, bStats and bStats.Parent
-		if doesExistA and not doesExistB then
-			return true
-		elseif not doesExistA and doesExistB then
-			return false
-		end
-		local isABot=_SETTINGS.myBots[a.Name:lower()]
-		local isBBot=_SETTINGS.myBots[b.Name:lower()]
-		if isABot~=isBBot then
-			return isABot and not isBBot
-		end
-		local aLevel = aStats:FindFirstChild("Level")
-		local bLevel = bStats:FindFirstChild("Level")
-		if not aLevel or not bLevel then
-			return aLevel~=nil
-		end
-		if aLevel.Value~=bLevel.Value then
-			return (aLevel.Value>bLevel.Value)
-		end
-		local aXP = aStats:FindFirstChild("Xp")
-		local bXP = bStats:FindFirstChild("Xp")
-		if not aXP or not bXP then
-			return aXP~=nil
-		end
-		if aXP.Value~=bXP.Value then
-			return (aXP.Value>bXP.Value)
-		end
-		if (aStats.Credits.Value ~= bStats.Credits.Value) then
-			return (aStats.Credits.Value>bStats.Credits.Value)
-		end
-		return a.Name:lower() > b.Name:lower()
-	end)
-
-	return plrList
-end
-local function findRandomPositionOnBox(BoxCF,BoxSize,BasedOnOrigin)
+function C.findRandomPositionOnBox(BoxCF,BoxSize,BasedOnOrigin)
 	if BasedOnOrigin then
 		BoxCF = BoxCF - BoxCF.Position;
 	end;
@@ -2279,952 +1412,13 @@ end;
 --Module 1: Draggable
 
 
-local UDim2_new = UDim2.new
 
-local UserInputService = game:GetService("UserInputService")
-
-local DraggableMain
-
-local DraggableObject 		= {}
-DraggableObject.__index 	= DraggableObject
-
--- Sets up a new draggable object
-function DraggableObject.new(Object)
-	local self 			= {}
-	self.Object			= Object
-	self.DragStarted	= nil
-	self.DragEnded		= nil
-	self.Dragged		= nil
-	self.Dragging		= false
-
-	setmetatable(self, DraggableObject)
-
-	return self
-end
-
--- Enables dragging
-function DraggableObject:Enable()
-	local object			= self.Object
-	local dragInput			= nil
-	local dragStart			= nil
-	local startPos			= nil
-	local preparingToDrag	= false
-
-	-- Updates the element
-	local function update(input)
-		local delta 		= input.Position - dragStart
-		local newPosition	= UDim2_new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-		object.Position 	= newPosition
-
-		return newPosition
-	end
-
-	self.InputBegan = object.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-			preparingToDrag = true
-				--[[if self.DragStarted then
-					self.DragStarted()
-				end
-				
-				dragging	 	= true
-				dragStart 		= input.Position
-				startPos 		= Element.Position
-				--]]
-
-			local connection 
-			connection = input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End and (self.Dragging or preparingToDrag) then
-					self.Dragging = false
-					connection:Disconnect()
-
-					if self.DragEnded and not preparingToDrag then
-						self.DragEnded()
-					end
-
-					preparingToDrag = false
-				end
-			end)
-		end
-	end)
-
-	self.InputChanged = object.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-			dragInput = input
-		end
-	end)
-
-	self.InputChanged2 = UserInputService.InputChanged:Connect(function(input)
-		if object.Parent == nil then
-			self:Disable()
-			return
-		end
-
-		if preparingToDrag then
-			preparingToDrag = false
-
-			if self.DragStarted then
-				self.DragStarted()
-			end
-
-			self.Dragging	= true
-			dragStart 		= input.Position
-			startPos 		= object.Position
-		end
-
-		if input == dragInput and self.Dragging then
-			local newPosition = update(input)
-
-			if self.Dragged then
-				self.Dragged(newPosition)
-			end
-		end
-	end)
-end
-
-function DraggableObject:Disable()
-	self.InputBegan:Disconnect()
-	self.InputChanged:Disconnect()
-	self.InputChanged2:Disconnect()
-
-	if self.Dragging then
-		self.Dragging = false
-
-		if self.DragEnded then
-			self.DragEnded()
-		end
-	end
-end
 
 --Module 3: RAYCAST
-local whitelistCashe = {};
-local whitelistDataCashe = {};
-local function compareArrays(arr1, arr2)
-	for i, v in pairs(arr1) do
-		if (typeof(v) == "table") then
-			if (compareArrays(arr2[i], v) == false) then
-				return false;
-			end;
-		else
-			if (v ~= arr2[i]) then
-				return false;
-			end;
-		end;
-	end;
-
-	--pls work
-	return true;
-
-
-end;
-
-local raycast;
-
-function raycast(from, target, filter, distance, passThroughTransparency,passThroughCanCollide,breakFunct)
-	local raycastParams = RaycastParams.new();
-	raycastParams.FilterType = Enum.RaycastFilterType.Include;
-	if filter[1]~=nil and (filter[1]=="Whitelist" or filter[1]=="Blacklist" or filter[1]=="Include" or filter[1]=="Exclude") then
-		raycastParams.FilterType = Enum.RaycastFilterType[(filter[1])];
-		table.remove(filter,1)
-	end
-	if raycastParams.FilterType==Enum.RaycastFilterType.Include then
-		local newFilter={};
-		for num, cashedData in pairs(whitelistCashe) do
-			if compareArrays(cashedData, filter) then
-				newFilter=whitelistDataCashe[num];
-			end;
-		end;
-		if #newFilter==0 then
-			for num,model in pairs(filter) do
-				for num,part in pairs(model:GetDescendants()) do
-					if part:IsA("BasePart") and ((not passThroughTransparency or  part.Transparency<(passThroughTransparency or 1)) and (not passThroughCanCollide or part.CanCollide)) then
-						table.insert(newFilter,part);
-					end;
-				end;
-			end;
-			local nextIndex = (#whitelistCashe+1);
-			table.insert(whitelistCashe,nextIndex,filter);
-			table.insert(whitelistDataCashe,nextIndex,newFilter);
-		end;
-		filter = newFilter;
-	end;
-	raycastParams.FilterDescendantsInstances = filter;
-	raycastParams.IgnoreWater = true;
-	local direction = (target - from);
-	local result, lastInstance;
-	while true do
-		result = workspace:Raycast(from, direction.Unit*(distance or direction.magnitude+.5), raycastParams);
-		--print(result~=nil and result.Instance or "no hit")
-		--print(result,passThroughTransparency,passThroughTransparency,passThroughCanCollide)
-		if raycastParams.FilterType==Enum.RaycastFilterType.Include or (result==nil or result.Instance==nil) or ((not passThroughTransparency or result.Instance.Transparency<(passThroughTransparency or 1) or result.Instance.Parent:IsA("Accessory")) 
-			and (not passThroughCanCollide or result.Instance.CanCollide or result.Instance:GetAttribute(C.OriginalCollideName))) then
-			break;
-		elseif result~=nil and lastInstance==result.Instance then
-			break;
-		elseif breakFunct and breakFunct(result) then
-			break;
-		else
-			from = result.Position:lerp(target,.01);
-			lastInstance = result.Instance;
-			table.insert(filter, lastInstance);
-			raycastParams.FilterDescendantsInstances = filter;
-		end
-	end
-	if result~=nil and result.Instance~=nil and result.Instance.Parent~=nil then
-		return result,result.Instance;
-	else
-		return false;
-	end;
-end;
+C.Modules.Raycast(C,_SETTINGS)
 --Module 4: SIMPLE PATH (PATHFINDING MODULE)
-local DEFAULT_SETTINGS = {
-
-	TIME_VARIANCE = 0.03,
-
-	COMPARISON_CHECKS = 1,
-
-	JUMP_WHEN_STUCK = true,
-}
-local function output(func, msg)
-	func(((func == error and "SimplePath Error: ") or "SimplePath: ")..msg)
-end
-local Path = {
-	StatusType = {
-		Idle = "Idle",
-		Active = "Active",
-	},
-	ErrorType = {
-		LimitReached = "LimitReached",
-		TargetUnreachable = "TargetUnreachable",
-		ComputationError = "ComputationError",
-		AgentStuck = "AgentStuck",
-	},
-}
-Path.__index = function(table, index)
-	if index == "Stopped" and not table._humanoid then
-		output(error, "Attempt to use Path.Stopped on a non-humanoid.")
-	end
-	return (table._events[index] and table._events[index].Event) or (index == "LastError" and table._lastError) or (index == "Status" and table._status) or Path[index]
-end
-
-local visualWaypoint = Instance.new("Part",script)
-visualWaypoint.Size = Vector3.new(0.3, 0.3, 0.3)
-visualWaypoint.Anchored = true
-visualWaypoint.CanCollide = false
-visualWaypoint.Material = Enum.Material.Neon
-visualWaypoint.Shape = Enum.PartType.Ball
-visualWaypoint:AddTag("RemoveOnDestroy")
-
-local function declareError(self, errorType)
-	self._lastError = errorType
-	self._events.Error:Fire(errorType)
-end
-
-local function createVisualWaypoints(waypoints)
-	if isCleared then
-		return
-	end
-	local visualWaypoints = {}
-	for _, waypoint in ipairs(waypoints) do
-		local visualWaypointClone = visualWaypoint:Clone()
-		visualWaypoint:AddTag("Waypoints")
-		visualWaypointClone.Position = waypoint.Position
-		visualWaypointClone.Color = (waypoint == waypoints[#waypoints] and Color3.fromRGB(0, 255, 0)) or (waypoint.Action == Enum.PathWaypointAction.Jump and Color3.fromRGB(255, 0, 0)) or Color3.fromRGB(255, 139, 0)
-		visualWaypointClone.Parent = C.char
-		table.insert(visualWaypoints, visualWaypointClone)
-	end
-	return visualWaypoints
-end
-
-local function destroyVisualWaypoints(waypoints)
-	for _, waypoint in ipairs(CS:GetTagged("Waypoints")) do
-		DestroyInstance(waypoint)
-	end
-	return
-end
-
-local function getNonHumanoidWaypoint(self)
-	for i = 2, #self._waypoints do
-		if (self._waypoints[i].Position - self._waypoints[i - 1].Position).Magnitude > 0.1 then
-			return i
-		end
-	end
-	return 2
-end
-
-local function setJumpState(self)
-	local function setJumpStateInternal()
-		if ((self._humanoid:GetState() ~= Enum.HumanoidStateType.Jumping and self._humanoid.FloorMaterial~=Enum.Material.Air and not isActionProgress and not isCleared and game.Players.LocalPlayer.PlayerGui.ScreenGui.ActionBox.Text~="Open Door")) then
-			self._humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-		end
-	end
-	pcall(setJumpStateInternal)
-end
-
-local function move(self)
-	while isActionProgress do
-		wait()
-	end
-	if not self._moveConnection then
-		return
-	end
-	if self._status == Path.StatusType.Idle or self._waypoints==nil then
-		return
-	end
-	if (self._waypoints[self._currentWaypoint].Action == Enum.PathWaypointAction.Jump) then
-		setJumpState(self)
-	elseif (self._currentWaypoint>1 and self._waypoints[self._currentWaypoint-1].Action == Enum.PathWaypointAction.Jump) then
-		setJumpState(self)
-	end
-	local arg1 = (self._waypoints[self._currentWaypoint].Position)
-	C.AvailableHacks.Bot[20].Funct(self, arg1)
-end
-
-local function disconnectMoveConnection(self)
-	if (self~=nil and self._moveConnection~=nil) then
-		self._moveConnection:Disconnect()
-	end
-	self._moveConnection = nil
-end
-
-local function invokeWaypointReached(self)
-	local lastWaypoint = (self._currentWaypoint>=2 and self._waypoints[self._currentWaypoint - 1])
-	local nextWaypoint = (self._waypoints[self._currentWaypoint])
-	self._events.WaypointReached:Fire(self._agent, lastWaypoint, nextWaypoint)
-end
-local function waitForFall(self)
-	if self._currentWaypoint==1 then
-		return
-	end
-	local lastWaypoint = self._waypoints[self._currentWaypoint - 1]
-	local currentWaypoint = self._waypoints[self._currentWaypoint]
-	if lastWaypoint.Position.Y-currentWaypoint.Position.Y>6 then
-		task.wait(1/3)
-	end
-end
-local function moveToFinished(self, reached)
-
-	if not getmetatable(self) then
-		return
-	end
-
-	if not self._humanoid then
-		if reached and self._currentWaypoint + 1 <= #self._waypoints then
-			invokeWaypointReached(self)
-			self._currentWaypoint = self._currentWaypoint + 1
-		elseif reached then
-			self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
-			self._target = nil
-			self._events.Reached:Fire(self._agent, self._waypoints[self._currentWaypoint])
-		else
-			self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
-			self._target = nil
-			declareError(self, self.ErrorType.TargetUnreachable)
-		end
-		return
-	end
-
-	if reached and ((self._currentWaypoint + 1) <= #self._waypoints)  then --Waypoint reached
-		waitForFall(self)
-		if ((self._currentWaypoint + 1) < #self._waypoints) then
-			invokeWaypointReached(self)
-		end
-		self._currentWaypoint = self._currentWaypoint + 1
-		move(self)
-	elseif reached then --Target reached, pathfinding ends
-		disconnectMoveConnection(self)
-		self._status = Path.StatusType.Idle
-		self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
-		self._events.Reached:Fire(self._agent, (self._waypoints[self._currentWaypoint]))
-	else --Target unreachable
-		disconnectMoveConnection(self)
-		self._status = Path.StatusType.Idle
-		self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
-		declareError(self, self.ErrorType.TargetUnreachable)
-	end
-end
-
-local function comparePosition(self)
-	if self._currentWaypoint == #self._waypoints or not self._agent.PrimaryPart then
-		return
-	end
-	--print("compared")
-	local dist = ((self._agent.PrimaryPart.Position - self._position._last)/(Vector3.new(1,math.huge,1))).Magnitude;
-	self._position._count = (((dist <= 3.5) and (self._position._count + 1)) or 0);
-	self._position._last = self._agent.PrimaryPart.Position;
-	if not isActionProgress then
-		if self._position._count >= self._settings.COMPARISON_CHECKS then
-			--declareError(self, errorType)
-			if self._settings.JUMP_WHEN_STUCK then
-				if not C.AvailableHacks.Bot[15].UnlockDoor(false) and not C.AvailableHacks.Bot[15].CrawlVent(false) then
-					self._agent.Humanoid:MoveTo(self._agent.PrimaryPart.CFrame*Vector3.new(0,0,1.35));
-					task.wait((0.1));
-					setJumpState(self);
-					declareError(self, self.ErrorType.AgentStuck);
-				end;
-			end;
-			return;
-		end;
-		local inputTbl = {C.Map};
-		local result,hitPart = raycast(self._agent.PrimaryPart.Position,self._agent.Head.Position,inputTbl,4,nil,true);
-		if hitPart then
-			warn("He is stuck in wall!");
-			declareError(self, self.ErrorType.AgentStuck);
-		end;
-	end;
-end;
-
-
-function Path.GetNearestCharacter(fromPosition)
-	local character, dist = nil, math.huge
-	for _, player in ipairs(PS:GetPlayers()) do
-		if player.Character and (player.Character.PrimaryPart.Position - fromPosition).Magnitude < dist then
-			character, dist = player.Character, (player.Character.PrimaryPart.Position - fromPosition).Magnitude
-		end
-	end
-	return character
-end
-
-function Path.new(agent, agentParameters, override)
-	if (not (agent and agent:IsA("Model") and agent.PrimaryPart)) then
-		output(error, "Pathfinding agent must be a valid Model Instance with a set PrimaryPart.")
-	end
-
-	local self = setmetatable(({
-		_settings = override or DEFAULT_SETTINGS,
-		_events = {
-			Reached = Instance.new("BindableEvent"),
-			WaypointReached = Instance.new("BindableEvent"),
-			Blocked = Instance.new("BindableEvent"),
-			Error = Instance.new("BindableEvent"),
-			Stopped = Instance.new("BindableEvent"),
-		},
-		_agent = agent,
-		_humanoid = agent:FindFirstChildOfClass("Humanoid"),
-		_path = PathfindingService:CreatePath(agentParameters),
-		_status = "Idle",
-		_t = 0,
-		_position = {
-			_last = Vector3.new(),
-			_count = 0,
-		},
-	}), Path)
-
-	--Configure settings
-	for setting, value in pairs(DEFAULT_SETTINGS) do
-		self._settings[setting] = self._settings[setting] == nil and value or self._settings[setting]
-	end
-
-	--Path blocked connection
-	local function selfPathBlockedFunction(...)
-		if (not ... or (self._currentWaypoint <= ... and self._currentWaypoint + 1 >= ...)) and self._humanoid and not isActionProgress then
-			self._events.Blocked:Fire(self._agent, self._waypoints[...])
-			setJumpState(self)
-		end
-	end
-	self._path.Blocked:Connect(selfPathBlockedFunction)
-
-	return self
-end
-
-
-function Path:Destroy()
-	for _, event in ipairs(self._events) do
-		event:Destroy()
-	end
-	self._events = nil
-	if rawget(self, "_visualWaypoints") then
-		self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
-	end
-	self._path:Destroy()
-	setmetatable(self, nil)
-	for k, _ in pairs(self) do
-		self[k] = nil
-	end
-end
-
-function Path:Stop()
-	if not self._humanoid then
-		output(error, "Attempt to call Path:Stop() on a non-humanoid.")
-		return
-	end
-	if self._status == Path.StatusType.Idle then
-		--output(function(m)
-		--	warn(debug.traceback(m))
-		--end, "Attempt to run Path:Stop() in idle state")
-		return
-	end
-	disconnectMoveConnection(self)
-	self._status = Path.StatusType.Idle
-	self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
-	self._events.Stopped:Fire(self._model)
-end
-
-function Path:Run(target)
-	if isCleared then
-		return false
-	end
-	--Non-humanoid handle case
-	if (not target and not self._humanoid and self._target) then
-		moveToFinished(self, true)
-		return
-	end
-
-	--Parameter check
-	if (not (target and (typeof(target) == "Vector3" or target:IsA("BasePart")))) then
-		output(error, "Pathfinding target must be a valid Vector3 or BasePart.")
-	end
-	if not C.AvailableHacks.Beast[2].IsCrawling then
-		isActionProgress = ((plr:WaitForChild("TempPlayerStatsModule"):WaitForChild("ActionProgress").Value%1)~=0)
-	end
-
-	while self._humanoid.Health>0 and self._humanoid.FloorMaterial==Enum.Material.Air do
-		self._humanoid:GetPropertyChangedSignal("FloorMaterial"):Wait()
-	end
-
-	--Refer to Settings.TIME_VARIANCE
-	if ((os.clock() - self._t) <= self._settings.TIME_VARIANCE) and self._humanoid then
-		task.wait(os.clock() - self._t)
-		declareError(self, self.ErrorType.LimitReached)
-		return false
-	elseif self._humanoid then
-		self._t = os.clock()
-	end
-
-	if not self._agent.PrimaryPart then 
-		return
-	end
-
-	local Destination = ((typeof(target) == "Vector3" and target) or target.Position)
-	local From = self._agent.PrimaryPart.Position
-
-	--Compute path
-	local excludeRaycastTable = ({"Exclude",nil,nil,C.char,C.Beast})
-	local directPath = false
-	local function pcallFunction()
-		local distToTarget = (Destination-From).Magnitude
-		local result, hitPart = raycast(From,(Destination+Vector3.new(0,4,0)),(excludeRaycastTable),distToTarget,nil,true)
-		if distToTarget<24 and not result then
-			directPath=true
-		else
-			self._path:ComputeAsync(From, Destination)
-		end
-	end
-	local pathComputed, _nothing = pcall(pcallFunction)
-	--print(directPath,_)
-	--Make sure path computation is successful
-	if (not pathComputed or ((self._path.Status == Enum.PathStatus.NoPath or (#self._path:GetWaypoints() < 2)) and not directPath) or (self._humanoid and self._humanoid:GetState() == Enum.HumanoidStateType.Freefall)) then
-		self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
-
-		local returnFalse = (self._target~=target or self._waypoints==nil or self._currentWaypoint==nil or self._waypoints[self._currentWaypoint]==nil or ((self._waypoints[self._currentWaypoint].Position-self._agent.PrimaryPart.Position)/Vector3.new(1,1,1)).magnitude>=6)
-
-		if (returnFalse) then
-			declareError(self, self.ErrorType.ComputationError)
-			return false
-			--else
-			--self._currentWaypoint = self._currentWaypoint or 2
-			--print("using old data!")
-		end
-
-	else
-		local newWaypoints = {{Position=From, Action=Enum.PathWaypointAction.Walk},
-		{Position=Destination, Action=Enum.PathWaypointAction.Walk}}
-		self._target = target
-		self._waypoints = (directPath and newWaypoints) or self._path:GetWaypoints()
-		self._currentWaypoint = 2
-	end
-
-	--Set status to active pathfinding starts
-	self._status = ((self._humanoid and Path.StatusType.Active) or Path.StatusType.Idle)
-
-
-	--Set network owner to server to prevent "hops"
-	--pcall(function()
-	--	self._agent.PrimaryPart:SetNetworkOwner(nil)
-	--end)
-
-	--Initialize waypoints
-
-
-	--Refer to Settings.COMPARISON_CHECKS
-	if self._humanoid then
-		comparePosition(self)
-	end
-
-	--Visualize waypoints
-	destroyVisualWaypoints(self._visualWaypoints)
-	if self._status == Path.StatusType.Idle then
-		return
-	end
-	self._visualWaypoints = (self.Visualize and createVisualWaypoints(self._waypoints))
-
-	--Create a new move connection if it doesn't exist already
-	if C.AvailableHacks.Bot[15].AvoidParts[1]~=nil and C.Beast~=nil and C.Beast:FindFirstChild("Torso")~=nil then
-		if not _SETTINGS.myBots[C.Beast.Name:lower()] then
-			C.AvailableHacks.Bot[15].AvoidParts[1].Position=(C.Beast.Torso.Position)
-		end
-	end
-	task.spawn(C.AvailableHacks.Bot[15].UnlockDoor)
-	local function mtf(...)
-		moveToFinished(self, ...)
-	end
-	self._moveConnection = self._humanoid and (self._moveConnection or self._humanoid.MoveToFinished:Connect(mtf))
-
-	--Begin pathfinding
-	if self._humanoid then
-		--self._humanoid:MoveTo(self._waypoints[self._currentWaypoint].Position)
-		if self._waypoints[self._currentWaypoint] then
-			C.AvailableHacks.Bot[20].Funct(self,self._waypoints[self._currentWaypoint].Position)
-			--self._currentWaypoint-=1--subtract the current waypoint to add it later!
-			--moveToFinished(self,true)
-			if self._waypoints[self._currentWaypoint].Position and self._agent.PrimaryPart then
-				if self._waypoints[self._currentWaypoint].Action==Enum.PathWaypointAction.Jump or (self._currentWaypoint>1 and self._waypoints[self._currentWaypoint-1].Action==Enum.PathWaypointAction.Jump) or self._waypoints[self._currentWaypoint].Position.Y>self._agent.PrimaryPart.Position.Y-2 then
-					setJumpState(self)
-				end
-			end
-		end
-	elseif #self._waypoints == 2 then
-		self._target = nil
-		self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
-		self._events.Reached:Fire(self._agent, self._waypoints[2])
-	else
-		self._currentWaypoint = getNonHumanoidWaypoint(self)
-		moveToFinished(self, true)
-	end
-	return true
-end
+local Path = C.Modules.SimplePathfinding(C,_SETTINGS)
 --MODULE 3: LOCAL CLUB SCRIPT
-local currentRaycastParams = RaycastParams.new()
-local ClearFreezePodBillboardIcons
-local function LocalClubScriptFunction(Original_LocalClubScript)
-	local script = Original_LocalClubScript
-	local Hammer = Original_LocalClubScript.Parent
-
-	local ClubConnections = C.AvailableHacks.Utility[8].ClubFuncts
-	local ShowFreezeConnections = C.AvailableHacks.Utility[8].ShowFreezeConnections
-
-	local ShowRaycast, RagdollLimbRaycast, FindCharacterFromChild, SetLocalTransparencyInChildren
-	local ShowEmptyFreezePodBillboardIcons, OnClick
-
-	local v2 = script.Parent
-	local v4 = v2:WaitForChild("HammerEvent")
-	local v7 = game:GetService("UserInputService")
-	local v10 = game:GetService("ReplicatedStorage")
-	local v13 = game:GetService("ContextActionService")
-	local v19 = v2:WaitForChild("Handle")
-	local v20 = false
-	local v21 = false
-	local v23 = game.Players
-	local v24 = v23.LocalPlayer
-	v23 = v24.Character
-	local v26 = v23:WaitForChild("Humanoid")
-	local v28 = v24:GetMouse()
-	local v30 = workspace.CurrentCamera
-	local v32 = v23:WaitForChild("CarriedTorso")
-	local v36 = require(v24:WaitForChild("TempPlayerStatsModule"))
-	local v40 = v26:LoadAnimation(v2:WaitForChild("AnimSwing"))
-	local v44 = v26:LoadAnimation(v2:WaitForChild("AnimWipe"))
-	local v48 = v26:LoadAnimation(v2:WaitForChild("AnimArmIdle"))
-	local v51 = v19:WaitForChild("SoundHitPlayer")
-	local v54 = v19:WaitForChild("SoundHitWall")
-	local function ClearFreezeConnection()
-		for s = #C.AvailableHacks.Utility[8].ShowFreezeConnections, 1, -1 do
-			local funct = C.AvailableHacks.Utility[8].ShowFreezeConnections[s]
-			if funct then
-				funct:Disconnect()
-			end
-			table.remove(C.AvailableHacks.Utility[8].ShowFreezeConnections,s)
-		end
-	end
-	ShowEmptyFreezePodBillboardIcons = function()
-		ClearFreezeConnection()
-		local v70 = v10.CurrentMap.Value
-		if not v70 or v70 == TS then
-			return
-		end
-		for v69, v74 in ipairs(v70:GetChildren()) do
-			local v73 = v74.Name
-			local podTrigger = v74:FindFirstChild("PodTrigger")
-			if podTrigger and podTrigger:FindFirstChild("ActionSign") then
-				local v77 = v10.BillboardGuiIcons.EmptyPodBillboardGui:Clone()
-				v77.Parent = v23:FindFirstChild("IconBillboardGuis")
-				v77.Adornee = v74:FindFirstChild("PodRoof")
-				v77.Enabled = podTrigger.ActionSign.Value==30
-
-				table.insert(ShowFreezeConnections, podTrigger.ActionSign.Changed:Connect(function()
-					v77.Enabled = podTrigger.ActionSign.Value==30
-				end))
-			end
-		end
-	end
-	ClearFreezePodBillboardIcons = function()
-		ClearFreezeConnection()
-		for v95, v94 in ipairs(v23:FindFirstChild("IconBillboardGuis"):GetChildren()) do
-			if v94.Name == "EmptyPodBillboardGui" then
-				v94:Destroy()
-			end
-		end
-	end
-	ShowRaycast = function(p1, p2)
-		local v100 = Instance.new("Part", v2)
-		v100.BrickColor = BrickColor.new("Bright red")
-		v100.FormFactor = "Custom"
-		v100.Material = "Neon"
-		v100.Transparency = 0.25
-		v100.Anchored = true
-		v100.Locked = true
-		v100.CanCollide = false
-		local v128 = p1.Origin - p2.magnitude
-		v100.Size = Vector3.new(0.01, 0.01, v128)
-		v100.CFrame = CFrame.new(p1.Origin, p2) * CFrame.new(0, 0, -v128 / 2)
-		DS:AddItem(v100, 1)
-	end
-	currentRaycastParams.FilterType = Enum.RaycastFilterType.Exclude
-	currentRaycastParams.IgnoreWater = true
-	--currentRaycastParams.CollisionGroup = "PLAYERS_BODIES"
-	RagdollLimbRaycast = function(p3)
-		--print("weapon raycast")
-		local v137 = false
-		local v138 = {}
-		v138[1] = v23
-		local v144 = v23
-		if not v23.Parent or not v23:FindFirstChild("Head") then return end
-		local v145 = v144.Head
-		local v146 = v145.CFrame
-		local v147 = v146.p
-		local v174 = p3 - v147
-		local v175 = v174.unit
-		local v149
-		local v150
-		local i = 0
-		while i < 10 do
-			i+=1
-			v147 = Ray.new(v23.Head.CFrame.p, v175 * 6)
-			v146 = v138
-			v145 = false
-			v144 = true
-			--local v151, hitLoc = workspace:FindPartOnRayWithIgnoreList(v147, v146, v145, v144)
-			currentRaycastParams.FilterDescendantsInstances = v146
-			local result = workspace:Raycast(v23.Head.CFrame.p,v175 * 6,currentRaycastParams)
-			v149 = result and result.Instance
-			v150 = v174
-			if result and v149 and v149:IsA("BasePart") then
-				local v151 = v149.Transparency
-				v174 = 0.95
-				if not v149.CanCollide or (v149.Parent and (v149.Parent:FindFirstChild("Humanoid") or v149.Parent.Parent:FindFirstChild("Humanoid"))) then
-					table.insert(v146, v149)
-					v137 = true
-					local v158 = PS:GetPlayerFromCharacter(v149.Parent)
-					if v158 then
-						local v161 = (v158:FindFirstChild("TempPlayerStatsModule"))
-						local v164 = v149:isDescendantOf(v23)
-						if not v164 then
-							if v161.Ragdoll.Value and v161.Health.Value > 0 then
-								v4:FireServer("HammerTieUp", v149, result.Position)
-								v137 = false
-								return v149
-							else
-								return
-							end
-						else
-							return
-						end
-					end
-				else
-					return
-				end
-			else
-				return
-			end
-		end
-		--print("Weapons Raycast failed after i =",i)
-		return
-	end
-	OnClick = function()
-		--print("Mouse pressed!")
-		local v180 = v20
-		if not v180 then
-			v180 = RagdollLimbRaycast
-			local v181 = v28
-			local v182 = v181.Hit
-			local v184 = v180(v182.p)
-			if v184 then
-				v181 = "tie up player's: "
-				v182 = v181 .. v184.Name
-				--print(v182)
-				return 
-			end
-		end
-		if v21 or v20 then
-			return
-		end
-		v21 = true
-		--print("HOI, swing!")
-		v40:Play()
-		local hammerHitConnection
-		local swingStoppedConnection
-		hammerHitConnection = v19.Touched:connect(function(p4)
-			local v193 = "I hit: "
-			local v194 = p4.Name
-			--print(v193 .. v194)
-			local v198 = FindCharacterFromChild(p4)
-			if v198 then
-				local v199 = v23
-				--[[if v198 == v199 then
-					v199 = p4.Transparency
-					v193 = 0.95
-					if v193 < v199 then
-						v199 = p4.CanCollide
-					end
-				end--]]
-				v199 = p4.Parent
-				if v199 == v198 then
-					--print( "I hit another player")
-					v51:Play()
-					v194 = "HammerHit"
-					v4:FireServer(v194, p4)
-					hammerHitConnection:Disconnect()
-					swingStoppedConnection:Disconnect()
-					v26.WalkSpeed = 0
-					v21 = true
-					while true do
-						if v40.TimePosition ~= v40.Length then
-							break
-						end
-						wait()
-					end
-					v44:Play(0.1, 1, 0.5)
-					local v204
-					local v211 = 0
-					while true do
-						if not v44.IsPlaying then
-							break
-						end
-						wait()
-					end
-					--v211 = v26
-					--local v214 = v211.WalkSpeed
-					--v214 = v26
-					--v214.WalkSpeed = v204.WalkSpeed
-					v26.WalkSpeed = myTSM.NormalWalkSpeed.Value
-					v21 = false
-					return 
-				end
-				return 
-			else
-				v54:Play()
-				v40:Stop()
-			end
-		end)
-		swingStoppedConnection = v40.Stopped:connect(function()
-			v21 = false
-			hammerHitConnection:disconnect()
-			swingStoppedConnection:disconnect()
-		end)
-	end
-	FindCharacterFromChild = function(p5)
-		if p5==workspace or p5==game then
-			return
-		elseif PS:GetPlayerFromCharacter(p5) then
-			local v237 = p5:FindFirstChild("Humanoid")
-			if v237 then
-				return p5
-			else
-				return
-			end
-		end
-		return FindCharacterFromChild(p5.Parent)
-	end
-	SetLocalTransparencyInChildren = function(p6)
-		if p6 then
-			local v246 = p6:IsA("BasePart")
-			if v246 then
-				v246 = p6.Transparency
-				p6.LocalTransparencyModifier = v246
-			end
-			for _, obj in  ipairs(p6:GetChildren()) do
-				SetLocalTransparencyInChildren(obj)
-			end
-		end
-	end
-	local function IsInsideGuiBox_1(p7, p8)
-		local v257 = p7.X
-		local v258 = p8.AbsolutePosition
-		local v259 = v258.X
-		if v257 > v259 then
-			v257 = p7.X
-			local v260 = p8.AbsolutePosition
-			local v261 = p8.AbsoluteSize
-			v258 = v260 + v261
-			v259 = v258.X
-			if v259 > v257 then
-				v257 = p7.Y
-				v258 = p8.AbsolutePosition
-				v259 = v258.Y
-				if v257 > v259 then
-					v257 = p7.Y
-					v260 = p8.AbsolutePosition
-					v261 = p8.AbsoluteSize
-					v258 = v260 + v261
-					v259 = v258.Y
-					if v259 > v257 then
-						v257 = true
-						return v257
-					end
-				end
-			end
-		end
-		return false
-	end
-	local IsInsideGuiBox = IsInsideGuiBox_1
-	IsInsideGuiBox_1 = UIS.TouchEnabled
-	IsInsideGuiBox_1 = UIS.TouchTapInWorld
-	table.insert(ClubConnections, IsInsideGuiBox_1:connect(function(p9, p10)
-		if p10 then
-			v4:FireServer("HammerClick", true)
-			OnClick()
-		end
-	end))
-	table.insert(ClubConnections, plr:GetMouse().Button1Down:connect(function()
-		v4:FireServer("HammerClick", true)
-		OnClick()
-	end))
-	local LArm = C.char:FindFirstChild("Left Arm")
-	local RArm = C.char:FindFirstChild("Right Arm")
-	table.insert(ClubConnections, game:GetService("RunService").RenderStepped:connect(function()
-		LArm.LocalTransparencyModifier = LArm.Transparency
-		RArm.LocalTransparencyModifier = RArm.Transparency
-		SetLocalTransparencyInChildren(Hammer)
-	end))
-	local function carriedTorsoChangedFunction()
-		local v295 = v32.Value
-		if v295 then
-			v295 = true
-			v20 = v295
-			v295 = ShowEmptyFreezePodBillboardIcons
-			v295()
-			return 
-		end
-		v20 = false
-		ClearFreezePodBillboardIcons()
-
-	end
-	local carriedTorsoConnection = v32.Changed:connect(carriedTorsoChangedFunction)
-	table.insert(ClubConnections,carriedTorsoConnection)
-	table.insert(ClubConnections, Hammer.ChildRemoved:connect(function(p11)
-		local v300 = p11.Name
-		v300 = v48
-		v300:Stop()
-		ClearFreezePodBillboardIcons()
-		v24.CameraMode = Enum.CameraMode.Classic
-	end))
-	if (C.enHacks.Util_CanZoom==false) then
-		v24.CameraMode = Enum.CameraMode.LockFirstPerson
-	end
-	v19:WaitForChild("SoundHeartBeat").Volume = 0
-	v19:WaitForChild("SoundChaseMusic").Volume = 0
-	v48:Play(0.100000001, 1, 0.5)
-	carriedTorsoChangedFunction()
-end
 
 --USER COLOR COMPUTATION
 local ChatColors = {
@@ -3266,31 +1460,31 @@ end
 --Important Variables:
 plr=PS.LocalPlayer
 C.char=plr.Character or plr.CharacterAdded:Wait()
-human=C.char:WaitForChild("Humanoid")
+C.human=C.char:WaitForChild("Humanoid")
 local hackChanged=Instance.new("BindableEvent")
 local computerHackStartTime=os.clock()
 local lastHackedPC,lastHackedPosition=nil,Vector3.new(100,100,100)
 
 
-if gameUniverse=="Flee" then
-	myTSM=plr:WaitForChild("TempPlayerStatsModule");
-	mySSM=plr:WaitForChild("SavedPlayerStatsModule");
-	local myTSM_Module = require(myTSM);
-	C.myTSM_Get_Hooks = getgenv().TSMGetHooks
-	if not C.myTSM_Get_Hooks then
-		C.myTSM_Get_Hooks = {}
-		--myTSM_Module.GetHooks = getgenv().TSMGetHooks
+if C.gameUniverse=="Flee" then
+	C.myTSM=plr:WaitForChild("TempPlayerStatsModule");
+	C.mySSM=plr:WaitForChild("SavedPlayerStatsModule");
+	local myTSM_Module = require(C.myTSM);
+	C.C.myTSM_Get_Hooks = getgenv().TSMGetHooks
+	if not C.C.myTSM_Get_Hooks then
+		C.C.myTSM_Get_Hooks = {}
+		--C.myTSM_Module.GetHooks = getgenv().TSMGetHooks
 	end
 	function C.ConnectPlrTSM(theirPlr,theTSM_Module)
 		local function TempPlayerStatsModule(instance_name)
-			local instance = myTSM:FindFirstChild(instance_name)
+			local instance = C.myTSM:FindFirstChild(instance_name)
 			if not instance then
 				return
 			end
 			local caller = getcallingscript()
 			local instance_value = instance.Value
 
-			for str, funct in pairs(C.myTSM_Get_Hooks) do
+			for str, funct in pairs(C.C.myTSM_Get_Hooks) do
 				local result = funct(theirPlr,caller,instance_name,instance_value)
 				if result ~= nil then
 					return result
@@ -3305,10 +1499,10 @@ if gameUniverse=="Flee" then
 		end--]]
 	end
 	function C.SetTempValue(identification,funct)
-		C.myTSM_Get_Hooks[identification] = funct or nil
+		C.C.myTSM_Get_Hooks[identification] = funct or nil
 	end
 end;
-if gameName=="FleeMain" then
+if C.gameName=="FleeMain" then
 	if plr:WaitForChild("IsCheckingLoadData").Value then
 		local WaitEvent=Instance.new("BindableEvent");
 		local function FinishedCheckingDataFunction()
@@ -3418,12 +1612,12 @@ C.AvailableHacks ={
 					if not newTag:FindFirstChild("Username") then
 						return
 					end
-					local setColor3 = select(2,isInGame(theirChar))
+					local setColor3 = select(2,C.isInGame(theirChar))
 					newTag.Username.TextColor3=(setColor3=="Beast" and newColor3(255)) or (setColor3=="Runner" and newColor3(0,0,255)) or newColor3(255,255,0)
 				end
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildAdded:Connect(childChanged)))
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildRemoved:Connect(childChanged)))
-				if gameName=="FleeMain" then
+				if C.gameName=="FleeMain" then
 					local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule",60)
 					if not theirTSM then
 						return
@@ -3455,10 +1649,10 @@ C.AvailableHacks ={
 					if not DistanceTag then
 						return
 					end
-					while (NameTag~=nil and NameTag.Parent~=nil and NameTag.Parent.Parent~=nil and DistanceTag~=nil and not isCleared) do
+					while (NameTag~=nil and NameTag.Parent~=nil and NameTag.Parent.Parent~=nil and DistanceTag~=nil and not C.isCleared) do
 						local dist=math.round((camera.CFrame.p-(CenterObject.Position+NameTag.StudsOffset)).Magnitude)
 						DistanceTag.Text=(dist.."m")
-						if isInGame(NameTag.Parent.Parent)==isInGame(camera.CameraSubject.Parent) then
+						if C.isInGame(NameTag.Parent.Parent)==C.isInGame(camera.CameraSubject.Parent) then
 							NameTag.PlayerToHideFrom=nil
 						else
 							NameTag.PlayerToHideFrom=plr
@@ -3577,13 +1771,13 @@ C.AvailableHacks ={
 				local key
 				delay(.25,function()
 					--C.objectFuncts[theirChar]=C.objectFuncts[theirChar] or {}
-					while not isCleared and theirChar~=nil and theirChar.Parent~=nil do
+					while not C.isCleared and theirChar~=nil and theirChar.Parent~=nil do
 						--if C.enHacks.ESP_Highlight then
 						--key=#C.objectFuncts[theirChar]+1
-						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
-							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({isInGame(theirChar)})[1])==({isInGame(camera.CameraSubject.Parent)})[1] then
+						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
+							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (({C.isInGame(theirChar)})[1])==({C.isInGame(camera.CameraSubject.Parent)})[1] then
 								--local didHit,instance=true,theirChar.PrimaryPart
-								local didHit,instance=raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil--[[,function(result)
+								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil--[[,function(result)
 									local instance = result and result.Instance
 									if instance and instance.Parent and 
 										(instance.Parent:FindFirstChild("Humanoid") or (instance.Parent.Parent and instance.Parent.Parent:FindFirstChild("Humanoid"))
@@ -3637,10 +1831,10 @@ C.AvailableHacks ={
 				end
 			end,
 			["CleanUp"]=function()
-				--[[if isCleared then return end
+				--[[if C.isCleared then return end
 				for num, computerElement in pairs(HackGUI:GetChildren()) do
 					if string.sub(computerElement.Name,1,13)=="ComputerTable" then
-						DestroyInstance(computerElement)
+						C.DestroyInstancelTags(computerElement)
 					end
 				end--]]
 			end,
@@ -3679,15 +1873,15 @@ C.AvailableHacks ={
 				CS:AddTag(robloxHighlight,"RemoveOnDestroy")
 
 				local function ESP_PC_Task_Spawn()
-					while not isCleared and Computer~=nil and Computer.Parent~=nil do
-						while C.enHacks.ESP_PCHighlight and not isCleared do
-							if (((primPart.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance) and isInGame(camera.CameraSubject.Parent)) then
+					while not C.isCleared and Computer~=nil and Computer.Parent~=nil do
+						while C.enHacks.ESP_PCHighlight and not C.isCleared do
+							if (((primPart.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance) and C.isInGame(camera.CameraSubject.Parent)) then
 								local didHit = false
 								local instance = primPart
 								if (C.Map~=nil and Screen~=nil) then    
 									local castArgument = camera.CameraSubject~=nil and camera.CameraSubject.Parent
 									local castArray = {"Blacklist", castArgument}
-									didHit,instance=raycast(camera.CFrame.p, Screen.Position, castArray, 100, 0.001)
+									didHit,instance=C.raycast(camera.CFrame.p, Screen.Position, castArray, 100, 0.001)
 								end 
 								changeVisibility(robloxHighlight,(didHit and Computer:IsAncestorOf(instance) and 1 or 0),Screen.Color)
 							else
@@ -3828,7 +2022,7 @@ C.AvailableHacks ={
 							if not C.enHacks.Util_AutoHack then
 								return
 							end
-							RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+							RS.C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
 							task.wait((0.05))
 						end
 					end
@@ -3847,24 +2041,23 @@ C.AvailableHacks ={
 			["Funct"]=nil,
 			["Event"]=nil,
 			["SetEnabled"]=function(tag)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local isInGame=C.isInGame(camera.CameraSubject.Parent)
 				local newValue = C.enHacks.Render_FreezingPods
 
 				local canBeActive = newValue == true
 				tag.Enabled=canBeActive and C.AllowedCameraEnums[camera.CameraType] and isInGame
 				if tag:FindFirstChild("Toggle") then
-					tag.Toggle.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+					tag.Toggle.Text = C.myTSM.IsBeast.Value and "Capture" or "Rescue"
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay3")
 				for num,tag in ipairs(hackDisplayList) do
 					C.AvailableHacks.Render[30].SetEnabled(tag)
 				end
 			end,
 			["CleanUp"]=function()
-				DestroyAllTaggedObjects("HackDisplay3")
+				C.DestroyAllTaggedObjects("HackDisplay3")
 				--if C.AvailableHacks.Render[30].Event then
 				--	C.AvailableHacks.Render[30].Event:Destroy()
 				--end
@@ -3893,10 +2086,9 @@ C.AvailableHacks ={
 					--end
 					return
 				end
-				local isBeast = myTSM:WaitForChild("IsBeast")
+				local isBeast = C.myTSM:WaitForChild("IsBeast")
 
 				local newTag=C.ToggleTag:Clone()
-				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "Pod"
 				newTag.Parent=GuiElements.HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
@@ -3909,14 +2101,14 @@ C.AvailableHacks ={
 				end
 				local ToggleButton = newTag.Toggle
 				ToggleButton.BackgroundColor3 = Color3.fromRGB(255,0,255)
-				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+				ToggleButton.Text = C.myTSM.IsBeast.Value and "Capture" or "Rescue"
 				C.AvailableHacks.Render[30].SetEnabled(newTag)
 				local function setToggleFunction()
 					if isBeast.Value then
 						local theirChar = C.Beast.CarriedTorso.Value.Parent
 						C.AvailableHacks.Beast[60].CaptureSurvivor(PS:GetPlayerFromCharacter(theirChar),theirChar, Capsule, true)
 					else
-						if myTSM.Health.Value > 0 then
+						if C.myTSM.Health.Value > 0 then
 							C.AvailableHacks.Runner[80].RescueSurvivor(Capsule,true)
 						else
 							print("You aren't a runner, so you can't rescue!")
@@ -3966,14 +2158,13 @@ C.AvailableHacks ={
 			["Shortcut"]="Render_DownedRunner",
 			["Default"]=false,
 			["SetEnabled"]=function(tag)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local isInGame=C.isInGame(camera.CameraSubject.Parent)
 				local newValue = C.enHacks.Render_DownedRunner
 
 				local canBeActive = newValue == true
 				tag.Enabled=canBeActive and C.AllowedCameraEnums[camera.CameraType] and isInGame
 			end,
 			["ActivateFunction"]=function(newValue)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay5")
 				for num,tag in ipairs(hackDisplayList) do
 					C.AvailableHacks.Render[29].SetEnabled(tag)
@@ -3986,7 +2177,7 @@ C.AvailableHacks ={
 				local carriedTorso = workspace:WaitForChild("CarriedTorsoChanged",math.huge)
 				local theirPrimPart = theirChar:WaitForChild("Torso",30)
 				if not carriedTorso or not theirPrimPart then
-					if C.Map and not isCleared then
+					if C.Map and not C.isCleared then
 						print("uh oh! CarriedTorsoChanged.Event found")
 					end
 					return
@@ -3999,7 +2190,6 @@ C.AvailableHacks ={
 				end
 
 				local newTag=C.ToggleTag:Clone()
-				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "Player"
 				newTag.Parent=GuiElements.HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 0, 0)
@@ -4012,7 +2202,7 @@ C.AvailableHacks ={
 				end
 				local ToggleButton = newTag.Toggle
 				ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
-				ToggleButton.Text = myTSM.IsBeast.Value and "Capture" or "Rescue"
+				ToggleButton.Text = C.myTSM.IsBeast.Value and "Capture" or "Rescue"
 				C.AvailableHacks.Render[29].SetEnabled(newTag)
 				local function setToggleFunction()
 					if C.Beast:FindFirstChild("CarriedTorso") and C.Beast.CarriedTorso.Value ~= theirPrimPart then
@@ -4058,21 +2248,20 @@ C.AvailableHacks ={
 			["Shortcut"]="Render_HackComputers",
 			["Default"]=false,
 			["SetEnabled"]=function(tag)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local isInGame=C.isInGame(camera.CameraSubject.Parent)
 				local newValue = C.enHacks.Render_HackComputers
 
 				local canBeActive = newValue == true
 				tag.Enabled=canBeActive and C.AllowedCameraEnums[camera.CameraType] and isInGame
 			end,
 			["ActivateFunction"]=function(newValue)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay4")
 				for num,tag in ipairs(hackDisplayList) do
 					C.AvailableHacks.Render[28].SetEnabled(tag)
 				end
 			end,
 			["CleanUp"]=function()
-				DestroyAllTaggedObjects("HackDisplay4")
+				C.DestroyAllTaggedObjects("HackDisplay4")
 				C.AvailableHacks.Render[28].ComputerTeleportFunctions={}
 			end,
 			["UpdateDisplays"]=function()
@@ -4099,7 +2288,7 @@ C.AvailableHacks ={
 				end
 
 				local newTag=C.ToggleTag:Clone()
-				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
+				local isInGame=C.isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "PCTrigger"
 				newTag.Parent=GuiElements.HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
@@ -4113,7 +2302,7 @@ C.AvailableHacks ={
 				local ToggleButton = newTag.Toggle
 				ToggleButton.Text = "Teleport"
 				local function setToggleFunction()
-					local ActionEventVal = myTSM:WaitForChild("ActionEvent").Value
+					local ActionEventVal = C.myTSM:WaitForChild("ActionEvent").Value
 					local TriggerType = ActionEventVal and trigger_gettype(ActionEventVal.Parent.Parent)
 					if ActionEventVal and TriggerType=="Computer" then
 						task.spawn(stopCurrentAction)
@@ -4152,13 +2341,13 @@ C.AvailableHacks ={
 			["MaxBound"]=1e3,
 			["ActivateFunction"]=function(newValue)
 				local function setSpeed()
-					human.WalkSpeed=newValue==16 and plr.TempPlayerStatsModule.NormalWalkSpeed.Value or newValue
+					C.human.WalkSpeed=newValue==16 and plr.TempPlayerStatsModule.NormalWalkSpeed.Value or newValue
 				end
 
 				if newValue==16 then
-					setChangedProperty(human,"WalkSpeed",false)
+					setChangedProperty(C.human,"WalkSpeed",false)
 				else
-					setChangedProperty(human,"WalkSpeed",setSpeed)
+					setChangedProperty(C.human,"WalkSpeed",setSpeed)
 				end
 				setSpeed()
 			end,
@@ -4194,10 +2383,10 @@ C.AvailableHacks ={
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				local ActionEventVal=TSM:WaitForChild("ActionEvent") 
 				local CurrentActionEvent=ActionEventVal.Value
-				RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+				C.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
 				task.wait()
-				RemoteEvent:FireServer("Input", "Action", true)
-				RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
+				C.RemoteEvent:FireServer("Input", "Action", true)
+				C.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
 				ActionEventVal.Value=nil
 				while Trigger.ActionSign.Value~=10 do--wait for it to be opened
 					Trigger.ActionSign.Changed:Wait()
@@ -4206,8 +2395,8 @@ C.AvailableHacks ={
 					if Trigger.ActionSign.Value==11 then
 						break
 					end
-					RemoteEvent:FireServer("Trigger", "Input", true, Trigger.Event)
-					RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+					C.RemoteEvent:FireServer("Trigger", "Input", true, Trigger.Event)
+					C.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
 					ActionEventVal.Value=CurrentActionEvent
 					TSM.OnTrigger.Value=true
 					wait(.05)
@@ -4292,14 +2481,14 @@ C.AvailableHacks ={
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				local isInGame=isInGame(camera.CameraSubject.Parent)
+				local isInGame=C.isInGame(camera.CameraSubject.Parent)
 				local hackDisplayList = CS:GetTagged("HackDisplay2")
 				for num,tag in ipairs(hackDisplayList) do
 					tag.Enabled=newValue and C.AllowedCameraEnums[camera.CameraType] and isInGame
 				end
 			end,
 			["CleanUp"]=function()
-				DestroyAllTaggedObjects("HackDisplay2")
+				C.DestroyAllTaggedObjects("HackDisplay2")
 				C.AvailableHacks.Blatant[15].DoorFuncts = {}
 			end,
 			["UpdateDisplays"]=function()
@@ -4338,7 +2527,7 @@ C.AvailableHacks ={
 					return
 				end
 				local newTag=C.ToggleTag:Clone()
-				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
+				local isInGame=C.isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Parent=GuiElements.HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 1, 0)
 				newTag.Adornee=WalkThru
@@ -4376,12 +2565,12 @@ C.AvailableHacks ={
 						if isOpened~=getState() or not doorTriggerEvent or not doorTriggerEvent.Parent or (saveActionSign ~= actionSign.Value and actionSign.Value ~= 0) then
 							break
 						end
-						RS.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
+						RS.C.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
 						--RunS.RenderStepped:Wait()
-						RS.RemoteEvent:FireServer("Input", "Action", true)
+						RS.C.RemoteEvent:FireServer("Input", "Action", true)
 						RunS.RenderStepped:Wait()
 						if isOpened then
-							RS.RemoteEvent:FireServer("Input", "Trigger", false)
+							RS.C.RemoteEvent:FireServer("Input", "Trigger", false)
 							RunS.RenderStepped:Wait()
 						end
 					end
@@ -4396,9 +2585,9 @@ C.AvailableHacks ={
 					end
 					--wait()
 					if currentEvent~=nil and not isOpened and false then--and saveActionSign == actionSign.Value then
-						RS.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
+						RS.C.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
 						--wait()
-						--RemoteEvent:FireServer("Input", "Action", true)
+						--C.RemoteEvent:FireServer("Input", "Action", true)
 					end
 				end
 				C.AvailableHacks.Blatant[15].DoorFuncts[door] = setToggleFunction
@@ -4432,17 +2621,17 @@ C.AvailableHacks ={
 				if C.Map and (C.enHacks.Blatant_KeepDoorsOpen or C.enHacks.Blatant_KeepDoorsClosed) then
 					local function doorAdded(door)
 						local saveDoorFunct = C.AvailableHacks.Blatant[15].DoorFuncts[door]
-						while not saveDoorFunct and C.AvailableHacks.Blatant[18].SaveDeb == saveDeb and C.Map and human and human.Parent and human.Health>0
-							and not isCleared do
+						while not saveDoorFunct and C.AvailableHacks.Blatant[18].SaveDeb == saveDeb and C.Map and C.human and C.human.Parent and C.human.Health>0
+							and not C.isCleared do
 							RunS.RenderStepped:Wait()
 							saveDoorFunct = C.AvailableHacks.Blatant[15].DoorFuncts[door]
 						end
-						if C.AvailableHacks.Blatant[18].SaveDeb ~= saveDeb or isCleared then
+						if C.AvailableHacks.Blatant[18].SaveDeb ~= saveDeb or C.isCleared then
 							return
 						end
 						local actionSign = StringWaitForChild(door,"DoorTrigger.ActionSign")
 						local function updateFunct()
-							if isCleared or actionSign.Value == 0 then
+							if C.isCleared or actionSign.Value == 0 then
 								return
 							end
 							if (C.enHacks.Blatant_KeepDoorsOpen and actionSign.Value == 10) or (C.enHacks.Blatant_KeepDoorsClosed and actionSign.Value == 11) then
@@ -4522,7 +2711,7 @@ C.AvailableHacks ={
 						if plr.PlayerGui.ScreenGui.TimingCircle.TimingPin.Rotation>=plr.PlayerGui.ScreenGui.TimingCircle.TimingBase.Rotation+45 then
 							TSM.ActionInput.Value=true
 							if not TSM.MinigameResult.Value then
-								--RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+								--RS.C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
 							end
 						end
 						task.wait()
@@ -4532,7 +2721,7 @@ C.AvailableHacks ={
 							return
 						end
 						if not TSM.MinigameResult.Value then
-							--RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+							--RS.C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
 						end 	
 						task.wait()
 					end
@@ -4551,10 +2740,10 @@ C.AvailableHacks ={
 				C.AvailableHacks.Utility[1].ActivateFunction(C.enHacks.Util_AutoHack)
 			end,
 			["MyPlayerAdded"] = function()
-				local minigameResult = myTSM:WaitForChild("MinigameResult")
+				local minigameResult = C.myTSM:WaitForChild("MinigameResult")
 				local function updateMiniGameResult()
 					if minigameResult and C.enHacks.Util_AutoHack then
-						RS.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+						RS.C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
 					end
 				end
 				setChangedProperty(minigameResult,"Value",updateMiniGameResult)
@@ -4607,7 +2796,7 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["Functs"]={},
 			["ActivateFunction"]=function(newValue)
-				--local TSMModule = require(myTSM)
+				--local TSMModule = require(C.myTSM)
 				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName")
 
 				local allowedEndValues = {
@@ -4665,7 +2854,7 @@ C.AvailableHacks ={
 				end)
 
 				--[[local function NormalFunction(valName)
-					return myTSM:FindFirstChild(valName).Value
+					return C.myTSM:FindFirstChild(valName).Value
 				end
 
 				TSMModule.GetValue = newValue and function(valName)
@@ -4735,7 +2924,7 @@ C.AvailableHacks ={
 
 
 				local function upd()
-					if (myTSM.IsBeast.Value or myTSM.Health.Value > 0) and math.abs(game.Lighting.ClockTime - 14) > .2 then
+					if (C.myTSM.IsBeast.Value or C.myTSM.Health.Value > 0) and math.abs(game.Lighting.ClockTime - 14) > .2 then
 						DefaultLightning.Name = "NotDefaultLightingSettings"
 					else
 						DefaultLightning.Name = "DefaultLightingSettings"
@@ -4750,8 +2939,8 @@ C.AvailableHacks ={
 						MapLighting.Name = "NotLightingSettings"
 					end
 				end
-				table.insert(C.AvailableHacks.Utility[5].Functs,myTSM.Health.Changed:Connect(upd))
-				table.insert(C.AvailableHacks.Utility[5].Functs,myTSM.IsBeast.Changed:Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Functs,C.myTSM.Health.Changed:Connect(upd))
+				table.insert(C.AvailableHacks.Utility[5].Functs,C.myTSM.IsBeast.Changed:Connect(upd))
 				table.insert(C.AvailableHacks.Utility[5].Functs,LS:GetPropertyChangedSignal("ClockTime"):Connect(upd))
 				table.insert(C.AvailableHacks.Utility[5].Functs,RS.IsGameActive.Changed:Connect(updMap))
 				upd() updMap()
@@ -4810,12 +2999,12 @@ C.AvailableHacks ={
 				textScaledTL:AddTag("RemoveOnDestroy")
 				C.AvailableHacks.Utility[3].DummyTextBox = textScaledTL--]]
 
-				if gameUniverse=="Flee" then
+				if C.gameUniverse=="Flee" then
 					local ScreenGui = PlayerGui:WaitForChild("ScreenGui");
 					local MenusTabFrame = ScreenGui:WaitForChild("MenusTabFrame");
-					local BeastPowerMenuFrame = gameName=="FleeMain" and ScreenGui:WaitForChild("BeastPowerMenuFrame")
-					local SurvivorStartFrame = gameName=="FleeMain" and  ScreenGui:WaitForChild("SurvivorStartFrame")
-					local IsCheckingLoadData = gameName=="FleeMain" and plr:WaitForChild("IsCheckingLoadData");
+					local BeastPowerMenuFrame = C.gameName=="FleeMain" and ScreenGui:WaitForChild("BeastPowerMenuFrame")
+					local SurvivorStartFrame = C.gameName=="FleeMain" and  ScreenGui:WaitForChild("SurvivorStartFrame")
+					local IsCheckingLoadData = C.gameName=="FleeMain" and plr:WaitForChild("IsCheckingLoadData");
 					if IsCheckingLoadData then
 						local function changedFunct()
 							if C.enHacks.Util_Fix then
@@ -4845,11 +3034,11 @@ C.AvailableHacks ={
 					end
 				end
 
-				local chatTextLabel = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
+				local chatTextLabel = C.gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.TextLabel")
 
 				if (UIS.TouchEnabled and newValue) and not C.AvailableHacks.Utility[3].Active and TCS.ChatVersion == Enum.ChatVersion.LegacyChatService then
-					local chatButton = gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
-					--local chatMain = requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
+					local chatButton = C.gameUniverse=="Flee" and StringWaitForChild(PlayerGui,"ScreenGui.ChatIconFrame.Button")
+					--local chatMain = C.requireModule(StringWaitForChild(plr,"PlayerScripts.ChatScript.ChatMain"))
 					local chatBar = StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar")
 					local action1 = (UIS.MouseEnabled and UIS.TouchEnabled  and "select") 
 						or (UIS.MouseEnabled and "click") or (UIS.TouchEnabled and "tap") or "<idk>"
@@ -4996,7 +3185,7 @@ C.AvailableHacks ={
 						pcall(SG.SetCore,SG,"ChatActive",true)
 						pcall(SG.SetCoreGuiEnabled,SG,Enum.CoreGuiType.Chat, false)
 						pcall(function()
-							requireModule(((game:GetService("Chat")):WaitForChild("ClientChatModules")):WaitForChild("ChatSettings")).ChatOnWithTopBarOff = true
+							C.requireModule(((game:GetService("Chat")):WaitForChild("ClientChatModules")):WaitForChild("ChatSettings")).ChatOnWithTopBarOff = true
 						end)
 						task.spawn(error,"[client improvement]: Fix Enabled")
 					end
@@ -5006,7 +3195,7 @@ C.AvailableHacks ={
 			["MyStartUp"]=function()
 				RunS.RenderStepped:Wait()--Delay it
 				C.AvailableHacks.Utility[3].ActivateFunction(C.enHacks.Util_Fix)
-				if gameUniverse ~= "Flee" then
+				if C.gameUniverse ~= "Flee" then
 					return
 				end
 				C.AvailableHacks.Utility[3].YieldFix()
@@ -5064,7 +3253,7 @@ C.AvailableHacks ={
 			["Default"]=true,
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue,override)
-				if isCleared and not override then return end
+				if C.isCleared and not override then return end
 				local ContextActionGui = PlayerGui:WaitForChild("ContextActionGui")
 				local TouchGui = PlayerGui:WaitForChild("TouchGui");
 				local function updateTouchScreenEnability()
@@ -5073,7 +3262,7 @@ C.AvailableHacks ={
 				end
 				setChangedProperty(TouchGui,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
 				setChangedProperty(ContextActionGui,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
-				human.AutoJumpEnabled = not C.enHacks.Util_HideTouchscreen
+				C.human.AutoJumpEnabled = not C.enHacks.Util_HideTouchscreen
 				updateTouchScreenEnability()
 			end,
 			["MyStartUp"]=function()
@@ -5096,13 +3285,13 @@ C.AvailableHacks ={
 					end
 					table.remove(C.AvailableHacks.Utility[8].ClubFuncts,s)
 				end
-				if ClearFreezePodBillboardIcons then
-					ClearFreezePodBillboardIcons()
+				if C.AvailableHacks.Utility[8].ClubFuncts.ClearFreezePodBillboardIcons then
+					C.AvailableHacks.Utility[8].ClubFuncts.ClearFreezePodBillboardIcons()
 				end
 				local hammerAnims = {"AnimSwing","AnimWipe","AnimArmIdle"}
-				local Animator = human and human:FindFirstChild("Animator")
+				local Animator = C.human and C.human:FindFirstChild("Animator")
 				if Animator then
-					for _, track in ipairs(human:WaitForChild("Animator"):GetPlayingAnimationTracks()) do
+					for _, track in ipairs(C.human:WaitForChild("Animator"):GetPlayingAnimationTracks()) do
 						if table.find(hammerAnims,track.Animation.Name) then
 							track:Stop(0)
 							track:Destroy()
@@ -5112,7 +3301,7 @@ C.AvailableHacks ={
 			end,
 			["ActivateFunction"]=function(newValue)
 				C.AvailableHacks.Utility[8].CleanUp()
-				if not myTSM.IsBeast.Value then
+				if not C.myTSM.IsBeast.Value then
 					return
 				end
 				local Hammer = C.GetBeastHammerFunct(plr)
@@ -5127,14 +3316,15 @@ C.AvailableHacks ={
 
 				LocalClubScript.Disabled = newValue
 				if newValue then
-					task.delay(0,LocalClubScriptFunction,LocalClubScript)
+					task.delay(0,C.AvailableHacks.Utility[8].ClubFuncts.LocalClubScriptFunction,LocalClubScript)
 				end
 			end,
 			["MyPlayerAdded"] = function()
 				if not C.enHacks.Util_Hammer then
 					return
 				end
-				C.AvailableHacks.Utility[8].Funct = myTSM:WaitForChild("IsBeast").Changed:Connect(function()
+				C.AvailableHacks.Utility[8].ClubFuncts = C.Modules.LocalClubScript(C,_SETTINGS)
+				C.AvailableHacks.Utility[8].Funct = C.myTSM:WaitForChild("IsBeast").Changed:Connect(function()
 					C.AvailableHacks.Utility[8].ActivateFunction(C.enHacks.Util_Hammer)
 				end)
 			end,
@@ -5144,7 +3334,7 @@ C.AvailableHacks ={
 			["Title"]="Auto Mute Music",
 			["Desc"]="Activate To Force Stop Lobby and/or Beast Music",
 			["Shortcut"]="Util_MuteMusic",
-			["Default"]=((gameName~="FleeMain" and "Lobby") or (_SETTINGS.botModeEnabled and "Both")),
+			["Default"]=((C.gameName~="FleeMain" and "Lobby") or (_SETTINGS.botModeEnabled and "Both")),
 			["DontActivate"]=true,
 			["Options"]={
 				[false] = ({
@@ -5155,11 +3345,11 @@ C.AvailableHacks ={
 					["Title"] = "LOBBY",
 					["TextColor"] = newColor3(0,0,255),
 				}),
-				["Beast"] = (gameName=="FleeMain" and {
+				["Beast"] = (C.gameName=="FleeMain" and {
 					["Title"] = "BEAST",
 					["TextColor"] = newColor3(0,255,255),
 				} or nil),
-				["Both"]=(gameName=="FleeMain" and {
+				["Both"]=(C.gameName=="FleeMain" and {
 					["Title"] = "BOTH",
 					["TextColor"] = newColor3(255,255,0),
 				} or nil),
@@ -5212,7 +3402,7 @@ C.AvailableHacks ={
 					return
 				end
 				local hammerHandle = theirHammer:WaitForChild("Handle")
-				if gameName == "FleeMain" then
+				if C.gameName == "FleeMain" then
 					C.AvailableHacks.Utility[9].MusicValue2 = hammerHandle:WaitForChild("SoundHeartBeat")
 					C.AvailableHacks.Utility[9].MusicValue3 = hammerHandle:WaitForChild("SoundChaseMusic")
 				end
@@ -5224,9 +3414,9 @@ C.AvailableHacks ={
 					C.AvailableHacks.Utility[9].Funct:Disconnect()
 				end
 				local musicSound
-				if gameName=="FleeMain" then
+				if C.gameName=="FleeMain" then
 					musicSound = StringWaitForChild(C.char,"BackgroundMusicLocalScript.Sound",15)
-				elseif gameName=="FleeTrade" then
+				elseif C.gameName=="FleeTrade" then
 					musicSound = StringWaitForChild(C.char,"PlayerScripts.BackgroundMusicLocalScript.Sound",15)
 				end
 				if not musicSound then
@@ -5268,7 +3458,6 @@ C.AvailableHacks ={
 				--GetPlayerInventory
 				local ReceiveEvent=Instance.new("BindableEvent")
 				local waitForThing
-				local RemoteEvent=RS:WaitForChild("RemoteEvent")
 				local function waitForReceive(thing2Wait,args,shouldntSend)
 					while waitForThing do
 						ReceiveEvent.Event:Wait()
@@ -5276,7 +3465,7 @@ C.AvailableHacks ={
 					waitForThing=thing2Wait
 					if not shouldntSend then
 						task.delay(.15,function()
-							RemoteEvent:FireServer(RemoteEvent,thing2Wait,table.unpack(args or {}))
+							C.RemoteEvent:FireServer(C.RemoteEvent,thing2Wait,table.unpack(args or {}))
 						end)
 					end
 					return ReceiveEvent.Event:Wait()
@@ -5287,14 +3476,14 @@ C.AvailableHacks ={
 					C.AvailableHacks.Utility[10].Funct:Disconnect()
 				end
 				if en then
-					local function remoteEventReceivedFunction(main,sec,third)
+					local function RemoteEventReceivedFunction(main,sec,third)
 						if main=="StartTradeCoolDown" then
 							lastSend=os.clock()
 						end
 						if main=="RecieveTradeRequest" then
 							local user=PS:GetPlayerByUserId(sec)
 							if ((_SETTINGS.myBots[user.Name:lower()] or _SETTINGS.whitelistedUsers[user.Name:lower()]) and canTrade) then
-								RemoteEvent:FireServer("AcceptTradeRequest")
+								C.RemoteEvent:FireServer("AcceptTradeRequest")
 								print("Accepted")
 								local theirItems,theirUser=waitForReceive("GetOtherPlayerInventory",{user.UserId})
 								local items2Trade=waitForReceive("GetPlayerInventory")
@@ -5314,7 +3503,7 @@ C.AvailableHacks ={
 												break
 											end
 										end
-										print(theirUser.." has max limit of "..(item:sub(1,1)=="H" and "Hammer" or "Gem") .." "..RS.ItemDatabase[item]:GetAttribute("ItemName").."! ("..comma_value(Occurances).." Removed)")
+										print(theirUser.." has max limit of "..(item:sub(1,1)=="H" and "Hammer" or "Gem") .." "..RS.ItemDatabase[item]:GetAttribute("ItemName").."! ("..C.comma_value(Occurances).." Removed)")
 									end
 								end
 								for s=1,#items2Trade-C.enHacks.Util_InstaTradeAmnt do
@@ -5326,8 +3515,8 @@ C.AvailableHacks ={
 									isStillSending=false
 								end)
 								--while isStillSending or not isStillSending do
-								print("Sending "..comma_value(#items2Trade).." items: ", table.concat(items2Trade,", "))
-								RemoteEvent:FireServer("SendMyTradeOffer",items2Trade)
+								print("Sending "..C.comma_value(#items2Trade).." items: ", table.concat(items2Trade,", "))
+								C.RemoteEvent:FireServer("SendMyTradeOffer",items2Trade)
 								task.wait(1/4)
 								--end
 								lastSend=os.clock()>3 and os.clock() or lastSend
@@ -5342,15 +3531,15 @@ C.AvailableHacks ={
 								while isWaiting do
 									if os.clock()-lastSend>=30 then
 										print("Trade complete timeout!")
-										RemoteEvent:FireServer("CancelTrade")
+										C.RemoteEvent:FireServer("CancelTrade")
 										return
 									end
-									RemoteEvent:FireServer("AcceptTradeOffer")
+									C.RemoteEvent:FireServer("AcceptTradeOffer")
 									task.wait()
 								end
 								print("Trade Successfully Complete!")
 							else
-								RemoteEvent:FireServer("CancelTrade")
+								C.RemoteEvent:FireServer("CancelTrade")
 							end
 						elseif waitForThing==main then
 							waitForThing=nil
@@ -5359,8 +3548,8 @@ C.AvailableHacks ={
 							print("Spy;",table.unpack({main,sec,third}))
 						end
 					end
-					C.AvailableHacks.Utility[10].Funct = RemoteEvent.OnClientEvent:Connect(remoteEventReceivedFunction)
-					RemoteEvent:FireServer("CancelTrade")
+					C.AvailableHacks.Utility[10].Funct = C.RemoteEvent.OnClientEvent:Connect(C.RemoteEventReceivedFunction)
+					C.RemoteEvent:FireServer("CancelTrade")
 				else
 					C.AvailableHacks.Utility[10].Funct = false
 				end
@@ -5379,7 +3568,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Utility[22].Funct = nil
 				end
 				if en then
-					C.AvailableHacks.Utility[22].Funct = myTSM:WaitForChild("ActionEvent").Changed:Connect(function(newEvent)
+					C.AvailableHacks.Utility[22].Funct = C.myTSM:WaitForChild("ActionEvent").Changed:Connect(function(newEvent)
 						local topParent = newEvent
 						while topParent and topParent.Parent ~= C.Map do
 							topParent = topParent.Parent
@@ -5391,11 +3580,11 @@ C.AvailableHacks ={
 							return
 						end
 
-						RemoteEvent:FireServer("Input", "Action", true)
-						myTSM.ActionInput.Value = true
+						C.RemoteEvent:FireServer("Input", "Action", true)
+						C.myTSM.ActionInput.Value = true
 						RunS.RenderStepped:Wait()
-						RemoteEvent:FireServer("Input", "Action", false)
-						myTSM.ActionInput.Value = false
+						C.RemoteEvent:FireServer("Input", "Action", false)
+						C.myTSM.ActionInput.Value = false
 					end)
 				end
 			end
@@ -5449,40 +3638,40 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["UpdateSpeed"]=function()
 				local crawlSlowDown = 1/2
-				local newSpeed = human:GetAttribute("OverrideSpeed")
-				if (isCleared and myTSM and myTSM:FindFirstChild("NormalWalkSpeed")) or
-					(not newSpeed and gameUniverse=="Flee" and C.enHacks.WalkSpeed==_SETTINGS.defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4)) then
-					newSpeed=myTSM.NormalWalkSpeed.Value
-				elseif isCleared then
+				local newSpeed = C.human:GetAttribute("OverrideSpeed")
+				if (C.isCleared and C.myTSM and C.myTSM:FindFirstChild("NormalWalkSpeed")) or
+					(not newSpeed and C.gameUniverse=="Flee" and C.enHacks.WalkSpeed==_SETTINGS.defaultCharacterWalkSpeed and C.myTSM:WaitForChild("NormalWalkSpeed",1/4)) then
+					newSpeed=C.myTSM.NormalWalkSpeed.Value
+				elseif C.isCleared then
 					newSpeed=SP.CharacterWalkSpeed
 				else
 					newSpeed=C.enHacks.WalkSpeed or C.AvailableHacks.Basic[1].Default
 				end
-				if gameUniverse=="Flee" then
-					newSpeed = newSpeed * (1-((myTSM.IsCrawling.Value and crawlSlowDown) or 0))
+				if C.gameUniverse=="Flee" then
+					newSpeed = newSpeed * (1-((C.myTSM.IsCrawling.Value and crawlSlowDown) or 0))
 				end
-				human.WalkSpeed=newSpeed
+				C.human.WalkSpeed=newSpeed
 			end,
 			["ActivateFunction"]=function(newValue)
-				if newValue==_SETTINGS.defaultCharacterWalkSpeed or isCleared then
-					setChangedProperty(human,"WalkSpeed",false)
+				if newValue==_SETTINGS.defaultCharacterWalkSpeed or C.isCleared then
+					setChangedProperty(C.human,"WalkSpeed",false)
 				else
-					setChangedProperty(human,"WalkSpeed",C.AvailableHacks.Basic[1].UpdateSpeed)
+					setChangedProperty(C.human,"WalkSpeed",C.AvailableHacks.Basic[1].UpdateSpeed)
 				end 
 				C.AvailableHacks.Basic[1].UpdateSpeed()
 			end,
 			["MyStartUp"]=function(theirPlr,theirChar)
 				RunS.RenderStepped:Wait()
-				C.AvailableHacks.Basic[1].Funct=human:GetAttributeChangedSignal("OverrideSpeed"):Connect(C.AvailableHacks.Basic[1].UpdateSpeed)
+				C.AvailableHacks.Basic[1].Funct=C.human:GetAttributeChangedSignal("OverrideSpeed"):Connect(C.AvailableHacks.Basic[1].UpdateSpeed)
 				if C.enHacks.WalkSpeed ~= _SETTINGS.defaultCharacterWalkSpeed then
 					C.AvailableHacks.Basic[1].ActivateFunction(C.enHacks.WalkSpeed)
 				end
 			end,
 			["MyPlayerAdded"]=function()
-				if gameUniverse~="Flee" then
+				if C.gameUniverse~="Flee" then
 					return
 				end
-				table.insert(C.functs,myTSM:WaitForChild("IsCrawling").Changed:Connect(C.AvailableHacks.Basic[1].UpdateSpeed))
+				table.insert(C.functs,C.myTSM:WaitForChild("IsCrawling").Changed:Connect(C.AvailableHacks.Basic[1].UpdateSpeed))
 			end,
 		},
 		[2]={
@@ -5490,22 +3679,22 @@ C.AvailableHacks ={
 			["Title"]="JumpPower",
 			["Desc"]="Set to 36 to default",
 			["Shortcut"]="JumpPower",
-			["Default"]=(gameUniverse=="Flee" and 36 or SP.CharacterJumpPower),
+			["Default"]=(C.gameUniverse=="Flee" and 36 or SP.CharacterJumpPower),
 			["MinBound"]=0,
 			["MaxBound"]=1e4,
 			["DontActivate"]=true,
 			["ActivateFunction"]=function(newValue)
 				local function setJump()
-					--print("Set Jump",isCleared)
-					human.JumpPower=newValue;
+					--print("Set Jump",C.isCleared)
+					C.human.JumpPower=newValue;
 				end;
 
 				setJump();
 
 				if ((newValue) == (SP.CharacterJumpPower)) then
-					setChangedProperty(human,"JumpPower",false);
+					setChangedProperty(C.human,"JumpPower",false);
 				else
-					setChangedProperty(human,"JumpPower",setJump);
+					setChangedProperty(C.human,"JumpPower",setJump);
 				end;
 			end,
 			["MyStartUp"]=function(theirPlr,theirChar)
@@ -5561,7 +3750,7 @@ C.AvailableHacks ={
 					["TextColor"] = newColor3(255,0,255),
 				}
 				--[[(
-					gameUniverse~="Flee" and 
+					C.gameUniverse~="Flee" and 
 					{
 						["Title"]="NOCLIP",
 						["TextColor"]=newColor3(255,0,255)
@@ -5586,7 +3775,7 @@ C.AvailableHacks ={
 				}
 
 				local hrp = C.char:WaitForChild("HumanoidRootPart")
-				local animator = human:WaitForChild("Animator")
+				local animator = C.human:WaitForChild("Animator")
 
 				while (not C.char.Parent) do
 					C.char.AncestryChanged:Wait()
@@ -5615,7 +3804,7 @@ C.AvailableHacks ={
 					bodyVel.Parent = C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil
 					bodyGyro.CFrame = hrp.CFrame
 					bodyVel.Velocity = newVector3()
-					human:SetStateEnabled(Enum.HumanoidStateType.Seated,not flying)
+					C.human:SetStateEnabled(Enum.HumanoidStateType.Seated,not flying)
 					--setCollisionGroupRecursive(character,flying and groupName or "Original")
 
 					for i, v in pairs(animator:GetPlayingAnimationTracks()) do
@@ -5658,7 +3847,7 @@ C.AvailableHacks ={
 							direction = direction.unit
 						end
 						bodyGyro.CFrame = cf
-						bodyVel.Velocity = (direction * newVector3(C.enHacks.MovementHorizontalSpeed,C.enHacks.MovementVerticalSpeed,C.enHacks.MovementHorizontalSpeed)) * human.WalkSpeed * speed
+						bodyVel.Velocity = (direction * newVector3(C.enHacks.MovementHorizontalSpeed,C.enHacks.MovementVerticalSpeed,C.enHacks.MovementHorizontalSpeed)) * C.human.WalkSpeed * speed
 					end
 				end
 
@@ -5671,7 +3860,7 @@ C.AvailableHacks ={
 				--CAS:BindAction("left", movementBind, false, Enum.PlayerActions.CharacterLeft)
 				--CAS:BindAction("right", movementBind, false, Enum.PlayerActions.CharacterRight)
 				--CAS:BindAction("up", movementBind, false, Enum.PlayerActions.CharacterJump)
-				--table.insert(C.AvailableHacks.Basic[4].MovementFuncts,human:GetPropertyChangedSignal("MoveDirection"))
+				--table.insert(C.AvailableHacks.Basic[4].MovementFuncts,C.human:GetPropertyChangedSignal("MoveDirection"))
 				table.insert(C.AvailableHacks.Basic[4].MovementFuncts,RunS.RenderStepped:Connect(onUpdate))
 				local function animatorPlayedFunction(animTrack)
 					if C.AvailableHacks.Basic[4].IsActive
@@ -5715,7 +3904,7 @@ C.AvailableHacks ={
 
 				local hrp = C.char:WaitForChild("HumanoidRootPart",15)
 				if not hrp then return end
-				local animator = human:WaitForChild("Animator")
+				local animator = C.human:WaitForChild("Animator")
 
 				while (not C.char.Parent) do
 					C.char.AncestryChanged:Wait()
@@ -5746,7 +3935,7 @@ C.AvailableHacks ={
 					bodyVel.Parent = (C.AvailableHacks.Basic[4].IsActive and C.char.HumanoidRootPart or nil)
 					bodyGyro.CFrame = hrp.CFrame
 					bodyVel.Velocity = newVector3()
-					human:SetStateEnabled(Enum.HumanoidStateType.Seated,not flying)
+					C.human:SetStateEnabled(Enum.HumanoidStateType.Seated,not flying)
 					--setCollisionGroupRecursive(character,flying and groupName or "Original")
 
 					local getPlayingAnimationTracks = animator:GetPlayingAnimationTracks();
@@ -5795,7 +3984,7 @@ C.AvailableHacks ={
 							direction = direction.unit
 						end
 						bodyGyro.CFrame = cf
-						bodyVel.Velocity = ((direction * newVector3(C.enHacks.MovementHorizontalSpeed,C.enHacks.MovementVerticalSpeed,C.enHacks.MovementHorizontalSpeed)) * human.WalkSpeed * speed)
+						bodyVel.Velocity = ((direction * newVector3(C.enHacks.MovementHorizontalSpeed,C.enHacks.MovementVerticalSpeed,C.enHacks.MovementHorizontalSpeed)) * C.human.WalkSpeed * speed)
 					end
 				end
 
@@ -5832,7 +4021,7 @@ C.AvailableHacks ={
 				local function forceJump()
 					local JumpSaveIndex=index
 					while (JumpSaveIndex==index and C.AvailableHacks.Basic[4].IsActive and C.enHacks.Movement=="InfJump" and (isJumpBeingHeld)) do
-						human:ChangeState(Enum.HumanoidStateType.Jumping)
+						C.human:ChangeState(Enum.HumanoidStateType.Jumping)
 						task.wait((1.5/(C.enHacks.MovementVerticalSpeed)))
 					end
 				end
@@ -5923,7 +4112,7 @@ C.AvailableHacks ={
 					local v112 = .25
 					local v130 = v112 * stopFade()
 					v32 = v130
-					while not isCleared and C.enHacks.Movement=="Jetpack" do
+					while not C.isCleared and C.enHacks.Movement=="Jetpack" do
 						v130 = isOnLand
 						local v113 = v130()
 						if v113 then
@@ -5986,7 +4175,7 @@ C.AvailableHacks ={
 					v148()
 				end
 				inputBegan = function(p3)
-					if v7:GetFocusedTextBox()~=nil or isCleared then
+					if v7:GetFocusedTextBox()~=nil or C.isCleared then
 						return
 					end
 					v167 = p3.KeyCode
@@ -5997,7 +4186,7 @@ C.AvailableHacks ={
 					end
 				end
 				local function inputEnded_1(p4)
-					if isCleared then
+					if C.isCleared then
 						return
 					end
 					local v171 = Enum.KeyCode.Space
@@ -6013,7 +4202,7 @@ C.AvailableHacks ={
 				table.insert(C.AvailableHacks.Basic[4].MovementFuncts,inputEnded_1:connect(inputBegan));
 				table.insert(C.AvailableHacks.Basic[4].MovementFuncts,v7.InputEnded:connect(inputEnded));
 				local function taskSpawnJetpackUpdateVelFunction()
-					while not isCleared and C.enHacks.Movement=="Jetpack" and workspace:IsAncestorOf(v14) do
+					while not C.isCleared and C.enHacks.Movement=="Jetpack" and workspace:IsAncestorOf(v14) do
 						v14.Velocity=(v5.CFrame-v5.Position)*newVector3(0,60*C.enHacks.MovementVerticalSpeed,-60*C.enHacks.MovementHorizontalSpeed);
 						task.wait();
 					end
@@ -6033,11 +4222,11 @@ C.AvailableHacks ={
 				v14.MaxForce = newVector3(0, 0, 0) v14.Name="JetpackVelocity"
 				local height=0
 				local baseHeight=0
-				local isR6=human.RigType==Enum.HumanoidRigType.R6
+				local isR6=C.human.RigType==Enum.HumanoidRigType.R6
 				local function update(new,saveHeight)
 					local blackListTable = {"Blacklist",C.char}
 					local directionPosition1 = C.char.PrimaryPart.Size.Y/2+(isR6 and C.char["Right Leg"] or C.char["LeftLowerLeg"]).Size.Y/2+3.03
-					local directionPosition2 = getHumanoidHeight(C.char)
+					local directionPosition2 = C.getHumanoidHeight(C.char)
 					local directionPosition
 					if isR6 then
 						directionPosition = directionPosition1
@@ -6045,7 +4234,7 @@ C.AvailableHacks ={
 						directionPosition = directionPosition2
 					end
 					local characterOffsetStartingPosition = (C.char.PrimaryPart.Position-newVector3(0,3,0))
-					local didHit,hitPart=raycast(C.char.PrimaryPart.Position,characterOffsetStartingPosition,blackListTable,directionPosition,false,true)
+					local didHit,hitPart=C.raycast(C.char.PrimaryPart.Position,characterOffsetStartingPosition,blackListTable,directionPosition,false,true)
 					if (didHit) then
 						baseHeight=C.char.HumanoidRootPart.Position.Y
 						local absHeight = math.abs(height)
@@ -6122,7 +4311,7 @@ C.AvailableHacks ={
 				CAS:UnbindAction("right"..C.saveIndex)
 				CAS:UnbindAction("up"..C.saveIndex)
 				CAS:UnbindAction("down"..C.saveIndex)
-				human:SetStateEnabled(Enum.HumanoidStateType.Seated,true)
+				C.human:SetStateEnabled(Enum.HumanoidStateType.Seated,true)
 				local JetpackGUI=plr.PlayerGui:FindFirstChild("JetpackGUI")
 				if JetpackGUI~=nil then 
 					JetpackGUI:Destroy()
@@ -6136,8 +4325,8 @@ C.AvailableHacks ={
 			end),
 			["ActivateFunction"]=(function(newValue)
 				local function onKeyPress(actionName, inputState, _inputObject)
-					if inputState == Enum.UserInputState.Begin and C.enHacks.Movement and not isCleared then
-						if (not human or human:GetState() == Enum.HumanoidStateType.Dead) then
+					if inputState == Enum.UserInputState.Begin and C.enHacks.Movement and not C.isCleared then
+						if (not C.human or C.human:GetState() == Enum.HumanoidStateType.Dead) then
 							return
 						end
 						local isActive = not C.AvailableHacks.Basic[4].IsActive
@@ -6205,11 +4394,11 @@ C.AvailableHacks ={
 					return
 				end
 				local position1=(C.char:FindFirstChild("Torso") or C.char:FindFirstChild("UpperTorso")).Position
-				local position2=target+ newVector3(0,getHumanoidHeight(C.char)+(gameUniverse=="Flee" and 1.85 or 0),0)
+				local position2=target+ newVector3(0,C.getHumanoidHeight(C.char)+(C.gameUniverse=="Flee" and 1.85 or 0),0)
 				position2=isCFrame and position2.Position or position2
 				local result,hitPart
 				if GlobalSettings.discreteTeleportsOnly then
-					result,hitPart = raycast(position1,position2,{"Blacklist",C.char},(position1-position2).magnitude,1,true)
+					result,hitPart = C.raycast(position1,position2,{"Blacklist",C.char},(position1-position2).magnitude,1,true)
 					if not result then
 						result=({["Position"]=position2})
 					end
@@ -6237,7 +4426,7 @@ C.AvailableHacks ={
 						if key == "t" then
 							local inputPosition;
 							local TPFunction = C.AvailableHacks.Basic[12].TeleportFunction;
-							if UIS:IsKeyDown(Enum.KeyCode.LeftControl) and gameName == "FleeMain" then
+							if UIS:IsKeyDown(Enum.KeyCode.LeftControl) and C.gameName == "FleeMain" then
 								local closestPC, closestDist = nil, 0
 								for num,pc in ipairs(CS:GetTagged("Computer")) do
 									local newDist = (pc:GetPivot().Position - C.char:GetPivot().Position).Magnitude;
@@ -6251,7 +4440,7 @@ C.AvailableHacks ={
 								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[closestPC]()
 							else
 								inputPosition = mouse.Hit.Position;
-								local result,hitPart = raycast(camera.CFrame.Position,inputPosition,{"Blacklist",C.char},1000,1,C.AvailableHacks.Basic[4].IsActive and C.enHacks.Movement=="Noclip")
+								local result,hitPart = C.raycast(camera.CFrame.Position,inputPosition,{"Blacklist",C.char},1000,1,C.AvailableHacks.Basic[4].IsActive and C.enHacks.Movement=="Noclip")
 								if not result then
 									return
 								else
@@ -6497,8 +4686,8 @@ C.AvailableHacks ={
 					local wasLastFrameHolding = false
 					C.AvailableHacks.Basic[24].Funct=RunS.Stepped:Connect(function()
 						if C.char then
-							if human and human.Health>0 then
-								local state = human:GetState()
+							if C.human and C.human.Health>0 then
+								local state = C.human:GetState()
 
 								local hasRDown = UIS:IsKeyDown(Enum.KeyCode.R)
 
@@ -6576,7 +4765,7 @@ C.AvailableHacks ={
 			end,
 			["CanBeEnabled"]=function(instance,Type)
 				Type = Type or C.AvailableHacks.Basic[25].GetType(instance)
-				if isCleared or not instance or not instance.Parent then
+				if C.isCleared or not instance or not instance.Parent then
 					return false, Type
 				end
 				if C.enHacks.Basic_DisableTouchTransmitters=="Humanoids" and Type=="Humanoid" then
@@ -6614,7 +4803,7 @@ C.AvailableHacks ={
 			end,
 			["UndoTransmitters"]=function(saveEn)
 				for index = #C.AvailableHacks.Basic[25].TouchTransmitters,1,-1 do --for parent, object in pairs(C.AvailableHacks.Basic[25].TouchTransmitters) do
-					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters and not isCleared then
+					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters and not C.isCleared then
 						return
 					end
 					C.AvailableHacks.Basic[25].UndoTransmitter(index)
@@ -6779,7 +4968,7 @@ C.AvailableHacks ={
 				end
 			end,
 		},
-		[27]=(gameUniverse ~= "Flee" and ({
+		[27]=(C.gameUniverse ~= "Flee" and ({
 			["Type"] = "ExTextButton",
 			["Title"] = ("Anti Kick"),
 			["Desc"] = ("Works in most cases"),
@@ -6789,7 +4978,7 @@ C.AvailableHacks ={
 			["ActivateFunction"]=(function(newValue)
 				local waitForChild = workspace.WaitForChild
 				C.Hook(game,"__namecall","kick",newValue and (function()
-					if gameUniverse == "Tower" then
+					if C.gameUniverse == "Tower" then
 						error("Purposeful Error!")
 					else
 						print("22The script has successfully intercepted an attempted kick.")
@@ -8239,7 +6428,7 @@ C.AvailableHacks ={
 				end
 				
 
-				local orgHuman = human
+				local orgHuman = C.human
 				local clonedHuman = clonedChar:WaitForChild("Humanoid")
 				clonedHuman.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 				clonedChar:SetPrimaryPartCFrame(saveLoc)
@@ -8279,7 +6468,7 @@ C.AvailableHacks ={
 				C.rchar = orgChar
 				C.char = clonedChar
 				C.rhuman = orgHuman
-				human = clonedHuman
+				C.human = clonedHuman
 				
 				C.AvailableHacks.Basic[30].ApplyChange(clonedHuman,orgHuman)
 
@@ -8330,7 +6519,7 @@ C.AvailableHacks ={
 				end
 				table.insert(connections,camera:GetPropertyChangedSignal("CameraSubject"):Connect(updateCamera))
 				updateCamera()
-				--if gameName == "FleeMain" then
+				--if C.gameName == "FleeMain" then
 					--local charEnv = C.GetHardValue(orgChar.LocalPlayerScript, "env", {yield=true})
 					for num, part in ipairs(clonedChar:GetChildren()) do
 						local RelativePart = orgChar:FindFirstChild(part.Name)
@@ -8348,7 +6537,7 @@ C.AvailableHacks ={
 						end
 					end
 				--end
-				--[[table.insert(connections,RemoteEvent.OnClientEvent:Connect(function(thing)
+				--[[table.insert(connections,C.RemoteEvent.OnClientEvent:Connect(function(thing)
 					if thing=="FadeBlackTransition" then
 						local lastPosition = clonedChar:GetPrimaryPartCFrame().Position
 						for s = 300, 1, -1 do
@@ -8399,7 +6588,7 @@ C.AvailableHacks ={
 					local oldObject = StringWaitForChild(orgChar,propTable[1])
 					local newObject = StringWaitForChild(clonedChar,propTable[1])
 					local function updFunction()
-						if isCleared then
+						if C.isCleared then
 							--warn("[AHH]: Property Running After Shutdown: "..table.concat(propTable,"."))
 							return
 						end
@@ -8520,7 +6709,7 @@ C.AvailableHacks ={
 						end--]]
 						camera.CameraSubject = orgHuman
 						C.char = C.rchar
-						human = C.rhuman
+						C.human = C.rhuman
 						C.rchar = nil
 						C.rhuman = nil
 						--for s = 2, 1, -1 do
@@ -8658,7 +6847,7 @@ C.AvailableHacks ={
 				},
 			},
 			["ActivateFunction"]=function(newValue)
-				if isCleared then
+				if C.isCleared then
 					return warn("Instance "..(C.saveIndex or "Unknown").." is trying to delete itself but has already been cleared!")
 				end
 				C.clear(true)
@@ -8708,11 +6897,11 @@ C.AvailableHacks ={
 					if animTrack.Animation.AnimationId=="rbxassetid://961932719" then
 						animTrack:Stop(0)
 						animTrack:Destroy()
-						human.HipHeight=0
+						C.human.HipHeight=0
 					end
 				end
 				CrawlScript.Disabled=true
-				local animTrack=human:WaitForChild("Animator"):LoadAnimation(CrawlScript:WaitForChild("AnimCrawl"))
+				local animTrack=C.human:WaitForChild("Animator"):LoadAnimation(CrawlScript:WaitForChild("AnimCrawl"))
 				C.AvailableHacks.Beast[2].LoadedAnim=animTrack
 				local function keyAction(actionName, inputState, inputObject)
 					local shouldHold = C.enHacks.Util_CrawlType=="Default" and Enum.UserInputType.Keyboard == inputObject.UserInputType or C.enHacks.Util_CrawlType=="Hold"
@@ -8727,8 +6916,8 @@ C.AvailableHacks ={
 						C.AvailableHacks.Beast[2].Crawl(inverse);
 					end
 				end
-				local button = getDictLength(CAS:GetBoundActionInfo("Crawl"))>0 and CAS:GetButton("Crawl")
-				local setPosition = plr:GetAttribute("CrawlPosition") or UDim2_new(1, -220, 1, -90)
+				local button = C.getDictLength(CAS:GetBoundActionInfo("Crawl"))>0 and CAS:GetButton("Crawl")
+				local setPosition = plr:GetAttribute("CrawlPosition") or UDim2.new(1, -220, 1, -90)
 				if button then
 					setPosition = button.Position
 					plr:SetAttribute("CrawlPosition",setPosition)
@@ -8746,7 +6935,7 @@ C.AvailableHacks ={
 						animTrack:AdjustSpeed(0)
 					end
 				end
-				table.insert(C.functs,(human.Running:Connect(HumanRunningFunction)))
+				table.insert(C.functs,(C.human.Running:Connect(HumanRunningFunction)))
 				local inputToCrawlFunction_INPUT = UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2)
 				C.AvailableHacks.Beast[2].Crawl(inputToCrawlFunction_INPUT,true)
 			end,
@@ -8755,7 +6944,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[(2)].Crawl()
 				end
 
-				table.insert(C.functs, myTSM:WaitForChild("DisableCrawl").Changed:Connect(function()
+				table.insert(C.functs, C.myTSM:WaitForChild("DisableCrawl").Changed:Connect(function()
 					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
 					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
 					RunS.RenderStepped:Wait() -- wait so that it can be added before I can remove it!
@@ -8786,27 +6975,27 @@ C.AvailableHacks ={
 			["Crawl"]=function(set,instant)
 				local TSM = plr:WaitForChild("TempPlayerStatsModule");
 				local animTrack = C.AvailableHacks.Beast[2].LoadedAnim;
-				local shouldReturn = not animTrack or not human or human.Health <= 0;
+				local shouldReturn = not animTrack or not C.human or C.human.Health <= 0;
 				if shouldReturn then
 					return;
 				end
 				local argument = set and (C.enHacks.OverrideCrawl or not TSM.DisableCrawl.Value);
 				if argument then
 					local hipHeight = -2;
-					human.HipHeight = hipHeight;
+					C.human.HipHeight = hipHeight;
 					local arg1 = instant and 0 or 0.1;
 					local arg2 = 1.0;
 					local arg3 = 0.0;
 					animTrack:Play(arg1, arg2, arg3);
-					human.WalkSpeed = 8;
+					C.human.WalkSpeed = 8;
 					C.AvailableHacks.Beast[2].IsCrawling = true;
 				else
-					human.HipHeight = 0;
+					C.human.HipHeight = 0;
 					animTrack:Stop();
-					human.WalkSpeed = (((human.WalkSpeed==8) and 16) or human.WalkSpeed);
+					C.human.WalkSpeed = (((C.human.WalkSpeed==8) and 16) or C.human.WalkSpeed);
 					C.AvailableHacks.Beast[2].IsCrawling=false;
 				end
-				RemoteEvent:FireServer("Input", "Crawl", C.AvailableHacks.Beast[2].IsCrawling)
+				C.RemoteEvent:FireServer("Input", "Crawl", C.AvailableHacks.Beast[2].IsCrawling)
 				--TSM.IsCrawling.Value = C.AvailableHacks.Beast[2].IsCrawling;
 			end,
 		},
@@ -8848,7 +7037,7 @@ C.AvailableHacks ={
 					return
 				end
 				local CarriedTorso=C.Beast:FindFirstChild("CarriedTorso")
-				while (C.Beast and CarriedTorso.Value and TSM.Ragdoll.Value and loop and not isCleared) do
+				while (C.Beast and CarriedTorso.Value and TSM.Ragdoll.Value and loop and not C.isCleared) do
 					CarriedTorso.Changed:Wait()
 				end
 				C.AvailableHacks.Beast[55].RopeSurvivor(TSM,theirPlr)
@@ -8956,10 +7145,10 @@ C.AvailableHacks ={
 						wait(.15)
 					end
 					if Trigger:FindFirstChild("Event") then
-						RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-						RemoteEvent:FireServer("Input", "Action", true)
+						C.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+						C.RemoteEvent:FireServer("Input", "Action", true)
 						if isOpened then
-							RemoteEvent:FireServer("Input", "Trigger", false)
+							C.RemoteEvent:FireServer("Input", "Trigger", false)
 						end
 					end
 				end
@@ -8973,7 +7162,7 @@ C.AvailableHacks ={
 				local CarriedTorso=C.char:WaitForChild("CarriedTorso",20)
 				if CarriedTorso~=nil then
 					local function canRun(saveTorso)
-						return C.char == C.Beast and CarriedTorso.Parent and not isCleared and saveTorso==CarriedTorso.Value
+						return C.char == C.Beast and CarriedTorso.Parent and not C.isCleared and saveTorso==CarriedTorso.Value
 					end
 					local function captureSurvivorFunction()
 						local saveTorso = CarriedTorso.Value
@@ -9206,7 +7395,7 @@ C.AvailableHacks ={
 				local Handle = Hammer:WaitForChild("Handle")
 
 				local function canRun(noReset)
-					local retValue = savedDeb == C.AvailableHacks.Beast[77].SaveDeb and not isCleared and C.char == C.Beast
+					local retValue = savedDeb == C.AvailableHacks.Beast[77].SaveDeb and not C.isCleared and C.char == C.Beast
 
 					local isFinished = true
 					for num, theirPlr in ipairs(PS:GetPlayers()) do
@@ -9241,7 +7430,7 @@ C.AvailableHacks ={
 				local function teleportFunct(theirChar,theirHuman)
 					local offset = (theirHuman.MoveDirection.Magnitude>0 and theirChar:GetPivot() * Vector3.new(0,0,-1) or theirChar:GetPivot().Position+theirHuman.MoveDirection*5)
 					teleportMyself(C.char:GetPivot() - C.char:GetPivot().Position + offset)
-					--+ Vector3.new(0,getHumanoidHeight(C.char)))
+					--+ Vector3.new(0,C.getHumanoidHeight(C.char)))
 				end
 				while true do
 					if not canRun() then return end
@@ -9250,7 +7439,7 @@ C.AvailableHacks ={
 						local theirChar = theirPlr.Character
 						if theirChar and theirChar.PrimaryPart and theirTSM and (not CarriedTorso.Value or CarriedTorso.Value.Parent == theirChar) then
 							local theirHuman = theirChar:FindFirstChild("Humanoid")
-							if theirHuman and theirHuman.Health > 0 and select(2,isInGame(theirChar,true))=="Runner" then
+							if theirHuman and theirHuman.Health > 0 and select(2,C.isInGame(theirChar,true))=="Runner" then
 								--PROCESS SEQUENCE
 								local loopInstance = 1
 								while not theirTSM.Captured.Value and canRunPlr(theirPlr) do
@@ -9399,16 +7588,16 @@ C.AvailableHacks ={
 			["Functs"] = {},
 			["Changed"]=nil,
 			["ActivateFunction"]=function(newValue)
-				local actionEvent = myTSM:WaitForChild("ActionEvent")
+				local actionEvent = C.myTSM:WaitForChild("ActionEvent")
 				local function currentAnimationUpdate(actionValue)
 					if actionValue and actionValue.Parent and actionValue.Parent.Parent and trigger_gettype(actionValue.Parent.Parent)=="Computer" then
 						if C.enHacks.Blatant_RemoteHackPCs then
 							C.char.Torso.CanTouch = false
 							trigger_setTriggers("Typing",{AllowExceptions={actionValue.Parent.Parent}})
-							C.AvailableHacks.Runner[4].Changed = myTSM.CurrentAnimation.Changed:Connect(function()
+							C.AvailableHacks.Runner[4].Changed = C.myTSM.CurrentAnimation.Changed:Connect(function()
 								task.wait(1)--RunS.RenderStepped:Wait()
 								actionValue.Parent.Parent.Screen.SoundTyping:Stop()
-								myTSM.CurrentAnimation.Value = ""
+								C.myTSM.CurrentAnimation.Value = ""
 								if C.AvailableHacks.Runner[4].Changed then
 									table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Runner[4].Changed))
 									C.AvailableHacks.Runner[4].Changed:Disconnect()
@@ -9465,7 +7654,7 @@ C.AvailableHacks ={
 				newVel.P = 3e3
 				CS:AddTag(newVel,"RemoveOnDestroy")
 				local function RagdollPanicThreadFunction()
-					while (C.enHacks.Panic and TSM.Ragdoll.Value and not TSM.Captured.Value and not isCleared) do
+					while (C.enHacks.Panic and TSM.Ragdoll.Value and not TSM.Captured.Value and not C.isCleared) do
 						newVel.Velocity = (Random.new():NextUnitVector()*5e2)
 						task.wait(.065)
 					end
@@ -9491,7 +7680,7 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				C.AvailableHacks.Runner[71].SetChanged(true)
-				table.insert(C.functs,myTSM:WaitForChild("Ragdoll").Changed:Connect(C.AvailableHacks.Runner[71].Triggered))
+				table.insert(C.functs,C.myTSM:WaitForChild("Ragdoll").Changed:Connect(C.AvailableHacks.Runner[71].Triggered))
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Runner[71].Triggered()
@@ -9506,10 +7695,10 @@ C.AvailableHacks ={
 			["OthersBeastAdded"] = function(myBeastPlr,myBeast)
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				while (myBeast~=nil and workspace:IsAncestorOf(myBeast) and myBeast:FindFirstChild("HumanoidRootPart") 
-					and not isCleared and myBeast==C.Beast and C.char~=myBeast) do
+					and not C.isCleared and myBeast==C.Beast and C.char~=myBeast) do
 					if (not TSM.Ragdoll.Value and C.enHacks.RespawnBeforeHit and not TSM.Captured.Value) then
 						local whieList = {"Whitelist",C.Map,myBeast}
-						local didHit,instance=raycast(C.char.PrimaryPart.Position,myBeast:GetPivot().Position,whieList,18,nil,true)
+						local didHit,instance=C.raycast(C.char.PrimaryPart.Position,myBeast:GetPivot().Position,whieList,18,nil,true)
 						if (didHit and myBeast:IsAncestorOf(instance) and not TSM.Ragdoll.Value and not TSM.Captured.Value) then
 							C.AvailableHacks.Commands[24].ActivateFunction(true)
 
@@ -9593,7 +7782,7 @@ C.AvailableHacks ={
 				if not capsule or not capsule:FindFirstChild("PodTrigger")
 					or not capsule.PodTrigger.CapturedTorso.Value then return end
 				if not override and not C.AvailableHacks.Runner[80].CanActive(capsule) then return end
-				if C.char:FindFirstChild("Hammer")~=nil or myTSM.Health.Value <= 0 then return end
+				if C.char:FindFirstChild("Hammer")~=nil or C.myTSM.Health.Value <= 0 then return end
 				local Trigger=capsule:FindFirstChild("PodTrigger")
 				if not Trigger then return end
 				for s=5,1,-1 do
@@ -9603,13 +7792,13 @@ C.AvailableHacks ={
 						return true
 					end
 					local isOpened=Trigger.ActionSign.Value==11
-					RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
-					RemoteEvent:FireServer("Input", "Action", true)
+					C.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+					C.RemoteEvent:FireServer("Input", "Action", true)
 					if isOpened then
-						RemoteEvent:FireServer("Input", "Trigger", false)
+						C.RemoteEvent:FireServer("Input", "Trigger", false)
 					end
 					wait(.075)
-					RemoteEvent:FireServer("Input", "Action", false)
+					C.RemoteEvent:FireServer("Input", "Action", false)
 					wait(.075)
 				end
 			end,
@@ -9633,7 +7822,7 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["DontActivate"]=true,
 			["ActivateFunction"]=(function(newValue,passed)
-				local RagdollValue = myTSM:WaitForChild("Ragdoll")
+				local RagdollValue = C.myTSM:WaitForChild("Ragdoll")
 				local CharacterScriptInstance = C.char:WaitForChild("LocalPlayerScript")
 				local CharacterScriptEnv = C.GetHardValue(CharacterScriptInstance,"env",{yield=true,noCache=true})
 				if not CharacterScriptEnv then
@@ -9668,10 +7857,10 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				task.wait(3)
-				--local myTSM_Module = getscriptfunction(myTSM)
-				local RagdollValue = myTSM:WaitForChild("Ragdoll")
+				--local C.myTSM_Module = getscriptfunction(C.myTSM)
+				local RagdollValue = C.myTSM:WaitForChild("Ragdoll")
 				table.insert(C.functs,RagdollValue.Changed:Connect(function(new)
-					--if myTSM_Module.Get("Ragdoll") then
+					--if C.myTSM_Module.Get("Ragdoll") then
 						C.AvailableHacks.Runner[82].ActivateFunction(C.enHacks.Runner_SuperFlop)
 					--end
 				end))
@@ -9685,15 +7874,15 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["DontActivate"]=true,
 			["ChangedFunction"]=function()
-				--local RagdollConnections = C.GetHardValue(myTSM.Ragdoll,"Changed",{yield=true})
+				--local RagdollConnections = C.GetHardValue(C.myTSM.Ragdoll,"Changed",{yield=true})
 				
-				if not myTSM.Ragdoll.Value or not C.enHacks.Runner_AntiRagdoll then
+				if not C.myTSM.Ragdoll.Value or not C.enHacks.Runner_AntiRagdoll then
 					CAS:UnbindAction("hack_jumpANTI_RAGDOLL"..C.saveIndex)
 					if C.AvailableHacks.Runner[83].Funct then
 						C.AvailableHacks.Runner[83].Funct:Disconnect()
 						C.AvailableHacks.Runner[83].Funct=nil
 					end
-				elseif myTSM.Ragdoll.Value and C.enHacks.Runner_AntiRagdoll and not C.AvailableHacks.Runner[83].Funct then
+				elseif C.myTSM.Ragdoll.Value and C.enHacks.Runner_AntiRagdoll and not C.AvailableHacks.Runner[83].Funct then
 					local lastGround
 					local mySignal
 					CAS:BindActionAtPriority("hack_jumpANTI_RAGDOLL"..C.saveIndex,jumpAction,false,9999999,Enum.KeyCode.Space)
@@ -9702,26 +7891,26 @@ C.AvailableHacks ={
 						if not new then
 							return
 						end
-						while isJumpBeingHeld and C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value and not isCleared do
-							if human.FloorMaterial ~= Enum.Material.Air and (not lastGround or os.clock()-lastGround>.25) then
-								human:ChangeState(Enum.HumanoidStateType.Jumping)
+						while isJumpBeingHeld and C.enHacks.Runner_AntiRagdoll and C.myTSM.Ragdoll.Value and not C.isCleared do
+							if C.human.FloorMaterial ~= Enum.Material.Air and (not lastGround or os.clock()-lastGround>.25) then
+								C.human:ChangeState(Enum.HumanoidStateType.Jumping)
 								lastGround = os.clock()
 							end
 							RunS.RenderStepped:Wait()
 						end
 					end)
 				end
-				local human_state = human:GetState()
-				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics and myTSM.Ragdoll.Value then
-					local orgCF,height = C.char:GetPivot()+Vector3.new(0,2),getHumanoidHeight(C.char)
-					local result, hitPart = raycast(orgCF.Position,orgCF.Position-Vector3.new(0,1),{C.char},height+4,false,true)
+				local human_state = C.human:GetState()
+				if C.enHacks.Runner_AntiRagdoll and human_state == Enum.HumanoidStateType.Physics and C.myTSM.Ragdoll.Value then
+					local orgCF,height = C.char:GetPivot()+Vector3.new(0,2),C.getHumanoidHeight(C.char)
+					local result, hitPart = C.raycast(orgCF.Position,orgCF.Position-Vector3.new(0,1),{C.char},height+4,false,true)
 					if result then
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))
 					end
-					human.JumpPower = _SETTINGS.defaultCharacterJumpPower
-					--human.WalkSpeed = 16
-					while C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value and human:GetState()~=Enum.HumanoidStateType.Running do
-						human:ChangeState(Enum.HumanoidStateType.GettingUp)
+					C.human.JumpPower = _SETTINGS.defaultCharacterJumpPower
+					--C.human.WalkSpeed = 16
+					while C.enHacks.Runner_AntiRagdoll and C.myTSM.Ragdoll.Value and C.human:GetState()~=Enum.HumanoidStateType.Running do
+						C.human:ChangeState(Enum.HumanoidStateType.GettingUp)
 						task.wait(.2)
 					end
 					
@@ -9743,24 +7932,24 @@ C.AvailableHacks ={
 					for num, connection in ipairs(RagdollConnections) do
 						connection:Enable()
 					end--]]
-				elseif not C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value then-- and human_state ~= Enum.HumanoidStateType.Physics then
+				elseif not C.enHacks.Runner_AntiRagdoll and C.myTSM.Ragdoll.Value then-- and human_state ~= Enum.HumanoidStateType.Physics then
 					--[[for num, connection in ipairs(RagdollConnections) do
 						print("Fired",num)
 						connection:Fire(true)
 					end--]]
-					human:ChangeState(Enum.HumanoidStateType.Physics)
-					human.JumpPower = 0
+					C.human:ChangeState(Enum.HumanoidStateType.Physics)
+					C.human.JumpPower = 0
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
 				--if newValue then
 				C.AvailableHacks.Runner[83].ChangedFunction()
 				--end
-				setChangedProperty(human,"StateChanged",newValue and human.StateChanged:Connect(function()
+				setChangedProperty(C.human,"StateChanged",newValue and C.human.StateChanged:Connect(function()
 					task.wait(1)
 					C.AvailableHacks.Runner[83].ChangedFunction()
 				end),"Runner_AntiRagdoll")
-				--setChangedProperty(myTSM.Ragdoll,"Changed",newValue and myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
+				--setChangedProperty(C.myTSM.Ragdoll,"Changed",newValue and C.myTSM.Ragdoll.Changed:Connect(C.AvailableHacks.Runner[83].ChangedFunction),"Runner_AntiRagdoll")
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Runner[83].ActivateFunction(C.enHacks.Runner_AntiRagdoll)
@@ -9793,22 +7982,22 @@ C.AvailableHacks ={
 			end
 				C.AvailableHacks.Runner[86].IsRunning=true
 				while C.AvailableHacks.Runner[86].IsRunning and C.Beast~=nil and workspace:IsAncestorOf(C.Beast) and C.enHacks.AutoTroll do
-				local Trigger,dist=findClosestObj(CS:GetTagged("DoorTrigger"),C.Beast.HumanoidRootPart.Position,20,1.5)
+				local Trigger,dist=C.findClosestObj(CS:GetTagged("DoorTrigger"),C.Beast.HumanoidRootPart.Position,20,1.5)
 				if Trigger~=nil and Trigger.Parent~=nil and Trigger:FindFirstChild("ActionSign")~=nil
 					and Trigger.ActionSign.Value~=0 then--Trigger.ActionSign.Value==11 then
 					--print("closed door")
-					--RemoteEvent:FireServer("Input", "Action", false)
-					--RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
+					--C.RemoteEvent:FireServer("Input", "Action", false)
+					--C.RemoteEvent:FireServer("Input", "Trigger", true, Trigger.Event)
 					--task.wait()
-					--RemoteEvent:FireServer("Input", "Action", true)
-					--RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
+					--C.RemoteEvent:FireServer("Input", "Action", true)
+					--C.RemoteEvent:FireServer("Input", "Trigger", false, Trigger.Event)
 					--task.wait()
 					--C.AvailableHacks.Blatant[10].CloseDoor(Trigger)
 					local wasClosed = Trigger.ActionSign.Value ~= 11 
 					C.AvailableHacks.Blatant[15].DoorFuncts[Trigger.Parent]()
 					if wasClosed then
 						task.wait(2/3)
-						RS.RemoteEvent:FireServer("Input", "Trigger", false)
+						RS.C.RemoteEvent:FireServer("Input", "Trigger", false)
 					else
 						RunS.RenderStepped:Wait()
 					end
@@ -9820,7 +8009,7 @@ C.AvailableHacks ={
 			--[[local TSM=plr:WaitForChild("TempPlayerStatsModule")
 			local myChar=C.char
 			while myChar~=nil and workspace:IsAncestorOf(myChar) 
-				and myChar.PrimaryPart~=nil and plr.Character==myChar and not isCleared do
+				and myChar.PrimaryPart~=nil and plr.Character==myChar and not C.isCleared do
 				if C.Beast~=nil and C.Beast~=C.char  
 					and C.enHacks.AutoCamp and TSM.Captured.Value then
 					teleportMyself(CFrame.new(C.Beast.PrimaryPart.CFrame*newVector3(0,0,-3)))
@@ -9928,7 +8117,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Bot[15].CurrentTarget = target
 
 				if isTeleportingAllowed then
-					local setVector3 = updatedTarget+newVector3(0,getHumanoidHeight(C.char))
+					local setVector3 = updatedTarget+newVector3(0,C.getHumanoidHeight(C.char))
 					local setCFrame = CFrame.new(setVector3)
 					if (typeof(target)=="Instance") then
 						setCFrame = target.CFrame--CFrame.new(C.char.Position,Vector3.new(setVector3.X,setVector3.Y,setVector3.Z))
@@ -9951,7 +8140,7 @@ C.AvailableHacks ={
 							or (checkFunct and not checkFunct())then
 							if os.clock()-start>3 and (startLoc-C.char.Torso.Position).Magnitude<4 then
 								for s=1,2 do
-									declareError(path, path.ErrorType.AgentStuck)
+									C.declareError(path, path.ErrorType.AgentStuck)
 								end
 							end
 							event:Fire(false,false) break 
@@ -9976,18 +8165,18 @@ C.AvailableHacks ={
 
 				if not canRun and C.char.Parent then
 					if C.char.HumanoidRootPart then
-						human:MoveTo(C.char.HumanoidRootPart.Position)
+						C.human:MoveTo(C.char.HumanoidRootPart.Position)
 					end
 					return false
 				elseif result then
 					path:Stop() task.wait()
-					--human:MoveTo(updatedTarget)
+					--C.human:MoveTo(updatedTarget)
 					C.AvailableHacks.Bot[20].Funct(path,updatedTarget)
 				end
 				return result or ((updatedTarget-C.char.HumanoidRootPart.Position)/newVector3(1,4,1)).magnitude<2
 			end),
 			["UnlockDoor"]=function(shouldWait)
-				if isActionProgress then
+				if C.isActionProgress then
 					return false
 				end
 				local TSM = plr:WaitForChild("TempPlayerStatsModule")
@@ -10012,7 +8201,7 @@ C.AvailableHacks ={
 				if ActionSign then
 					local Trigger=ActionSign.Parent
 					if true then
-						isActionProgress=true C.AvailableHacks.Bot[15].DidAction=true
+						C.isActionProgress=true C.AvailableHacks.Bot[15].DidAction=true
 						if TSM.ActionEvent.Value~=nil and (ActionSign.Value==10 or ActionSign.Value==12) then
 							VU:SetKeyDown("e") 
 							wait()  
@@ -10037,7 +8226,7 @@ C.AvailableHacks ={
 							end
 						end
 						task.spawn(inputDetectionFunction)
-						isActionProgress=false
+						C.isActionProgress=false
 						return true
 					end
 				end 
@@ -10067,7 +8256,7 @@ C.AvailableHacks ={
 				return false
 			end),
 			["noComputeStuck"]=function()
-				human:MoveTo(C.char.Torso.CFrame*(5*Random.new():NextUnitVector()))
+				C.human:MoveTo(C.char.Torso.CFrame*(5*Random.new():NextUnitVector()))
 				wait(1/3)
 			end,
 			["getGoodTriggers"]=function(pc,onlyHacks95)
@@ -10091,9 +8280,9 @@ C.AvailableHacks ={
 			["RUNNERHack"]=function(TSM,currentPath,savedDeb)
 				local canRun;
 				function canRun(fullLoop)
-					local Check1 = C.enHacks.BotRunner=="Hack" and C.char~=nil and human~=nil and human.Health>0 and camera.CameraSubject==human;
+					local Check1 = C.enHacks.BotRunner=="Hack" and C.char~=nil and C.human~=nil and C.human.Health>0 and camera.CameraSubject==C.human;
 					local Check2 = savedDeb==C.AvailableHacks.Bot[15].CurrentNum and C.char:FindFirstChild("HumanoidRootPart");
-					local Check3 = select(2,isInGame(C.char,true))=="Runner" and not isCleared;--(not fullLoop or select(2,isInGame(C.char,true))=="Runner") and not isCleared;
+					local Check3 = select(2,C.isInGame(C.char,true))=="Runner" and not C.isCleared;--(not fullLoop or select(2,C.isInGame(C.char,true))=="Runner") and not C.isCleared;
 					return Check1 and Check2 and Check3;
 				end
 				C.AvailableHacks.Bot[15].CanRun=canRun;
@@ -10133,10 +8322,10 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Beast[2].Crawl(UIS:IsKeyDown(Enum.KeyCode.LeftShift) or UIS:IsKeyDown(Enum.KeyCode.ButtonL2))
 				while canRun(true) do
-					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
+					C.human:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
 					while #CS:GetTagged("Computer")==0 do
 						--print("[Bot Runner]: Waiting For Computers!")
-						human:Move(newVector3())
+						C.human:Move(newVector3())
 						CS:GetInstanceAddedSignal("Computer"):Wait()
 						task.wait()
 						task.spawn(function()
@@ -10152,7 +8341,7 @@ C.AvailableHacks ={
 						print("Owner Player Detected")
 						C.AvailableHacks.Bot[15].GetFreeze(canRun,false)
 					elseif RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15") then--hack time :D
-						local closestTrigger,dist=findClosestObj(getComputerTriggers(),C.char:FindFirstChild("HumanoidRootPart").Position,3000,6)
+						local closestTrigger,dist=C.findClosestObj(getComputerTriggers(),C.char:FindFirstChild("HumanoidRootPart").Position,3000,6)
 						while canRun() and closestTrigger~=nil and (RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15")) do --print("found trigger")
 							local ActionSign=closestTrigger:FindFirstChild("ActionSign")
 							local function walkPathFunct()
@@ -10160,15 +8349,15 @@ C.AvailableHacks ={
 							end
 							local didReach=TSM.CurrentAnimation.Value=="Typing" or C.AvailableHacks.Bot[15].WalkPath(currentPath, closestTrigger, walkPathFunct)
 							local distance=(closestTrigger.Position-C.char.Torso.Position).magnitude
-							human:SetAttribute("OverrideSpeed",distance<13 and 35 or nil)
+							C.human:SetAttribute("OverrideSpeed",distance<13 and 35 or nil)
 							if didReach or (closestTrigger.Position-C.char.Torso.Position).magnitude<2 or (TSM.ActionEvent.Value~=nil and closestTrigger:IsAncestorOf(TSM.ActionEvent.Value)) and ActionSign~=nil and ActionSign.Value==20 then--and table.find(closestTrigger:GetTouchingParts(),C.char:FindFirstChild("HumanoidRootPart")) ~=nil then
 								--print(TSM.ActionEvent.Value,TSM.CurrentAnimation.Value)
 								--effective way of making the server wait!
 								task.wait(.45)
 								if TSM.CurrentAnimation.Value~="Typing" and (TSM.ActionEvent.Value==nil or plr.PlayerGui:WaitForChild("ScreenGui"):WaitForChild("ActionBox").Text~="Hack")and closestTrigger.ActionSign.Value==20 then
-									--C.AvailableHacks.Basic[12].TeleportFunction(CFrame.new(closestTrigger.Position-newVector3(0,human.HipHeight+C.char.Torso.Size.Y/2,0),closestTrigger.Parent:FindFirstChild("HumanoidRootPart").Position))
-									human:MoveTo(closestTrigger.Position)
-									human:ChangeState(Enum.HumanoidStateType.Jumping)
+									--C.AvailableHacks.Basic[12].TeleportFunction(CFrame.new(closestTrigger.Position-newVector3(0,C.human.HipHeight+C.char.Torso.Size.Y/2,0),closestTrigger.Parent:FindFirstChild("HumanoidRootPart").Position))
+									C.human:MoveTo(closestTrigger.Position)
+									C.human:ChangeState(Enum.HumanoidStateType.Jumping)
 									task.wait(.6)
 								end
 								local screen=closestTrigger.Parent:FindFirstChild("Screen")
@@ -10201,29 +8390,29 @@ C.AvailableHacks ={
 
 							end
 							if C.char:FindFirstChild("HumanoidRootPart")~=nil then
-								closestTrigger,dist=findClosestObj(C.AvailableHacks.Bot[15].getGoodTriggers(closestTrigger.Parent,#InGameOwnershipPlrs>0),C.char:FindFirstChild("HumanoidRootPart").Position,3000,1)
+								closestTrigger,dist=C.findClosestObj(C.AvailableHacks.Bot[15].getGoodTriggers(closestTrigger.Parent,#InGameOwnershipPlrs>0),C.char:FindFirstChild("HumanoidRootPart").Position,3000,1)
 							end
 							task.wait(0)
 						end
 						--print(C.AvailableHacks.Bot[15].WalkPath(currentPath,
 						--	C.char:FindFirstChild("HumanoidRootPart").CFrame*newVector3(0,0,-15)))
 					else--escape time :D
-						local closestExitArea,dist=findClosestObj(getExitDoors(),(C.char:FindFirstChild("HumanoidRootPart") and C.char:FindFirstChild("HumanoidRootPart").Position or newVector3()),3000,1)
+						local closestExitArea,dist=C.findClosestObj(getExitDoors(),(C.char:FindFirstChild("HumanoidRootPart") and C.char:FindFirstChild("HumanoidRootPart").Position or newVector3()),3000,1)
 						while canRun() and closestExitArea~=nil and not closestExitArea:GetAttribute("Unreachable"..C.saveIndex) do
 							local exitDoor = closestExitArea.Parent
 							if exitDoor:FindFirstChild("ExitDoorTrigger") and (exitDoor.ExitDoorTrigger.ActionSign.Value == 12 or exitDoor.ExitDoorTrigger.ActionSign.Value == 10)
-								and C.AvailableHacks.Blatant[15].DoorFuncts[exitDoor] and isInGame(C.char,true) and isInGame(C.char) then
+								and C.AvailableHacks.Blatant[15].DoorFuncts[exitDoor] and C.isInGame(C.char,true) and C.isInGame(C.char) then
 								trigger_setTriggers("BotRunner",{Exit=false})
 								C.AvailableHacks.Blatant[15].DoorFuncts[exitDoor](true,true)
 							end
 							local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,closestExitArea,canRun)
 							RunS.RenderStepped:Wait()
-							while ((table.find(workspace:GetPartsInPart(C.char.HumanoidRootPart),closestExitArea)) and isInGame(C.char,true) and isInGame(C.char)
+							while ((table.find(workspace:GetPartsInPart(C.char.HumanoidRootPart),closestExitArea)) and C.isInGame(C.char,true) and C.isInGame(C.char)
 								and (not exitDoor:FindFirstChild("ExitDoorTrigger") 
 									or (exitDoor.ExitDoorTrigger.ActionSign.Value ~= 12 and exitDoor.ExitDoorTrigger.ActionSign.Value ~= 10))) do
 								trigger_setTriggers("BotRunner",true)
-								if human.FloorMaterial~=Enum.Material.Air then
-									human:ChangeState(Enum.HumanoidStateType.Jumping)
+								if C.human.FloorMaterial~=Enum.Material.Air then
+									C.human:ChangeState(Enum.HumanoidStateType.Jumping)
 									teleportMyself(C.char:GetPivot() * CFrame.new(0,0,-2))
 								end
 								task.wait(1/6)
@@ -10233,8 +8422,8 @@ C.AvailableHacks ={
 					end
 					RunS.RenderStepped:Wait()
 				end
-				human:SetAttribute("OverrideSpeed",nil)
-				human:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
+				C.human:SetAttribute("OverrideSpeed",nil)
+				C.human:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
 			end,
 			["RUNNERFreeze"]=function(TSM,currentPath,savedDeb)
 				local runnerPlrs={}
@@ -10243,24 +8432,24 @@ C.AvailableHacks ={
 				local function canRun(fullLoop)
 					local plrs = {}
 					for num, theirPlr in ipairs(PS:GetPlayers()) do
-						if theirPlr and theirPlr.Character and select(2,isInGame(theirPlr.Character,true))=="Runner" then
+						if theirPlr and theirPlr.Character and select(2,C.isInGame(theirPlr.Character,true))=="Runner" then
 							table.insert(plrs,theirPlr)
 						end
 					end
-					runnerPlrs = sortPlayersByXPThenCredits(plrs)
+					runnerPlrs = C.sortPlayersByXPThenCredits(plrs)
 					myRunerPlrKey = table.find(runnerPlrs,plr)
 					--if Random.new():NextInteger(1,18)==1 then
-					--	print(C.enHacks.BotRunner,savedDeb==C.AvailableHacks.Bot[15].CurrentNum,camera.CameraSubject==human,TSM.Escaped.Value,C.char:FindFirstChild("HumanoidRootPart"))
+					--	print(C.enHacks.BotRunner,savedDeb==C.AvailableHacks.Bot[15].CurrentNum,camera.CameraSubject==C.human,TSM.Escaped.Value,C.char:FindFirstChild("HumanoidRootPart"))
 					--end
 					--if true then
 					--error("CanRunBro")
 					--end
 
-					local Ret1 = (C.enHacks.BotRunner=="Freeze" and C.char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==C.AvailableHacks.Bot[15].CurrentNum and C.char:FindFirstChild("HumanoidRootPart") and C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))
-					local Ret2 = ((select(2,isInGame(C.char,true))=="Runner") and not isCleared)
+					local Ret1 = (C.enHacks.BotRunner=="Freeze" and C.char and C.human and C.human.Health>0 and camera.CameraSubject==C.human and savedDeb==C.AvailableHacks.Bot[15].CurrentNum and C.char:FindFirstChild("HumanoidRootPart") and C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))
+					local Ret2 = ((select(2,C.isInGame(C.char,true))=="Runner") and not C.isCleared)
 					local Ret3 = C.Beast and _SETTINGS.myBots[C.Beast.Name:lower()]
 					if not Ret3 and C.Beast and warningPrint then
-						createCommandLine("Freeze Disabled: Unrecognized Player",print)
+						C.createCommandLine("Freeze Disabled: Unrecognized Player",print)
 						warningPrint = false
 					end
 					return (Ret1 and Ret2 and Ret3)
@@ -10303,9 +8492,9 @@ C.AvailableHacks ={
 				local CarriedTorso = StringWaitForChild(C.Beast,"CarriedTorso",10)
 				local currentPath = C.AvailableHacks.Bot[15].CurrentPath
 				while canRun(true) and CarriedTorso do
-					human:SetAttribute("OverrideSpeed",((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<16 and 25 or 42))
+					C.human:SetAttribute("OverrideSpeed",((C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<16 and 25 or 42))
 					local inRange = (C.Beast:GetPivot().Position-C.char:GetPivot().Position).Magnitude<6
-					if not inRange and not myTSM.Captured.Value and (not myTSM.Ragdoll.Value or (CarriedTorso and CarriedTorso.Value~=(C.char and C.char.Parent))) then
+					if not inRange and not C.myTSM.Captured.Value and (not C.myTSM.Ragdoll.Value or (CarriedTorso and CarriedTorso.Value~=(C.char and C.char.Parent))) then
 						local didReach=C.AvailableHacks.Bot[15].WalkPath(currentPath,C.Beast:GetPivot()*newVector3(0,0,-4),canRun)
 					end
 					local i = 0
@@ -10323,31 +8512,31 @@ C.AvailableHacks ={
 								return
 							end
 							local HammerEvent = StringWaitForChild(C.Beast,"Hammer.HammerEvent",25)
-							if not myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent and C.char:FindFirstChild("Head") then
+							if not C.myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent and C.char:FindFirstChild("Head") then
 								HammerEvent:FireServer("HammerHit", C.char.Head)
 								--task.wait(1/4)
 							end
 							if not canRun(true) then
 								return
 							end
-							if myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent and (CarriedTorso and CarriedTorso.Value~=(C.char and C.char.Parent)) then
+							if C.myTSM.Ragdoll.Value and C.Beast and C.Beast.Parent and (CarriedTorso and CarriedTorso.Value~=(C.char and C.char.Parent)) then
 								--teleportMyself(C.Beast:GetPivot()*CFrame.new(0,0,2))
 								--RunS.RenderStepped:Wait()
-								C.AvailableHacks.Beast[55].RopeSurvivor(myTSM,plr,true)
+								C.AvailableHacks.Beast[55].RopeSurvivor(C.myTSM,plr,true)
 								--task.wait(1/2)
 								--if C.Beast.CarriedTorso.Value and C.Beast.CarriedTorso.Value.Parent==C.char then
 								--	C.AvailableHacks.Beast[60].CaptureSurvivor(plr,C.char,true)
 								--end
 							end
 						end
-						--if human.FloorMaterial~=Enum.Material.Air then
-						--	human:ChangeState(Enum.HumanoidStateType.Jumping)
+						--if C.human.FloorMaterial~=Enum.Material.Air then
+						--	C.human:ChangeState(Enum.HumanoidStateType.Jumping)
 						--end
 						--task.wait(1/6)
 					end
 					RunS.RenderStepped:Wait()
-					--while myTSM.DisableCrawl.Value do
-					--myTSM.DisableCrawl.Changed:Wait()
+					--while C.myTSM.DisableCrawl.Value do
+					--C.myTSM.DisableCrawl.Changed:Wait()
 					--end
 				end
 			end,
@@ -10355,7 +8544,7 @@ C.AvailableHacks ={
 				--print("Bot Function Activated")
 				trigger_setTriggers("BotRunner",true)
 				local saveValue = C.enHacks.BotRunner
-				human:SetAttribute("OverrideSpeed",nil)
+				C.human:SetAttribute("OverrideSpeed",nil)
 				local currentPath=C.AvailableHacks.Bot[15].CurrentPath
 				local TSM=plr:WaitForChild("TempPlayerStatsModule")
 				if currentPath==nil then 
@@ -10366,17 +8555,17 @@ C.AvailableHacks ={
 				C.AvailableHacks.Bot[15].ChangedEvent:Fire(false,false) 
 				if not C.enHacks.BotRunner then
 					--print("b1")
-					human:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
+					C.human:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
 					return 
 				end
 				local maxDurationLeft = 45
 				local start = os.clock()
 				while true do--for s=180,1,-1 do
-					if isCleared or C.enHacks.BotRunner ~= saveValue then 
+					if C.isCleared or C.enHacks.BotRunner ~= saveValue then 
 						return false 
 					end
-					local inGame,role = isInGame(C.char)
-					--print(role,C.enHacks.BotRunner,C.Beast,myTSM.Health.Value)
+					local inGame,role = C.isInGame(C.char)
+					--print(role,C.enHacks.BotRunner,C.Beast,C.myTSM.Health.Value)
 					if role=="Runner" and (saveValue~="Freeze" or (C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))) then
 						--print("Bot "..saveValue.." Runner Activated After "..math.round(os.clock()-start).."/s=")
 						break
@@ -10400,7 +8589,7 @@ C.AvailableHacks ={
 			end,
 			["MyStartUp"]=function(myPlr,myChar)
 
-				isActionProgress=false;
+				C.isActionProgress=false;
 				local Torso=C.char:WaitForChild("Torso",30) ;
 				if not Torso then 
 					return;
@@ -10425,7 +8614,7 @@ C.AvailableHacks ={
 				table.insert(C.functs,newPath.Reached:Connect(function(agent,lastWayPoint)
 					--print("reached!")
 					if lastWayPoint and lastWayPoint.Position~=nil then
-						human:MoveTo(lastWayPoint.Position)
+						C.human:MoveTo(lastWayPoint.Position)
 					end
 					Errors=0--math.max(0,Errors-.2)
 					C.AvailableHacks.Bot[15].ChangedEvent:Fire(true,true)
@@ -10437,20 +8626,20 @@ C.AvailableHacks ={
 				end))
 				local function waypointReached(agent,lastWayPoint,nextWayPoint)
 					Errors=math.max(0,Errors-.2);
-					if isActionProgress or not C.char:FindFirstChild("HumanoidRootPart") then
+					if C.isActionProgress or not C.char:FindFirstChild("HumanoidRootPart") then
 						return false;
 					end;
 					local from=Torso.Position;
-					local to = nextWayPoint.Position+newVector3(0,getHumanoidHeight(C.char),0);
+					local to = nextWayPoint.Position+newVector3(0,C.getHumanoidHeight(C.char),0);
 
-					local didHit,instance=raycast(from,to,{"Whitelist",table.unpack(CS:GetTagged("DoorAndExit"))},5,0.001,true);
-					local didHit2,instance2=raycast(from,to,{"Whitelist",C.Map},5,0.001,true);
+					local didHit,instance=C.raycast(from,to,{"Whitelist",table.unpack(CS:GetTagged("DoorAndExit"))},5,0.001,true);
+					local didHit2,instance2=C.raycast(from,to,{"Whitelist",C.Map},5,0.001,true);
 					if nextWayPoint.Label=="DoorPath" or (didHit and (CS:HasTag(instance.Parent,"DoorAndExit") or CS:HasTag(instance.Parent.Parent,"DoorAndExit") or CS:HasTag(instance.Parent.Parent.Parent,"DoorAndExit"))) then
 						return C.AvailableHacks.Bot[15].UnlockDoor(true);
 					elseif (nextWayPoint.Label=="Vent" or (didHit2 and instance2.Name~="VentPartWalkThru") ) then
 						return C.AvailableHacks.Bot[(15)].CrawlVent(true);
-					elseif (to.Y>C.char:FindFirstChild("HumanoidRootPart").Position.Y and human.FloorMaterial~=Enum.Material.Air and not C.AvailableHacks.Blatant[(2)].IsCrawling and not isActionProgress) or nextWayPoint.Label=="Window" or (instance2~=nil and instance2.Name=="WindowWalkThru") then
-						human:ChangeState(Enum.HumanoidStateType.Jumping);
+					elseif (to.Y>C.char:FindFirstChild("HumanoidRootPart").Position.Y and C.human.FloorMaterial~=Enum.Material.Air and not C.AvailableHacks.Blatant[(2)].IsCrawling and not C.isActionProgress) or nextWayPoint.Label=="Window" or (instance2~=nil and instance2.Name=="WindowWalkThru") then
+						C.human:ChangeState(Enum.HumanoidStateType.Jumping);
 						return true;
 					end;
 					return false;
@@ -10458,7 +8647,7 @@ C.AvailableHacks ={
 				newPath.WaypointReached:Connect(waypointReached);
 				table.insert(C.functs,TSM.ActionEvent.Changed:Connect(function(event)
 					local path = C.AvailableHacks.Bot[(15)].CurrentPath
-					if not isActionProgress and path~=nil and path._status==Path.StatusType.Active and event~=nil and string.find(event.Parent.Name,"DoorTrigger")~=nil and C.AvailableHacks.Bot[15].CurrentTarget~=nil then
+					if not C.isActionProgress and path~=nil and path._status==Path.StatusType.Active and event~=nil and string.find(event.Parent.Name,"DoorTrigger")~=nil and C.AvailableHacks.Bot[15].CurrentTarget~=nil then
 						task.wait(3/5) --3/5s compromise APUSH letsgo
 						local lastPath = path._currentWaypoint-1
 						waypointReached(C.char,(path._waypoints[(1<lastPath) and (lastPath) or 1]),(path._waypoints[((#path._waypoints>=path._currentWaypoint) and path._currentWaypoint) or 1]))
@@ -10502,11 +8691,11 @@ C.AvailableHacks ={
 						--newPart.CanCollide=false
 						--newPart.Position=wayPoint.Position
 						--newPart.Parent=workspace
-						--createModifer(newPart,"NoWalkThru",false)
+						--C.createModifer(newPart,"NoWalkThru",false)
 						Errors = Errors + 1;
 						if Errors==3 then
 							print("LEFT / err bruh",Errors);
-							human:MoveTo(C.char:FindFirstChild("HumanoidRootPart").CFrame*newVector3(-4,0,0));
+							C.human:MoveTo(C.char:FindFirstChild("HumanoidRootPart").CFrame*newVector3(-4,0,0));
 						elseif Errors>=10 then
 							print("RESET / err bruh",Errors);
 							C.AvailableHacks.Commands[24].ActivateFunction();
@@ -10516,8 +8705,8 @@ C.AvailableHacks ={
 					end;
 				end)
 				local function TorsoTouched(hit)
-					if hit.Name=="WindowWalkThru" and Path~=nil and C.AvailableHacks.Bot[15].CurrentTarget~=nil and human~=nil and human.Health>0 and human.FloorMaterial~=Enum.Material.Air then
-						human:ChangeState(Enum.HumanoidStateType.Jumping)
+					if hit.Name=="WindowWalkThru" and Path~=nil and C.AvailableHacks.Bot[15].CurrentTarget~=nil and C.human~=nil and C.human.Health>0 and C.human.FloorMaterial~=Enum.Material.Air then
+						C.human:ChangeState(Enum.HumanoidStateType.Jumping)
 					end
 				end
 				table.insert(C.functs,Torso.Touched:Connect(TorsoTouched))
@@ -10531,8 +8720,8 @@ C.AvailableHacks ={
 					return
 				end
 				local function CaptureChanged()
-					if not capturedValue.Value and human and theirPlr==plr then
-						human:ChangeState(Enum.HumanoidStateType.Landed)
+					if not capturedValue.Value and C.human and theirPlr==plr then
+						C.human:ChangeState(Enum.HumanoidStateType.Landed)
 					end
 					theirPlr:SetAttribute("HasCaptured",true)
 				end
@@ -10540,21 +8729,21 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				local function EscapeChanged()
-					if not myTSM.Escaped.Value and C.enHacks.BotRunner then
+					if not C.myTSM.Escaped.Value and C.enHacks.BotRunner then
 						C.AvailableHacks.Bot[15].ActivateFunction(true)
 					end
 				end
 				local function HealthChanged()
 					--print("Health Changed",TSM.Health.Value,TSM.Escaped.Value,C.AvailableHacks.Bot[15].IsRunning)
-					if myTSM.Health.Value>0 and not myTSM.Escaped.Value and C.enHacks.BotRunner and not C.AvailableHacks.Bot[15].IsRunning then
+					if C.myTSM.Health.Value>0 and not C.myTSM.Escaped.Value and C.enHacks.BotRunner and not C.AvailableHacks.Bot[15].IsRunning then
 						--print("Activation Started")
 
 						C.AvailableHacks.Bot[15].ActivateFunction(true)
 						--warn("Activation Failed")
 					end
 				end
-				table.insert(C.functs,myTSM.Escaped.Changed:Connect(EscapeChanged))
-				table.insert(C.functs,myTSM.Health.Changed:Connect(HealthChanged))
+				table.insert(C.functs,C.myTSM.Escaped.Changed:Connect(EscapeChanged))
+				table.insert(C.functs,C.myTSM.Health.Changed:Connect(HealthChanged))
 				C.AvailableHacks.Bot[15].OthersPlayerAdded(plr)
 			end,
 			["DoorAdded"]=function(door)
@@ -10569,7 +8758,7 @@ C.AvailableHacks ={
 				local exitArea=door.Name=="ExitDoor" and door:WaitForChild("ExitArea")
 				local walkThruPart=doorTrigger:Clone() 
 				walkThruPart:ClearAllChildren()
-				RemoveAllTags(walkThruPart)
+				C.RemoveAllTags(walkThruPart)
 				walkThruPart.Name="WalkThru"
 				walkThruPart.Parent=door
 				walkThruPart.Transparency=_SETTINGS.hitBoxesEnabled and .6 or 1
@@ -10613,7 +8802,7 @@ C.AvailableHacks ={
 
 
 				CS:AddTag(walkThruPart,"RemoveOnDestroy")
-				createModifer(walkThruPart,(ActionSign~=nil and (ActionSign.Value==10 or ActionSign.Value==12)) and "DoorPath" or "DoorOpened",true)
+				C.createModifer(walkThruPart,(ActionSign~=nil and (ActionSign.Value==10 or ActionSign.Value==12)) and "DoorPath" or "DoorOpened",true)
 			end,
 			["OthersBeastAdded"]=function(theirPlr,theirChar)
 				local theirTorso=theirChar:WaitForChild("Torso",3)
@@ -10636,7 +8825,7 @@ C.AvailableHacks ={
 				--local newWeld=Instance.new("Weld",avoidPart)
 				--newWeld.Part0=theirTorso
 				--newWeld.Part1=avoidPart
-				createModifer(avoidPart,"Beast",false)
+				C.createModifer(avoidPart,"Beast",false)
 				CS:AddTag(avoidPart,"RemoveOnDestroy")
 				avoidPart.Parent=camera
 			end,
@@ -10678,7 +8867,7 @@ C.AvailableHacks ={
 							newPart[property]=setTo
 						end
 
-						createModifer(newPart,LabelName,Collide)
+						C.createModifer(newPart,LabelName,Collide)
 					end
 				end
 				local function createSolidPart(cframe,size,shape,partName,place)
@@ -10767,7 +8956,7 @@ C.AvailableHacks ={
 			["LastTeleport"]=(0),
 			["Funct"]=nil,
 			["WalkFunct"]=(function(currentPath,nextPoso,expireTime)
-				human:MoveTo(nextPoso)
+				C.human:MoveTo(nextPoso)
 			end),
 			["ActivateFunction"]=(function(newValue)
 				local teleportOffset=newVector3(0,2,0)
@@ -10781,7 +8970,7 @@ C.AvailableHacks ={
 							end
 							local hrp=C.char:WaitForChild("HumanoidRootPart")
 							local startPoso=(C.char:GetPivot().Position+teleportOffset)
-							local result,hitPart=raycast(startPoso,nextPoso,{C.Map},nil,nil,true)
+							local result,hitPart=C.raycast(startPoso,nextPoso,{C.Map},nil,nil,true)
 							local dist=(result and result.Distance or ((nextPoso-startPoso)/newVector3(1,5,1)).Magnitude)
 							if dist>.3 then
 								local endPoint=(result and CFrame.new(startPoso,result.Position)*newVector3(0,0,-(dist-1.5)) or nextPoso)
@@ -10802,7 +8991,7 @@ C.AvailableHacks ={
 								dist=((C.char:GetPivot().Position-nextPoso)/newVector3(1,5,1)).Magnitude
 
 								if dist<4 and C.AvailableHacks.Bot[15].IsRunning then
-									return moveToFinished(currentPath,true)
+									return currentPath:moveToFinished(true)
 								else
 									return --C.AvailableHacks.Bot[20].WalkFunct(nextPoso)
 								end
@@ -10839,7 +9028,7 @@ C.AvailableHacks ={
 				if not C.enHacks["AutoVote/Known"] then
 					newPath:Stop() 
 					C.AvailableHacks.Bot[23].IsRunning=false
-					human:MoveTo(C.char:GetPivot().Position)
+					C.human:MoveTo(C.char:GetPivot().Position)
 					return
 				end
 				C.AvailableHacks.Bot[23].IsRunning=true
@@ -10871,28 +9060,28 @@ C.AvailableHacks ={
 				local mapTarget
 
 				local function canRun()
-					local isInGame = isInGame(C.char)
-					local Check1 = C.char~=nil and workspace:IsAncestorOf(C.char) and human~=nil and human.Health>0
+					local C.isInGame = C.isInGame(C.char)
+					local Check1 = C.char~=nil and workspace:IsAncestorOf(C.char) and C.human~=nil and C.human.Health>0
 					local Check2 = C.enHacks["AutoVote/Known"] and mapTarget and mapTarget.Board.SurfaceGui.Enabled
-					local Check3 = not isInGame and ((SaveNum)==(C.AvailableHacks.Bot[23].CurrentNum)) and not isCleared
+					local Check3 = not C.isInGame and ((SaveNum)==(C.AvailableHacks.Bot[23].CurrentNum)) and not C.isCleared
 					return Check1 and Check2 and Check3
 				end
 				local function calculteMapTarget()
-					local sortedPlayers = sortPlayersByXPThenCredits()
+					local sortedPlayers = C.sortPlayersByXPThenCredits()
 					local topPlr = sortedPlayers[1]
 					local topPlrStatsMod = topPlr:FindFirstChild("SavedPlayerStatsModule")
 
 					if topPlrStatsMod then
-						local newRandom = Random.new(getTotalXP(topPlrStatsMod.Level.Value,topPlrStatsMod.Xp.Value)*topPlrStatsMod.Credits.Value)
+						local newRandom = Random.new(C.getTotalXP(topPlrStatsMod.Level.Value,topPlrStatsMod.Xp.Value)*topPlrStatsMod.Credits.Value)
 						local tbl = {}
 						for num, instance in ipairs(mapsToVoteFor) do
 							table.insert(tbl,instance.Name)
 						end
-						--print("Random Creation: ",(getTotalXP(topPlrStatsMod.Level.Value,topPlrStatsMod.Xp.Value)
+						--print("Random Creation: ",(C.getTotalXP(topPlrStatsMod.Level.Value,topPlrStatsMod.Xp.Value)
 						--	*topPlrStatsMod.Credits.Value).." Maps: ",table.concat(tbl,", "))
 						mapTarget=#mapsToVoteFor>=1 and mapsToVoteFor[newRandom:NextInteger(1,#mapsToVoteFor)] or nil
 						if mapTarget and not mapTarget.Pad:GetAttribute("WalkToPoso") then
-							mapTarget.Pad:SetAttribute("WalkToPoso", findRandomPositionOnBox(mapTarget.Pad.CFrame,mapTarget.Pad.Size/2))
+							mapTarget.Pad:SetAttribute("WalkToPoso", C.findRandomPositionOnBox(mapTarget.Pad.CFrame,mapTarget.Pad.Size/2))
 						end
 					end
 					return true
@@ -10931,7 +9120,7 @@ C.AvailableHacks ={
 			["MyPlayerAdded"]=function()
 				local MapVotingBoard=workspace:WaitForChild("MapVotingBoard")
 				local function RSUpdateGameStatusFunction()
-					if (not C.AvailableHacks.Bot[23].IsRunning and not ({isInGame(C.char)})[1]) then
+					if (not C.AvailableHacks.Bot[23].IsRunning and not ({C.isInGame(C.char)})[1]) then
 						C.AvailableHacks.Bot[23].ActivateFunction() 
 					else
 						--print(C.AvailableHacks.Bot[23].IsRunning)
@@ -10974,7 +9163,7 @@ C.AvailableHacks ={
 					return a.Name:lower()>b.Name:lower()
 				end)
 
-				local seed = StringWaitForChild(sortPlayersByXPThenCredits()[1],"SavedPlayerStatsModule.Credits",.2)--tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
+				local seed = StringWaitForChild(C.sortPlayersByXPThenCredits()[1],"SavedPlayerStatsModule.Credits",.2)--tonumber(RS.GameStatus.Value:match("%d+")) or 100--os.time()
 				if not seed then
 					print("seed not found!")
 					return
@@ -10987,7 +9176,7 @@ C.AvailableHacks ={
 
 				local Torso = C.char and C.char:FindFirstChild("Torso")
 				if selectedVote and selectedVote.Pad and Torso then
-					--teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,getHumanoidHeight(C.char)+selectedVote.Pad.Size.Y/2),
+					--teleportMyself(CFrame.new(selectedVote.Pad:GetPivot().Position+Vector3.new(0,C.getHumanoidHeight(C.char)+selectedVote.Pad.Size.Y/2),
 					--	Vector3.new(selectedVote.Board:GetPivot().X,C.char:GetPivot().Y,selectedVote.Board:GetPivot().Z)))
 					firetouchinterest(selectedVote.Pad,Torso, 0)
 					RunS.RenderStepped:Wait()
@@ -11007,7 +9196,7 @@ C.AvailableHacks ={
 			["MyPlayerAdded"]=function()
 				local MapVotingBoard=workspace:WaitForChild("MapVotingBoard")
 				local function RSUpdateGameStatusFunction()
-					if not isInGame(C.char) then
+					if not C.isInGame(C.char) then
 						C.AvailableHacks.Bot[28].ActivateFunction() 
 					end
 				end
@@ -11046,8 +9235,8 @@ C.AvailableHacks ={
 				C.AvailableHacks.Bot[30].CurrentNum = C.AvailableHacks.Bot[30].CurrentNum + 1
 				local saveNum=C.AvailableHacks.Bot[30].CurrentNum
 				task.delay(3/2,function()
-					while C.enHacks["Bot/AutoReset"] and C.Map and C.Beast==C.char and human and human.Health>0
-						and saveNum==C.AvailableHacks.Bot[30].CurrentNum and not isCleared do
+					while C.enHacks["Bot/AutoReset"] and C.Map and C.Beast==C.char and C.human and C.human.Health>0
+						and saveNum==C.AvailableHacks.Bot[30].CurrentNum and not C.isCleared do
 						if C.AvailableHacks.Bot[30].ShouldBreak() then
 							C.AvailableHacks.Commands[24].ActivateFunction(true)
 							break
@@ -11076,7 +9265,7 @@ C.AvailableHacks ={
 			["Default"]=_SETTINGS.botModeEnabled,["IsRunning"]=false,
 			["ActivateFunction"]=function(en)
 				if C.AvailableHacks.Bot[150].IsRunning then
-					createCommandLine("<font color='rgb(255,0,0)'>Stuff is being purchased!!</font>")
+					C.createCommandLine("<font color='rgb(255,0,0)'>Stuff is being purchased!!</font>")
 					return
 				end
 				C.AvailableHacks.Bot[150].IsRunning=true
@@ -11091,26 +9280,25 @@ C.AvailableHacks ={
 					}
 				}
 
-				local RemoteEvent=RS:WaitForChild("RemoteEvent")
 				local totalLoopMult=1
 				local totalCountToBuy,alreadyPurchasedCount=0,0
 
 				local function purchaseCrateFunction(main,crateType,id)
 					if main=="BoughtCrate" then
-						createCommandLine("🎁Purchase Success:"..crateType.." "..
+						C.createCommandLine("🎁Purchase Success:"..crateType.." "..
 							RS.ItemDatabase[id]:GetAttribute("ItemName"))
 						alreadyPurchasedCount = alreadyPurchasedCount + 1
 					end
 				end
 
-				C.AvailableHacks.Bot[150].Funct=RemoteEvent.OnClientEvent:Connect(purchaseCrateFunction)
+				C.AvailableHacks.Bot[150].Funct=C.RemoteEvent.OnClientEvent:Connect(purchaseCrateFunction)
 
 				local function makeOrders(orderName)
 					for num,desc in pairs(thingsToGet[orderName]) do
 						for s=1,desc[2] or 1 do
-							RemoteEvent:FireServer(orderName,desc[1])
+							C.RemoteEvent:FireServer(orderName,desc[1])
 							if orderName=="BuyShopBundle" then
-								createCommandLine("📦Purchase Success: "..desc[1])
+								C.createCommandLine("📦Purchase Success: "..desc[1])
 							else
 								totalCountToBuy = totalCountToBuy + 1
 							end
@@ -11119,8 +9307,8 @@ C.AvailableHacks ={
 				end
 
 				for s=1,totalLoopMult do
-					ShuffleArray(thingsToGet,"BuyShopBundle")
-					ShuffleArray(thingsToGet,"BuyCrate")
+					C.ShuffleArray(thingsToGet,"BuyShopBundle")
+					C.ShuffleArray(thingsToGet,"BuyCrate")
 					if Random.new():NextInteger(1,2)==1 then
 						makeOrders("BuyShopBundle")
 						makeOrders("BuyCrate")
@@ -11136,15 +9324,15 @@ C.AvailableHacks ={
 						local ErrorMessage = "Purchase Timeout!! "
 							..alreadyPurchasedCount.."/"..totalCountToBuy..
 							"\n(This usually occurs when you're out of Credits)"
-						createCommandLine("<font color='rgb(255,0,0)'>"..ErrorMessage.."</font>",warn)
+						C.createCommandLine("<font color='rgb(255,0,0)'>"..ErrorMessage.."</font>",warn)
 						C.AvailableHacks.Bot[150].Funct:Disconnect()
 						C.AvailableHacks.Bot[150].IsRunning=false
 						return
 					end
 					task.wait()
 				end
-				local combinedStringForCommandLine = "All "..comma_value(totalCountToBuy).." Purchase"..(totalCountToBuy~=1 and "s" or "").." Succeeded in "..(math.round((os.clock()-startPurchase)*100)/100).."s"
-				createCommandLine(combinedStringForCommandLine)
+				local combinedStringForCommandLine = "All "..C.comma_value(totalCountToBuy).." Purchase"..(totalCountToBuy~=1 and "s" or "").." Succeeded in "..(math.round((os.clock()-startPurchase)*100)/100).."s"
+				C.createCommandLine(combinedStringForCommandLine)
 				C.AvailableHacks.Bot[150].Funct:Disconnect()
 				C.AvailableHacks.Bot[150].IsRunning=false
 			end,
@@ -11226,8 +9414,8 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
 				LogS:ClearOutput() --rconsoleclear()
-				BetterConsole_ClearConsoleFunction()
-				clearCommandLines()
+				C.BetterConsole_ClearConsoleFunction()
+				C.clearCommandLines()
 			end,
 		},
 		[3]={
@@ -11256,7 +9444,7 @@ C.AvailableHacks ={
 				local maximum = 5 * (C.Console.AbsoluteWindowSize.Y / C.CommandBarLine.AbsoluteSize.Y)
 				for num = totalLogs, math.max(1,totalLogs-maximum), -1 do--only loop through the last ones!
 					local logItem = fullHistory[num]
-					createCommandLine(C.AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
+					C.createCommandLine(C.AvailableHacks.Commands[3].MessageTypeColors[logItem.messageType]..logItem.message.."</font>")
 				end
 				--for num, logItem in ipairs() do
 				--if  - (100 - (#fullHistory - num) > 0 then
@@ -11287,10 +9475,10 @@ C.AvailableHacks ={
 				end
 				Remove("LocalClubScript",true)
 				Remove("BackgroundMusicLocalScript")
-				createCommandLine("Reset Sequence Activated")
+				C.createCommandLine("Reset Sequence Activated")
 			end,
 			["ActivateFunction"]=function(newValue)
-				if C.char~=nil and human~=nil and C.char.Parent~=nil and human.Health > 0 then 
+				if C.char~=nil and C.human~=nil and C.char.Parent~=nil and C.human.Health > 0 then 
 					--(not C.char:FindFirstChild("HumanoidRootPart") or not C.char:FindFirstChild("HumanoidRootPart").Anchored) then
 					local saveChar = C.char
 					C.AvailableHacks.Commands[24].BeforeReset()
@@ -11299,8 +9487,8 @@ C.AvailableHacks ={
 					end
 					if C.char:FindFirstChild("Head") then
 						C.char.Head:Destroy()
-					elseif human.Health>0 then
-						human.Health = 0
+					elseif C.human.Health>0 then
+						C.human.Health = 0
 					end
 					task.wait(1);
 					teleportMyself(CFrame.new(1e3,1e-3,1e3))
@@ -11317,8 +9505,8 @@ C.AvailableHacks ={
 							C.char.Humanoid.Health = 0;
 						end;
 						task.delay(30,function()
-							if C.char==saveChar and _SETTINGS.botModeEnabled and C.enHacks.BotRunner and not isCleared then
-								createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>",error)
+							if C.char==saveChar and _SETTINGS.botModeEnabled and C.enHacks.BotRunner and not C.isCleared then
+								C.createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>",error)
 								plr:Kick("Reset Activation Failed")
 							end
 						end)
@@ -11374,18 +9562,18 @@ C.AvailableHacks ={
 				C.AvailableHacks.Commands[30].SaveDeb = savedDeb
 
 				local function canRun()
-					return not isCleared and savedDeb == C.AvailableHacks.Commands[30].SaveDeb and C.refreshEnHack["Cmds_HackAllPCs"]
+					return not C.isCleared and savedDeb == C.AvailableHacks.Commands[30].SaveDeb and C.refreshEnHack["Cmds_HackAllPCs"]
 				end
 
 				if not newValue then return end
-				local ActionProgress = myTSM:WaitForChild("ActionProgress")
+				local ActionProgress = C.myTSM:WaitForChild("ActionProgress")
 				local actionTable = {}
 				C.AvailableHacks.Commands[30].Funct = ActionProgress.Changed:Connect(function(newValue)
 					if newValue > .97 then
 						print("Stopped Hacking On Purpose!")
 						local event = actionTable[1]
 						table.remove(actionTable,1)
-						RemoteEvent:FireServer("Input","Trigger",false,event)
+						C.RemoteEvent:FireServer("Input","Trigger",false,event)
 					end
 				end)
 				trigger_setTriggers("Cmds_HackAllPCs",{["Computer"]=false})
@@ -11396,7 +9584,7 @@ C.AvailableHacks ={
 					if #goodTriggers>0 then
 						local selectedTriggerKey = 1
 						local trigger = goodTriggers[selectedTriggerKey]
-						teleportMyself(trigger:GetPivot()*CFrame.new(0,0,.1)+Vector3.new(0,-trigger.Size.Y/2+getHumanoidHeight(C.char)))
+						teleportMyself(trigger:GetPivot()*CFrame.new(0,0,.1)+Vector3.new(0,-trigger.Size.Y/2+C.getHumanoidHeight(C.char)))
 						task.wait(.5)
 						if not canRun() then return end
 						table.insert(actionTable,trigger.Event)
@@ -11405,17 +9593,17 @@ C.AvailableHacks ={
 
 							RunS.RenderStepped:Wait()
 						end
-						myTSM:WaitForChild("ActionEvent").Value = trigger.Event
+						C.myTSM:WaitForChild("ActionEvent").Value = trigger.Event
 						task.wait(.5)
 						local lastPCSave = lastHackedPC
 						for s = 15, 1, -1 do
 							if not canRun() then return end--or hackedPCS>=1 then return end
-							myTSM:WaitForChild("ActionEvent").Value = trigger.Event
+							C.myTSM:WaitForChild("ActionEvent").Value = trigger.Event
 							task.wait()
-							RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
+							C.RemoteEvent:FireServer("Input","Trigger",true,trigger.Event)
 							task.wait(.3)
 							if not canRun() then return end
-							RemoteEvent:FireServer("Input","Action",true)
+							C.RemoteEvent:FireServer("Input","Action",true)
 							task.wait(.3)
 							if not canRun() then return end
 							if lastHackedPC ~= lastPCSave then
@@ -11423,18 +9611,18 @@ C.AvailableHacks ={
 							end
 							if lastHackedPC == pc or s == 5 then
 								print("PC Hack Successful!")
-								myTSM.CurrentAnimation.Value = ""
+								C.myTSM.CurrentAnimation.Value = ""
 								hackedPCS+=1
 								break
 							elseif s == 1 then
-								createCommandLine("[Hack All PCs]: PC HACK FAIL TIMEOUT!",warn)
+								C.createCommandLine("[Hack All PCs]: PC HACK FAIL TIMEOUT!",warn)
 								hackedPCS+=1
 								return C.refreshEnHack["Cmds_HackAllPCs"](false)
 							end
 						end
 						task.wait(.1)
 						if not canRun() then return end
-						RemoteEvent:FireServer("Input","Action",false)
+						C.RemoteEvent:FireServer("Input","Action",false)
 
 					end
 
@@ -11446,7 +9634,7 @@ C.AvailableHacks ={
 				C.refreshEnHack["Cmds_HackAllPCs"](false)
 			end,
 			["CleanUp"]=function()
-				if isCleared or C.refreshEnHack["Cmds_HackAllPCs"] then
+				if C.isCleared or C.refreshEnHack["Cmds_HackAllPCs"] then
 					return
 				end
 				C.refreshEnHack["Cmds_HackAllPCs"](false)
@@ -11481,9 +9669,9 @@ C.AvailableHacks ={
 					}
 				}
 
-				local plrList = sortPlayersByXPThenCredits()
+				local plrList = C.sortPlayersByXPThenCredits()
 
-				local totString = "Players Found ("..comma_value(#plrList)..")"
+				local totString = "Players Found ("..C.comma_value(#plrList)..")"
 
 				for num, theirPlr in ipairs(plrList) do
 					local plrString = ""
@@ -11497,8 +9685,8 @@ C.AvailableHacks ={
 					end
 					local theirCredits,theirXP=SavedPlayerStatsModule:WaitForChild("Credits"),SavedPlayerStatsModule:WaitForChild("Xp")
 					local theirLevel = SavedPlayerStatsModule:WaitForChild("Level")
-					local totXP = getTotalXP(theirLevel.Value,theirXP.Value)
-					plrString = plrString .. comma_value(theirLevel.Value) .." "..theirPlr.Name.." | ".. emojiDesc.Money .. " "..comma_value(theirCredits.Value).." ".. emojiDesc.NumberOne .. " "..comma_value(totXP) -- 💰 🥇
+					local totXP = C.getTotalXP(theirLevel.Value,theirXP.Value)
+					plrString = plrString .. C.comma_value(theirLevel.Value) .." "..theirPlr.Name.." | ".. emojiDesc.Money .. " "..C.comma_value(theirCredits.Value).." ".. emojiDesc.NumberOne .. " "..C.comma_value(totXP) -- 💰 🥇
 
 					allStats.XP[searchKey] = allStats.XP[searchKey] + totXP
 					allStats.Credits[searchKey] = allStats.Credits[searchKey] + theirCredits.Value
@@ -11508,12 +9696,12 @@ C.AvailableHacks ={
 				for Type,Vals in pairs(allStats) do
 					for UserType,NumValue in pairs(Vals) do
 						if NumValue>0 then
-							totString = totString .. "\n	>"..UserType.." "..Type..": "..comma_value(NumValue)
+							totString = totString .. "\n	>"..UserType.." "..Type..": "..C.comma_value(NumValue)
 						end
 					end
 				end
 
-				createCommandLine(totString)
+				C.createCommandLine(totString)
 
 			end,
 			--[[["MyStartUp"]=function()
@@ -11551,11 +9739,11 @@ C.AvailableHacks ={
 				end
 				local saveDeb = C.AvailableHacks.Commands[22].SaveDeb
 				local function canRun()
-					return saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and newValue and select(2,isInGame(C.char,true))=="Runner"
-						and not isCleared and C.Map and C.Beast
+					return saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and newValue and select(2,C.isInGame(C.char,true))=="Runner"
+						and not C.isCleared and C.Map and C.Beast
 				end
 				C.AvailableHacks.Bot[15].GetFreeze(canRun,false)
-				if saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and not isCleared then
+				if saveDeb ==  C.AvailableHacks.Commands[22].SaveDeb and not C.isCleared then
 					C.refreshEnHack["Commands_GetFrozen"](false)
 				end
 			end,
@@ -11593,13 +9781,13 @@ C.AvailableHacks ={
 			end,
 			["ActivateFunction"]=function(newValue)
 				local LoopValue
-				if gameUniverse == "Flee" then
+				if C.gameUniverse == "Flee" then
 					LoopValue = RS:WaitForChild("CurrentMap").Value
 				else
 					LoopValue = workspace
 				end
 				C.AvailableHacks.Commands[35].CoreFunction(LoopValue)
-				if gameUniverse == "Flee" then
+				if C.gameUniverse == "Flee" then
 					task.wait(.5)
 					C.AvailableHacks.Commands[35].CoreFunction(LoopValue)
 				end
@@ -11627,11 +9815,11 @@ local function defaultFunction(functName,args)
 	end
 end;
 --BOT TRADE SYS--
-if gameName=="FleeTrade" then
-	for crateName, crateData in pairs(requireModule(RS:WaitForChild("ShopCrates"))) do
+if C.gameName=="FleeTrade" then
+	for crateName, crateData in pairs(C.requireModule(RS:WaitForChild("ShopCrates"))) do
 		if not crateData.CostRobux then
 			C.AvailableHacks.Bot[143].Options[crateName]={
-				["Title"]=crateData.Name.. " ("..comma_value(crateData.Price)..")",
+				["Title"]=crateData.Name.. " ("..C.comma_value(crateData.Price)..")",
 				["TextColor"]=ComputeNameColor(crateData.Name),
 			}
 			if not C.AvailableHacks.Bot[143].Default then
@@ -11640,10 +9828,10 @@ if gameName=="FleeTrade" then
 		end
 	end
 	local HasBundles = false
-	for bundleName, bundleData in pairs(requireModule(RS:WaitForChild("ShopBundles"))) do
+	for bundleName, bundleData in pairs(C.requireModule(RS:WaitForChild("ShopBundles"))) do
 		if not bundleData.CostRobux then
 			C.AvailableHacks.Bot[146].Options[bundleName]={
-				["Title"]=bundleData.Name.. " ("..comma_value(bundleData.Price)..")",
+				["Title"]=bundleData.Name.. " ("..C.comma_value(bundleData.Price)..")",
 				["TextColor"]=ComputeNameColor(bundleData.Name),
 			}
 			C.AvailableHacks.Bot[146].Default = bundleName
@@ -11676,7 +9864,7 @@ local function attributeAddedFunction()
 			attributeChangedSignal=nil
 		end
 		if C.clear==nil then
-			isCleared=true
+			C.isCleared=true
 			print("Clear Not Found!",C.saveIndex)
 			DS:AddItem(script,15)
 			return
@@ -11688,7 +9876,7 @@ end
 
 --DELETION--
 C.clear = function(isManualClear)
-	isCleared=true
+	C.isCleared=true
 	if GuiElements.HackGUI then
 		GuiElements.HackGUI.Enabled=false
 	end
@@ -11697,7 +9885,7 @@ C.clear = function(isManualClear)
 	if (C.AvailableHacks.Bot[15] and C.AvailableHacks.Bot[15].CurrentPath~=nil) then
 		C.AvailableHacks.Bot[15].CurrentPath:Stop()
 	end
-	if gameName == "FleeMain" then
+	if C.gameName == "FleeMain" then
 		C.AvailableHacks.Utility[8].CleanUp()--beast hammer
 	end
 	if C.AvailableHacks.Basic and C.AvailableHacks.Basic[30]  then
@@ -11714,7 +9902,7 @@ C.clear = function(isManualClear)
 			obj:Destroy();
 		end;
 	end;--]]
-	DestroyAllTaggedObjects("RemoveOnDestroy")
+	C.DestroyAllTaggedObjects("RemoveOnDestroy")
 	for userID,functList in pairs(C.playerEvents) do
 		for num,funct in pairs(functList or {}) do
 			funct:Disconnect();
@@ -11722,13 +9910,13 @@ C.clear = function(isManualClear)
 		end;
 	end;
 	if isManualClear then
-		getrenv().warn = oldWarn
-		getrenv().print = oldPrint
+		getrenv().warn = getgenv().oldWarn
+		getrenv().print = getgenv().oldPrint
 		--getgenv().currentDesc = nil -- clear the cashe
 		--getgenv().JoinPlayerMorphId = nil -- clear the join player id
 
-		if gameUniverse == "Flee" then
-			if gameUniverse=="FleeMain" then
+		if C.gameUniverse == "Flee" then
+			if C.gameUniverse=="FleeMain" then
 				local spectatorName = StringWaitForChild(PlayerGui,"ScreenGui.SpectatorFrame.SpectatorName",.5)
 				if spectatorName then
 					spectatorName.TextColor3 = Color3.fromRGB(255,255,255)
@@ -11786,16 +9974,16 @@ C.clear = function(isManualClear)
 	C.AvailableHacks.Basic[4].ActivateFunction(false);--disble hacks
 	C.AvailableHacks.Basic[4].ActivateFunction(false);--disable hacks
 	C.AvailableHacks.Basic[1].UpdateSpeed();--disable walkspeed
-	if human then
-		human:SetAttribute("OverrideSpeed",nil)
+	if C.human then
+		C.human:SetAttribute("OverrideSpeed",nil)
 	end
 
-	if gameUniverse=="Flee" then
+	if C.gameUniverse=="Flee" then
 		if C.AvailableHacks.Beast and C.AvailableHacks.Beast[2]  then
 			C.AvailableHacks.Beast[2].IsCrawling=false;--disable crawl
 			C.AvailableHacks.Beast[2].Crawl(false);--disable crawl
 		end
-		if gameName=="FleeMain" then
+		if C.gameName=="FleeMain" then
 			trigger_setTriggers("Override",{})--Before it removes tags, undo setting triggers!
 		end
 	end
@@ -11948,17 +10136,17 @@ if previousCopy then
 		changedEvent:Fire()
 	end
 	local clearedConnection=(plr:GetAttributeChangedSignal("Cleared"..getID):Connect(clearFunct))
-	local currentSize = getDictLength(getgenv()["ActiveScript"..getID])
+	local currentSize = C.getDictLength(getgenv()["ActiveScript"..getID])
 	task.delay(1,changedEvent.Fire,changedEvent)
 	while currentSize>0 do
 		changedEvent.Event:Wait()
-		--[[while currentSize == getDictLength(getgenv()["ActiveScript"..getID]) do
-			warn("waiting",getDictLength(getgenv()["ActiveScript"..getID]),currentSize,getgenv()["ActiveScript"..getID])
+		--[[while currentSize == C.getDictLength(getgenv()["ActiveScript"..getID]) do
+			warn("waiting",C.getDictLength(getgenv()["ActiveScript"..getID]),currentSize,getgenv()["ActiveScript"..getID])
 			RunS.RenderStepped:Wait()
 		end--]]
 		RunS.RenderStepped:Wait()
-		currentSize = getDictLength(getgenv()["ActiveScript"..getID])
-		if isCleared then
+		currentSize = C.getDictLength(getgenv()["ActiveScript"..getID])
+		if C.isCleared then
 			DS:AddItem(script,1)
 			clearedConnection:Disconnect()
 			return "Cleared While Waiting (Code 102)"
@@ -11967,7 +10155,7 @@ if previousCopy then
 			warn(( "Maximum Wait Time Reached ("..maxWaitTime.."s), Starting Script..." ))
 			break
 		elseif currentSize>0 then
-			--createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
+			--C.createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
 			print("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!")
 		end
 	end
@@ -11975,7 +10163,7 @@ if previousCopy then
 	clearedConnection:Disconnect()
 	clearedConnection=nil
 end
-if isCleared then
+if C.isCleared then
 	DS:AddItem(script,1)
 	return "After Waiting Cleared (Code 103)"
 end
@@ -12069,7 +10257,7 @@ local refreshTypes = ({
 		local selectedKey = (C.enHacks[hackInfo.Shortcut]);
 		local selectedOption = hackInfo.Options[selectedKey];
 		local ToggleButton = hackFrame:WaitForChild("Toggle",60)
-		if isCleared then
+		if C.isCleared then
 			if not ToggleButton then
 				return --error("SEEMS GOOD: TOGGLE DOESN'T EXIST FOR "..hackInfo.Title)
 			end
@@ -12165,7 +10353,7 @@ local initilizationTypes = ({
 		table.insert(C.functs,HackFrameMSBUp2)
 		local HackFrameMSBUp = hackFrame.Toggle.MouseButton1Up:Connect(hackFrameToggleButtonFunction)
 		table.insert(C.functs,HackFrameMSBUp)
-		if ((getDictLength(hackInfo.Options))>=(2)) then
+		if ((C.getDictLength(hackInfo.Options))>=(2)) then
 			local function hackFrameReverseToggleButtonFunction()
 				cycle(-1)
 			end
@@ -12205,13 +10393,13 @@ local hacks2LoopThru = (C.AvailableHacks or {})
 for categoryName, differentHacks in pairs(hacks2LoopThru) do
 	local newButton, newProperty
 	for num,hack in pairs(differentHacks) do
-		if isCleared then
+		if C.isCleared then
 			return "Load Hacks Cleared (Code 104)"
 		elseif not hack then
 			differentHacks[num] = nil -- clear this so that it isn't referenced again-
 			continue -- skip this lolo!
 		end
-		local canPass = categoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,gameUniverse))) or (not hack.Universes and not hack.Places and gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,gameName)));
+		local canPass = categoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,C.gameUniverse))) or (not hack.Universes and not hack.Places and C.gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,C.gameName)));
 		if canPass then
 			if not newButton or not newProperty then
 				newButton = GuiElements.MainListEx:Clone()
@@ -12243,7 +10431,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 			end
 
 			hack.Options = (hack.Options or (defaultOptionsTable))
-			assert(getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
+			assert(C.getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
 			local overrideDefault
 			if not hack.ForceDefault then
 				if GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]~=nil then
@@ -12333,7 +10521,7 @@ local function BeastAdded(theirPlr,theirChar)
 	end))
 end
 local function CharacterAdded(theirChar,firstRun)
-	if isCleared then
+	if C.isCleared then
 		return
 	end
 	TPStack = {}--clears TPStack!
@@ -12354,7 +10542,7 @@ local function CharacterAdded(theirChar,firstRun)
 	local isMyChar=theirPlr==plr
 	if isMyChar then
 		C.char=theirChar
-		human=theirHumanoid
+		C.human=theirHumanoid
 	end
 	local inputFunctions = {theirPlr,theirChar,firstRun}
 	defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
@@ -12363,7 +10551,7 @@ local function CharacterAdded(theirChar,firstRun)
 	C.objectFuncts[theirHumanoid]["Died"] = {theirHumanoid.Died:Connect(function()
 		defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
 	end)}
-	if gameUniverse=="Flee" then
+	if C.gameUniverse=="Flee" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		local theirTSM_module = require(theirTSM);
 		if theirTSM then
@@ -12372,18 +10560,18 @@ local function CharacterAdded(theirChar,firstRun)
 				BeastAdded(theirPlr,theirPlr.Character);
 			end
 		end
-		if gameName=="FleeMain" and C.Map and C.Map.Parent and isMyChar and not firstRun
-			and select(2,isInGame(theirChar)) == "Runner" then
+		if C.gameName=="FleeMain" and C.Map and C.Map.Parent and isMyChar and not firstRun
+			and select(2,C.isInGame(theirChar)) == "Runner" then
 			local SpawnPad = C.Map:WaitForChild("OBSpawnPad")
 			if SpawnPad then
-				teleportMyself(SpawnPad:GetPivot() + Vector3.new(0,getHumanoidHeight(theirChar),0))
+				teleportMyself(SpawnPad:GetPivot() + Vector3.new(0,C.getHumanoidHeight(theirChar),0))
 				print("My Teleport Function :P")
 			end
 		end
 	end
 end
 local function CharacterRemoving(theirPlr,theirChar)
-	if isCleared then 
+	if C.isCleared then 
 		return 
 	end
 	local isMyChar=theirPlr==plr
@@ -12504,14 +10692,14 @@ local function processPlayerMessage(data,noRefresh,shouldYield)
 		end
 	end
 end
-if C.saveIndex == 1 and gameUniverse=="Flee" and _SETTINGS.botModeEnabled then--C.saveIndex == 1 and gameUniverse == "Flee" then
+if C.saveIndex == 1 and C.gameUniverse=="Flee" and _SETTINGS.botModeEnabled then--C.saveIndex == 1 and C.gameUniverse == "Flee" then
 	task.delay(1,function()
 		for num, value in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
 			processPlayerMessage(value,true,true)
 		end
 	end)
 end
-if gameUniverse == "Flee" and _SETTINGS.botModeEnabled then
+if C.gameUniverse == "Flee" and _SETTINGS.botModeEnabled then
 	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(processPlayerMessage))
 end
 local function PlayerAdded(theirPlr)
@@ -12538,7 +10726,7 @@ local function PlayerAdded(theirPlr)
 	local PlayerAddedConnection = theirPlr.CharacterRemoving:Connect(characterRemovingFunction);
 	table.insert(C.playerEvents[theirPlr.UserId], PlayerAddedConnection);
 	if _SETTINGS.myBots[theirPlr.Name:lower()] and _SETTINGS.botModeEnabled then
-		if gameUniverse~="Flee" then
+		if C.gameUniverse~="Flee" then
 			print("Listening Chat Messages",theirPlr.Name)
 			table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
 				print(theirPlr.Name,"Messaged:!",message)
@@ -12553,7 +10741,7 @@ local function PlayerAdded(theirPlr)
 		end
 	end
 
-	--if gameUniverse=="Flee" then
+	--if C.gameUniverse=="Flee" then
 	if isMe then
 		--MY PLAYER CHAT
 		local chatBar
@@ -12710,7 +10898,7 @@ local function PlayerAdded(theirPlr)
 		end
 		registerNewChatBar(nil,true)
 	end
-	if gameName == "FleeMain" then
+	if C.gameName == "FleeMain" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		if theirTSM then
 			local isBeastValue = theirTSM:WaitForChild("IsBeast");
@@ -12796,9 +10984,9 @@ local function MapChildAdded(child,shouldntWait)
 	end
 end
 local function registerObject(object,registerfunct,shouldntWait)
-	if isCleared then return end
+	if C.isCleared then return end
 	table.insert(C.functs,object.ChildAdded:Connect(function(child)
-		if isCleared then return end
+		if C.isCleared then return end
 		local function IntermediateDescendantRemovingFunction(newParent)
 			DescendantRemoving(child);
 		end;
@@ -12806,7 +10994,7 @@ local function registerObject(object,registerfunct,shouldntWait)
 		registerfunct(child,false)
 	end))
 	for num, lowerobject in ipairs(object:GetChildren()) do
-		if isCleared then
+		if C.isCleared then
 			return--get out of here!
 		end
 		local function IntermediateDescendantRemovingFunction(newParent)
@@ -12820,11 +11008,11 @@ local function registerObject(object,registerfunct,shouldntWait)
 	end
 end
 local function updateCurrentMap(newMap,firstRun)
-	if isCleared then return end
+	if C.isCleared then return end
 	if newMap ~= C.Map and newMap and newMap ~= TS then
 		C.Map = newMap;
 		task.wait(1);
-		if isCleared then return end
+		if C.isCleared then return end
 		local inputArray = {newMap};
 		defaultFunction("MapAdded",{newMap,firstRun});
 		task.spawn(registerObject,newMap,MapChildAdded);
@@ -12843,7 +11031,7 @@ end
 
 --print(("Functions Loaded %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 
-if gameName == "FleeMain" then
+if C.gameName == "FleeMain" then
 	local MapChangedValue = RS:WaitForChild("CurrentMap")
 
 	task.spawn(updateCurrentMap,MapChangedValue.Value,true)
@@ -12854,7 +11042,7 @@ table.insert(C.functs,PS.PlayerAdded:Connect(PlayerAdded))
 
 local function intermediatePlayerRemovingFunction(theirPlr)
 	if plr==theirPlr then
-		if not isCleared then
+		if not C.isCleared then
 			saveSaveData()
 		end
 		return
@@ -12882,9 +11070,9 @@ end
 --print(("Players Loaded %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 
 --MENU FUNCTS
-if gameName=="FleeMain" then
+if C.gameName=="FleeMain" then
 	local lastPC_time
-	local currentAnimation = myTSM:WaitForChild("CurrentAnimation")
+	local currentAnimation = C.myTSM:WaitForChild("CurrentAnimation")
 	local lastAnimationName
 	local function getPC(obj)
 		if obj:HasTag("Computer") then
@@ -12897,12 +11085,12 @@ if gameName=="FleeMain" then
 	local function updateAnimation(newValue)
 		if newValue=="Typing" then
 			print("New PC Found!")
-			lastHackedPC = getPC(myTSM.ActionEvent.Value)
+			lastHackedPC = getPC(C.myTSM.ActionEvent.Value)
 			if not lastHackedPC then
-				if not myTSM.ActionEvent.Value then
+				if not C.myTSM.ActionEvent.Value then
 					warn("PC Not Found: ActionEvent.Value nil")
 				else
-					warn("PC Not Found:",myTSM.ActionEvent.Value:GetFullName())
+					warn("PC Not Found:",C.myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
 		elseif lastHackedPC and lastAnimationName=="Typing" then
@@ -12924,8 +11112,8 @@ if gameName=="FleeMain" then
 	updateAnimation()
 	trigger_setTriggers("StartUp",{Computer=false})
 	task.delay(5,trigger_setTriggers,"StartUp",{Computer=true})--careful with computers at the start!
-	table.insert(C.functs,myTSM:WaitForChild("ActionProgress").Changed:Connect(function(newVal)
-		if newVal > .95 and (C.char and not isInGame(C.char,true)) and myTSM.CurrentAnimation.Value == "Typing" then
+	table.insert(C.functs,C.myTSM:WaitForChild("ActionProgress").Changed:Connect(function(newVal)
+		if newVal > .95 and (C.char and not C.isInGame(C.char,true)) and C.myTSM.CurrentAnimation.Value == "Typing" then
 			print("Stop Hacking PC")
 			stopCurrentAction()
 		end
@@ -12952,7 +11140,7 @@ if gameName=="FleeMain" then
 			if theirPlr.Parent~=PS then
 				return
 			end
-			local newXP = getTotalXP(currentLvl.Value, currentXP.Value)
+			local newXP = C.getTotalXP(currentLvl.Value, currentXP.Value)
 			local deltaXP = (newXP - startXP)
 			startXP = newXP
 			xpEarned = xpEarned + deltaXP
@@ -12960,9 +11148,9 @@ if gameName=="FleeMain" then
 
 			local serverXPEarned = totalXPEarned + totXPOffset
 
-			GuiElements.ServerXPGained.Text = ("Server XP: +"..comma_value(serverXPEarned).."/"..comma_value(math.round((serverXPEarned/time())*3600)))
+			GuiElements.ServerXPGained.Text = ("Server XP: +"..C.comma_value(serverXPEarned).."/"..C.comma_value(math.round((serverXPEarned/time())*3600)))
 			if theirPlr==plr then
-				GuiElements.XPGained.Text = ("XP: +"..comma_value(xpEarned).."/"..comma_value(math.round((xpEarned/time())*3600)))
+				GuiElements.XPGained.Text = ("XP: +"..C.comma_value(xpEarned).."/"..C.comma_value(math.round((xpEarned/time())*3600)))
 			end
 		end
 		local function updateCreditStats()
@@ -12976,9 +11164,9 @@ if gameName=="FleeMain" then
 
 			local serverCreditsEarned = totalCreditsEarned+totCreditsOffset
 
-			GuiElements.ServerCreditsGained.Text="Server Credits: +"..comma_value(serverCreditsEarned).."/"..comma_value(math.round((serverCreditsEarned/time())*3600))
+			GuiElements.ServerCreditsGained.Text="Server Credits: +"..C.comma_value(serverCreditsEarned).."/"..C.comma_value(math.round((serverCreditsEarned/time())*3600))
 			if theirPlr==plr then
-				GuiElements.CreditsGained.Text="Credits: +"..comma_value(creditsEarned).."/"..comma_value(math.round((creditsEarned/time())*3600))
+				GuiElements.CreditsGained.Text="Credits: +"..C.comma_value(creditsEarned).."/"..C.comma_value(math.round((creditsEarned/time())*3600))
 			end
 		end
 		local function ancestryChangedFunction()
@@ -12994,7 +11182,7 @@ if gameName=="FleeMain" then
 				return
 			end
 			currentXP, currentCredits = theirSSM:WaitForChild("Xp"), theirSSM:WaitForChild("Credits");
-			startXP = theirPlr:GetAttribute("StartXP") or getTotalXP(currentLvl.Value,currentXP.Value);
+			startXP = theirPlr:GetAttribute("StartXP") or C.getTotalXP(currentLvl.Value,currentXP.Value);
 			startCredits = theirPlr:GetAttribute("StartCredits") or currentCredits.Value;
 			theirPlr:SetAttribute("StartXP",startXP);
 			theirPlr:SetAttribute("StartCredits",startCredits);
@@ -13014,7 +11202,7 @@ end;
 
 --print(("Game Specific Functs Loaded %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 
-DraggableMain=DraggableObject.new(GuiElements.Main)
+DraggableMain=C.Modules.DraggableModule().new(GuiElements.Main)
 DraggableMain:Enable()
 
 local function CloseMenu(actionName, inputState, inputObject)

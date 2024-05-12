@@ -9824,15 +9824,15 @@ C.AvailableHacks ={
 		},
 		[36]={
 			["Type"]="ExTextButton",
-			["Title"]="ClickDetectors",
-			["Desc"]="Activates All Possible ClickDetectors",
+			["Title"]="TouchTransmitters",
+			["Desc"]="Activates All Possible TouchTransmitters",
 			["Shortcut"]="Commands_ClickDetectors",
 			["Default"]=true,
 			["DontActivate"]=true,
 			["Options"]={
 				[true]={
 					["Title"]="ACTIVATE",
-					["TextColor"]=newColor3(0,0,170),
+					["TextColor"]=newColor3(0,50,170),
 				},
 			},
 			["CoreFunction"]=function(loopInstance)
@@ -9846,7 +9846,7 @@ C.AvailableHacks ={
 							task.delay(.2,clickfunction)
 						else
 							firetouchinterest(C.char.PrimaryPart,parent,0)
-							task.spawn(firetouchinterest,obj,1)
+							task.spawn(firetouchinterest,parent,1)
 						end
 						print("TouchActivated",obj.Parent:GetFullName(),obj.Name)
 					end

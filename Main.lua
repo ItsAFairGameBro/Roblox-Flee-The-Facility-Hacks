@@ -186,6 +186,7 @@ function C.LoadModules()
 				end
 				C.Modules[moduleName] = result
 			end
+			print("✅Module "..moduleName..": "..tostring(C.Modules[moduleName]))
 			ModulesLoaded += 1
 		end)
 	end

@@ -178,11 +178,13 @@ function C.LoadModules()
 				C.Modules[moduleName] = require(script:WaitForChild(moduleName))
 			else
 				local success, result = pcall(request,{Url=ModuleLoaderLink:format(moduleName),Method="GET"})
-				if not success then
-					warn("FLEEMASTERHACKV1: Failed to load module "..moduleName.." because "..result)
+				local failMessage = (not success and result) or (not result.Success and "HttpReq Fail")
+				if failMessage then
+					warn("FLEEMASTERHACKV1: Failed to load module "..moduleName.." because "..failMessage)
 					if C.clear then
 						C.clear()
 					end
+					return
 				end
 				C.Modules[moduleName] = result
 			end

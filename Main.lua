@@ -161,6 +161,7 @@ local GuiElements = {}
 C.hackGUIParent = gethui()
 --MODULE LOADER
 C.Modules = {}
+C.SavedHttp = C.SavedHttp or {}
 function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
 	
@@ -177,18 +178,22 @@ function C.LoadModules()
 			if isStudio then
 				C.Modules[moduleName] = require(script:WaitForChild(moduleName))
 			else
-				local success, result = pcall(request,{Url=ModuleLoaderLink:format(moduleName),Method="GET"})
-				local failMessage = (not success and result) or (not result.Success and "HttpReq Fail")
-				if failMessage then
-					warn("FLEEMASTERHACKV1: Failed to load module "..moduleName.." because "..failMessage)
-					if C.clear then
-						C.clear()
+				local TheURL = ModuleLoaderLink:format(moduleName)
+				if not C.SavedHttp[TheURL] then
+					local success, result = pcall(request,{Url=TheURL,Method="GET"})
+					local failMessage = (not success and result) or (not result.Success and "HttpReq Fail")
+					if failMessage then
+						warn("FLEEMASTERHACKV1: Failed to load module "..moduleName.." because "..failMessage)
+						if C.clear then
+							C.clear()
+						end
+						return
 					end
-					return
+					C.SavedHttp[TheURL] = result.Body
 				end
-				C.Modules[moduleName] = loadstring(result.Body)()
+				C.Modules[moduleName] = loadstring(C.SavedHttp[TheURL])()
 			end
-			print("✅Module "..moduleName..": "..tostring(C.Modules[moduleName]))
+			--print("✅Module "..moduleName..": "..tostring(C.Modules[moduleName]))
 			ModulesLoaded += 1
 		end)
 	end
@@ -10147,7 +10152,7 @@ if previousCopy then
 			return
 		end
 		print("Timeout Occured!")
-		changedEvent:Fire()
+		changedEvent:Fire(true)
 	end
 	task.delay(maxWaitTime,maxWaitTimeReturnFunction)
 	changedEvent:AddTag("RemoveOnDestroy")
@@ -10159,7 +10164,7 @@ if previousCopy then
 	local currentSize = C.getDictLength(getgenv()["ActiveScript"..getID])
 	task.delay(1,changedEvent.Fire,changedEvent)
 	while currentSize>0 do
-		changedEvent.Event:Wait()
+		local timeOut = changedEvent.Event:Wait()
 		--[[while currentSize == C.getDictLength(getgenv()["ActiveScript"..getID]) do
 			warn("waiting",C.getDictLength(getgenv()["ActiveScript"..getID]),currentSize,getgenv()["ActiveScript"..getID])
 			RunS.RenderStepped:Wait()
@@ -10171,12 +10176,12 @@ if previousCopy then
 			clearedConnection:Disconnect()
 			return "Cleared While Waiting (Code 102)"
 		end
-		if os.clock()-startTime>=maxWaitTime then
+		if timeOut then
 			warn(( "Maximum Wait Time Reached ("..maxWaitTime.."s), Starting Script..." ))
 			break
 		elseif currentSize>0 then
 			--C.createCommandLine("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!",print)
-			print("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist!")
+			print("Dict Length Still Larger Than Zero After One Cycle!\nThis may have occured if one or more instances already exist! Current Size: "..currentSize)
 		end
 	end
 	changedEvent:Destroy()

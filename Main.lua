@@ -9842,7 +9842,7 @@ C.AvailableHacks ={
 						local parent = obj.Parent
 						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent]
 						if clickfunction then
-							clickfunction()
+							task.spawn(clickfunction)
 							task.delay(.2,clickfunction)
 						else
 							firetouchinterest(C.char.PrimaryPart,parent,0)

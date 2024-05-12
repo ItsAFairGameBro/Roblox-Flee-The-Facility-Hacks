@@ -5066,7 +5066,7 @@ C.AvailableHacks ={
 				
 				local saveMovement = C.enHacks.Movement
 				C.refreshEnHack["Movement"](false)
-				C.refreshEnHack["Movement"](saveMovement)
+				--C.refreshEnHack["Movement"](saveMovement)
 			end,
 			["ReplicateProperties"]={
 				{"Humanoid","HipHeight"},
@@ -7597,7 +7597,6 @@ C.AvailableHacks ={
 						if C.enHacks.AutoRemoveRope == false then
 							C.refreshEnHack["AutoRemoveRope"]("Everyone")
 						else
-							--TODO HERE
 							C.refreshEnHack["AutoRemoveRope"](false)
 						end
 					end

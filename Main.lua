@@ -161,7 +161,7 @@ local GuiElements = {}
 C.hackGUIParent = gethui()
 --MODULE LOADER
 C.Modules = {}
-C.SavedHttp = C.SavedHttp or {}
+getgenv().SavedHttp = getgenv().SavedHttp or {}
 function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
 	
@@ -179,7 +179,7 @@ function C.LoadModules()
 				C.Modules[moduleName] = require(script:WaitForChild(moduleName))
 			else
 				local TheURL = ModuleLoaderLink:format(moduleName)
-				if not C.SavedHttp[TheURL] then
+				if not getgenv().SavedHttp[TheURL] then
 					local success, result = pcall(request,{Url=TheURL,Method="GET"})
 					local failMessage = (not success and result) or (not result.Success and "HttpReq Fail")
 					if failMessage then
@@ -189,9 +189,9 @@ function C.LoadModules()
 						end
 						return
 					end
-					C.SavedHttp[TheURL] = result.Body
+					getgenv().SavedHttp[TheURL] = result.Body
 				end
-				C.Modules[moduleName] = loadstring(C.SavedHttp[TheURL])()
+				C.Modules[moduleName] = loadstring(getgenv().SavedHttp[TheURL])()
 			end
 			--print("✅Module "..moduleName..": "..tostring(C.Modules[moduleName]))
 			ModulesLoaded += 1
@@ -7870,7 +7870,7 @@ C.AvailableHacks ={
 							end
 							bodyForce.Force = (Force * 1e4) + 4e3 * Vector3.new(0,1,0)
 							bodyForce.Parent = Torso
-							DS:AddItem(bodyForce,1)
+							DS:AddItem(bodyForce,.1)
 						end
 						
 						return true--]]

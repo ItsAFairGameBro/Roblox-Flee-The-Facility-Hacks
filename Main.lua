@@ -2063,7 +2063,7 @@ C.CommandFunctions = {
 				end,
 				Start = function(targetChar)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),false,false)
-					task.wait(1)
+					task.wait(2)
 				end,
 				Update = function(targetChar,part)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,{part},false,true)

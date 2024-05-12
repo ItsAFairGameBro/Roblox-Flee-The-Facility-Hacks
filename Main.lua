@@ -4769,6 +4769,7 @@ C.AvailableHacks ={
 			},
 			["Universes"]={"Global"},
 			["TouchTransmitters"]={},
+			["GlobalTouchTransmitters"]={},
 			["MapAdded"]=function(newMap)
 				local GameStatus = RS:WaitForChild("GameStatus")
 				while GameStatus.Value:find("LOADING:") do
@@ -4822,6 +4823,7 @@ C.AvailableHacks ={
 					end
 					parent:RemoveTag("TouchDisabled")
 					C.AvailableHacks.Basic[25].TouchTransmitters[index]=nil
+					C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent] = nil
 					--table.remove(C.AvailableHacks.Basic[25].TouchTransmitters,index)
 					--end
 				end
@@ -4933,6 +4935,7 @@ C.AvailableHacks ={
 							end
 						end
 						table.insert(insertTbl[5],TouchToggle.Toggle.MouseButton1Up:Connect(clickfunction))
+						C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent] = clickfunction
 						if Type=="Part" then
 							--task.delay(Random.new():NextNumber(3,20),clickfunction)
 						end
@@ -4956,6 +4959,7 @@ C.AvailableHacks ={
 						--end
 					end
 				end
+				
 				local saveEn = C.enHacks.Basic_DisableTouchTransmitters
 				for num, location in ipairs(instance:GetChildren()) do
 					if saveEn ~= C.enHacks.Basic_DisableTouchTransmitters then
@@ -9816,6 +9820,49 @@ C.AvailableHacks ={
 					task.wait(.5)
 					C.AvailableHacks.Commands[35].CoreFunction(LoopValue)
 				end
+			end,
+		},
+		[36]={
+			["Type"]="ExTextButton",
+			["Title"]="ClickDetectors",
+			["Desc"]="Activates All Possible ClickDetectors",
+			["Shortcut"]="Commands_ClickDetectors",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[true]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=newColor3(0,0,170),
+				},
+			},
+			["CoreFunction"]=function(loopInstance)
+				local fireclickdetector = fireclickdetector
+				for num, obj in ipairs(loopInstance:GetDescendants()) do
+					if obj:IsA("TouchTransmitter") then
+						local parent = obj.Parent
+						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent.Parent]
+						if clickfunction then
+							clickfunction()
+							task.delay(.2,clickfunction)
+						else
+							firetouchinterest(C.char.PrimaryPart,parent,0)
+							task.spawn(firetouchinterest,obj,1)
+						end
+						print("TouchActivated",obj.Parent:GetFullName(),obj.Name)
+					end
+					if num%1000==0 then
+						task.wait(.1)
+					end
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				local LoopValue
+				--if C.gameUniverse == "Flee" then
+				--	LoopValue = RS:WaitForChild("CurrentMap").Value
+				--else
+				LoopValue = workspace
+				--end
+				C.AvailableHacks.Commands[36].CoreFunction(LoopValue)
 			end,
 		},
 	}

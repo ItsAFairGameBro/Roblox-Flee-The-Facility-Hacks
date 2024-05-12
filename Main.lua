@@ -2056,14 +2056,14 @@ C.CommandFunctions = {
 							if instant then
 								part[property] = visible and PreviousTransparency or newTransparency
 							else
-								TS:Create(part,TweenInfo.new(.6),{[property] = visible and PreviousTransparency or newTransparency}):Play();
+								TS:Create(part,TweenInfo.new(1),{[property] = visible and PreviousTransparency or newTransparency}):Play();
 							end
 						end
 					end
 				end,
 				Start = function(targetChar)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,targetChar:GetDescendants(),false,false)
-					task.wait(0.6 + (os.clock()-math.floor(os.clock())))
+					task.wait(1)
 				end,
 				Update = function(targetChar,part)
 					C.CommandFunctions.morph.AnimationEffectFunctions.Fade.Tween(targetChar,{part},false,true)

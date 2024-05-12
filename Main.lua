@@ -171,13 +171,29 @@ function C.LoadModules()
 			table.insert(ModuleNames,"LocalClubScript")
 		end
 	end
+	local ModulesLoaded = 0
 	for num, moduleName in ipairs(ModuleNames) do
-		if isStudio then
-			C.Modules[moduleName] = require(script:WaitForChild(moduleName))
-		else
-			C.Modules[moduleName] = loadstring(game:HttpGet(ModuleLoaderLink:format(moduleName),true))()
-		end
-		print(C.Modules[moduleName])
+		task.spawn(function()
+			if isStudio then
+				C.Modules[moduleName] = require(script:WaitForChild(moduleName))
+			else
+				local success, result = pcall(request,{Url=ModuleLoaderLink:format(moduleName),Method="GET"})
+				if not success then
+					warn("FLEEMASTERHACKV1: Failed to load module "..moduleName.." because "..result)
+					if C.clear then
+						C.clear()
+					end
+				end
+				C.Modules[moduleName] = result
+			end
+			ModulesLoaded += 1
+		end)
+	end
+	while (ModulesLoaded < #ModuleNames) and not C.isCleared do
+		RunS.RenderStepped:Wait()
+	end
+	if C.isCleared then
+		return "Cleared During Module Loading"
 	end
 end
 C.LoadModules()

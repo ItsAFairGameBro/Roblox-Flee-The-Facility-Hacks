@@ -9851,7 +9851,7 @@ C.AvailableHacks ={
 						end
 						print("TouchActivated",obj.Parent:GetFullName(),obj.Name)
 					end
-					if num%1000==0 then
+					if num%100==0 then
 						task.wait(.1)
 					end
 				end

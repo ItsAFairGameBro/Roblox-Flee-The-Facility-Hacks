@@ -45,8 +45,6 @@ local isActionProgress=false
 local isCleared=false
 local isJumpBeingHeld = false
 
-C.hackGUIParent = isStudio and plr:WaitForChild("PlayerGui") or gethui();
-
 local lastRunningEnv = getfenv()
 local reloadFunction = lastRunningEnv.ReloadFunction--function()
 --loadstring(game:HttpGet("https://raw.githubusercontent.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/main/Load.lua",false))()
@@ -81,67 +79,106 @@ local mainZIndex = 2
 --local InstanceFunction = Instance.new
 local getscriptfunction = require
 local checkcaller = isStudio and (function() return true end) or checkcaller
-local getrenv = isStudio and _G or getrenv
-local getsenv = isStudio and (function() return {} end) or getsenv
 local getconnections = isStudio and (function(signal) return {} end) or getconnections
---DEBUG--
-local botModeEnabled=GlobalSettings.botModeEnabled
-local myBots={--has faster default walkspeed for all my bot's and their usernames
-	["itsafairgamebro"]=true,
-	["molliethetroller"]=true,
-	["calorytr"]=true,
-	["averynotafkbot3"]=true,
-	["suitedforbans"]=true,
-	["suitedforbans8"]=true,
-	["sonicehecksbro"]=true,
-	["sonicehecksbro1"]=true,
-	["sonicehecksbro2"]=true,
-	["sonicehecksbro3"]=true,
-	["sonicehecksbro4"]=true,
-	["sonicehecksbro5"]=true,
+local getrenv = isStudio and function() return _G end or getrenv
+local getgenv = isStudio and function() return _G end or getgenv
+local getsenv = isStudio and (function() return {} end) or getsenv
+local loadstring = isStudio and function() return function() end end or loadstring
+local getnamecallmethod = isStudio and (function() return "" end) or getnamecallmethod
+local getcallingscript = isStudio and (function() return nil end) or getcallingscript
+local hookfunction = isStudio and function() return end or hookfunction
+local hookmetamethod = isStudio and function() return end or hookmetamethod
+local newcclosure = isStudio and function(funct) return funct end or newcclosure
+local gethui = isStudio and function() return PlayerGui end or gethui
+local firetouchinterest = isStudio and function() return end or firetouchinterest
+local fireclickdetector = isStudio and function() return end or fireclickdetector
+local request = not isStudio and request
+local isfolder = not isStudio and isfolder
+local readfile = not isStudio and readfile
+local isfile = not isStudio and isfile
+local makefolder = not isStudio and makefolder
+local writefile = not isStudio and writefile
 
-	["theweirdspook"]=true,
-	["lifeisoofs"]=true,
-	["lexxy4life"]=true,
-	["itsagoodgamebro"]=true,
-	["itsagoodgamebros"]=true,
-};
-local whitelistedUsers={
-	["facilitystorage"]=true,
-	["4evernIove"]=true,
-	["kitcat4681"]=true,
-	["goldenbear25"]=true,
-};
-local owernshipUsers={
-	["suitedforbans3"]=true,
-};
-if not myBots[plr.Name:lower()] then
-	if not botModeEnabled and not GlobalSettings.ForceBotMode then
-		myBots={};
-		botModeEnabled = false;
+--TODO HERE
+--DEBUG--
+local _SETTINGS
+_SETTINGS={
+	botModeEnabled=GlobalSettings.botModeEnabled;
+	myBots={--has faster default walkspeed for all my bot's and their usernames
+		["itsafairgamebro"]=true,
+		["molliethetroller"]=true,
+		["calorytr"]=true,
+		["averynotafkbot3"]=true,
+		["suitedforbans"]=true,
+		["suitedforbans8"]=true,
+		["sonicehecksbro"]=true,
+		["sonicehecksbro1"]=true,
+		["sonicehecksbro2"]=true,
+		["sonicehecksbro3"]=true,
+		["sonicehecksbro4"]=true,
+		["sonicehecksbro5"]=true,
+
+		["theweirdspook"]=true,
+		["lifeisoofs"]=true,
+		["lexxy4life"]=true,
+		["itsagoodgamebro"]=true,
+		["itsagoodgamebros"]=true,
+	};
+	whitelistedUsers={
+		["facilitystorage"]=true,
+		["4evernIove"]=true,
+		["kitcat4681"]=true,
+		["goldenbear25"]=true,
+	};
+	owernshipUsers={
+		["suitedforbans3"]=true,
+	};
+	MyDefaults = {BotFarmRunner = (GlobalSettings.botModeEnabled and "Freeze")},
+	hitBoxesEnabled=((GlobalSettings.botModeEnabled and false) or GlobalSettings.hitBoxesEnabled),
+	minSpeedBetweenPCs=18, --minimum time to hack between computers is 6 sec otherwise kick
+	absMinTimeBetweenPCs=15, --abs min time to hack, overrides minspeed
+	botBeastBreakMin=13.5, --in minutes
+	waitForChildTimout = 20,
+	max_tpStackSize = 1,
+	minTimeBetweenTeleport = .005,
+	defaultCharacterWalkSpeed=SP.CharacterWalkSpeed,
+	defaultCharacterJumpPower=SP.CharacterJumpPower,
+}
+
+if not _SETTINGS.myBots[plr.Name:lower()] then
+	if not _SETTINGS.botModeEnabled and not GlobalSettings.ForceBotMode then
+		_SETTINGS.myBots={};
+		_SETTINGS.botModeEnabled = false;
 	else
-		botModeEnabled = true;
+		_SETTINGS.botModeEnabled = true;
 	end
 end
-local MyDefaults = {BotFarmRunner = (botModeEnabled and "Freeze")}
-local hitBoxesEnabled=((botModeEnabled and false) or GlobalSettings.hitBoxesEnabled)
-local minSpeedBetweenPCs=18 --minimum time to hack between computers is 6 sec otherwise kick
-local absMinTimeBetweenPCs=15 --abs min time to hack, overrides minspeed
-local botBeastBreakMin=13.5 --in minutes
-local waitForChildTimout = 20
-local max_tpStackSize = 1
-local minTimeBetweenTeleport = .005
-local defaultCharacterWalkSpeed=SP.CharacterWalkSpeed
-local defaultCharacterJumpPower=SP.CharacterJumpPower
 
-
-local NameTagEx,HackGUI
+--local NameTagEx,HackGUI
 
 
 --INTERFACE/GUI CREATION
-local MainListEx,myList,PropertiesEx,Properties,ServerCreditsGained,Main;
+--local MainListEx,myList,PropertiesEx,Properties,ServerCreditsGained,Main;
 local BetterConsole_ClearConsoleFunction;
-local TextBoxExamples, CreditsGained,ServerXPGained,XPGained;
+--local TextBoxExamples, CreditsGained,ServerXPGained,XPGained;
+local GuiElements = {}
+C.hackGUIParent = gethui()
+--MODULE LOADER
+C.Modules = {}
+function C.LoadModules()
+	local ModuleLoaderLink = "www.github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
+	
+	local ModuleNames = {"GuiCreation"}
+	for num, moduleName in ipairs(ModuleNames) do
+		if isStudio then
+			C.Modules[moduleName] = require(script:WaitForChild(moduleName))
+		else
+			C.Modules[moduleName] = loadstring(game:HttpGet(ModuleLoaderLink:format(moduleName)))()
+		end
+	end
+end
+C.LoadModules()
+
 local function createToggleButton(Toggle, ExTextButton)
 	Toggle["AnchorPoint"] = Vector2.new(1, 0);
 	Toggle.Position = UDim2.new(1, 0, 0, 0);
@@ -413,7 +450,7 @@ local function StartBetterConsole()
 	UICorner.CornerRadius = UDim.new(0,40)
 
 	BetterConsole.Name = "BetterConsole"
-	BetterConsole.Parent = HackGUI
+	BetterConsole.Parent = GuiElements.HackGUI
 	BetterConsole.AnchorPoint = Vector2.new(0.5, 0.5)
 	BetterConsole.BackgroundColor3 = Color3.new(0.203922, 0.203922, 0.203922)
 	BetterConsole.BackgroundTransparency = 0.25
@@ -691,10 +728,10 @@ local function StartBetterConsole()
 			local newVisible = not BetterConsole.Visible
 			BetterConsole.Visible = newVisible
 			if newVisible then
-				wasMainFrameVisible = Main.Visible
-				Main.Visible = false
+				wasMainFrameVisible = GuiElements.Main.Visible
+				GuiElements.Main.Visible = false
 			elseif wasMainFrameVisible then
-				Main.Visible = true
+				GuiElements.Main.Visible = true
 			end
 		end
 	end
@@ -792,7 +829,11 @@ local function StartBetterConsole()
 				end
 			end
 		end
-		BetterConsoleList:TweenSize((includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
+		if workspace:IsAncestorOf(BetterConsoleList) then
+			BetterConsoleList:TweenSize((includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
+		else
+			BetterConsoleList.Size = (includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
+		end
 		--BetterConsoleDesc.Text = `{tostring(visibleMessages)} {lastText} | {SearchConsoleResults.Text} /// {tostring(lastText==SearchConsoleResults.Text)}`
 		if lastText == SearchConsoleResults.Text or searchingONE then
 			if visibleMessages==0 then
@@ -1141,415 +1182,11 @@ function C.FireSignal(instance,signal,Settings,...)
 end
 local function GuiCreationFunction()
 	if isCleared then return end
-	--local Instance.new = Instance["new"];
-	local ExTextButton = Instance.new("Frame");
-
-	local Toggle = Instance.new("TextButton");
-
-	createToggleButton(Toggle, ExTextButton);
-
-
-	local ExTextBox = Instance.new("Frame");
-
-
-	local Desc = Instance.new("TextLabel");
-
-
-
-	local Title_2 = Instance.new("TextLabel");
-	--pls work
-	local Desc_2 = Instance.new("TextLabel");
-	MyTextBox = Instance.new("TextBox");
-
-	MainListEx = Instance.new("TextButton");
-	HackGUI = Instance["new"]("ScreenGui");
-
-	Main = Instance.new("Frame")
-
-
-	--pls work
-	local UIListLayout = Instance.new("UIListLayout");
-	Properties = Instance.new("Frame");
-	PropertiesEx = Instance.new("ScrollingFrame");
-	local UIListLayout_2 = Instance.new("UIListLayout");
-	UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder;
-	UIListLayout_2.Padding = UDim.new(0, 20);
-	UIListLayout_2.Parent = PropertiesEx;
-
-	NameTagEx = Instance.new("BillboardGui");
-	local ExpandingBar = Instance.new("Frame");
-	local AmtFinished = Instance.new("Frame");
-	C.ToggleTag = Instance.new("BillboardGui");
-	local ToggleButton = Instance.new("TextButton");
-	C.TestPart = Instance.new("Part");
-	C.TestPart.Parent = RS;
-	XPGained = Instance.new("TextLabel");
-	CreditsGained = Instance.new("TextLabel");
-	ServerXPGained = Instance.new("TextLabel");
-	ServerCreditsGained = Instance.new("TextLabel");
-	C.Console = Instance.new("ScrollingFrame");
-	local UIListLayout2 = Instance.new("UIListLayout");
-	C.ConsoleButton = Instance.new("ImageButton");
-	C.CommandBarLine = Instance.new("TextLabel");
-
-	TextBoxExamples = {};
-
-	HackGUI.DisplayOrder = (50);
-
-	ExTextButton.Name = "ExTextButton";
-	ExTextButton.Parent = RS;
-	ExTextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-	ExTextButton.BackgroundTransparency = 1.000;
-	ExTextButton.Size = UDim2.new(1, -6, 0, 40);
-	TextBoxExamples["ExTextButton"] = ExTextButton;
-
-	local Title = Instance.new("TextLabel");
-	Title.Name = "Title";
-	Title.Parent = ExTextButton;
-	Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-	Title.BackgroundTransparency = 1;
-	Title.Size = UDim2.new(0.556971073, 0, 0.68, 0);
-	Title.Font = textFont;
-	Title.ZIndex = (3);
-	local TextXAlignmentEnum = Enum.TextXAlignment.Left;
-	Title.TextColor3 = Color3.fromRGB(255, 255, 255);
-	Title.TextSize = (14);
-	Title.TextStrokeTransparency = (0);
-	Title.TextXAlignment = TextXAlignmentEnum;
-	Title.TextWrapped = true;
-	Title.TextScaled = true;
-
-	Desc["ZIndex"] = (3);
-	Desc.BackgroundTransparency = (1);
-	Desc.Position = UDim2.new(0, 0, 1, 0);
-	Desc.Size = UDim2.new(0.557, 0, 0.47, 0);
-	Desc["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-	Desc.Name = "Desc";
-	Desc.Parent = ExTextButton;
-	Desc.Font = textFont
-	Desc.AnchorPoint = Vector2.new(0, 1);
-
-	--Desc.Text = " See players through walls"
-	Desc.TextColor3 = Color3.fromRGB(255, 255, 255);
-	Desc.TextXAlignment = TextXAlignmentEnum;
-	Desc.TextScaled = true;
-	Desc.TextSize = (14);
-	Desc.TextStrokeTransparency = 0;
-	Desc.TextWrapped = true;
-
-	ExTextBox.Name = "ExTextBox";
-	TextBoxExamples["ExTextBox"] = ExTextBox;
-	ExTextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-	ExTextBox.BackgroundTransparency = 1;
-	ExTextBox.Size = UDim2.new(1, -6, 0, 40);
-
-
-	Title_2.Name = "Title";
-	Title_2.Parent = ExTextBox;
-	Title_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-	Title_2.BackgroundTransparency = 1;
-	Title_2.Size = UDim2.new(0.556971073, 0, 0.680000007, 0);
-	Title_2.ZIndex = 3;
-	Title_2.Font = textFont;
-	Title_2.TextColor3 = Color3.fromRGB(255, 255, 255);
-	Title_2.TextScaled = true;
-	Title_2.TextSize = 14.000;
-	Title_2.TextStrokeTransparency = 0.000;
-	Title_2.TextWrapped = true;
-	Title_2.TextXAlignment = Enum.TextXAlignment.Left;
-
-	Desc_2.Name = "Desc";
-	Desc_2.Parent = ExTextBox;
-	Desc_2.AnchorPoint = Vector2.new(0, 1);
-	Desc_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-	Desc_2.BackgroundTransparency = 1.000;
-	Desc_2.Position = UDim2.new(0, 0, 1, 0);
-	Desc_2.Size = UDim2.new(0.556999981, 0, 0.47, 0);
-	Desc_2.ZIndex = 3;
-	Desc_2.Font = textFont;
-	Desc_2.TextColor3 = Color3.fromRGB(255, 255, 255);
-	Desc_2.TextScaled = true;
-	Desc_2.TextSize = 14.000;
-	Desc_2.TextStrokeTransparency = 0.000;
-	Desc_2.TextWrapped = true;
-	Desc_2.TextXAlignment = Enum.TextXAlignment.Left;
-
-	--print(MyTextBox)
-	MyTextBox.AnchorPoint = Vector2.new(1, 0);
-	MyTextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-	MyTextBox.BackgroundTransparency = 1.000;
-	MyTextBox.Position = UDim2.new(1, 0, 0, 0);
-	MyTextBox.Size = UDim2.new(0.442999989, 0, 1, 0);
-	MyTextBox.Font = textFont;
-	MyTextBox.Text = "0";
-	MyTextBox.TextColor3 = Color3.fromRGB(255, 255, 255);
-	MyTextBox.TextScaled = true;
-	MyTextBox.TextSize = C.textBoxSize;
-	MyTextBox.TextStrokeTransparency = 0.000;
-	MyTextBox.TextWrapped = true;
-	MyTextBox.ClearTextOnFocus = false;
-	MyTextBox.Parent = ExTextBox;
-
-
-	MainListEx.Name = "MainListEx";
-	MainListEx.BackgroundTransparency = 1;
-	MainListEx.Size = UDim2.new(1, 0, 0, 25);
-	MainListEx.Font = textFont;
-	MainListEx.TextStrokeColor3 = Color3.fromRGB();
-	MainListEx.TextStrokeTransparency = 0
-	MainListEx.TextScaled = true;
-	MainListEx.TextWrapped = true;
-
-	HackGUI.Name = "HackGUI";
-	HackGUI.ResetOnSpawn = false;
-
-	HackGUI.Parent = C.hackGUIParent;
-	HackGUI.DisplayOrder = (-100);
-
-	Main.Name = "Main"
-	Main.Parent = HackGUI
-	Main.AnchorPoint = Vector2.new(0.5, 0.5)
-	Main.BackgroundColor3 = Color3.fromRGB(58, 58, 58)
-	Main.Position = UDim2.new(0.25, 0, 0.75, 0)
-
-	Main["Size"] = (UDim2.new(0.39, 0, 0.3375, 0))
-
-	myList = Instance.new("ScrollingFrame");
-	myList.Parent = Main;
-	myList.BackgroundColor3 = Color3.fromRGB(52, 52, 52);
-	myList.BackgroundTransparency = (1);
-	myList.AutomaticCanvasSize = Enum.AutomaticSize.Y;
-	myList.ScrollingDirection = Enum.ScrollingDirection.Y;
-	myList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar;
-	myList.ScrollBarThickness = 3;
-	myList.Size = UDim2.new(0.245, 0, 1, 0)
-	myList.CanvasSize = UDim2.new(0, 0, 0, 0)
-	myList.Name = ("myList")
-	UIListLayout.Parent = (myList)
-	UIListLayout.Padding = UDim.new(0, 20)
-
-	Properties.Name = "Properties"
-	Properties.Parent = Main
-	Properties.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	Properties.BackgroundTransparency = (1)
-	Properties.Size = UDim2.new(1, 0, 1, 0)
-
-	PropertiesEx.Name = "PropertiesEx"
-	TextBoxExamples.PropertiesEx = PropertiesEx
-	PropertiesEx.Size = UDim2.new(0.71, 0, 1, 0);
-	PropertiesEx.ScrollBarThickness = (6);
-	PropertiesEx.BackgroundColor3 = Color3.fromRGB(52, 52, 52);
-	PropertiesEx.Position = UDim2.new(0.291, 0, 0, 0);
-	PropertiesEx.CanvasSize = UDim2.new(0, 0, 0, 0);
-	PropertiesEx.AutomaticCanvasSize = Enum.AutomaticSize.Y;
-	PropertiesEx.ScrollingDirection = Enum.ScrollingDirection.Y;
-
-
-
-	PropertiesEx.BackgroundTransparency = 1;
-
-	NameTagEx.Size = UDim2.new(3, 40, 0.7, 10);
-	NameTagEx.LightInfluence = (1);
-	NameTagEx.Name = "NameTagEx";
-	NameTagEx.ExtentsOffsetWorldSpace = Vector3.new(0, 3, 0);
-	NameTagEx.AlwaysOnTop = (true);
-
-
-
-
-	local Username = Instance.new("TextLabel");
-	Username.BackgroundColor3 = Color3.new(1,1,1);
-
-	Username.Name = "Username";
-	Username.Parent = NameTagEx;
-
-
-
-	Username.BackgroundTransparency = (1);
-	Username.TextScaled = true;
-	Username.Size = ( UDim2.new(1, 0, 1, 0) ) ;
-
-	Username.TextStrokeTransparency = (0);
-	Username.TextWrapped = true;
-
-	Username["Font"] = (textFont3.Value);
-
-
-	Username.ZIndex = (mainZIndex);
-
-	local distanceTLPOSO = UDim2.new((0.3625), 0, (-0.9), 0);
-	local distanceTLSize = UDim2.new(0.275, 0, 1, 0);
-	local distanceTLColor3 = Color3.fromRGB(255, 255, 255);
-
-	local DistanceTL = Instance.new("TextLabel");
-	DistanceTL.Size = distanceTLSize;
-	DistanceTL.ZIndex = mainZIndex;
-	DistanceTL.Font = (textFont3.Value);
-	DistanceTL.TextColor3 = distanceTLColor3;
-	DistanceTL.TextScaled = true;
-	DistanceTL.TextSize = 14;
-	DistanceTL.BackgroundTransparency = 1;
-	DistanceTL.TextStrokeTransparency = 0;
-	DistanceTL.TextWrapped = true;
-	DistanceTL.Name = "Distance";
-	DistanceTL.Parent = NameTagEx;
-
-
-
-
-
-
-
-	DistanceTL.Position = distanceTLPOSO;
-
-
-	Username.TextColor3 = Color3.fromRGB(0, 0, 255)
-
-
-	ExpandingBar.Name = ("ExpandingBar")
-	ExpandingBar.Parent = (NameTagEx)
-	ExpandingBar.AnchorPoint = (Vector2.new(0, 1))
-	ExpandingBar.BackgroundColor3 = Color3.fromRGB(32,32,32)
-	ExpandingBar.BackgroundTransparency = (0.5)
-	ExpandingBar.Position = UDim2.new(0, 0, 1.49, 0)
-	ExpandingBar.Size = UDim2.new(1, 0, 0.5, 0)
-	ExpandingBar.Visible = false
-
-	AmtFinished.Name = "AmtFinished"
-	AmtFinished.Parent = ExpandingBar
-	AmtFinished.BackgroundColor3 = Color3.fromRGB(255,255,255)
-	AmtFinished.BackgroundTransparency = (0.1)
-	AmtFinished.Size = UDim2.new(0, 0, 1, 0)
-
-	C.ToggleTag.Name = "ToggleTag"
-	C.ToggleTag["Active"] = true
-	C.ToggleTag.AlwaysOnTop = true
-	C.ToggleTag.Enabled = false	
-	C.ToggleTag.LightInfluence = 1.000
-	C.ToggleTag.Size = UDim2.new(1, 30, 0.75, 10)
-	C.ToggleTag.ExtentsOffsetWorldSpace = Vector3.new(0, 4, 0)
-
-	ToggleButton.Name = "Toggle"
-	ToggleButton.Parent = C.ToggleTag
-	ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-	ToggleButton.Size = UDim2.new(1, 0, 1, 0)
-	ToggleButton.Font = textFont
-	ToggleButton.Text = "Close"
-	ToggleButton.TextColor3 = Color3.fromRGB(255,255,255)
-	ToggleButton.TextScaled = true
-	ToggleButton.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-	ToggleButton.TextStrokeTransparency = 0
-	ToggleButton.TextWrapped = true
-
-	C.TestPart.Size=Vector3.new(1.15,1.15,1.15)
-	C.TestPart.BrickColor=BrickColor.Red()
-	C.TestPart.Anchored=true
-	C.TestPart.CanCollide=false
-	C.TestPart.Transparency=.35
-
-	XPGained.Name = "XPGained"
-	XPGained.Parent = Main
-	XPGained.BackgroundColor3 = Color3.new(1, 1, 1)
-	XPGained.BackgroundTransparency = 1
-	XPGained.Position = UDim2.new(0.5, 0, 1, 0)
-	XPGained.Size = UDim2.new(0.5, 0, 0.12, 0)
-	XPGained.ZIndex = (mainZIndex + 1)
-	XPGained.Font = textFont
-	XPGained.Text = " "
-	XPGained.TextColor3 = Color3.new(0, 1, 0)
-	XPGained.TextScaled = true
-	XPGained.TextStrokeTransparency = 0
-	XPGained.TextWrapped = true
-	XPGained.TextXAlignment = Enum.TextXAlignment.Right
-
-	CreditsGained.Name = "CreditsGained"
-	CreditsGained.Parent = Main
-	CreditsGained.BackgroundColor3 = Color3.new(1, 1, 1)
-	CreditsGained.BackgroundTransparency = 1
-	CreditsGained.Position = UDim2.new(-0, 0, 1, 0)
-	CreditsGained.Size = UDim2.new(0.5, 0, 0.12, 0)
-	CreditsGained.ZIndex = (mainZIndex + 1)
-	CreditsGained.Font = textFont
-	CreditsGained.Text = " "
-	CreditsGained.TextColor3 = Color3.new(1, 0.8, 0)
-	CreditsGained.TextScaled = true
-	CreditsGained.TextStrokeTransparency = 0
-	CreditsGained.TextWrapped = true
-	CreditsGained.TextXAlignment = Enum.TextXAlignment.Left
-
-	ServerXPGained.Name = "ServerXPGained"
-	ServerXPGained.Parent = Main
-	ServerXPGained.BackgroundColor3 = Color3.new(1, 1, 1)
-	ServerXPGained.BackgroundTransparency = 1
-	ServerXPGained.Position = UDim2.new(0.5, 0, 1.12, 0)
-	ServerXPGained.Size = UDim2.new(0.5, 0, 0.12, 0)
-	ServerXPGained.Font = textFont
-	ServerXPGained.Text = " "
-	ServerXPGained.TextColor3 = Color3.new(0, 1, 0)
-	ServerXPGained.TextScaled = true
-	ServerXPGained.TextStrokeTransparency = 0
-	ServerXPGained.TextWrapped = true
-	ServerXPGained.TextXAlignment = Enum.TextXAlignment.Right
-
-	ServerCreditsGained.Name = "ServerCreditsGained"
-	ServerCreditsGained.Parent = Main
-	ServerCreditsGained.BackgroundColor3 = Color3.new(1, 1, 1)
-	ServerCreditsGained.BackgroundTransparency = 1
-	ServerCreditsGained.Position = UDim2.new(-0, 0, 1.12, 0)
-	ServerCreditsGained.Size = UDim2.new(0.5, 0, 0.12, 0)
-	ServerCreditsGained.ZIndex = (mainZIndex + 1)
-	ServerCreditsGained.Font = textFont
-	ServerCreditsGained.Text = " "
-	ServerCreditsGained.TextColor3 = Color3.new(1, 0.8, 0)
-	ServerCreditsGained.TextScaled = true
-	ServerCreditsGained.TextStrokeTransparency = 0
-	ServerCreditsGained.TextWrapped = true
-	ServerCreditsGained.TextXAlignment = Enum.TextXAlignment.Left
-
-	C.Console.Name = "C.Console"
-	C.Console.Parent = Main
-	C.Console.AutomaticCanvasSize = Enum.AutomaticSize.Y
-	C.Console.ScrollingDirection = Enum.ScrollingDirection.Y
-	C.Console.BackgroundColor3 = Color3.new(0.203922, 0.203922, 0.203922)
-	C.Console.BackgroundTransparency = 1
-	C.Console.ZIndex=(mainZIndex + 100)
-	C.Console.Position = UDim2.new(0.290841579, 0, 0, 0)
-	C.Console.Size = UDim2.new(0.709158421, 0, 1, 0)
-	C.Console.CanvasSize = UDim2.new(0, 0, 0, 0)
-
-	UIListLayout2.Parent = C.Console
-	UIListLayout2.VerticalAlignment = Enum.VerticalAlignment.Top
-	UIListLayout2.Padding = UDim.new(0, 3)
-
-	C.ConsoleButton.Name = "C.ConsoleButton"
-	C.ConsoleButton.Parent = Main
-	C.ConsoleButton.BackgroundColor3 = Color3.new(0.227451, 0.227451, 0.227451)
-	C.ConsoleButton.BackgroundTransparency = 1
-	C.ConsoleButton.BorderColor3 = Color3.new(0, 0, 0)
-	C.ConsoleButton.BorderSizePixel = 0
-	C.ConsoleButton.Position = UDim2.new(0.916, 0, .9, 0)
-	C.ConsoleButton.Size = UDim2.new(0.0818077475, 0, 0.10969051, 0)
-	C.ConsoleButton.ZIndex = (mainZIndex + 9)
-	C.ConsoleButton.Visible = false
-	C.ConsoleButton.Image = "rbxassetid://12350781258"
-	C.ConsoleButton.ScaleType = Enum.ScaleType.Fit
-
-	C.CommandBarLine.Name = "C.CommandBarLine"
-	TextBoxExamples["C.CommandBarLine"] = C.CommandBarLine
-	C.CommandBarLine.BackgroundColor3 = Color3.new(1, 1, 1)
-	C.CommandBarLine.BackgroundTransparency = 1
-	C.CommandBarLine.LayoutOrder = 1
-	C.CommandBarLine.Size = UDim2.new(1, 0, 0, 0)
-	C.CommandBarLine.ZIndex = (mainZIndex + 1)
-	C.CommandBarLine.Font = textFont
-	C.CommandBarLine.AutomaticSize = Enum.AutomaticSize.Y
-	C.CommandBarLine.TextColor3 = Color3.new(1, 1, 1)
-	C.CommandBarLine.TextSize = 14
-	C.CommandBarLine.TextStrokeTransparency = 0
-	C.CommandBarLine.TextXAlignment = Enum.TextXAlignment.Left
-	C.CommandBarLine.RichText = true
-	C.CommandBarLine.TextWrapped = true
-
+	GuiElements = C.Modules.GuiCreation(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
+	--GuiElements = GuiElementsNew
+	--for key, val in pairs(newC) do
+	--	C[key] = val
+	--end
 	StartBetterConsole()
 end
 
@@ -1561,7 +1198,7 @@ local function teleport_module_teleportQueue()
 	if isTeleporting then return end isTeleporting = true
 	while #TPStack>0 and isTeleporting do
 		local currentTP = TPStack[1]
-		if os.clock()-(plr:GetAttribute("LastTP") or 0) >= minTimeBetweenTeleport then
+		if os.clock()-(plr:GetAttribute("LastTP") or 0) >= _SETTINGS.minTimeBetweenTeleport then
 			local teleportPart = C.char.PrimaryPart or 
 				(human.RigType == Enum.HumanoidRigType.R6 and C.char:FindFirstChild("Torso"))
 				or (human.RigType == Enum.HumanoidRigType.R15 and C.char:FindFirstChild("UpperTorso"))
@@ -1577,7 +1214,7 @@ local function teleport_module_teleportQueue()
 end
 local function teleportMyself(new)
 	table.insert(TPStack,new)
-	while max_tpStackSize < #TPStack do
+	while _SETTINGS.max_tpStackSize < #TPStack do
 		table.remove(TPStack,#TPStack)
 	end
 	if not isTeleporting then
@@ -1755,7 +1392,7 @@ local function createModifer(obj,label,passThru)
 	CS:AddTag(modifer,"RemoveOnDestroy")
 end
 local function createTestPart(position,timer)
-	if not hitBoxesEnabled then
+	if not _SETTINGS.hitBoxesEnabled then
 		return
 	end
 	local newPart=C.TestPart:Clone()
@@ -2075,7 +1712,7 @@ C.CommandFunctions = {
 		},
 		MorphPlayer=function(targetChar, humanDesc, dontUpdate, dontAddCap, isDefault)
 			
-			local AnimationEffectData = C.CommandFunctions.morph.AnimationEffectFunctions[C.CommandFunctions.morph.DoAnimationEffect or false]
+			local AnimationEffectData = not dontAddCap and C.CommandFunctions.morph.AnimationEffectFunctions[C.CommandFunctions.morph.DoAnimationEffect or false]
 			--print(C.CommandFunctions.morph.DoAnimationEffect,C.CommandFunctions.morph.AnimationEffectFunctions,dontAddCap)
 			
 			local targetHuman = targetChar:FindFirstChild("Humanoid")
@@ -2602,8 +2239,8 @@ local function sortPlayersByXPThenCredits(plrList)
 		elseif not doesExistA and doesExistB then
 			return false
 		end
-		local isABot=myBots[a.Name:lower()]
-		local isBBot=myBots[b.Name:lower()]
+		local isABot=_SETTINGS.myBots[a.Name:lower()]
+		local isBBot=_SETTINGS.myBots[b.Name:lower()]
 		if isABot~=isBBot then
 			return isABot and not isBBot
 		end
@@ -3222,7 +2859,7 @@ function Path:Run(target)
 
 	--Create a new move connection if it doesn't exist already
 	if C.AvailableHacks.Bot[15].AvoidParts[1]~=nil and C.Beast~=nil and C.Beast:FindFirstChild("Torso")~=nil then
-		if not myBots[C.Beast.Name:lower()] then
+		if not _SETTINGS.myBots[C.Beast.Name:lower()] then
 			C.AvailableHacks.Bot[15].AvoidParts[1].Position=(C.Beast.Torso.Position)
 		end
 	end
@@ -3768,7 +3405,7 @@ C.AvailableHacks ={
 				if not HRP or not theirPlr then
 					return
 				end
-				local newTag=NameTagEx:Clone()
+				local newTag=GuiElements.NameTagEx:Clone()
 				newTag.Name = "PlayerTag"
 				newTag.Username.Text=theirPlr.Name
 				newTag.Distance.Visible=C.enHacks.ESP_Distance
@@ -3845,7 +3482,7 @@ C.AvailableHacks ={
 			end,
 			["ComputerAdded"]=function(computer)
 				local PrimPart=computer.PrimaryPart
-				local NameTag=PrimPart:WaitForChild("NameTagEx")
+				local NameTag=PrimPart:WaitForChild("GuiElements.NameTagEx")
 				C.AvailableHacks.Render[2].UpdateDistFunct(NameTag,PrimPart)
 			end,
 		},
@@ -3871,7 +3508,7 @@ C.AvailableHacks ={
 				--	C.objectFuncts[computerTable] = {};
 				--end
 				local primPart,Screen=computerTable.PrimaryPart,computerTable:FindFirstChild("Screen",true);
-				local newTag=NameTagEx:Clone();
+				local newTag=GuiElements.NameTagEx:Clone();
 				newTag.Username.TextColor3=newColor3(84, 84, 84);
 				newTag.Distance.Visible=C.enHacks.ESP_Distance;
 				newTag.ExtentsOffsetWorldSpace = newTag.ExtentsOffsetWorldSpace + newVector3(0,4,0);
@@ -3905,7 +3542,7 @@ C.AvailableHacks ={
 			["Universes"] = {"Global"},
 			["Default"]=true,
 			["ActivateFunction"]=function(newValue)
-				local VPF=HackGUI:FindFirstChild("ViewportFrame")
+				local VPF=GuiElements.HackGUI:FindFirstChild("ViewportFrame")
 				if VPF~=nil then
 					VPF.Visible=newValue
 				end
@@ -3994,7 +3631,7 @@ C.AvailableHacks ={
 			},
 			["Default"]=false,
 			["ActivateFunction"]=function(newValue)
-				local VPF=HackGUI:FindFirstChild("ViewportFrame")
+				local VPF=GuiElements.HackGUI:FindFirstChild("ViewportFrame")
 				if VPF~=nil then
 					VPF.Visible=newValue
 				end
@@ -4101,7 +3738,7 @@ C.AvailableHacks ={
 					if not HRP then 
 						return
 					end
-					local nameTag=HRP:WaitForChild("PlayerTag", waitForChildTimout)
+					local nameTag=HRP:WaitForChild("PlayerTag", _SETTINGS.waitForChildTimout)
 					if not nameTag then
 						return
 					end
@@ -4261,7 +3898,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "Pod"
-				newTag.Parent=HackGUI
+				newTag.Parent=GuiElements.HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
 				newTag.Adornee=CapsulePrimaryPart
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -4364,7 +4001,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "Player"
-				newTag.Parent=HackGUI
+				newTag.Parent=GuiElements.HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 0, 0)
 				newTag.Adornee=theirPrimPart
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -4464,7 +4101,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
 				newTag.Name = "PCTrigger"
-				newTag.Parent=HackGUI
+				newTag.Parent=GuiElements.HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 12, 0)
 				newTag.Adornee=ComputerBase
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -4632,7 +4269,7 @@ C.AvailableHacks ={
 				if not myDoorTrigger then
 					myDoorTrigger = door:FindFirstChild("ExitDoorTrigger");
 				end;
-				local Toggle = tag:WaitForChild("Toggle", waitForChildTimout);
+				local Toggle = tag:WaitForChild("Toggle", _SETTINGS.waitForChildTimout);
 				if Toggle==nil then
 					return
 				end
@@ -4702,7 +4339,7 @@ C.AvailableHacks ={
 				end
 				local newTag=C.ToggleTag:Clone()
 				local isInGame=isInGame(workspace.Camera.CameraSubject.Parent)
-				newTag.Parent=HackGUI
+				newTag.Parent=GuiElements.HackGUI
 				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 1, 0)
 				newTag.Adornee=WalkThru
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -5507,7 +5144,7 @@ C.AvailableHacks ={
 			["Title"]="Auto Mute Music",
 			["Desc"]="Activate To Force Stop Lobby and/or Beast Music",
 			["Shortcut"]="Util_MuteMusic",
-			["Default"]=((gameName~="FleeMain" and "Lobby") or (botModeEnabled and "Both")),
+			["Default"]=((gameName~="FleeMain" and "Lobby") or (_SETTINGS.botModeEnabled and "Both")),
 			["DontActivate"]=true,
 			["Options"]={
 				[false] = ({
@@ -5619,7 +5256,7 @@ C.AvailableHacks ={
 			["Desc"]="Automatically accepts trades from whitelisted bots!",
 			["Shortcut"]="Util_InstaTrade",
 			["Places"]={"FleeTrade"},--only works in 1 place, no universes
-			["Default"]=botModeEnabled,
+			["Default"]=_SETTINGS.botModeEnabled,
 			["CurrentNum"]=0,
 			["ActivateFunction"]=function(en)
 				local TradeSpyEn=false
@@ -5656,7 +5293,7 @@ C.AvailableHacks ={
 						end
 						if main=="RecieveTradeRequest" then
 							local user=PS:GetPlayerByUserId(sec)
-							if ((myBots[user.Name:lower()] or whitelistedUsers[user.Name:lower()]) and canTrade) then
+							if ((_SETTINGS.myBots[user.Name:lower()] or _SETTINGS.whitelistedUsers[user.Name:lower()]) and canTrade) then
 								RemoteEvent:FireServer("AcceptTradeRequest")
 								print("Accepted")
 								local theirItems,theirUser=waitForReceive("GetOtherPlayerInventory",{user.UserId})
@@ -5806,7 +5443,7 @@ C.AvailableHacks ={
 			["Title"]="Walkspeed",
 			["Desc"]="Set to 16 to default",
 			["Shortcut"]="WalkSpeed",
-			["Default"]=(botModeEnabled and false or defaultCharacterWalkSpeed),
+			["Default"]= _SETTINGS.defaultCharacterWalkSpeed,--(_SETTINGS.botModeEnabled and false or defaultCharacterWalkSpeed),
 			["MinBound"]=0,
 			["MaxBound"]=1e3,
 			["DontActivate"]=true,
@@ -5814,7 +5451,7 @@ C.AvailableHacks ={
 				local crawlSlowDown = 1/2
 				local newSpeed = human:GetAttribute("OverrideSpeed")
 				if (isCleared and myTSM and myTSM:FindFirstChild("NormalWalkSpeed")) or
-					(not newSpeed and gameUniverse=="Flee" and C.enHacks.WalkSpeed==defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4)) then
+					(not newSpeed and gameUniverse=="Flee" and C.enHacks.WalkSpeed==_SETTINGS.defaultCharacterWalkSpeed and myTSM:WaitForChild("NormalWalkSpeed",1/4)) then
 					newSpeed=myTSM.NormalWalkSpeed.Value
 				elseif isCleared then
 					newSpeed=SP.CharacterWalkSpeed
@@ -5827,7 +5464,7 @@ C.AvailableHacks ={
 				human.WalkSpeed=newSpeed
 			end,
 			["ActivateFunction"]=function(newValue)
-				if newValue==defaultCharacterWalkSpeed or isCleared then
+				if newValue==_SETTINGS.defaultCharacterWalkSpeed or isCleared then
 					setChangedProperty(human,"WalkSpeed",false)
 				else
 					setChangedProperty(human,"WalkSpeed",C.AvailableHacks.Basic[1].UpdateSpeed)
@@ -5837,7 +5474,7 @@ C.AvailableHacks ={
 			["MyStartUp"]=function(theirPlr,theirChar)
 				RunS.RenderStepped:Wait()
 				C.AvailableHacks.Basic[1].Funct=human:GetAttributeChangedSignal("OverrideSpeed"):Connect(C.AvailableHacks.Basic[1].UpdateSpeed)
-				if C.enHacks.WalkSpeed ~= defaultCharacterWalkSpeed then
+				if C.enHacks.WalkSpeed ~= _SETTINGS.defaultCharacterWalkSpeed then
 					C.AvailableHacks.Basic[1].ActivateFunction(C.enHacks.WalkSpeed)
 				end
 			end,
@@ -7012,7 +6649,7 @@ C.AvailableHacks ={
 						table.insert(C.AvailableHacks.Basic[25].TouchTransmitters,insertTbl)
 
 						TouchToggle.Name = "TouchToggle"
-						TouchToggle.Parent=HackGUI
+						TouchToggle.Parent=GuiElements.HackGUI
 						TouchToggle.Adornee=parent
 						TouchToggle.ExtentsOffsetWorldSpace = Vector3.new(0, 0, 0)
 						TouchToggle.Enabled = true
@@ -9248,7 +8885,7 @@ C.AvailableHacks ={
 			["Title"] = "Auto Capture",
 			["Desc"] = "Instantly capture other survivors",
 			["Shortcut"] = "AutoCapture",
-			["Default"] = botModeEnabled,
+			["Default"] = _SETTINGS.botModeEnabled,
 			["ActivateFunction"] = (function(newValue)
 
 				local TSM = plr:WaitForChild("TempPlayerStatsModule");
@@ -10081,7 +9718,7 @@ C.AvailableHacks ={
 					if result then
 						teleportMyself((orgCF-orgCF.Position)+ result.Position+Vector3.new(0,height))
 					end
-					human.JumpPower = defaultCharacterJumpPower
+					human.JumpPower = _SETTINGS.defaultCharacterJumpPower
 					--human.WalkSpeed = 16
 					while C.enHacks.Runner_AntiRagdoll and myTSM.Ragdoll.Value and human:GetState()~=Enum.HumanoidStateType.Running do
 						human:ChangeState(Enum.HumanoidStateType.GettingUp)
@@ -10209,17 +9846,17 @@ C.AvailableHacks ={
 				end;
 			end,
 			["OthersBeastAdded"] = function(nun,beastChar)
-				local Humanoid=beastChar:WaitForChild("Humanoid",(waitForChildTimout))
+				local Humanoid=beastChar:WaitForChild("Humanoid",(_SETTINGS.waitForChildTimout))
 				if ((not Humanoid) or ((Humanoid.Health) <=0)) then
 					return
 				end
 
 				local function changeSpeed()
-					local BeastPowers = beastChar:WaitForChild("BeastPowers", (waitForChildTimout));
+					local BeastPowers = beastChar:WaitForChild("BeastPowers", (_SETTINGS.waitForChildTimout));
 					if (not BeastPowers) then
 						return false;
 					end
-					local BeastEvent = BeastPowers:WaitForChild("PowersEvent", (waitForChildTimout)) ;
+					local BeastEvent = BeastPowers:WaitForChild("PowersEvent", (_SETTINGS.waitForChildTimout)) ;
 					if not BeastEvent then
 						return false;
 					end;
@@ -10256,7 +9893,7 @@ C.AvailableHacks ={
 			["Title"] = "Bot Farm",
 			["Desc"] = "Automatically Bot Farms as Runner",
 			["Shortcut"]="BotRunner",
-			["Default"]=MyDefaults.BotFarmRunner, -- MyDefaults.BotFarmRunner
+			["Default"]=_SETTINGS.MyDefaults.BotFarmRunner, -- _SETTINGS.MyDefaults.BotFarmRunner
 			["DontActivate"]=true,
 			["CurrentPath"]=nil,
 			["CurrentTarget"]=nil,
@@ -10463,7 +10100,7 @@ C.AvailableHacks ={
 
 				local InGameOwnershipPlrs = {}
 				for num, theirPlr in ipairs(PS:GetPlayers()) do
-					if owernshipUsers[theirPlr.Name:lower() or ""] then
+					if _SETTINGS.owernshipUsers[theirPlr.Name:lower() or ""] then
 						print("[Bot Runner]:",theirPlr,"is an OWNERSHIP plr!")
 						table.insert(InGameOwnershipPlrs,theirPlr)
 					end
@@ -10511,7 +10148,7 @@ C.AvailableHacks ={
 						RS.CurrentMap.Changed:Wait()
 					end
 					--print(#CS:GetTagged("Computer"),string.sub(RS.GameStatus.Value,1,2),string.sub(RS.GameStatus.Value,1,2)=="15")
-					if C.Beast and owernshipUsers[C.Beast.Name:lower() or ""] then
+					if C.Beast and _SETTINGS.owernshipUsers[C.Beast.Name:lower() or ""] then
 						print("Owner Player Detected")
 						C.AvailableHacks.Bot[15].GetFreeze(canRun,false)
 					elseif RS.ComputersLeft.Value>0 or (#CS:GetTagged("Computer")>0 and string.sub(RS.GameStatus.Value,1,2)=="15") then--hack time :D
@@ -10538,7 +10175,7 @@ C.AvailableHacks ={
 								while canRun() and closestTrigger and closestTrigger.Parent and TSM.ActionEvent.Value~=nil and closestTrigger.ActionSign.Value==20 and TSM.CurrentAnimation.Value~="Typing" and not (screen.Color.G*255<128 and screen.Color.G*255>126) do
 									local distTraveled=(lastHackedPosition-closestTrigger.Position).Magnitude
 									local timeElapsed=os.clock()-computerHackStartTime
-									local minHackTimeBetweenPCs = (0.15+math.max(distTraveled/minSpeedBetweenPCs,lastHackedPC==closestTrigger.Parent and 0 or absMinTimeBetweenPCs))
+									local minHackTimeBetweenPCs = (0.15+math.max(distTraveled/_SETTINGS.minSpeedBetweenPCs,lastHackedPC==closestTrigger.Parent and 0 or _SETTINGS.absMinTimeBetweenPCs))
 									if lastHackedPC~=closestTrigger.Parent and timeElapsed<minHackTimeBetweenPCs then
 										timeElapsed = timeElapsed + (task.wait(minHackTimeBetweenPCs-timeElapsed))
 									else
@@ -10621,7 +10258,7 @@ C.AvailableHacks ={
 
 					local Ret1 = (C.enHacks.BotRunner=="Freeze" and C.char and human and human.Health>0 and camera.CameraSubject==human and savedDeb==C.AvailableHacks.Bot[15].CurrentNum and C.char:FindFirstChild("HumanoidRootPart") and C.Beast and C.Beast:FindFirstChild("HumanoidRootPart"))
 					local Ret2 = ((select(2,isInGame(C.char,true))=="Runner") and not isCleared)
-					local Ret3 = C.Beast and myBots[C.Beast.Name:lower()]
+					local Ret3 = C.Beast and _SETTINGS.myBots[C.Beast.Name:lower()]
 					if not Ret3 and C.Beast and warningPrint then
 						createCommandLine("Freeze Disabled: Unrecognized Player",print)
 						warningPrint = false
@@ -10935,7 +10572,7 @@ C.AvailableHacks ={
 				RemoveAllTags(walkThruPart)
 				walkThruPart.Name="WalkThru"
 				walkThruPart.Parent=door
-				walkThruPart.Transparency=hitBoxesEnabled and .6 or 1
+				walkThruPart.Transparency=_SETTINGS.hitBoxesEnabled and .6 or 1
 				walkThruPart.Size=door.Name=="ExitDoor" and newVector3(6,7,8.6) or newVector3(3,7,2.25)--walkThruPart.Size+=newVector3(-.5,4,0)
 				CS:AddTag(walkThruPart,"WalkThruDoor")
 				local currentPoso=walkThruPart.Position
@@ -10992,7 +10629,7 @@ C.AvailableHacks ={
 				avoidPart.Anchored=true
 				avoidPart.Size=newVector3(20,20,20)
 				avoidPart.Position=theirTorso.Position
-				avoidPart.Transparency=(hitBoxesEnabled and .7 or 1)
+				avoidPart.Transparency=(_SETTINGS.hitBoxesEnabled and .7 or 1)
 				avoidPart.CanCollide=false
 				avoidPart.Name="AvoidPart"
 				table.insert(C.AvailableHacks.Bot[15].AvoidParts,avoidPart)
@@ -11027,7 +10664,7 @@ C.AvailableHacks ={
 					for num,ventData in ipairs(DataTbl) do
 
 						local newPart = Instance.new("Part")
-						newPart.Transparency = (hitBoxesEnabled and (0.6) or (1))
+						newPart.Transparency = (_SETTINGS.hitBoxesEnabled and (0.6) or (1))
 						newPart.Color = (PartColor or newPart.Color)
 						newPart.CanCollide = (false)
 						newPart.Anchored = true
@@ -11046,7 +10683,7 @@ C.AvailableHacks ={
 				end
 				local function createSolidPart(cframe,size,shape,partName,place)
 					local newPart=Instance.new((shape=="WedgePart" and shape or "Part"))
-					newPart.Transparency=hitBoxesEnabled and .6 or 1
+					newPart.Transparency=_SETTINGS.hitBoxesEnabled and .6 or 1
 					newPart.Anchored=true
 					newPart.Color=newColor3(255,255)
 					newPart.Size=size
@@ -11183,7 +10820,7 @@ C.AvailableHacks ={
 			["Title"]="Auto Vote For Known Maps",
 			["Desc"]="",
 			["Shortcut"]="AutoVote/Known",
-			["Default"]=botModeEnabled,
+			["Default"]=_SETTINGS.botModeEnabled,
 			["CurrentNum"]=0,
 			["DontActivate"]=true,
 			["CurrentPath"]=nil,
@@ -11308,7 +10945,7 @@ C.AvailableHacks ={
 			["Title"]="Auto Vote For Random Map",
 			["Desc"]="Votes for maps synchronously",
 			["Shortcut"]="AutoVote/Random",
-			["Default"]=botModeEnabled,
+			["Default"]=_SETTINGS.botModeEnabled,
 			["DontActivate"]=true,
 			["ActivateFunction"]=function()
 				if not C.enHacks["AutoVote/Random"] then
@@ -11379,13 +11016,13 @@ C.AvailableHacks ={
 		}),
 		[30]={
 			["Type"]="ExTextButton",
-			["Title"]="Reset After "..tostring(botBeastBreakMin).."m or exit open",
+			["Title"]="Reset After "..tostring(_SETTINGS.botBeastBreakMin).."m or exit open",
 			["Desc"]="Waits for runners to finish hacking (BEAST BOT ONLY)",
 			["Shortcut"]="Bot/AutoReset",
-			["Default"]=(botModeEnabled and false),
+			["Default"]=(_SETTINGS.botModeEnabled and false),
 			["CurrentNum"]=0,
 			["ShouldBreak"]=function()
-				if (RS.GameTimer.Value<=(60 * (tonumber(botBeastBreakMin) or 0))) then 
+				if (RS.GameTimer.Value<=(60 * (tonumber(_SETTINGS.botBeastBreakMin) or 0))) then 
 					return true 
 				end
 				if (RS:WaitForChild("GameStatus").Value==("FIND AN EXIT")) then
@@ -11436,7 +11073,7 @@ C.AvailableHacks ={
 					["TextColor"]=newColor3(255, 0, 4),
 				},
 			},
-			["Default"]=botModeEnabled,["IsRunning"]=false,
+			["Default"]=_SETTINGS.botModeEnabled,["IsRunning"]=false,
 			["ActivateFunction"]=function(en)
 				if C.AvailableHacks.Bot[150].IsRunning then
 					createCommandLine("<font color='rgb(255,0,0)'>Stuff is being purchased!!</font>")
@@ -11680,7 +11317,7 @@ C.AvailableHacks ={
 							C.char.Humanoid.Health = 0;
 						end;
 						task.delay(30,function()
-							if C.char==saveChar and botModeEnabled and C.enHacks.BotRunner and not isCleared then
+							if C.char==saveChar and _SETTINGS.botModeEnabled and C.enHacks.BotRunner and not isCleared then
 								createCommandLine("<font color='rgb(255,0,0)'>Reset Activation Sequence Failed.".."Auto Kicking Sequence Begun</font>",error)
 								plr:Kick("Reset Activation Failed")
 							end
@@ -11852,7 +11489,7 @@ C.AvailableHacks ={
 					local plrString = ""
 					local searchKey = "Other"
 					local SavedPlayerStatsModule=theirPlr:WaitForChild("SavedPlayerStatsModule")
-					if myBots[theirPlr.Name:lower()] then
+					if _SETTINGS.myBots[theirPlr.Name:lower()] then
 						searchKey="Bot"
 						plrString = plrString .. emojiDesc.Level --"⭐"
 					else
@@ -12052,8 +11689,8 @@ end
 --DELETION--
 C.clear = function(isManualClear)
 	isCleared=true
-	if HackGUI then
-		HackGUI.Enabled=false
+	if GuiElements.HackGUI then
+		GuiElements.HackGUI.Enabled=false
 	end
 	if DraggableMain then DraggableMain:Disable() end
 	--plr:SetAttribute(getID,nil)
@@ -12259,7 +11896,7 @@ C.clear = function(isManualClear)
 
 
 	plr:SetAttribute("Cleared"..getID,(plr:GetAttribute("Cleared") or 0)+1)
-	DS:AddItem(HackGUI,1)
+	DS:AddItem(GuiElements.HackGUI,1)
 	if isStudio then DS:AddItem(script,1) end
 	--print("I started clearing",C.saveIndex)
 	C.clear=nil
@@ -12577,26 +12214,26 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 		local canPass = categoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,gameUniverse))) or (not hack.Universes and not hack.Places and gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,gameName)));
 		if canPass then
 			if not newButton or not newProperty then
-				newButton = MainListEx:Clone()
+				newButton = GuiElements.MainListEx:Clone()
 				newButton.Text = categoryName
 				newButton.TextColor3 = ComputeNameColor(categoryName)
 				newButton.Name = categoryName
 				newButton.LayoutOrder = (categoryName=="Commands" and 1 or 0)
-				newButton.Parent=myList
+				newButton.Parent=GuiElements.myList
 
-				newProperty = PropertiesEx:Clone()
-				newProperty.Parent = Properties
+				newProperty = GuiElements.PropertiesEx:Clone()
+				newProperty.Parent = GuiElements.Properties
 				newProperty.Name = categoryName
 				newProperty.Visible=false
 				local function newButtonMB1Up()
 					C.Console.Visible = false
-					Properties.Visible = true
-					for num,prop in pairs(Properties:GetChildren()) do
+					GuiElements.Properties.Visible = true
+					for num,prop in pairs(GuiElements.Properties:GetChildren()) do
 						if prop.ClassName=="ScrollingFrame" then
 							prop.Visible = (prop==newProperty)
 						end
 					end
-					for num,button in pairs(myList:GetChildren()) do
+					for num,button in pairs(GuiElements.myList:GetChildren()) do
 						if button.ClassName=="TextButton" then
 							button.Font = (button==newButton and textFontBold or textFont)
 						end
@@ -12631,7 +12268,7 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 				C.enHacks[hack.Shortcut]=hack.Default;
 			end
 			--print(hack.Shortcut,hack.Type);
-			local miniHackFrame = TextBoxExamples[hack.Type]:Clone();
+			local miniHackFrame = GuiElements.TextBoxExamples[hack.Type]:Clone();
 			miniHackFrame.Parent = newProperty;
 			miniHackFrame.Name = hack.Title;
 			miniHackFrame.Title.Text = hack.Title;
@@ -12662,7 +12299,7 @@ end
 
 local function consoleButtonControlFunction()
 	C.Console.Visible = not C.Console.Visible
-	Properties.Visible = not Properties.Visible
+	GuiElements.Properties.Visible = not GuiElements.Properties.Visible
 end
 
 C.ConsoleButton.MouseButton1Up:Connect(consoleButtonControlFunction)
@@ -12857,7 +12494,7 @@ local function processPlayerMessage(data,noRefresh,shouldYield)
 		local message = data.Message
 		local theirPlr = PS:GetPlayerByUserId(data.SpeakerUserId)
 		if theirPlr then
-			if theirPlr ~= plr and myBots[theirPlr.Name:lower()] and botModeEnabled then
+			if theirPlr ~= plr and _SETTINGS.myBots[theirPlr.Name:lower()] and _SETTINGS.botModeEnabled then
 				if message:sub(1,1) == "/" then
 					C.RunCommand(message,false,noRefresh==true,shouldYield)--message:sub(2),theirPlr == plr)
 				end
@@ -12867,14 +12504,14 @@ local function processPlayerMessage(data,noRefresh,shouldYield)
 		end
 	end
 end
-if C.saveIndex == 1 and gameUniverse=="Flee" and botModeEnabled then--C.saveIndex == 1 and gameUniverse == "Flee" then
+if C.saveIndex == 1 and gameUniverse=="Flee" and _SETTINGS.botModeEnabled then--C.saveIndex == 1 and gameUniverse == "Flee" then
 	task.delay(1,function()
 		for num, value in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents").GetInitDataRequest:InvokeServer().Channels[2][3]) do
 			processPlayerMessage(value,true,true)
 		end
 	end)
 end
-if gameUniverse == "Flee" and botModeEnabled then
+if gameUniverse == "Flee" and _SETTINGS.botModeEnabled then
 	table.insert(C.functs, StringWaitForChild(RS,"DefaultChatSystemChatEvents.OnMessageDoneFiltering").OnClientEvent:Connect(processPlayerMessage))
 end
 local function PlayerAdded(theirPlr)
@@ -12900,7 +12537,7 @@ local function PlayerAdded(theirPlr)
 
 	local PlayerAddedConnection = theirPlr.CharacterRemoving:Connect(characterRemovingFunction);
 	table.insert(C.playerEvents[theirPlr.UserId], PlayerAddedConnection);
-	if myBots[theirPlr.Name:lower()] and botModeEnabled then
+	if _SETTINGS.myBots[theirPlr.Name:lower()] and _SETTINGS.botModeEnabled then
 		if gameUniverse~="Flee" then
 			print("Listening Chat Messages",theirPlr.Name)
 			table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
@@ -13119,7 +12756,7 @@ local function MapChildAdded(child,shouldntWait)
 		for num, triggerName in ipairs(loopTriggers) do
 			local trigger=child:WaitForChild(triggerName);
 			CS:AddTag(trigger,"Trigger");
-			trigger.Transparency=(hitBoxesEnabled and .6 or 1);
+			trigger.Transparency=(_SETTINGS.hitBoxesEnabled and .6 or 1);
 			if (C.Map.Name=="Abandoned Facility by iiGalaxyKoala, Vexhins, and cyrda") then
 				trigger:SetAttribute("WalkToPoso",Vector3.new(Screen.Position.X,trigger.Position.Y,Screen.Position.Z):lerp(trigger.Position,1.17));
 			end;
@@ -13271,7 +12908,7 @@ if gameName=="FleeMain" then
 		elseif lastHackedPC and lastAnimationName=="Typing" then
 			lastPC_time = os.clock() print("Triggers Disabled")
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
-			local timeNeeded = (0.15+math.max((70)/minSpeedBetweenPCs,absMinTimeBetweenPCs))
+			local timeNeeded = (0.15+math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
 
 			task.delay(timeNeeded,function()
 				if (os.clock() - lastPC_time) >= timeNeeded then
@@ -13323,9 +12960,9 @@ if gameName=="FleeMain" then
 
 			local serverXPEarned = totalXPEarned + totXPOffset
 
-			ServerXPGained.Text = ("Server XP: +"..comma_value(serverXPEarned).."/"..comma_value(math.round((serverXPEarned/time())*3600)))
+			GuiElements.ServerXPGained.Text = ("Server XP: +"..comma_value(serverXPEarned).."/"..comma_value(math.round((serverXPEarned/time())*3600)))
 			if theirPlr==plr then
-				XPGained.Text = ("XP: +"..comma_value(xpEarned).."/"..comma_value(math.round((xpEarned/time())*3600)))
+				GuiElements.XPGained.Text = ("XP: +"..comma_value(xpEarned).."/"..comma_value(math.round((xpEarned/time())*3600)))
 			end
 		end
 		local function updateCreditStats()
@@ -13339,9 +12976,9 @@ if gameName=="FleeMain" then
 
 			local serverCreditsEarned = totalCreditsEarned+totCreditsOffset
 
-			ServerCreditsGained.Text="Server Credits: +"..comma_value(serverCreditsEarned).."/"..comma_value(math.round((serverCreditsEarned/time())*3600))
+			GuiElements.ServerCreditsGained.Text="Server Credits: +"..comma_value(serverCreditsEarned).."/"..comma_value(math.round((serverCreditsEarned/time())*3600))
 			if theirPlr==plr then
-				CreditsGained.Text="Credits: +"..comma_value(creditsEarned).."/"..comma_value(math.round((creditsEarned/time())*3600))
+				GuiElements.CreditsGained.Text="Credits: +"..comma_value(creditsEarned).."/"..comma_value(math.round((creditsEarned/time())*3600))
 			end
 		end
 		local function ancestryChangedFunction()
@@ -13377,13 +13014,13 @@ end;
 
 --print(("Game Specific Functs Loaded %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 
-DraggableMain=DraggableObject.new(Main)
+DraggableMain=DraggableObject.new(GuiElements.Main)
 DraggableMain:Enable()
 
 local function CloseMenu(actionName, inputState, inputObject)
 	if inputState==Enum.UserInputState.Begin and (UIS:IsKeyDown(Enum.KeyCode.LeftControl) or inputObject.UserInputType ~= Enum.UserInputType.Keyboard) then
-		local newMain = not Main.Visible
-		Main.Visible=newMain
+		local newMain = not GuiElements.Main.Visible
+		GuiElements.Main.Visible=newMain
 		if newMain then
 			DraggableMain:Enable()
 			C.BetterConsole.Visible = false

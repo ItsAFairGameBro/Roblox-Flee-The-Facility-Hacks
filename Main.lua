@@ -2743,7 +2743,7 @@ C.AvailableHacks ={
 				local minigameResult = C.myTSM:WaitForChild("MinigameResult")
 				local function updateMiniGameResult()
 					if minigameResult and C.enHacks.Util_AutoHack then
-						RS.C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+						C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
 					end
 				end
 				setChangedProperty(minigameResult,"Value",updateMiniGameResult)

@@ -1,0 +1,129 @@
+local RunS = game:GetService("RunService")
+local DS = game:GetService("Debris")
+local CS = game:GetService("CollectionService")
+local isStudio = RunS:IsStudio()
+return function(C,_SETTINGS)
+	--PRINT ENVIRONMENT START
+	local function printInstances(...)
+		local printVal = ""
+		for num, val in pairs({...}) do
+			if num~=1 then
+				printVal ..= " "
+			end
+			local print4Instance = val
+			if typeof(print4Instance) == "Instance" then--"userdata" then
+				print4Instance = select(2,pcall(val.GetFullName,val))
+			end
+			printVal ..= tostring(print4Instance)
+		end
+		return (printVal)
+	end
+	local function recurseLoopPrint(leftTbl,str,depth)
+		local totalValues = #leftTbl
+		for num, val in pairs(leftTbl) do
+			str..=string.rep("\t",depth)
+			local isTable = typeof(val)=="table"
+			if isTable then
+				str..=("tbl "..printInstances(num)..":	{\n")
+				str..=recurseLoopPrint(val,"",depth+1)
+				str..=("\n	}")
+			else
+				if depth ~= 0 and (totalValues>=1 or num~=1) then
+					str..=printInstances(num).." = "..printInstances(val)
+				else
+					str..=printInstances(val)
+				end
+			end
+			if totalValues ~= num then
+				str..=" "
+				if isTable then
+					str..="\n"
+				end
+			end
+		end
+		return str
+	end
+	if not isStudio then
+		local oldWarn = getgenv().oldWarn
+		if not oldWarn then
+			getgenv().oldWarn = warn
+			oldWarn = warn
+		end
+		local oldPrint = getgenv().oldPrint
+		if not oldPrint then
+			getgenv().oldPrint = print
+			oldPrint = print
+		end
+		local function warn(...)
+			oldWarn(recurseLoopPrint({...},"",0))
+		end
+		local function print(...)
+			oldPrint(recurseLoopPrint({...},"",0))
+		end
+		getrenv().warn = warn
+		getrenv().print = print
+	end
+
+	function C.findClosestObj(objs,poso,maxDist,yMult)
+		local closest,closestDist=nil,maxDist or 2000
+		for num,current in ipairs(objs) do
+			local dist=((poso-current.Position)*Vector3.new(1,yMult or 1,1)).magnitude
+			if dist<=closestDist then
+				closest,closestDist=current,dist
+			end
+		end
+		return closest,closestDist
+	end
+	function C.createModifer(obj,label,passThru)
+		local modifer=Instance.new("PathfindingModifier")
+		modifer.Label=label
+		modifer.PassThrough=passThru
+		modifer.Parent=obj
+		CS:AddTag(modifer,"RemoveOnDestroy")
+	end
+	function C.createTestPart(position,timer)
+		if not _SETTINGS.hitBoxesEnabled then
+			return
+		end
+		local newPart=C.TestPart:Clone()
+		newPart.Position=position
+		newPart.Parent=workspace.Camera
+		DS:AddItem(newPart,5)
+	end
+	function C.getHumanoidHeight(model)
+		local Humanoid=model:WaitForChild("Humanoid")
+		local RootPart=model:WaitForChild("HumanoidRootPart")
+		if Humanoid.RigType==Enum.HumanoidRigType.R15 then
+			return (0.5 * RootPart.Size.Y) + Humanoid.HipHeight
+		elseif Humanoid.RigType==Enum.HumanoidRigType.R6 then
+			return model:WaitForChild("Left Leg").Size.Y + (0.5 * RootPart.Size.Y) + Humanoid.HipHeight
+		end
+	end
+	function C.getDictLength(dict)
+		local num=0
+		for key,val in pairs(dict) do
+			num = num + 1
+		end
+		return num
+	end
+	function C.ShuffleArray(tabl)
+		for i=1,#tabl-1 do
+			local ran = Random.new():NextInteger(i,#tabl)
+			tabl[i],tabl[ran] = tabl[ran],tabl[i]
+		end return tabl
+	end
+	function C.comma_value(amount)
+		local k
+		local formatted = amount
+		while true do  
+			formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+			if (k==0) then
+				break
+			end
+		end
+		return formatted
+	end
+	return print, warn
+end
+
+

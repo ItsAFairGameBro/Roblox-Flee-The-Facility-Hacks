@@ -177,6 +177,7 @@ function C.LoadModules()
 		else
 			C.Modules[moduleName] = loadstring(game:HttpGet(ModuleLoaderLink:format(moduleName),true))()
 		end
+		print(C.Modules[moduleName])
 	end
 end
 C.LoadModules()
@@ -321,7 +322,7 @@ function C.Hook(root,method,functName,functData)
 		RBXHooks[root] = {}
 	end
 	if not RBXHooks[root][method] then
-		print("New2 Hook",root)
+		--print("New2 Hook",root)
 		local myData = {}
 		--myData.List = {}
 		RBXHooks[root][method] = myData

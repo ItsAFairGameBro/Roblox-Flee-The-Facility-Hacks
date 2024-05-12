@@ -4883,6 +4883,7 @@ C.AvailableHacks ={
 							TouchToggle.Toggle.Text = "Enable"
 							TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0,170)
 						end
+						local saveCollide = parent.CanCollide or parent.Parent.Name=="FadingTiles"
 						local function clickfunction()
 							if Type=="Part" then
 								local HRP = C.char and C.char:FindFirstChild("HumanoidRootPart")
@@ -4898,7 +4899,7 @@ C.AvailableHacks ={
 									toTouch = 0
 								else
 									TouchToggle.Toggle.Text = "Activate"
-									if parent.CanCollide then
+									if saveCollide then
 										TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(0, 255, 238)
 									else
 										TouchToggle.Toggle.BackgroundColor3 = Color3.fromRGB(80, 0, 255)
@@ -9843,7 +9844,7 @@ C.AvailableHacks ={
 						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent]
 						if clickfunction then
 							task.spawn(clickfunction)
-							task.delay(.2,clickfunction)
+							task.delay(2,clickfunction)
 						else
 							firetouchinterest(C.char.PrimaryPart,parent,0)
 							task.spawn(firetouchinterest,C.char.PrimaryPart,parent,1)

@@ -166,7 +166,7 @@ C.hackGUIParent = gethui()
 --MODULE LOADER
 C.Modules = {}
 function C.LoadModules()
-	local ModuleLoaderLink = "www.github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
+	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
 	
 	local ModuleNames = {"GuiCreation"}
 	for num, moduleName in ipairs(ModuleNames) do

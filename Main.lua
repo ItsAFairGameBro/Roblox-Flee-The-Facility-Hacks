@@ -175,7 +175,7 @@ function C.LoadModules()
 		if isStudio then
 			C.Modules[moduleName] = require(script:WaitForChild(moduleName))
 		else
-			C.Modules[moduleName] = loadstring(game:HttpGet(ModuleLoaderLink:format(moduleName)))()
+			C.Modules[moduleName] = loadstring(game:HttpGet(ModuleLoaderLink:format(moduleName),true))()
 		end
 	end
 end
@@ -9999,7 +9999,7 @@ C.clear = function(isManualClear)
 	end
 	for category, categoryList in pairs(C.AvailableHacks or {}) do
 		for index,tbl in pairs(categoryList) do
-			local funcList = tbl.Functs or {}
+			local funcList = tbl and tbl.Functs or {}
 			table.insert(funcList,tbl.Funct)
 			for _, funct in ipairs(funcList) do
 				local check = (funct and typeof(funct))

@@ -10025,7 +10025,9 @@ C.clear = function(isManualClear)
 	for category, categoryList in pairs(C.AvailableHacks or {}) do
 		for index,tbl in pairs(categoryList) do
 			local funcList = tbl and tbl.Functs or {}
-			table.insert(funcList,tbl.Funct)
+			if tbl and tbl.Funct then
+				table.insert(funcList,tbl.Funct)
+			end
 			for _, funct in ipairs(funcList) do
 				local check = (funct and typeof(funct))
 				if (check=="RBXScriptConnection") then

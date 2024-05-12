@@ -9840,7 +9840,7 @@ C.AvailableHacks ={
 				for num, obj in ipairs(loopInstance:GetDescendants()) do
 					if obj:IsA("TouchTransmitter") then
 						local parent = obj.Parent
-						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent.Parent]
+						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent]
 						if clickfunction then
 							clickfunction()
 							task.delay(.2,clickfunction)

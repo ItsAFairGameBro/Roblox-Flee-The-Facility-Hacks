@@ -1,0 +1,658 @@
+local RunS = game:GetService("RunService")
+local CAS = game:GetService("ContextActionService")
+local LogS = game:GetService("LogService")
+local RS = game:GetService("ReplicatedStorage")
+local TS = game:GetService("TweenService")
+local SC = game:GetService("ScriptContext")
+local isStudio = RunS:IsStudio()
+--ADD game:GetService SERVICES FROM SCRIPT CONTENTS
+return function(C,GuiElements,comma_value,checkcaller)
+	local BetterConsole_CheckCaller_MsgStart = {"TextScraper text too long: ","Failed to load ",
+		"Font family ","Preloaded game image: ","load size ","HTTP error ","Unhandled Promise rejection:","MeshContentProvider failed to process ",
+		"invisible is not a valid member of Model","player is not a valid member of TextButton ",
+		"set scale to ",
+	}
+	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
+	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
+		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done",
+
+		"attempt to index nil with 'Name'"
+	}
+
+	local BetterConsole = Instance.new("Frame")
+	C.BetterConsole = BetterConsole
+	local SearchConsoleTextBox = Instance.new("TextBox")
+	local SearchConsoleResults = Instance.new("TextLabel")
+	local FilterCheckBoxes = Instance.new("Frame")
+	local UIGridLayout = Instance.new("UIGridLayout")
+	local BetterConsoleFilterBox = Instance.new("Frame")
+	local InviClicker = Instance.new("TextButton")
+	local CheckboxImage = Instance.new("ImageLabel")
+	local FilterBoxName = Instance.new("TextLabel")
+	local BetterConsoleList = Instance.new("ScrollingFrame")
+	local UIListLayout = Instance.new("UIListLayout")
+	local BetterConsoleTextEx = Instance.new("TextLabel")
+	local BetterConsoleDesc = Instance.new("TextLabel")
+	local BetterConsoleQuitButton = Instance.new("ImageButton")
+	local Buttons = Instance.new("Frame")
+	local UIGridLayout_2 = Instance.new("UIGridLayout")
+	local Clear = Instance.new("TextButton")
+	local Bottom = Instance.new("TextButton")
+	local Top = Instance.new("TextButton")
+	local UIStroke = Instance.new("UIStroke")
+	local UICorner = Instance.new("UICorner")
+
+	UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	UICorner.CornerRadius = UDim.new(0,40)
+
+	BetterConsole.Name = "BetterConsole"
+	BetterConsole.Parent = GuiElements.HackGUI
+	BetterConsole.AnchorPoint = Vector2.new(0.5, 0.5)
+	BetterConsole.BackgroundColor3 = Color3.new(0.203922, 0.203922, 0.203922)
+	BetterConsole.BackgroundTransparency = 0.25
+	BetterConsole.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsole.BorderSizePixel = 0
+	BetterConsole.Position = UDim2.new(0.5, 0, 0.5, 0)
+	BetterConsole.Size = UDim2.new(0.600000024, 0, 0.560000002, 0)
+	BetterConsole.Visible = false
+	BetterConsole.ZIndex = 5000
+	UIStroke:Clone().Parent=BetterConsole
+	UICorner:Clone().Parent=BetterConsole
+
+	SearchConsoleTextBox.Name = "SearchConsoleTextBox"
+	SearchConsoleTextBox.Parent = BetterConsole
+	SearchConsoleTextBox.BackgroundColor3 = Color3.new(0, 0.65098, 1)
+	SearchConsoleTextBox.BorderColor3 = Color3.new(0, 0, 0)
+	SearchConsoleTextBox.BorderSizePixel = 0
+	SearchConsoleTextBox.Position = UDim2.new(0.0199999996, 0, 0, 0)
+	SearchConsoleTextBox.Size = UDim2.new(0.320734084, 0, 0.0500000007, 0)
+	SearchConsoleTextBox.ShowNativeInput = true
+	SearchConsoleTextBox.ZIndex = 5001
+	SearchConsoleTextBox.Font = Enum.Font.Arial
+	SearchConsoleTextBox.PlaceholderColor3 = Color3.new(1,1,1)
+	SearchConsoleTextBox.PlaceholderText = "Filter Search Results"
+	SearchConsoleTextBox.Text = ""
+	SearchConsoleTextBox.TextColor3 = Color3.new(1,1,1)
+	SearchConsoleTextBox.TextScaled = true
+	SearchConsoleTextBox.TextSize = C.textBoxSize
+	SearchConsoleTextBox.TextStrokeColor3 = Color3.new(0,0,0)
+	SearchConsoleTextBox.TextStrokeTransparency = 0
+	SearchConsoleTextBox.TextWrapped = true
+	SearchConsoleTextBox.RichText = true
+	UIStroke:Clone().Parent=SearchConsoleTextBox
+	UICorner:Clone().Parent=SearchConsoleTextBox
+
+	SearchConsoleResults.Name = "SearchConsoleResults"
+	SearchConsoleResults.Parent = BetterConsole
+	SearchConsoleResults.AnchorPoint = Vector2.new(0.5, 0)
+	SearchConsoleResults.BackgroundColor3 = Color3.new(1, 1, 1)
+	SearchConsoleResults.BackgroundTransparency = 1
+	SearchConsoleResults.BorderColor3 = Color3.new(0, 0, 0)
+	SearchConsoleResults.BorderSizePixel = 0
+	SearchConsoleResults.Position = UDim2.new(0.5, 0, 0.0590000004, 0)
+	SearchConsoleResults.Size = UDim2.new(0.937323153, 0, 0.0528666973, 0)
+	SearchConsoleResults.ZIndex = 5002
+	SearchConsoleResults.Font = Enum.Font.Arial
+	SearchConsoleResults.RichText = true
+	SearchConsoleResults.Text = "<font color='rgb(0,255,0)'>1,402</font> search results for found \"potato\""
+	SearchConsoleResults.TextColor3 = Color3.new(1, 1, 1)
+	SearchConsoleResults.TextScaled = true
+	SearchConsoleResults.TextSize = 14
+	SearchConsoleResults.TextStrokeTransparency = 0
+	SearchConsoleResults.TextWrapped = true
+
+	FilterCheckBoxes.Name = "FilterCheckBoxes"
+	FilterCheckBoxes.Parent = BetterConsole
+	FilterCheckBoxes.BackgroundColor3 = Color3.new(1, 1, 1)
+	FilterCheckBoxes.BackgroundTransparency = 1
+	FilterCheckBoxes.BorderColor3 = Color3.new(0, 0, 0)
+	FilterCheckBoxes.BorderSizePixel = 0
+	FilterCheckBoxes.Position = UDim2.new(0.565277815, 0, -7.26609031e-08, 0)
+	FilterCheckBoxes.Size = UDim2.new(0.40223217, 0, 0.0500000007, 0)
+	FilterCheckBoxes.ZIndex = 5002
+
+	UIGridLayout.Parent = FilterCheckBoxes
+	UIGridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIGridLayout.CellPadding = UDim2.new(0, 0, 0, 0)
+	UIGridLayout.CellSize = UDim2.new(0.200000003, 0, 1, 0)
+
+	BetterConsoleFilterBox.Name = "BetterConsoleFilterBox"
+	BetterConsoleFilterBox.Parent = nil
+	BetterConsoleFilterBox.BackgroundColor3 = Color3.new(0.219608, 0.219608, 0.219608)
+	BetterConsoleFilterBox.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleFilterBox.BorderSizePixel = 0
+	BetterConsoleFilterBox.Size = UDim2.new(0, 100, 0, 100)
+	BetterConsoleFilterBox.ZIndex = 5003
+	BetterConsoleFilterBox:AddTag("RemoveOnDestroy")
+	UIStroke:Clone().Parent=BetterConsoleFilterBox
+	UICorner:Clone().Parent=BetterConsoleFilterBox
+
+
+	InviClicker.Name = "InviClicker"
+	InviClicker.Parent = BetterConsoleFilterBox
+	InviClicker.AnchorPoint = Vector2.new(0.5, 0)
+	InviClicker.BackgroundColor3 = Color3.new(1, 1, 1)
+	InviClicker.BackgroundTransparency = 1
+	InviClicker.BorderColor3 = Color3.new(0, 0, 0)
+	InviClicker.BorderSizePixel = 0
+	InviClicker.Position = UDim2.new(0.5, 0, 0, 0)
+	InviClicker.Size = UDim2.new(0.899999976, 0, 1, 0)
+	InviClicker.ZIndex = 5004
+	InviClicker.Font = Enum.Font.SourceSans
+	InviClicker.Text = " "
+	InviClicker.TextColor3 = Color3.new(0, 0, 0)
+	InviClicker.TextSize = 14
+
+	CheckboxImage.Name = "CheckboxImage"
+	CheckboxImage.Parent = BetterConsoleFilterBox
+	CheckboxImage.BackgroundColor3 = Color3.new(1, 1, 1)
+	CheckboxImage.BackgroundTransparency = 1
+	CheckboxImage.BorderColor3 = Color3.new(0, 0, 0)
+	CheckboxImage.BorderSizePixel = 0
+	CheckboxImage.Size = UDim2.new(0.300000012, 0, 1, 0)
+	CheckboxImage.ZIndex = 5004
+	CheckboxImage.Image = "rbxassetid://4458804262"
+	CheckboxImage.ImageColor3 = Color3.new(0.0509804, 1, 0)
+	CheckboxImage.ScaleType = Enum.ScaleType.Fit
+
+	FilterBoxName.Name = "FilterBoxName"
+	FilterBoxName.Parent = BetterConsoleFilterBox
+	FilterBoxName.AnchorPoint = Vector2.new(1, 0)
+	FilterBoxName.BackgroundColor3 = Color3.new(1, 1, 1)
+	FilterBoxName.BackgroundTransparency = 1
+	FilterBoxName.BorderColor3 = Color3.new(0, 0, 0)
+	FilterBoxName.BorderSizePixel = 0
+	FilterBoxName.Position = UDim2.new(1, 0, 0, 0)
+	FilterBoxName.Size = UDim2.new(0.699999988, 0, 1, 0)
+	FilterBoxName.ZIndex = 5004
+	FilterBoxName.Font = Enum.Font.SourceSans
+	FilterBoxName.Text = "Errors"
+	FilterBoxName.TextColor3 = Color3.new(1, 1, 1)
+	FilterBoxName.TextScaled = true
+	FilterBoxName.TextSize = 14
+	FilterBoxName.TextStrokeTransparency = 0
+	FilterBoxName.TextWrapped = true
+
+	BetterConsoleList.Name = "BetterConsoleList"
+	BetterConsoleList.Parent = BetterConsole
+	BetterConsoleList.Active = false
+	BetterConsoleList.AnchorPoint = Vector2.new(0, 1)
+	BetterConsoleList.BackgroundColor3 = Color3.new(1, 1, 1)
+	BetterConsoleList.BackgroundTransparency = 1
+	BetterConsoleList.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleList.BorderSizePixel = 0
+	BetterConsoleList.Position = UDim2.new(0, 0, 0.958246052, 0)
+	BetterConsoleList.Size = UDim2.new(1, 0, 0.846379399, 0)
+	BetterConsoleList.CanvasSize = UDim2.new(0, 0, 0, 0)
+	BetterConsoleList.ZIndex = 5001
+	BetterConsoleList.ElasticBehavior = Enum.ElasticBehavior.Always
+	BetterConsoleList.ScrollingDirection = Enum.ScrollingDirection.Y
+	BetterConsoleList.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	BetterConsoleList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
+
+	UIListLayout.Parent = BetterConsoleList
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+	BetterConsoleTextEx.Name = "BetterConsole"
+	BetterConsoleTextEx.Parent = nil
+	BetterConsoleTextEx.AutoLocalize = false
+	BetterConsoleTextEx.BackgroundColor3 = Color3.new(1, 1, 1)
+	BetterConsoleTextEx.BackgroundTransparency = 1
+	BetterConsoleTextEx.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleTextEx.BorderSizePixel = 0
+	BetterConsoleTextEx.Size = UDim2.new(1, -10, 0, 0)
+	BetterConsoleTextEx.RichText = true
+	BetterConsoleTextEx.AutomaticSize = Enum.AutomaticSize.Y
+	BetterConsoleTextEx.ZIndex = 5001
+	BetterConsoleTextEx.Font = Enum.Font.Arial
+	BetterConsoleTextEx.Text = " <font color='rgb(200,50,50)'>[6:29:29 PM, Game]:</font> Random errorr occured!"
+	BetterConsoleTextEx.TextColor3 = Color3.new(1, 1, 1)
+	BetterConsoleTextEx.TextSize = 22
+	BetterConsoleTextEx.TextStrokeTransparency = 0
+	BetterConsoleTextEx.TextWrapped = true
+	BetterConsoleTextEx.TextXAlignment = Enum.TextXAlignment.Left
+	BetterConsoleTextEx:AddTag("RemoveOnDestroy")
+
+	BetterConsoleDesc.Name = "BetterConsoleDesc"
+	BetterConsoleDesc.Parent = BetterConsole
+	BetterConsoleDesc.BackgroundColor3 = Color3.new(1, 1, 1)
+	BetterConsoleDesc.BackgroundTransparency = 1
+	BetterConsoleDesc.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleDesc.BorderSizePixel = 0
+	BetterConsoleDesc.Position = UDim2.new(0, 0, 0.958246052, 0)
+	BetterConsoleDesc.Size = UDim2.new(1, 0, 0.0404888801, 0)
+	BetterConsoleDesc.ZIndex = 5001
+	BetterConsoleDesc.Font = Enum.Font.Arial
+	BetterConsoleDesc.Text = `Press "M" or the mobile button to open/close`
+	BetterConsoleDesc.TextColor3 = Color3.new(1, 1, 1)
+	BetterConsoleDesc.TextScaled = true
+	BetterConsoleDesc.TextSize = 14
+	BetterConsoleDesc.TextStrokeTransparency = 0
+	BetterConsoleDesc.TextWrapped = true
+
+	BetterConsoleQuitButton.Name = "BetterConsoleQuitButton"
+	BetterConsoleQuitButton.Parent = BetterConsole
+	BetterConsoleQuitButton.AnchorPoint = Vector2.new(1, 0)
+	BetterConsoleQuitButton.BackgroundColor3 = Color3.new(1, 1, 1)
+	BetterConsoleQuitButton.BackgroundTransparency = 1
+	BetterConsoleQuitButton.BorderColor3 = Color3.new(0, 0, 0)
+	BetterConsoleQuitButton.BorderSizePixel = 0
+	BetterConsoleQuitButton.Position = UDim2.new(1.017, 0, -0.03, 0)
+	BetterConsoleQuitButton.Rotation = 0
+	BetterConsoleQuitButton.Size = UDim2.new(0.052, 0, 0.1, 0)
+	BetterConsoleQuitButton.ZIndex = 5001
+	BetterConsoleQuitButton.Image = "rbxassetid://5100480132"
+	BetterConsoleQuitButton.ScaleType = Enum.ScaleType.Fit
+
+	Buttons.Name = "Buttons"
+	Buttons.Parent = BetterConsole
+	Buttons.BackgroundColor3 = Color3.new(1, 1, 1)
+	Buttons.BackgroundTransparency = 1
+	Buttons.BorderColor3 = Color3.new(0, 0, 0)
+	Buttons.BorderSizePixel = 0
+	Buttons.Position = UDim2.new(0.340734154, 0, -7.25641485e-08, 0)
+	Buttons.Size = UDim2.new(0.224543512, 0, 0.0500000007, 0)
+	Buttons.ZIndex = 5002
+
+	UIGridLayout_2.Parent = Buttons
+	UIGridLayout_2.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UIGridLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
+	UIGridLayout_2.CellPadding = UDim2.new(0, 0, 0, 0)
+	UIGridLayout_2.CellSize = UDim2.new(0.333333343, 0, 1, 0)
+
+	Clear.Name = "Clear"
+	Clear.Parent = Buttons
+	Clear.BackgroundColor3 = Color3.new(1, 0, 0)
+	Clear.BorderColor3 = Color3.new(0, 0, 0)
+	Clear.BorderSizePixel = 0
+	Clear.Size = UDim2.new(0, 200, 0, 50)
+	Clear.ZIndex = 5001
+	Clear.Font = Enum.Font.Arial
+	Clear.Text = "Clear"
+	Clear.TextColor3 = Color3.new(1, 1, 1)
+	Clear.TextScaled = true
+	Clear.TextSize = 14
+	Clear.TextStrokeTransparency = 0
+	Clear.TextWrapped = true
+	UIStroke:Clone().Parent=Clear
+	UICorner:Clone().Parent=Clear
+
+	Bottom.Name = "Bottom"
+	Bottom.Parent = Buttons
+	Bottom.BackgroundColor3 = Color3.new(0, 0.533333, 1)
+	Bottom.BorderColor3 = Color3.new(0, 0, 0)
+	Bottom.BorderSizePixel = 0
+	Bottom.LayoutOrder = 1
+	Bottom.Size = UDim2.new(0, 200, 0, 50)
+	Bottom.ZIndex = 5001
+	Bottom.Font = Enum.Font.Arial
+	Bottom.Text = "Bottom"
+	Bottom.TextColor3 = Color3.new(1, 1, 1)
+	Bottom.TextScaled = true
+	Bottom.TextSize = 14
+	Bottom.TextStrokeTransparency = 0
+	Bottom.TextWrapped = true
+	UIStroke:Clone().Parent=Bottom
+	UICorner:Clone().Parent=Bottom
+
+	Top.Name = "Top"
+	Top.Parent = Buttons
+	Top.BackgroundColor3 = Color3.new(0.0156863, 1, 0)
+	Top.BorderColor3 = Color3.new(0, 0, 0)
+	Top.BorderSizePixel = 0
+	Top.LayoutOrder = 2
+	Top.Size = UDim2.new(0, 200, 0, 50)
+	Top.ZIndex = 5001
+	Top.Font = Enum.Font.Arial
+	Top.Text = "Top"
+	Top.TextColor3 = Color3.new(1, 1, 1)
+	Top.TextScaled = true
+	Top.TextSize = 14
+	Top.TextStrokeTransparency = 0
+	Top.TextWrapped = true
+	UIStroke:Clone().Parent=Top
+	UICorner:Clone().Parent=Top
+
+	--CODING FOR BETTER CONSOLE:
+
+	local allMessages, visibleMessages = 0, 0
+	local isSorted = false
+	local wasMainFrameVisible 
+	local function BetterConsoleFrameToggle(_,inputState)
+		if inputState == Enum.UserInputState.Begin then
+			local newVisible = not BetterConsole.Visible
+			BetterConsole.Visible = newVisible
+			if newVisible then
+				wasMainFrameVisible = GuiElements.Main.Visible
+				GuiElements.Main.Visible = false
+			elseif wasMainFrameVisible then
+				GuiElements.Main.Visible = true
+			end
+		end
+	end
+	CAS:BindActionAtPriority("OpenBetterConsole"..C.saveIndex,BetterConsoleFrameToggle,true,1e4,Enum.KeyCode.M)
+	CAS:SetImage("OpenBetterConsole"..C.saveIndex,"rbxassetid://12350781258")
+	CAS:SetTitle("OpenBetterConsole"..C.saveIndex,"")
+	table.insert(C.functs,BetterConsoleQuitButton.MouseButton1Up:Connect(function()
+		BetterConsoleFrameToggle("OpenBetterConsole"..C.saveIndex,Enum.UserInputState.Begin)
+	end))
+	local MessageTypeSettings = {
+		[Enum.MessageType.MessageOutput.Name] = {Text="Outs",Color='<font color="rgb(170,170,170)">',Layout=0,Active=true},
+		[Enum.MessageType.MessageInfo.Name] = {Text="Info",Color='<font color="rgb(255,0,255)">',Layout=1,Active=true},
+		[Enum.MessageType.MessageWarning.Name] = {Text="Warn",Color='<font color="rgb(255,255,0)">',Layout=2,Active=true},
+		[Enum.MessageType.MessageError.Name] = {Text="Error",Color='<font color="rgb(255,0,0)">',Layout=3,Active=true},
+		["FromGMEGame"] = {Text="Game",Color="<font color='rgb(70,70,170)'>",Layout=4,Active=false},
+	}
+	local forceAtBottom = false
+	local noMessagesFound = BetterConsoleTextEx:Clone()
+	noMessagesFound.RichText = false
+	noMessagesFound.TextXAlignment = Enum.TextXAlignment.Center
+	noMessagesFound.Parent = BetterConsole
+	noMessagesFound.AnchorPoint = BetterConsoleList.AnchorPoint
+	noMessagesFound.Size = BetterConsoleList.Size
+	noMessagesFound.Position = BetterConsoleList.Position
+	noMessagesFound.ZIndex = BetterConsoleList.ZIndex + 1
+	noMessagesFound.Visible = false
+	noMessagesFound.Name = "NoMessagesFound"
+	noMessagesFound:AddTag("RemoveOnDestroy")
+	local SearchCasesFound = 0
+	local function BetterConsole_SetMessagesVisibility(MessageLabel)
+		if C.isCleared then return end
+		if not MessageLabel then
+			visibleMessages = 0
+			SearchCasesFound = 0
+		end
+		local searchingONE = MessageLabel~=nil -- if MessageLabel is specified, we're not searching much of anyone
+		local currentText = SearchConsoleTextBox.Text:lower()
+		local includeALL = currentText=="" or currentText == " " or currentText:sub(1,1)=="/"
+		local current,total = 0,searchingONE and 1 or (#BetterConsoleList:GetChildren()-1)
+		local lastText
+		isSorted = not includeALL
+		if total ~= 0 then
+			if not searchingONE then
+				SearchConsoleResults.Text = "Loading..."--In Case Still Visible
+				BetterConsoleList:TweenSize(includeALL and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
+				SearchConsoleResults.Text = includeALL and `Displaying Messages({current}/{total})`
+					or `Filtering "{currentText}" ({current}/{total})`
+				lastText = SearchConsoleResults.Text
+			end
+		else
+			--BetterConsoleList:TweenSize(UDim2.fromScale(1,.846),"Out","Quad",.6,true)
+			SearchConsoleResults.Text = ""--In Case Still Visible
+			lastText = ""
+		end
+		for _, object in ipairs((searchingONE and {} or BetterConsoleList:GetChildren())) do
+			if SearchConsoleResults.Text ~= lastText and not searchingONE then
+				return -- out of order!
+			end
+			if object:IsA("TextLabel") then
+				object.Visible = false
+			end
+		end
+		for _, object in ipairs((searchingONE and {MessageLabel} or BetterConsoleList:GetChildren())) do
+			if SearchConsoleResults.Text ~= lastText and not searchingONE then
+				return -- out of order!
+			end
+			if object:IsA("TextLabel") then
+				local theirText=object:GetAttribute("OrgText")
+				local newText,newFound = C.BetterGSub(theirText,currentText,{'<stroke color="#00A2FF" joins="miter" thickness="1" transparency="0">','</stroke>'},{IgnoreRichText = true, IgnoreCase = true, NoUndoFormat = true})
+				local willBeVisible = includeALL or newFound > 0
+				--local willBeVisible = includeALL or object.ContentText:lower():match(C.ApplyRichTextEscapeCharacters(currentText,true,C.DefaultStringEscapeCharacters))
+				willBeVisible = willBeVisible and MessageTypeSettings[object:GetAttribute("Type")].Active
+					and (not object:GetAttribute("IsGame") or MessageTypeSettings.FromGMEGame.Active)
+				if willBeVisible then
+					if includeALL then
+						object.Text = theirText 
+
+					else
+						local lastChars = ""
+						object.Text=newText
+						willBeVisible = newText ~= theirText--make sure we found an ACTUAL occurance!
+						SearchCasesFound += newFound
+					end
+				end
+				object.Visible = willBeVisible
+				if willBeVisible then
+					visibleMessages += 1
+				end
+				current += 1
+				SearchConsoleResults.Text = includeALL and `Displaying Messages"\n({current}/{total})`
+					or `Filtering "{currentText}" ({current}/{total})`
+				lastText = SearchConsoleResults.Text
+				if (current%20)==0 then
+					RunS.RenderStepped:Wait()
+				end
+			end
+		end
+		if workspace:IsAncestorOf(BetterConsoleList) then
+			BetterConsoleList:TweenSize((includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846),"Out","Quad",.6,true)
+		else
+			BetterConsoleList.Size = (includeALL or total==0) and UDim2.fromScale(1,.9) or UDim2.fromScale(1,.846)
+		end
+		--BetterConsoleDesc.Text = `{tostring(visibleMessages)} {lastText} | {SearchConsoleResults.Text} /// {tostring(lastText==SearchConsoleResults.Text)}`
+		if lastText == SearchConsoleResults.Text or searchingONE then
+			if visibleMessages==0 then
+				if allMessages > 0 then
+					noMessagesFound.Text = "No Messages Found!"
+					noMessagesFound.TextColor3 = Color3.fromRGB(200,50,50)
+				else
+					noMessagesFound.Text = "No Messages Yet!"
+					noMessagesFound.TextColor3 = Color3.fromRGB(50,50,200)
+				end
+				noMessagesFound.Visible = true
+			else
+				noMessagesFound.Visible = false
+			end
+		else
+			noMessagesFound.Visible = false
+		end
+		SearchConsoleResults.Text = (includeALL or total==0) and "" 
+			or '<font color="rgb(0,255,0)">'..comma_value(SearchCasesFound) ..`</font> search result{visibleMessages>1 and 's' or ''} for found "`..C.ApplyRichTextEscapeCharacters(currentText,true)..'"'
+	end
+	for messageType, messageData in pairs(MessageTypeSettings) do
+		local BoxFrame = BetterConsoleFilterBox:Clone()
+		BoxFrame:WaitForChild("FilterBoxName").Text = messageData.Text--messageType:sub(8)
+		local R, G, B = table.unpack(messageData.Color:sub(messageData.Color:find("%(")+1,messageData.Color:find("%)")-1):split(","))
+		BoxFrame:WaitForChild("FilterBoxName").TextColor3 = Color3.fromRGB(tonumber(R),tonumber(G),tonumber(B))
+		BoxFrame.LayoutOrder = messageData.Layout
+		local tweenInstance
+		local updImage = BoxFrame:WaitForChild("CheckboxImage")
+		local function update()
+			if tweenInstance and tweenInstance.PlaybackState == Enum.PlaybackState.Playing then
+				tweenInstance:Cancel()
+				tweenInstance:Destroy()
+			end
+			local active = messageData.Active
+			local tweenObj = TweenInfo.new(.5)
+			local myTweenInstance = TS:Create(updImage,tweenObj,{ImageColor3=(active and Color3.fromRGB(13,255) or Color3.fromRGB(255,13))})
+			tweenInstance = myTweenInstance
+			task.delay(.2,function()
+				if myTweenInstance ~= tweenInstance then
+					return
+				end
+				if active then
+					updImage.Image = "rbxassetid://4458804262"
+				else
+					updImage.Image = "rbxassetid://4458801905"
+				end
+			end)
+			tweenInstance:AddTag("RemoveOnDestroy")
+			tweenInstance:Play()
+		end
+		table.insert(C.functs,BoxFrame:WaitForChild("InviClicker").MouseButton1Up:Connect(function()
+			messageData.Active = not messageData.Active
+			update()
+			BetterConsole_SetMessagesVisibility()
+		end))
+		update()
+		BoxFrame.Parent = FilterCheckBoxes
+	end
+	table.insert(C.functs,SearchConsoleTextBox:GetPropertyChangedSignal("Text"):Connect(BetterConsole_SetMessagesVisibility))
+	function C.BetterConsole_ClearConsoleFunction()
+		allMessages, visibleMessages = 0, 0
+		for num, object in ipairs(BetterConsoleList:GetChildren()) do
+			if object:IsA("TextLabel") and object ~= noMessagesFound then
+				object:Destroy()
+			end
+		end
+		BetterConsole_SetMessagesVisibility()
+	end
+	local BetterConsole_TweenList
+	local function BetterConsole_DoCmd(msg,instant)
+		if msg == "/clear" then
+			C.AvailableHacks.Commands[2].ActivateFunction(true)
+			task.spawn(function()
+				--delay this!
+				SearchConsoleTextBox.Text = ""
+			end)
+			BetterConsole_SetMessagesVisibility(nil)
+		elseif msg=="/top" or msg=="/bottom" then
+			if BetterConsole_TweenList and BetterConsole_TweenList.PlaybackState == Enum.PlaybackState then
+				BetterConsole_TweenList:SetAttribute("NoChange",true)
+				BetterConsole_TweenList:Cancel()
+				BetterConsole_TweenList:Destroy()
+			end
+			forceAtBottom = msg == "/bottom" and not instant
+			local targetPosition = msg=="/top" and Vector2.new(0,0) 
+				or Vector2.new(0,math.max(0,BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y+10))
+			if instant then
+				BetterConsoleList.CanvasPosition = targetPosition
+			else
+				local duration = math.clamp(math.abs(targetPosition.Y - BetterConsoleList.CanvasPosition.Y)/1200,.2,1)
+				BetterConsole_TweenList = TS:Create(BetterConsoleList,TweenInfo.new(duration),{["CanvasPosition"] = targetPosition})
+				BetterConsole_TweenList:Play()
+				BetterConsole_TweenList:SetAttribute("NoChange",nil)
+				if msg == "/bottom" then
+					BetterConsole_TweenList.Completed:Connect(function(state)
+						if not BetterConsole_TweenList:GetAttribute("NoChange") then
+							forceAtBottom = false
+						end
+					end)
+				end
+			end
+		end
+	end
+	table.insert(C.functs,SearchConsoleTextBox.FocusLost:Connect(function(enterPressed)
+		local currentText = SearchConsoleTextBox.Text
+		if enterPressed then
+			BetterConsole_DoCmd(currentText:lower())
+		end
+	end))
+	table.insert(C.functs,Clear.MouseButton1Up:Connect(function()
+		BetterConsole_DoCmd("/clear")
+	end))
+	table.insert(C.functs,Top.MouseButton1Up:Connect(function()
+		BetterConsole_DoCmd("/top")
+	end))
+	table.insert(C.functs,Bottom.MouseButton1Up:Connect(function()
+		BetterConsole_DoCmd("/bottom")
+	end))
+	--if isStudio then
+	--CHECKCALLER is not working correctly, so we'll take over from here
+	local function checkmycaller(msg)
+		for _, text in ipairs(BetterConsole_CheckCaller_MsgExact) do
+			if text==msg then
+				return false
+			end
+		end
+		for _, text in ipairs(BetterConsole_CheckCaller_MsgStart) do
+			if msg:sub(1,text:len()) == text then
+				return false
+			end
+		end
+		for _, text in ipairs(BetterConsole_CheckCaller_MsgEnd) do
+			if msg:sub(msg:len()-text:len()+1) == text then
+				return false
+			end
+		end
+		return isStudio or checkcaller()
+	end
+	--end
+	local function printFunction(message,messageType,isFromMe)
+		if C.isCleared then return end
+		allMessages += 1
+		local wasAtBottom = forceAtBottom or BetterConsoleList.CanvasPosition.Y+5 >= BetterConsoleList.AbsoluteCanvasSize.Y - BetterConsoleList.AbsoluteWindowSize.Y
+		local MessageLabel = BetterConsoleTextEx:Clone()
+		if not isFromMe then
+			MessageLabel:SetAttribute("IsGame",true)
+		end
+		MessageLabel:SetAttribute("Type",messageType.Name)
+		MessageLabel:SetAttribute("OrgText",message)
+		MessageLabel.Text = message
+		MessageLabel.LayoutOrder = allMessages
+		MessageLabel.Name = allMessages
+		MessageLabel.Parent = BetterConsoleList
+		BetterConsole_SetMessagesVisibility(MessageLabel)
+		if wasAtBottom then -- and MessageLabel.Visible
+			BetterConsole_DoCmd("/bottom",true)
+		end
+	end
+	local function formatMessage(beforeMessage,message,messageType,isFromMe,customTime)
+		local dateTime = (customTime and DateTime.fromUnixTimestamp(customTime) or DateTime.now())
+		printFunction(beforeMessage:format(dateTime:FormatLocalTime("LTS","en-us"):gsub(" AM",""):gsub(" PM", ""))..message,messageType,isFromMe)
+	end
+
+	local function processMessage(message, messageType,...)
+		if not message:match("</") or not message:match(">") then -- Check to see if it is rich text formatted!
+			message = C.ApplyRichTextEscapeCharacters(message,true)
+		end
+		local myMessageData = MessageTypeSettings[messageType.Name]
+		local isFromMe = checkmycaller(message)
+		local beforeMessage = myMessageData.Color .. "[%s"
+		local inputMessage = 
+			" ".. myMessageData.Text .. (isFromMe and "" or ("</font>"..MessageTypeSettings.FromGMEGame.Color.." Game</font>"..myMessageData.Color))
+			.."] ".. "</font>" .. (message:sub(1,1)==":" and "<b>Hack.Unk</b>" or "") .. message
+		formatMessage(beforeMessage,inputMessage,messageType,isFromMe,...)
+	end
+
+	local function BetterConsole_wasFromMe(message)
+		if message:match("BetterConsole_onMessageOut") or message:match("BetterConsole_onErrorOut") then
+			return true
+		end
+	end
+	local function BetterConsole_onMessageOut(message, messageType,...)
+		if messageType==Enum.MessageType.MessageError or BetterConsole_wasFromMe(message) then
+			return--Handle these in the "onErrorOut" request!
+		end
+		processMessage(message,messageType,...)
+	end
+	local function BetterConsole_onErrorOut(message, Trace, theirScript)
+		if BetterConsole_wasFromMe(message) then
+			return
+		end
+		if message:sub(1,1)==":" then
+			message = "<b>Hack."..theirScript.Name .. "</b>" .. message
+		end
+		if theirScript.Name == "LocalPlayerScript" and message:find("attempt to index nil with 'Value'") then
+			if C.human then
+				task.delay(1,function()
+					C.human:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+					warn("JUMP FIX APPLIED!")
+				end)
+			end
+		end
+		message = `{message}\n\tStack Begin\n\tScript ''{Trace:gsub("\n, ","\n\tScript '', "):gsub("line","Line")}\tStack End`
+		processMessage(message,Enum.MessageType.MessageError)
+	end
+	table.insert(C.functs,LogS.MessageOut:Connect(BetterConsole_onMessageOut))
+	table.insert(C.functs,SC.Error:Connect(BetterConsole_onErrorOut))
+	local logSuccess,logResult = pcall(function()
+		local logHistory = LogS:GetLogHistory()
+		if logHistory then -- it should exist, right?
+			--for num, logData in ipairs(logHistory) do
+			for index = math.max(#logHistory-50,1), #logHistory, 1 do
+				local logData = logHistory[index]
+				if checkmycaller(logData.message) then -- only if the message wasn't from "game!"
+					processMessage(logData.message,logData.messageType,logData.timestamp)
+				end
+				if index%50==0 then
+					RunS.RenderStepped:Wait()
+				end
+			end
+		end
+	end)
+	if not logSuccess then
+		BetterConsole_onMessageOut("LogService:GetLogHistory has failed: "..tostring(logResult),Enum.MessageType.MessageError)
+	end
+end

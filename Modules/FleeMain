@@ -1,0 +1,107 @@
+local RS = game:GetService("ReplicatedStorage")
+local PS = game:GetService("Players")
+return function(C,_SETTINGS)
+	local LevelingXpCurve=C.gameUniverse=="Flee" and C.requireModule(RS:WaitForChild("LevelingXpCurve"))
+
+	function C.getTotalXP(Level,CurrentXP)
+		local totalXP=0
+		for level=1,Level-1,1 do
+			totalXP = totalXP + (LevelingXpCurve[level] or 4000)
+		end
+		totalXP = totalXP + CurrentXP
+		return totalXP
+	end
+	function C.sortPlayersByXPThenCredits(plrList)
+		plrList = plrList or PS:GetPlayers()
+
+
+		table.sort(plrList,	function(a,b)
+			local aStats=a:FindFirstChild("SavedPlayerStatsModule")
+			local bStats=b:FindFirstChild("SavedPlayerStatsModule")
+			local doesExistA, doesExistB = aStats and aStats.Parent, bStats and bStats.Parent
+			if doesExistA and not doesExistB then
+				return true
+			elseif not doesExistA and doesExistB then
+				return false
+			end
+			local isABot=_SETTINGS.myBots[a.Name:lower()]
+			local isBBot=_SETTINGS.myBots[b.Name:lower()]
+			if isABot~=isBBot then
+				return isABot and not isBBot
+			end
+			local aLevel = aStats:FindFirstChild("Level")
+			local bLevel = bStats:FindFirstChild("Level")
+			if not aLevel or not bLevel then
+				return aLevel~=nil
+			end
+			if aLevel.Value~=bLevel.Value then
+				return (aLevel.Value>bLevel.Value)
+			end
+			local aXP = aStats:FindFirstChild("Xp")
+			local bXP = bStats:FindFirstChild("Xp")
+			if not aXP or not bXP then
+				return aXP~=nil
+			end
+			if aXP.Value~=bXP.Value then
+				return (aXP.Value>bXP.Value)
+			end
+			if (aStats.Credits.Value ~= bStats.Credits.Value) then
+				return (aStats.Credits.Value>bStats.Credits.Value)
+			end
+			return a.Name:lower() > b.Name:lower()
+		end)
+
+		return plrList
+	end
+	function C.isInGame(theirChar,noDefactoAllowed)
+	--[[local a=Vector3.new(410.495, 59.4767, -197.00)
+	local b=Vector3.new(-54.505, 59.4767, -547.007)
+	return (point.X >= a.X and point.X <= b.X) and (point.Z >= a.Z and point.Z <= b.Z)--]]
+		if theirChar and theirChar.Name == "InviClone" then
+			theirChar = C.char
+		end
+		if C.gameName~="FleeMain" then
+			return false,"Lobby"
+		end
+		if theirChar~=nil and
+			theirChar:FindFirstChild("Hammer")~=nil or (C.Map~=nil and C.Map:IsAncestorOf(theirChar)) then
+			--print("beast ", theirChar.Name)
+			return true,"Beast"
+		end
+		--for num,textLabel in pairs(PS.LocalPlayer.PlayerGui:WaitForChild("ScreenGui")
+		--	:WaitForChild("StatusBars"):GetChildren()) do
+		local player=PS:GetPlayerFromCharacter(theirChar)
+		if player==nil then
+			return false, "Unknown"
+		end
+		local TSM=player:WaitForChild("TempPlayerStatsModule",4)
+		if TSM==nil then
+			return false,"Unknown"
+		end
+
+		--if theirChar~=nil and textLabel.ClassName=="TextLabel"
+		--	and textLabel.Text==theirChar.Name
+		--	and textLabel.Bar.Size.X.Scale>=.001
+		--	and textLabel.Bar.Visible then
+		if TSM.Health.Value>0
+			or (not noDefactoAllowed and theirChar.PrimaryPart and 
+				(theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
+				< (theirChar:GetPivot().Position-workspace.LobbyMusicBox.Position).Magnitude
+				and (theirChar:GetPivot().Position-workspace.MapBackgroundMusicBox.Position).Magnitude 
+				< (theirChar:GetPivot().Position-workspace.BeastCaveMusicBox.Position).Magnitude
+				and RS.IsGameActive.Value) then
+			return true,"Runner"
+		end
+		--print("runner ", theirChar.Name, "true")
+
+		--end
+		--print(textLabel.Bar.Size.X.Scale)
+		--end
+		--print("runner ", theirChar.Name, "false")
+		return false,"Lobby"--]]
+	end
+	getgenv().isInGame = C.isInGame
+	if C.gameUniverse=="Flee" then
+		RemoteEvent = RS:WaitForChild("RemoteEvent")
+	end
+end

@@ -9788,6 +9788,7 @@ C.AvailableHacks ={
 			["Shortcut"]="Commands_ClickDetectors",
 			["Default"]=true,
 			["DontActivate"]=true,
+			["Universes"] = {"Global"},
 			["Options"]={
 				[true]={
 					["Title"]="ACTIVATE",
@@ -9836,6 +9837,7 @@ C.AvailableHacks ={
 					["TextColor"]=newColor3(0,50,170),
 				},
 			},
+			["Universes"] = {"Global"},
 			["CoreFunction"]=function(loopInstance)
 				local fireclickdetector = fireclickdetector
 				for num, obj in ipairs(loopInstance:GetDescendants()) do

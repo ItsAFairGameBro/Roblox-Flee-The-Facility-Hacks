@@ -1677,7 +1677,7 @@ C.AvailableHacks ={
 					while (NameTag~=nil and NameTag.Parent~=nil and NameTag.Parent.Parent~=nil and DistanceTag~=nil and not C.isCleared) do
 						local dist=math.round((camera.CFrame.p-(CenterObject.Position+NameTag.StudsOffset)).Magnitude)
 						DistanceTag.Text=(dist.."m")
-						if C.gameName == "FleeMain" or C.isInGame(NameTag.Parent.Parent)==C.isInGame(camera.CameraSubject.Parent) then
+						if C.gameName ~= "FleeMain" or C.isInGame(NameTag.Parent.Parent)==C.isInGame(camera.CameraSubject.Parent) then
 							NameTag.PlayerToHideFrom=nil
 						else
 							NameTag.PlayerToHideFrom=plr
@@ -1800,7 +1800,7 @@ C.AvailableHacks ={
 						--if C.enHacks.ESP_Highlight then
 						--key=#C.objectFuncts[theirChar]+1
 						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
-							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (C.gameName=="FleeMain" or (({C.isInGame(theirChar)})[1])==({C.isInGame(camera.CameraSubject.Parent)})[1]) then
+							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (C.gameName~="FleeMain" or (({C.isInGame(theirChar)})[1])==({C.isInGame(camera.CameraSubject.Parent)})[1]) then
 								--local didHit,instance=true,theirChar.PrimaryPart
 								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil--[[,function(result)
 									local instance = result and result.Instance

@@ -9843,7 +9843,7 @@ C.AvailableHacks ={
 				for num, obj in ipairs(loopInstance:GetDescendants()) do
 					if obj:IsA("TouchTransmitter") 
 						and (C.gameName ~= "GlassBridge" or (obj.Parent and obj.Parent.Parent and obj.Parent.Parent.Parent and 
-							obj.Parent.Parent.Parent.Name=="Bridge" and (obj.Parent.CanCollide or obj:GetAttribute(C.OriginalCollideName) > 0))) then
+							obj.Parent.Parent.Parent.Name=="Bridge" and (obj.Parent.CanCollide or (obj:GetAttribute(C.OriginalCollideName) or 0) > 0))) then
 						local parent = obj.Parent
 						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent]
 						if clickfunction then

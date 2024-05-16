@@ -35,6 +35,7 @@ CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil,textBox
 --local clear,C.saveIndex,C.AvailableHacks
 C.gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") 
 	or (game.PlaceId==1962086868 and "TowerMain") or (game.PlaceId==3582763398 and "TowerPro")
+	or (game.PlaceId==7080389084 and "GlassBridge")
 	or (game.PlaceId==5253186791 and "TowerAppeals") or "Unknown")
 C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or "Unknown"
 --C.myTSM,C.mySSM
@@ -9840,7 +9841,7 @@ C.AvailableHacks ={
 			["CoreFunction"]=function(loopInstance)
 				local fireclickdetector = fireclickdetector
 				for num, obj in ipairs(loopInstance:GetDescendants()) do
-					if obj:IsA("TouchTransmitter") then
+					if obj:IsA("TouchTransmitter") and (C.gameName ~= "GlassBridge" or obj.Parent.Name=="Bridge") then
 						local parent = obj.Parent
 						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent]
 						if clickfunction then

@@ -9841,7 +9841,8 @@ C.AvailableHacks ={
 			["CoreFunction"]=function(loopInstance)
 				local fireclickdetector = fireclickdetector
 				for num, obj in ipairs(loopInstance:GetDescendants()) do
-					if obj:IsA("TouchTransmitter") and (C.gameName ~= "GlassBridge" or (obj.Parent and obj.Parent.Parent and obj.Parent.Parent.Name=="Bridge")) then
+					if obj:IsA("TouchTransmitter") 
+						and (C.gameName ~= "GlassBridge" or (obj.Parent and obj.Parent.Parent and obj.Parent.Parent.Parent and obj.Parent.Parent.Parent.Name=="Bridge")) then
 						local parent = obj.Parent
 						local clickfunction = C.AvailableHacks.Basic[25].GlobalTouchTransmitters[parent]
 						if clickfunction then

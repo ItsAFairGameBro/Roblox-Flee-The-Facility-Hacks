@@ -2591,12 +2591,12 @@ C.AvailableHacks ={
 						if isOpened~=getState() or not doorTriggerEvent or not doorTriggerEvent.Parent or (saveActionSign ~= actionSign.Value and actionSign.Value ~= 0) then
 							break
 						end
-						RS.C.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
+						C.RemoteEvent:FireServer("Input", "Trigger", true, doorTrigger.Event)
 						--RunS.RenderStepped:Wait()
-						RS.C.RemoteEvent:FireServer("Input", "Action", true)
+						C.RemoteEvent:FireServer("Input", "Action", true)
 						RunS.RenderStepped:Wait()
 						if isOpened then
-							RS.C.RemoteEvent:FireServer("Input", "Trigger", false)
+							C.RemoteEvent:FireServer("Input", "Trigger", false)
 							RunS.RenderStepped:Wait()
 						end
 					end
@@ -2611,7 +2611,7 @@ C.AvailableHacks ={
 					end
 					--wait()
 					if currentEvent~=nil and not isOpened and false then--and saveActionSign == actionSign.Value then
-						RS.C.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
+						C.RemoteEvent:FireServer("Input", "Trigger", true, currentEvent)
 						--wait()
 						--C.RemoteEvent:FireServer("Input", "Action", true)
 					end
@@ -3342,6 +3342,9 @@ C.AvailableHacks ={
 
 				LocalClubScript.Disabled = newValue
 				if newValue then
+					while not C.AvailableHacks.Utility[8].ClubFuncts.LocalClubScriptFunction and not C.isCleared do
+						task.wait()
+					end
 					task.delay(0,C.AvailableHacks.Utility[8].ClubFuncts.LocalClubScriptFunction,LocalClubScript)
 				end
 			end,

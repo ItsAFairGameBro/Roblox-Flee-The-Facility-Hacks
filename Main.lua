@@ -1702,7 +1702,7 @@ C.AvailableHacks ={
 			end,
 			["ComputerAdded"]=function(computer)
 				local PrimPart=computer.PrimaryPart
-				local NameTag=PrimPart:WaitForChild("GuiElements.NameTagEx")
+				local NameTag=PrimPart:WaitForChild("NameTagEx")
 				C.AvailableHacks.Render[2].UpdateDistFunct(NameTag,PrimPart)
 			end,
 		},

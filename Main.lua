@@ -9453,7 +9453,8 @@ C.AvailableHacks ={
 					if imageLabel:IsA("ImageButton") then
 						local ClaimReward = RS:WaitForChild("Packages"):FindFirstChild("ClaimReward",true)
 						local function Upd()
-							if imageLabel.Status.Label=="CLAIM!" and not C.isCleared then
+							print(imageLabel.Name,imageLabel.Status.Label.Text)
+							if imageLabel.Status.Label.Text=="CLAIM!" and not C.isCleared then
 								task.wait(.5)
 								ClaimReward:FireServer(tonumber(imageLabel.Name))
 								print("Sending "..imageLabel.Name)

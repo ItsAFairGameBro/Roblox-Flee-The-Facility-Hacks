@@ -9456,8 +9456,8 @@ C.AvailableHacks ={
 							print(imageLabel.Name,imageLabel.Status.Label.Text)
 							if imageLabel.Status.Label.Text=="CLAIM!" and not C.isCleared then
 								task.wait(.5)
-								ClaimReward:FireServer(tonumber(imageLabel.Name))
-								print("Sending "..imageLabel.Name)
+								
+								print("Sent "..imageLabel.Name,"Result;",ClaimReward:InvokeServer(tonumber(imageLabel.Name)))
 							end
 						end
 						table.insert(C.AvailableHacks.Bot[200].Functs,imageLabel.Status.Label:GetPropertyChangedSignal("Text"):Connect(Upd))

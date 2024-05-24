@@ -1276,6 +1276,17 @@ C.CommandFunctions = {
 				if isTeleporting then
 					return
 				end
+				if not theirPlr.Parent or theirPlr.Parent ~= PS then
+					C.CommandFunctions.unfollow.Run()
+					C.CreateSysMessage(`Followed User {theirPlr.Name} has left the game!`)
+					return
+				end
+				if not HRP then
+					local theirChar = theirPlr.Character
+					if theirChar and theirChar.PrimaryPart then
+						HRP = theirChar.PrimaryPart
+					end
+				end
 				
 				if dist == 0 then
 					teleportMyself(HRP.CFrame)

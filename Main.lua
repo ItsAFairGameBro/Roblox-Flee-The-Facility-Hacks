@@ -9535,11 +9535,13 @@ C.AvailableHacks ={
 				if not newValue then
 					return
 				end
-				local finish = StringWaitForChild(workspace,"tower.finishes.Finish")
-				if finish then
-					firetouchinterest(finish,C.char.PrimaryPart,1)
-					task.wait()
-					firetouchinterest(finish,C.char.PrimaryPart,0)
+				local finishes = StringWaitForChild(workspace,"tower.finishes")
+				for num, instance in ipairs(finishes:GetChildren()) do
+					if instance.Name == "finish" then
+						firetouchinterest(C.char.PrimaryPart,instance,1)
+						task.wait()
+						firetouchinterest(C.char.PrimaryPart,instance,0)
+					end
 				end
 			end)
 		},

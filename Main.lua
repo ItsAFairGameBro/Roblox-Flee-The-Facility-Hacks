@@ -1282,8 +1282,10 @@ C.CommandFunctions = {
 					return
 				end
 				if not HRP or not HRP.Parent then
+					print("No HRP")
 					theirChar = theirPlr.Character
 					if theirChar and theirChar.PrimaryPart then
+						print("SET HRP")
 						HRP = theirChar.PrimaryPart
 					end
 				end
@@ -1292,6 +1294,10 @@ C.CommandFunctions = {
 					teleportMyself(HRP.CFrame)
 				else
 					teleportMyself(CFrame.new(HRP.CFrame * Vector3.new(0,0,dist),HRP.Position))
+				end
+				if C.char and C.char.PrimaryPart then
+					C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
+					C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 				end
 				--[[for num, animTrack in ipairs(saveChar.Humanoid.Animator:GetPlayingAnimationTracks()) do
 					if animTrack then

@@ -9535,12 +9535,19 @@ C.AvailableHacks ={
 				if not newValue then
 					return
 				end
-				local finishes = StringWaitForChild(workspace,"tower.finishes")
+				local C = {char = game.Players.LocalPlayer.Character}
+				local finishes = workspace:WaitForChild("tower"):WaitForChild("finishes")
 				for num, instance in ipairs(finishes:GetChildren()) do
 					if instance.Name == "Finish" then
-						firetouchinterest(C.char.PrimaryPart,instance,1)
-						task.wait()
-						firetouchinterest(C.char.PrimaryPart,instance,0)
+						for num, myPart in ipairs(C.char:GetChildren()) do
+							if myPart:IsA("BasePart") then
+								firetouchinterest(C.char.hitbox,instance,1)
+								task.delay(1,function()
+									firetouchinterest(C.char.hitbox,instance,0)
+								end)
+								task.wait()
+							end
+						end
 					end
 				end
 			end)

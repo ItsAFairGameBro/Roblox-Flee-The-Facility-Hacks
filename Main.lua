@@ -9549,7 +9549,7 @@ C.AvailableHacks ={
 								task.wait()
 							end
 						end--]]
-						teleportMyself(instance.CFrame * CFrame.new(-3))
+						teleportMyself(instance.CFrame * CFrame.new(-3,0,0))
 						C.human:MoveTo(instance.Position)
 						task.wait(1)
 						break

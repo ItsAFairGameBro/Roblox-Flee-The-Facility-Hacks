@@ -9541,6 +9541,9 @@ C.AvailableHacks ={
 				end
 				local timerLeftButton = StringWaitForChild(PlayerGui,"timer.timeLeft")
 				local function doUpdate()
+					if C.isCleared then
+						return
+					end
 					if (timerLeftButton.TextColor3.G > .8 and timerLeftButton.TextColor3.B < .8) then
 						print("Alr Sped! (Not White Text)")
 						return
@@ -9549,6 +9552,12 @@ C.AvailableHacks ={
 						task.delay(1,doUpdate)
 					end
 					local savePoso = C.char:GetPivot()
+					for num, stage in ipairs(workspace:WaitForChild("tower"):WaitForChild("sections"):GetChildren()) do
+						if stage.Name ~= "lobby" and stage.Name ~= "finish" then
+							teleportMyself(stage.Start.Position+Vector3.new(0,3,0))
+							task.wait(1)
+						end
+					end
 					local finishes = workspace:WaitForChild("tower"):WaitForChild("finishes")
 					for num, instance in ipairs(finishes:GetChildren()) do
 						if instance.Name == "Finish" then

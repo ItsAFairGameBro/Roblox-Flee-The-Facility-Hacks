@@ -9523,6 +9523,26 @@ C.AvailableHacks ={
 				task.spawn(SpinsLeftChanged)
 			end)
 		},
+		[215] = {
+			["Type"]="ExTextButton",
+			["Title"]="Auto Get Top",
+			["Desc"]="Automatically Gets To The Top",
+			["Default"]=true,
+			["Shortcut"]="Bot_AutoTowerTop",
+			["Universes"]={"Tower"},
+			["Functs"]={},
+			["ActivateFunction"]=(function(newValue)
+				if not newValue then
+					return
+				end
+				local finish = StringWaitForChild(workspace,"tower.finishes.Finish")
+				if finish then
+					firetouchinterest(finish,C.char.PrimaryPart,1)
+					task.wait()
+					firetouchinterest(finish,C.char.PrimaryPart,0)
+				end
+			end)
+		},
 	},
 	["Commands"]={
 		[2]={

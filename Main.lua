@@ -9615,9 +9615,9 @@ C.AvailableHacks ={
 						task.spawn(ClickEvent.FireServer,ClickEvent)
 					end
 					RunS.RenderStepped:Wait()
-					while Debounce.Value do
+					--[[while Debounce.Value do
 						Debounce.Changed:Wait()
-					end
+					end--]]
 				end
 			end)
 		},

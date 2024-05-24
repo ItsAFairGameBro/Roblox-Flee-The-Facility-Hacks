@@ -9453,9 +9453,10 @@ C.AvailableHacks ={
 					if imageLabel:IsA("ImageButton") then
 						local ClaimReward = RS:WaitForChild("Packages"):FindFirstChild("ClaimReward",true)
 						local function Upd()
-							if imageLabel.Status.Label=="CLAIM!" then
+							if imageLabel.Status.Label=="CLAIM!" and not C.isCleared then
 								task.wait(.5)
 								ClaimReward:FireServer(tonumber(imageLabel.Name))
+								print("Sending "..imageLabel.Name)
 							end
 						end
 						table.insert(C.AvailableHacks.Bot[200].Functs,imageLabel.Status.Label:GetPropertyChangedSignal("Text"):Connect(Upd))
@@ -9478,7 +9479,7 @@ C.AvailableHacks ={
 				end C.AvailableHacks.Bot[201].Functs = {}
 				local SpinsLeft = StringWaitForChild(plr,"leaderstats.Spins")
 				local function SpinsLeftChanged()
-					while SpinsLeft.Value>0 do
+					while SpinsLeft.Value>0 and not C.isCleared do
 						local Result = StringWaitForChild(RS:WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.6.0"),
 							"knit.Services.SpinService.RF.Spin"):InvokeServer()
 						if not Result then
@@ -9486,7 +9487,7 @@ C.AvailableHacks ={
 						else
 							if Result.Reward ~= "Nothing" then
 								if Result.Reward:gmatch("Spins_%d+")() then
-									print("Reward: Spins "..Result.Reward:gmatch("%d+"))
+									print("Reward: Spins "..Result.Reward:gmatch("%d+")())
 								else
 									warn("GOOD REWARD: "..Result.Reward)
 								end

@@ -9611,7 +9611,7 @@ C.AvailableHacks ={
 				local ClickEvent = RS:WaitForChild("Events"):WaitForChild("Click")
 				while newValue and not C.isCleared and C.enHacks.Bot_AutoClick do
 					ClickEvent:FireServer()
-					RS.RenderStepped:Wait()
+					RunS.RenderStepped:Wait()
 				end
 			end)
 		},

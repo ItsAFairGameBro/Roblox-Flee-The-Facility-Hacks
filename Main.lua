@@ -9481,8 +9481,18 @@ C.AvailableHacks ={
 					while SpinsLeft.Value>0 do
 						local Result = StringWaitForChild(RS:WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.6.0"),
 							"knit.Services.SpinService.RF.Spin"):InvokeServer()
-						print(Result)
-						task.wait(1)
+						if Result then
+							task.wait(1)
+						else
+							if Result.Reward ~= "Nothing" then
+								if Result.Reward:gmatch("Spins_%d+")() then
+									print("Reward: Spins "..Result.Reward:gmatch("%d+"))
+								else
+									warn("GOOD REWARD: "..Result.Reward)
+								end
+							end
+							task.wait(Result.SpinTime)
+						end
 					end
 				end
 				SpinsLeft.Changed:Connect(SpinsLeftChanged)

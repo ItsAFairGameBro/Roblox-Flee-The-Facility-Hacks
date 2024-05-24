@@ -9492,9 +9492,10 @@ C.AvailableHacks ={
 						else
 							if Result.Reward ~= "Nothing" then
 								if Result.Reward:gmatch("Spins_%d+")() then
-									print("Reward: Spins "..Result.Reward:gmatch("%d+")())
+									local SpinsNum = Result.Reward:gmatch("%d+")()
+									print("Reward: "..SpinsNum.." Spin"..(SpinsNum==1 and "" or "s").."!")
 								else
-									warn("GOOD REWARD: "..Result.Reward)
+									warn("GOOD REWARD: "..tostring(Result.Reward))
 								end
 							end
 							task.wait(Result.SpinTime)

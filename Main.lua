@@ -9554,7 +9554,7 @@ C.AvailableHacks ={
 					local savePoso = C.char:GetPivot()
 					for num, stage in ipairs(workspace:WaitForChild("tower"):WaitForChild("sections"):GetChildren()) do
 						if stage.Name ~= "lobby" and stage.Name ~= "finish" then
-							teleportMyself(stage.Start.Position+Vector3.new(0,3,0))
+							teleportMyself(stage.start.Position+Vector3.new(0,3,0))
 							task.wait(1)
 						end
 					end

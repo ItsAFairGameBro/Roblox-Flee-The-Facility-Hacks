@@ -9541,8 +9541,8 @@ C.AvailableHacks ={
 				end
 				local timerLeftButton = StringWaitForChild(PlayerGui,"timer.timeLeft")
 				local function doUpdate()
-					if timerLeftButton.TextColor3.R > .8 and timerLeftButton.TextColor3.G > .8 and timerLeftButton.TextColor3.B > .8 then
-						print("Alr Sped!")
+					if not (timerLeftButton.TextColor3.R > .8 and timerLeftButton.TextColor3.G > .8 and timerLeftButton.TextColor3.B > .8) then
+						print("Alr Sped! (Not White Text)")
 						return
 					end
 					local savePoso = C.char:GetPivot()

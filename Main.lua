@@ -9530,7 +9530,7 @@ C.AvailableHacks ={
 			["Default"]=true,
 			["Shortcut"]="Bot_AutoTowerTop",
 			["Universes"]={"Tower"},
-			["Funct"]={},
+			["Funct"]=nil,
 			["ActivateFunction"]=(function(newValue)
 				if C.AvailableHacks.Bot[215].Funct then
 					C.AvailableHacks.Bot[215].Funct:Disconnect()

@@ -38,7 +38,9 @@ C.gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==8939734
 	or (game.PlaceId==1962086868 and "TowerMain") or (game.PlaceId==3582763398 and "TowerPro")
 	or (game.PlaceId==7080389084 and "GlassBridge")
 	or (game.PlaceId==5253186791 and "TowerAppeals")
-	or (game.PlaceId==16070671286 and "UGCSpin") or "Unknown")
+	or (game.PlaceId==16070671286 and "UGCSpin") 
+	or (game.PlaceId==15467338598 and "UGCClick")
+	or "Unknown")
 C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or C.gameName
 --C.myTSM,C.mySSM
 local plr = PS.LocalPlayer
@@ -5077,7 +5079,7 @@ C.AvailableHacks ={
 			},
 			["Functs"]={},
 			["Deb"]=0.5,
-			["HiddenLocation"] = Vector3.new(0,70,0),
+			["HiddenLocation"] = Vector3.new(0,-20,0),
 			["LastTeleportLocation"] = CFrame.new(),
 			["ApplyChange"] = function(newHuman,oldHuman)
 				local clonedChar, currentChar = newHuman.Parent, oldHuman.Parent
@@ -9596,6 +9598,21 @@ C.AvailableHacks ={
 				C.AvailableHacks.Bot[215].Funct = timerLeftButton:GetPropertyChangedSignal("TextColor3"):Connect(doUpdate)
 				task.spawn(doUpdate)
 				--local C = {char = game.Players.LocalPlayer.Character}
+			end)
+		},
+		[250] = {
+			["Type"]="ExTextButton",
+			["Title"]="Autoclicker",
+			["Desc"]="Auto Fakes Clicks",
+			["Default"]=true,
+			["Shortcut"]="Bot_AutoClick",
+			["Universes"]={"UGCClick"},
+			["ActivateFunction"]=(function(newValue)
+				local ClickEvent = RS:WaitForChild("Events"):WaitForChild("Click")
+				while newValue and not C.isCleared and C.enHacks.Bot_AutoClick do
+					ClickEvent:FireServer()
+					RS.RenderStepped:Wait()
+				end
 			end)
 		},
 	},

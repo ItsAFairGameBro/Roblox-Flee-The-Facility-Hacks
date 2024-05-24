@@ -9530,16 +9530,25 @@ C.AvailableHacks ={
 			["Default"]=true,
 			["Shortcut"]="Bot_AutoTowerTop",
 			["Universes"]={"Tower"},
-			["Functs"]={},
+			["Funct"]={},
 			["ActivateFunction"]=(function(newValue)
+				if C.AvailableHacks.Bot[215].Funct then
+					C.AvailableHacks.Bot[215].Funct:Disconnect()
+					C.AvailableHacks.Bot[215].Funct=nil
+				end
 				if not newValue then
 					return
 				end
-				--local C = {char = game.Players.LocalPlayer.Character}
-				local savePoso = C.char:GetPivot()
-				local finishes = workspace:WaitForChild("tower"):WaitForChild("finishes")
-				for num, instance in ipairs(finishes:GetChildren()) do
-					if instance.Name == "Finish" then
+				local timerLeftButton = StringWaitForChild(PlayerGui,"timer.timeLeft")
+				local function doUpdate()
+					if timerLeftButton.TextColor3.R > .8 and timerLeftButton.TextColor3.G > .8 and timerLeftButton.TextColor3.B > .8 then
+						print("Alr Sped!")
+						return
+					end
+					local savePoso = C.char:GetPivot()
+					local finishes = workspace:WaitForChild("tower"):WaitForChild("finishes")
+					for num, instance in ipairs(finishes:GetChildren()) do
+						if instance.Name == "Finish" then
 						--[[for num, myPart in ipairs(C.char:GetChildren()) do
 							if myPart:IsA("BasePart") then
 								firetouchinterest(C.char.hitbox,instance,1)
@@ -9549,14 +9558,19 @@ C.AvailableHacks ={
 								task.wait()
 							end
 						end--]]
-						teleportMyself(instance.CFrame * CFrame.new(-3,0,0))
-						C.human:MoveTo(instance.CFrame * Vector3.new(3,0,0))
-						task.wait(1)
-						break
+							C.human:MoveTo(instance.CFrame * Vector3.new(2,0,0))
+							teleportMyself(instance.CFrame * CFrame.new(-2,0,0))
+							task.wait(1)
+							break
+						end
 					end
+					teleportMyself(savePoso)
+					C.human:MoveTo(savePoso)
+					
 				end
-				teleportMyself(savePoso)
-				C.human:MoveTo(savePoso)
+				C.AvailableHacks.Bot[215].Funct = timerLeftButton:GetPropertyChangedSignal("TextColor3"):Connect(doUpdate)
+				task.spawn(doUpdate)
+				--local C = {char = game.Players.LocalPlayer.Character}
 			end)
 		},
 	},

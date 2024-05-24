@@ -9475,8 +9475,8 @@ C.AvailableHacks ={
 								if result == true then
 									print("Sent Reward #"..imageLabel.Name..": "..tostring(message).."!")
 								else
-									print("Sent Reward Error: "..tostring(message).."; Updating in 5s.")
-									task.wait(3)
+									print("Sent Reward Error: "..tostring(message).."; Trying again in 5s.")
+									task.wait(5)
 									Upd()
 								end
 							end
@@ -9509,13 +9509,15 @@ C.AvailableHacks ={
 						else
 							if Result.Reward ~= "Nothing" then
 								if Result.Reward:gmatch("Spins_%d+")() then
-									local SpinsNum = Result.Reward:gmatch("%d+")()
+									local SpinsNum = tostring(Result.Reward:gmatch("%d+")())
 									print("Reward: "..SpinsNum.." Spin"..(SpinsNum==1 and "" or "s").."!")
 								else
 									warn("GOOD REWARD: "..tostring(Result.Reward))
 								end
 							end
-							task.wait(Result.SpinTime)
+							if Result.SpinTime then
+								task.wait(Result.SpinTime)
+							end
 						end
 					end
 				end
@@ -9556,6 +9558,9 @@ C.AvailableHacks ={
 						if stage.Name ~= "lobby" and stage.Name ~= "finish" then
 							teleportMyself(CFrame.new(stage.start.Position+Vector3.new(0,3,0)))
 							task.wait(1)
+							if not C.human or C.human.Health <= 0 then
+								return
+							end
 						end
 					end
 					local finishes = workspace:WaitForChild("tower"):WaitForChild("finishes")

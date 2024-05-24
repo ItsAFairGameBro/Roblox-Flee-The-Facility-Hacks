@@ -9609,11 +9609,14 @@ C.AvailableHacks ={
 			["Universes"]={"UGCClick"},
 			["ActivateFunction"]=(function(newValue)
 				local ClickEvent = RS:WaitForChild("Events"):WaitForChild("Click")
+				local Debounce = plr:WaitForChild("ClickDebounce")
 				while newValue and not C.isCleared and C.enHacks.Bot_AutoClick do
 					for s = 1, 1, -1 do
 						task.spawn(ClickEvent.FireServer,ClickEvent)
 					end
-					RunS.RenderStepped:Wait()
+					while Debounce.Value do
+						Debounce.Changed:Wait()
+					end
 				end
 			end)
 		},

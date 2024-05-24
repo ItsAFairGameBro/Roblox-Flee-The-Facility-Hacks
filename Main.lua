@@ -9558,8 +9558,8 @@ C.AvailableHacks ={
 								task.wait()
 							end
 						end--]]
-							C.human:MoveTo(instance.CFrame * Vector3.new(2,0,0))
 							teleportMyself(instance.CFrame * CFrame.new(-2,0,0))
+							C.human:MoveTo(instance.CFrame * Vector3.new(5,0,0))
 							task.wait(1)
 							break
 						end

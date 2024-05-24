@@ -19,6 +19,7 @@ local LS=game:GetService("Lighting")
 local SC=game:GetService("ScriptContext")
 local CP=game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
+local TS = game:GetService("TeleportService")
 local TCS=game:GetService("TextChatService")
 
 
@@ -1350,6 +1351,13 @@ C.CommandFunctions = {
 			return true,str
 		end,
 	},
+	["rejoin"]={
+		Type="",
+		AfterTxt="%s",
+		Run=function(args)
+			TS:Teleport(game.PlaceId, plr)
+		end,
+	}
 }
 
 --SAVE/LOAD MODULE

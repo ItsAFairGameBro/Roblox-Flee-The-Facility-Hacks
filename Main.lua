@@ -9537,7 +9537,7 @@ C.AvailableHacks ={
 				end
 				local finishes = StringWaitForChild(workspace,"tower.finishes")
 				for num, instance in ipairs(finishes:GetChildren()) do
-					if instance.Name == "finish" then
+					if instance.Name == "Finish" then
 						firetouchinterest(C.char.PrimaryPart,instance,1)
 						task.wait()
 						firetouchinterest(C.char.PrimaryPart,instance,0)

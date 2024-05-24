@@ -9613,8 +9613,8 @@ C.AvailableHacks ={
 				
 				local ClicksVal = StringWaitForChild(plr,"leaderstats.Clicks")
 				local StartVal, StartTime = ClicksVal.Value, os.clock()
-				task.delay(15,function()
-					print(("Time per second was measured to be %.2f/s!"):format((ClicksVal.Value-StartVal)/(os.clock()-StartTime)))
+				task.delay(60,function()
+					print(("Time per minute was measured to be %.3f/m!"):format((60*(ClicksVal.Value-StartVal))/(os.clock()-StartTime)))
 				end)
 
 				while newValue and not C.isCleared and C.enHacks.Bot_AutoClick do

@@ -9453,15 +9453,19 @@ C.AvailableHacks ={
 					if imageLabel:IsA("ImageButton") then
 						local ClaimReward = RS:WaitForChild("Packages"):FindFirstChild("ClaimReward",true)
 						local function Upd()
-							print(imageLabel.Name,imageLabel.Status.Label.Text)
 							if imageLabel.Status.Label.Text=="CLAIM!" and not C.isCleared then
-								task.wait(.5)
-								
-								print("Sent "..imageLabel.Name,"Result;",ClaimReward:InvokeServer(tonumber(imageLabel.Name)))
+								local result, message = ClaimReward:InvokeServer(tonumber(imageLabel.Name))
+								if result == true then
+									print("Sent Reward #"..imageLabel.Name..": "..tostring(message).."!")
+								else
+									print("Sent Reward Error: "..tostring(message).."; Updating in 5s.")
+									task.wait(3)
+									Upd()
+								end
 							end
 						end
 						table.insert(C.AvailableHacks.Bot[200].Functs,imageLabel.Status.Label:GetPropertyChangedSignal("Text"):Connect(Upd))
-						Upd()
+						task.spawn(Upd)
 					end
 				end
 			end)

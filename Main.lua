@@ -9611,10 +9611,10 @@ C.AvailableHacks ={
 				local ClickEvent = RS:WaitForChild("Events"):WaitForChild("Click")
 				local Debounce = plr:WaitForChild("ClickDebounce")
 				
-				local ClicksVal = game.Players.LocalPlayer.leaderstats.Clicks
-				local StartVal, StartTime = ClicksVal.Clicks, os.clock()
+				local ClicksVal = StringWaitForChild(plr,"leaderstats.Clicks")
+				local StartVal, StartTime = ClicksVal.Value, os.clock()
 				task.delay(15,function()
-					print(("Time per second was measured to be %.2f/s!"):format((ClicksVal.Clicks-StartVal)/(os.clock()-StartTime)))
+					print(("Time per second was measured to be %.2f/s!"):format((ClicksVal.Value-StartVal)/(os.clock()-StartTime)))
 				end)
 
 				while newValue and not C.isCleared and C.enHacks.Bot_AutoClick do

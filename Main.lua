@@ -9536,10 +9536,11 @@ C.AvailableHacks ={
 					return
 				end
 				local C = {char = game.Players.LocalPlayer.Character}
+				local savePoso = C.char:GetPivot()
 				local finishes = workspace:WaitForChild("tower"):WaitForChild("finishes")
 				for num, instance in ipairs(finishes:GetChildren()) do
 					if instance.Name == "Finish" then
-						for num, myPart in ipairs(C.char:GetChildren()) do
+						--[[for num, myPart in ipairs(C.char:GetChildren()) do
 							if myPart:IsA("BasePart") then
 								firetouchinterest(C.char.hitbox,instance,1)
 								task.delay(1,function()
@@ -9547,9 +9548,11 @@ C.AvailableHacks ={
 								end)
 								task.wait()
 							end
-						end
+						end--]]
+						teleportMyself(instance.CFrame)
 					end
 				end
+				teleportMyself(savePoso)
 			end)
 		},
 	},

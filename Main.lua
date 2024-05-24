@@ -36,8 +36,9 @@ CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil,textBox
 C.gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==893973440 and "FleeMain") 
 	or (game.PlaceId==1962086868 and "TowerMain") or (game.PlaceId==3582763398 and "TowerPro")
 	or (game.PlaceId==7080389084 and "GlassBridge")
-	or (game.PlaceId==5253186791 and "TowerAppeals") or "Unknown")
-C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or "Unknown"
+	or (game.PlaceId==5253186791 and "TowerAppeals")
+	or (game.PlaceId==16070671286 and "UGCSpin") or "Unknown")
+C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or C.gameName
 --C.myTSM,C.mySSM
 local plr = PS.LocalPlayer
 local PlayerGui = plr:WaitForChild("PlayerGui");
@@ -9428,6 +9429,60 @@ C.AvailableHacks ={
 			["Options"] = {
 
 			}
+		},
+		
+		[200] = {
+			["Type"]="ExTextButton",
+			["Title"]="Auto Claim Rewards",
+			["Desc"]="Means of transportation",
+			["Default"]=true,
+			["Shortcut"]="Bot_AutoClaimRewards",
+			["Universes"]={"UGCSpin"},
+			["Functs"]={},
+			["ActivateFunction"]=(function(newValue)
+				for num, funct in ipairs(C.AvailableHacks.Bot[200].Functs) do
+					funct:Disconnect()
+				end C.AvailableHacks.Bot[200].Functs = {}
+				if not newValue then return end
+				local FreeRewardContainer = StringWaitForChild(PlayerGui,"PlaytimeRewards.Main.Container")
+				for num, imageLabel in ipairs(FreeRewardContainer:GetChildren()) do
+					if imageLabel:IsA("ImageButton") then
+						local ClaimReward = RS:WaitForChild("Packages"):FindFirstChild("ClaimReward",true)
+						local function Upd()
+							if imageLabel.Status.Label=="CLAIM!" then
+								task.wait(.5)
+								ClaimReward:FireServer(tonumber(imageLabel.Name))
+							end
+						end
+						table.insert(C.AvailableHacks.Bot[200].Functs,imageLabel.Status.Label:GetPropertyChangedSignal("Text"):Connect(Upd))
+						Upd()
+					end
+				end
+			end)
+		},
+		[201] = {
+			["Type"]="ExTextButton",
+			["Title"]="Auto Spin Rewards",
+			["Desc"]="Automatically Spins and Prints Good Rewards In Output",
+			["Default"]=true,
+			["Shortcut"]="Bot_AutoSpin",
+			["Universes"]={"UGCSpin"},
+			["Functs"]={},
+			["ActivateFunction"]=(function(newValue)
+				for num, funct in ipairs(C.AvailableHacks.Bot[201].Functs) do
+					funct:Disconnect()
+				end C.AvailableHacks.Bot[201].Functs = {}
+				local SpinsLeft = StringWaitForChild(plr,"leaderstats.Spins")
+				local function SpinsLeftChanged()
+					while SpinsLeft.Value>0 do
+						local Result = StringWaitForChild(RS,"Packages._Index.sleitnick_knit@1.6.0.knit.Services.SpinService.RF.Spin"):InvokeServer()
+						print(Result)
+						task.wait(1)
+					end
+				end
+				SpinsLeft.Changed:Connect(SpinsLeftChanged)
+				task.spawn(SpinsLeftChanged)
+			end)
 		},
 	},
 	["Commands"]={

@@ -3628,7 +3628,11 @@ C.AvailableHacks ={
 			["Default"]=true,
 			["OthersPlayerAdded"]=function(theirPlr)
 				local Config = {public = false}
-				local getmsg = RS:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+				local DefaultChatSystemChatEvents = RS:WaitForChild("DefaultChatSystemChatEvents",10)
+				if not DefaultChatSystemChatEvents then
+					return
+				end
+				local getmsg = DefaultChatSystemChatEvents:WaitForChild("OnMessageDoneFiltering")
 				table.insert(C.playerEvents[theirPlr.UserId],theirPlr.Chatted:Connect(function(msg)
 					if C.enHacks.Utility_ChatSpy then
 						msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ') -- CLIP THE MESSAGE (important!)
@@ -9475,7 +9479,8 @@ C.AvailableHacks ={
 				local SpinsLeft = StringWaitForChild(plr,"leaderstats.Spins")
 				local function SpinsLeftChanged()
 					while SpinsLeft.Value>0 do
-						local Result = StringWaitForChild(RS,"Packages._Index.sleitnick_knit@1.6.0.knit.Services.SpinService.RF.Spin"):InvokeServer()
+						local Result = StringWaitForChild(RS:WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.6.0"),
+							"knit.Services.SpinService.RF.Spin"):InvokeServer()
 						print(Result)
 						task.wait(1)
 					end

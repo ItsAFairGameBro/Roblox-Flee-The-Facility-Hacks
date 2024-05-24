@@ -9481,7 +9481,7 @@ C.AvailableHacks ={
 					while SpinsLeft.Value>0 do
 						local Result = StringWaitForChild(RS:WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.6.0"),
 							"knit.Services.SpinService.RF.Spin"):InvokeServer()
-						if Result then
+						if not Result then
 							task.wait(1)
 						else
 							if Result.Reward ~= "Nothing" then

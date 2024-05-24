@@ -1281,8 +1281,8 @@ C.CommandFunctions = {
 					C.CreateSysMessage(`Followed User {theirPlr.Name} has left the game!`)
 					return
 				end
-				if not HRP then
-					local theirChar = theirPlr.Character
+				if not HRP or not HRP.Parent then
+					theirChar = theirPlr.Character
 					if theirChar and theirChar.PrimaryPart then
 						HRP = theirChar.PrimaryPart
 					end

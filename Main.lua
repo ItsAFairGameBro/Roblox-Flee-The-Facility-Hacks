@@ -9610,6 +9610,13 @@ C.AvailableHacks ={
 			["ActivateFunction"]=(function(newValue)
 				local ClickEvent = RS:WaitForChild("Events"):WaitForChild("Click")
 				local Debounce = plr:WaitForChild("ClickDebounce")
+				
+				local ClicksVal = game.Players.LocalPlayer.leaderstats.Clicks
+				local StartVal, StartTime = ClicksVal.Clicks, os.clock()
+				task.delay(15,function()
+					print(("Time per second was measured to be %.2f/s!"):format((ClicksVal.Clicks-StartVal)/(os.clock()-StartTime)))
+				end)
+
 				while newValue and not C.isCleared and C.enHacks.Bot_AutoClick do
 					for s = 1, 1, -1 do
 						task.spawn(ClickEvent.FireServer,ClickEvent)

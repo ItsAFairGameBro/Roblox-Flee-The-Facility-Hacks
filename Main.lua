@@ -9545,6 +9545,9 @@ C.AvailableHacks ={
 						print("Alr Sped! (Not White Text)")
 						return
 					end
+					if not C.char or not C.char.PrimaryPart or not C.human or C.human.Health <= 0 then
+						task.delay(1,doUpdate)
+					end
 					local savePoso = C.char:GetPivot()
 					local finishes = workspace:WaitForChild("tower"):WaitForChild("finishes")
 					for num, instance in ipairs(finishes:GetChildren()) do
@@ -9565,8 +9568,8 @@ C.AvailableHacks ={
 						end
 					end
 					teleportMyself(savePoso)
-					C.human:MoveTo(savePoso)
-					
+					C.human:MoveTo(savePoso.Position)
+					task.delay(1,doUpdate)
 				end
 				C.AvailableHacks.Bot[215].Funct = timerLeftButton:GetPropertyChangedSignal("TextColor3"):Connect(doUpdate)
 				task.spawn(doUpdate)

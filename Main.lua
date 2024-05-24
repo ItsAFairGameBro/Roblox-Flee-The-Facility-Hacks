@@ -9535,7 +9535,7 @@ C.AvailableHacks ={
 				if not newValue then
 					return
 				end
-				local C = {char = game.Players.LocalPlayer.Character}
+				--local C = {char = game.Players.LocalPlayer.Character}
 				local savePoso = C.char:GetPivot()
 				local finishes = workspace:WaitForChild("tower"):WaitForChild("finishes")
 				for num, instance in ipairs(finishes:GetChildren()) do
@@ -9550,8 +9550,8 @@ C.AvailableHacks ={
 							end
 						end--]]
 						teleportMyself(instance.CFrame * CFrame.new(-3,0,0))
-						task.wait(1)
 						C.human:MoveTo(instance.Position)
+						task.wait(2)
 						break
 					end
 				end

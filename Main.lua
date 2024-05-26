@@ -3693,7 +3693,9 @@ C.AvailableHacks ={
 			["Universes"]={"UGCClick"},
 			["Default"]=true,
 			["DontActivate"]=true,
-			["ActivateFunction"]=C.AvailableHacks.Utility[200].MyStartUp,
+			["ActivateFunction"]=function() 
+				C.AvailableHacks.Utility[200].MyStartUp()
+			end,
 			["MyStartUp"]=function()
 				local FavoriteGame = StringWaitForChild(PlayerGui,"FavoriteGameScript")
 				FavoriteGame.Enabled = not C.enHacks.Utility_DisableFavoriteGame

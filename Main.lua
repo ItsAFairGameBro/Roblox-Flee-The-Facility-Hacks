@@ -3685,7 +3685,20 @@ C.AvailableHacks ={
 				C.AvailableHacks.Utility[26].PlayerAdded(theirPlr)
 			end,--]]
 		},
-
+		[200]={
+			["Type"]="ExTextButton",
+			["Title"]="Disable Favorite Game",
+			["Desc"]="Disables favorite game prompt",
+			["Shortcut"]="Utility_DisableFavoriteGame",
+			["Universes"]={"UGCClick"},
+			["Default"]=true,
+			["DontActivate"]=true,
+			["ActivateFunction"]=C.AvailableHacks.Utility[200].MyStartUp,
+			["MyStartUp"]=function()
+				local FavoriteGame = StringWaitForChild(PlayerGui,"FavoriteGameScript")
+				FavoriteGame.Enabled = not C.Utility_DisableFavoriteGame
+			end,
+		},
 	},
 	["Basic"]={
 		[1]={

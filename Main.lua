@@ -3696,7 +3696,7 @@ C.AvailableHacks ={
 			["ActivateFunction"]=C.AvailableHacks.Utility[200].MyStartUp,
 			["MyStartUp"]=function()
 				local FavoriteGame = StringWaitForChild(PlayerGui,"FavoriteGameScript")
-				FavoriteGame.Enabled = not C.Utility_DisableFavoriteGame
+				FavoriteGame.Enabled = not C.enHacks.Utility_DisableFavoriteGame
 			end,
 		},
 	},

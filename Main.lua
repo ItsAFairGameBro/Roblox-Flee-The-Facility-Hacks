@@ -38,7 +38,8 @@ C.gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==8939734
 	or (game.PlaceId==1962086868 and "TowerMain") or (game.PlaceId==3582763398 and "TowerPro")
 	or (game.PlaceId==7080389084 and "GlassBridge")
 	or (game.PlaceId==5253186791 and "TowerAppeals")
-	or (game.PlaceId==16070671286 and "UGCSpin") 
+	or (game.PlaceId==16070671286 and "UGCSpin")
+	or (game.PlaceId==537413528 and "BuildABoat")
 	or (game.PlaceId==15467338598 and "UGCClick")
 	or "Unknown")
 C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or C.gameName
@@ -9647,6 +9648,47 @@ C.AvailableHacks ={
 				end
 			end)
 		},
+		[300] = {
+			["Type"]="ExTextButton",
+			["Title"]="Auto Grind Money",
+			["Desc"]="Gets Money",
+			["Default"]=true,
+			["Shortcut"]="Bot_AutoGrindBAB",
+			["Universes"]={"BuildABoat"},
+			["Functs"]={},
+			["Deb"] = 0,
+			["ActivateFunction"]=(function(newValue)
+				C.AvailableHacks.Bot[300].Deb+=1 local SaveDeb = C.AvailableHacks.Bot[300].Deb
+				local SaveChar = C.char
+				local function RunFunct()
+					return C.AvailableHacks.Bot[300].Deb==SaveDeb and C.Bot_AutoGrindBAB and char == SaveChar
+				end
+				for num, funct in ipairs(C.AvailableHacks.Bot[300].Functs) do
+					funct:Disconnect()
+				end C.AvailableHacks.Bot[300].Functs = {}
+				
+				task.spawn(10 - (os.clock() - C.AvailableHacks.Bot[300].Spawned))
+				
+				--while RunFunct() do
+				local TPPosition=Vector3.new(-55.17,-356.49,9491.75)
+				for num,stage in pairs(workspace.BoatStages.NormalStages:GetChildren()) do
+					if not RunFunct() then return end
+					if stage:FindFirstChild("DarknessPart")~=nil then
+						game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						task.wait(1/4)
+					end
+				end
+				teleportMyself(CFrame.new(TPPosition))
+				--end
+			end),
+			["MyStartUp"]=function()
+				task.wait(2)
+				workspace.ClaimRiverResultsGold:FireServer()
+				C.AvailableHacks.Bot[300].Spawned = os.clock()
+				C.AvailableHacks.Bot[300].ActivateFunction()
+			end,
+		},
+
 	},
 	["Commands"]={
 		[2]={

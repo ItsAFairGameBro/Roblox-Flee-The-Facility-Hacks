@@ -9685,9 +9685,11 @@ C.AvailableHacks ={
 					if not RunFunct() then return end
 					if stage:FindFirstChild("DarknessPart")~=nil then
 						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,1)
-						C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						teleportMyself(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 						task.wait(1/4)
-						C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						teleportMyself(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 						task.wait(1/4)
 						--C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
 						--task.wait(1/2)

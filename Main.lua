@@ -1357,7 +1357,11 @@ C.CommandFunctions = {
 		Type="",
 		AfterTxt="%s",
 		Run=function(args)
-			TS:Teleport(game.PlaceId, plr)
+			if args[1][1] == "new" then
+				TS:Teleport(game.PlaceId, plr)
+			elseif args[1][2]:len() == 0 then
+				TS:TeleportToPlaceInstance(game.PlaceId,game.JobId,plr)
+			end
 		end,
 	}
 }

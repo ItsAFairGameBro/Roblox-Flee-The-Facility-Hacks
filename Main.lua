@@ -9684,11 +9684,13 @@ C.AvailableHacks ={
 				for num,stage in pairs(workspace.BoatStages.NormalStages:GetChildren()) do
 					if not RunFunct() then return end
 					if stage:FindFirstChild("DarknessPart")~=nil then
-						firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,1)
-						--game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
-						task.wait(1/4)
-						firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,0)
-						task.wait(1/4)
+						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,1)
+						C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						task.wait(1/2)
+						C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						task.wait(1/2)
+						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,0)
+						--task.wait(1/4)
 					end
 				end
 				if not RunFunct() then return end

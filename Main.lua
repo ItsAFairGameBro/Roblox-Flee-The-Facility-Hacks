@@ -56,6 +56,7 @@ local reloadFunction = lastRunningEnv.ReloadFunction--function()
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
 GlobalSettings.MinimumHeight = GlobalSettings.MinimumHeight or 1.5
+GlobalSettings.BetterConsole = true
 
 local getID="HackGUI1"
 local emojiDesc = {

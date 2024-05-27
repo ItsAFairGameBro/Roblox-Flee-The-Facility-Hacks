@@ -9664,6 +9664,10 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["ActivateFunction"]=(function(newValue)
 				C.AvailableHacks.Bot[300].Deb+=1 local SaveDeb = C.AvailableHacks.Bot[300].Deb
+				if not newValue then
+					C.char.PrimaryPart.Anchored = false
+					return
+				end
 				local SaveChar = C.char
 				local function RunFunct()
 					return C.AvailableHacks.Bot[300].Deb==SaveDeb and C.enHacks.Bot_AutoGrindBAB and C.char == SaveChar
@@ -9672,7 +9676,9 @@ C.AvailableHacks ={
 					funct:Disconnect()
 				end C.AvailableHacks.Bot[300].Functs = {}
 				
-				task.wait(10 - (os.clock() - C.AvailableHacks.Bot[300].Spawned))
+				task.wait(5 - (os.clock() - C.AvailableHacks.Bot[300].Spawned))
+				
+				C.char.PrimaryPart.Anchored = true
 				
 				--while RunFunct() do
 				local TPPosition=Vector3.new(-55.17,-356.49,9491.75)
@@ -9680,7 +9686,7 @@ C.AvailableHacks ={
 					if not RunFunct() then return end
 					if stage:FindFirstChild("DarknessPart")~=nil then
 						game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
-						task.wait(1/4)
+						task.wait(1/2)
 					end
 				end
 				if not RunFunct() then return end
@@ -9691,7 +9697,7 @@ C.AvailableHacks ={
 				task.wait(2)
 				workspace.ClaimRiverResultsGold:FireServer()
 				C.AvailableHacks.Bot[300].Spawned = os.clock()
-				C.AvailableHacks.Bot[300].ActivateFunction()
+				C.AvailableHacks.Bot[300].ActivateFunction(C.enHacks.Bot_AutoGrindBAB)
 			end,
 		},
 

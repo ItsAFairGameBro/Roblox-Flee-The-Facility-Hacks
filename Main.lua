@@ -9699,7 +9699,13 @@ C.AvailableHacks ={
 					end
 				end
 				if not RunFunct() then return end
-				teleportMyself(CFrame.new(TPPosition))
+				while RunFunct() do
+					teleportMyself(CFrame.new(TPPosition))
+					if C.human then
+						C.human:ChangeState(Enum.HumanoidStateType.Jumping)
+					end
+					task.wait(1)
+				end
 				--end
 			end),
 			["MyStartUp"]=function()

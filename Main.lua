@@ -1359,7 +1359,7 @@ C.CommandFunctions = {
 		Run=function(args)
 			if args[1][1] == "new" then
 				TS:Teleport(game.PlaceId, plr)
-			elseif args[1][2]:len() == 0 then
+			elseif not args[1][1] or args[1][1]:len() == 0 then
 				TS:TeleportToPlaceInstance(game.PlaceId,game.JobId,plr)
 			end
 		end,

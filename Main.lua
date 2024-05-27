@@ -9657,6 +9657,7 @@ C.AvailableHacks ={
 			["Universes"]={"BuildABoat"},
 			["Functs"]={},
 			["Deb"] = 0,
+			["DontActivate"]=true,
 			["ActivateFunction"]=(function(newValue)
 				C.AvailableHacks.Bot[300].Deb+=1 local SaveDeb = C.AvailableHacks.Bot[300].Deb
 				local SaveChar = C.char

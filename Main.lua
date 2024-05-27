@@ -9687,6 +9687,8 @@ C.AvailableHacks ={
 						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,1)
 						C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
 						task.wait(1/4)
+						C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						task.wait(1/4)
 						--C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
 						--task.wait(1/2)
 						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,0)

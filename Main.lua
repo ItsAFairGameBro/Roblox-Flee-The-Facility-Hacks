@@ -9666,7 +9666,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Bot[300].Deb+=1 local SaveDeb = C.AvailableHacks.Bot[300].Deb
 				local SaveChar = C.char
 				local function RunFunct()
-					return C.AvailableHacks.Bot[300].Deb==SaveDeb and C.Bot_AutoGrindBAB and C.char == SaveChar
+					return C.AvailableHacks.Bot[300].Deb==SaveDeb and C.enHacks.Bot_AutoGrindBAB and C.char == SaveChar
 				end
 				for num, funct in ipairs(C.AvailableHacks.Bot[300].Functs) do
 					funct:Disconnect()

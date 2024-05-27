@@ -572,7 +572,7 @@ local function GuiCreationFunction()
 	--for key, val in pairs(newC) do
 	--	C[key] = val
 	--end
-	if GlobalSettings.BetterConsoleEnabled~=false then
+	if GlobalSettings.BetterConsole then
 		C.Modules.BetterConsole(C,GuiElements,C.comma_value,checkcaller)
 	end
 	if C.Modules[C.gameName] then

@@ -9667,7 +9667,7 @@ C.AvailableHacks ={
 					funct:Disconnect()
 				end C.AvailableHacks.Bot[300].Functs = {}
 				
-				task.spawn(10 - (os.clock() - C.AvailableHacks.Bot[300].Spawned))
+				task.wait(10 - (os.clock() - C.AvailableHacks.Bot[300].Spawned))
 				
 				--while RunFunct() do
 				local TPPosition=Vector3.new(-55.17,-356.49,9491.75)

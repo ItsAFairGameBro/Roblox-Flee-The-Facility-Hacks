@@ -9676,7 +9676,7 @@ C.AvailableHacks ={
 					funct:Disconnect()
 				end C.AvailableHacks.Bot[300].Functs = {}
 
-				task.wait(5 - (os.clock() - C.AvailableHacks.Bot[300].Spawned))
+				task.wait(3 - (os.clock() - C.AvailableHacks.Bot[300].Spawned))
 
 
 				--while RunFunct() do
@@ -9686,9 +9686,9 @@ C.AvailableHacks ={
 					if stage:FindFirstChild("DarknessPart")~=nil then
 						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,1)
 						C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
-						task.wait(1/2)
-						C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
-						task.wait(1/2)
+						task.wait(1/4)
+						--C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
+						--task.wait(1/2)
 						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,0)
 						--task.wait(1/4)
 					end

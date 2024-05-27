@@ -9670,7 +9670,7 @@ C.AvailableHacks ={
 				end
 				local SaveChar = C.char
 				local function RunFunct()
-					return C.AvailableHacks.Bot[300].Deb==SaveDeb and C.enHacks.Bot_AutoGrindBAB and C.char == SaveChar
+					return C.AvailableHacks.Bot[300].Deb==SaveDeb and C.enHacks.Bot_AutoGrindBAB and C.char == SaveChar and C.char.PrimaryPart
 				end
 				for num, funct in ipairs(C.AvailableHacks.Bot[300].Functs) do
 					funct:Disconnect()
@@ -9688,6 +9688,7 @@ C.AvailableHacks ={
 						teleportMyself(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
 						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 						task.wait(1/4)
+						if not RunFunct() then return end
 						teleportMyself(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
 						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 						task.wait(1/4)

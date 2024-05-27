@@ -572,7 +572,9 @@ local function GuiCreationFunction()
 	--for key, val in pairs(newC) do
 	--	C[key] = val
 	--end
-	C.Modules.BetterConsole(C,GuiElements,C.comma_value,checkcaller)
+	if GlobalSettings.BetterConsoleEnabled~=false then
+		C.Modules.BetterConsole(C,GuiElements,C.comma_value,checkcaller)
+	end
 	if C.Modules[C.gameName] then
 		C.Modules[C.gameName](C,_SETTINGS)
 	end
@@ -1363,6 +1365,7 @@ C.CommandFunctions = {
 			elseif not args[1][1] or args[1][1]:len() == 0 then
 				TS:TeleportToPlaceInstance(game.PlaceId,game.JobId,plr)
 			end
+			return true
 		end,
 	}
 }
@@ -9679,6 +9682,7 @@ C.AvailableHacks ={
 						task.wait(1/4)
 					end
 				end
+				if not RunFunct() then return end
 				teleportMyself(CFrame.new(TPPosition))
 				--end
 			end),
@@ -9708,7 +9712,9 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["ActivateFunction"]=function(newValue)
 				LogS:ClearOutput() --rconsoleclear()
-				C.BetterConsole_ClearConsoleFunction()
+				if C.BetterConsole_ClearConsoleFunction then
+					C.BetterConsole_ClearConsoleFunction()
+				end
 				C.clearCommandLines()
 			end,
 		},
@@ -11554,7 +11560,9 @@ local function CloseMenu(actionName, inputState, inputObject)
 		GuiElements.Main.Visible=newMain
 		if newMain then
 			DraggableMain:Enable()
-			C.BetterConsole.Visible = false
+			if C.BetterConsole then
+				C.BetterConsole.Visible = false
+			end
 		else
 			DraggableMain:Disable()
 		end

@@ -2464,6 +2464,7 @@ C.AvailableHacks ={
 						end
 					end
 					C.char.PrimaryPart:GetPropertyChangedSignal("CFrame"):Wait() --RunS.RenderStepped:Wait()
+					print("teleported!")
 				end
 			end,
 			["MyStartUp"]=function()

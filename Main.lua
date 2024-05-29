@@ -2473,7 +2473,6 @@ C.AvailableHacks ={
 					newInput = C.char.PrimaryPart.CFrame
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
-							print("TPed")
 							teleportMyself(lastInput)
 						end
 					end
@@ -2842,13 +2841,17 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Universes"]={"Tower"},
 			["ActivateFunction"]=function(newValue)
-				if not C.enHacks.Blatant_DisableToHAntiCheat then
+				--[[if not C.enHacks.Blatant_DisableToHAntiCheat then
 					return
 				end
 				local localScript1 = StringWaitForChild(plr,"PlayerScripts.LocalScript",30)
 				local localScript2 = StringWaitForChild(plr,"PlayerScripts.LocalScript2",30)
 				if not localScript1 or not localScript2 then
 					return
+				end
+				for num, connection in ipairs(C.GetHardValue(localScript1,"Changed",{yield=true})) do
+					connection:Disconnect()
+					print(`Disconnected {num}`)
 				end
 				local oldParent = localScript1.Parent
 				localScript1.Parent = nil
@@ -2860,7 +2863,7 @@ C.AvailableHacks ={
 				localScript1.Parent = oldParent
 				localScript2 = Instance.new("LocalScript")
 				localScript2.Name = "LocalScript2"
-				localScript2.Parent = oldParent
+				localScript2.Parent = oldParent--]]
 			end,
 		},
 		[253]={

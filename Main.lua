@@ -2459,15 +2459,23 @@ C.AvailableHacks ={
 					return
 				end
 				local lastInput,newInput = C.char:GetPivot(), nil
-				while C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.enHacks.Blatant_TeleportBack do
+				local function CanRun()
+					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.enHacks.Blatant_TeleportBack
+				end
+				task.spawn(function()
+					while CanRun() do
+						lastInput = C.char.PrimaryPart.CFrame
+						RunS.RenderStepped:Wait()
+					end
+				end)
+				while CanRun() do
 					newInput = C.char.PrimaryPart.CFrame
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
 							teleportMyself(lastInput)
 						end
 					end
-					lastInput = C.char.PrimaryPart.CFrame
-					RunS.RenderStepped:Wait() --C.char.PrimaryPart:GetPropertyChangedSignal("CFrame"):Wait()
+					C.char.PrimaryPart:GetPropertyChangedSignal("CFrame"):Wait()
 				end
 			end,
 			["MyStartUp"]=function()

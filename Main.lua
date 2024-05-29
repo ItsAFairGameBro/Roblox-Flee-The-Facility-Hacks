@@ -2472,6 +2472,7 @@ C.AvailableHacks ={
 					newInput = C.char.PrimaryPart.CFrame
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
+							print("TPed")
 							teleportMyself(lastInput)
 						end
 					end
@@ -9635,9 +9636,13 @@ C.AvailableHacks ={
 					local savePoso = C.char:GetPivot()
 					for num, stage in ipairs(workspace:WaitForChild("tower"):WaitForChild("sections"):GetChildren()) do
 						if stage.Name ~= "lobby" and stage.Name ~= "finish" then
-							teleportMyself(CFrame.new(stage.start.Position+Vector3.new(0,3,0)))
+							teleportMyself(CFrame.new(stage:WaitForChild("start").Position+Vector3.new(0,3,0)))
 							task.wait(1)
 							if not C.human or C.human.Health <= 0 then
+								return
+							end
+							if stage:WaitForChild("start").Position > C.char:GetPivot().Position then
+								print("We fell offf! :(")
 								return
 							end
 						end

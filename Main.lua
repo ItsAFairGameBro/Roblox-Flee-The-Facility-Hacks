@@ -2464,7 +2464,7 @@ C.AvailableHacks ={
 						end
 					end
 					lastInput = C.char.PrimaryPart.CFrame
-					C.char.PrimaryPart:GetPropertyChangedSignal("CFrame"):Wait() --RunS.RenderStepped:Wait()
+					RunS.RenderStepped:Wait() --C.char.PrimaryPart:GetPropertyChangedSignal("CFrame"):Wait()
 				end
 			end,
 			["MyStartUp"]=function()

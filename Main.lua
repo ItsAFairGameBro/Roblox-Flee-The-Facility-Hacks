@@ -3756,6 +3756,91 @@ C.AvailableHacks ={
 				FavoriteGame.Enabled = not C.enHacks.Utility_DisableFavoriteGame
 			end,
 		},
+		[250]={
+			["Type"]="ExTextButton",
+			["Title"]="Disable Death",
+			["Desc"]="Disables killparts locally (just for you)",
+			["Shortcut"]="Blatant_NoDeath",
+			["Default"]=false,
+			["DontActivate"]=true,
+			["Universes"]={"Tower"},
+			["ActivateFunction"]=function()
+				local killScript = C.char:WaitForChild("KillScript")
+				if killScript then
+					killScript.Disabled = C.enHacks.Blatant_NoDeath
+				end
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Blatant[250].ActivateFunction()
+			end,
+		},
+		[251]={
+			["Type"]="ExTextButton",
+			["Title"]="Disable Bunny Jump",
+			["Desc"]="Disables forced bunny jump locally (just for you)",
+			["Shortcut"]="Blatant_NoBunnyJump",
+			["Default"]=false,
+			["DontActivate"]=true,
+			["Universes"]={"Tower"},
+			["ActivateFunction"]=function()
+				local bunnyJump = C.char:WaitForChild("bunnyJump",30)
+				if bunnyJump then
+					bunnyJump.Disabled = C.enHacks.Blatant_NoBunnyJump
+				end
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Blatant[251].ActivateFunction()
+			end,
+		},
+		[252]={
+			["Type"]="ExTextButton",
+			["Title"]="Disable ToH Client AntiCheat (experimental)",
+			["Desc"]="Disables Anticheat",
+			["Shortcut"]="Blatant_DisableToHAntiCheat",
+			["Default"]=false,
+			["Universes"]={"Tower"},
+			["ActivateFunction"]=function(newValue)
+				local localScript1 = StringWaitForChild(plr,"PlayerScripts.LocalScript",30)
+				local localScript2 = StringWaitForChild(plr,"PlayerScripts.LocalScript2",30)
+				if not localScript1 or not localScript2 then
+					return
+				end
+				localScript1.Disabled = C.enHacks.Blatant_DisableToHAntiCheat
+				localScript2.Disabled = C.enHacks.Blatant_DisableToHAntiCheat
+			end,
+		},
+		[253]={
+			["Type"]="ExTextButton",
+			["Title"]="ToH Force Infinite Jump",
+			["Desc"]="Forces Inf Jump",
+			["Shortcut"]="Blatant_ToHInfJump",
+			["Default"]=false,
+			["DontActivate"]=true,
+			["Universes"]={"Tower"},
+			["ActivateFunction"]=function()
+				local multiJumpCount = StringWaitForChild(C.char,"ExtraJumper.multiJumpCount")
+				if multiJumpCount then
+					multiJumpCount.Value = C.enHacks.Blatant_ToHInfJump and math.huge or 0
+				end
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Blatant[251].ActivateFunction()
+			end,
+		},
+		[255]={
+			["Type"]="ExTextButton",
+			["Title"]="Freeze ToH Client",
+			["Desc"]="Stops moving objects. This has the same effect as the hour glass",
+			["Shortcut"]="Blatant_ToHFreezeTime",
+			["Default"]=false,
+			["Universes"]={"Tower"},
+			["ActivateFunction"]=function(newValue)
+				local val = StringWaitForChild(plr,"PlayerScripts.timefreeze",30)
+				if val then
+					val.Value = C.enHacks.Blatant_ToHFreezeTime
+				end
+			end,
+		},
 	},
 	["Basic"]={
 		[1]={

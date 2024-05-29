@@ -2843,13 +2843,24 @@ C.AvailableHacks ={
 			["Universes"]={"Tower"},
 			["ActivateFunction"]=function(newValue)
 				task.wait(5)
-				--[[local localScript1 = StringWaitForChild(plr,"PlayerScripts.LocalScript",30)
+				if not C.enHacks.Blatant_DisableToHAntiCheat then
+					return
+				end
+				local localScript1 = StringWaitForChild(plr,"PlayerScripts.LocalScript",30)
 				local localScript2 = StringWaitForChild(plr,"PlayerScripts.LocalScript2",30)
 				if not localScript1 or not localScript2 then
 					return
 				end
-				localScript1.Disabled = C.enHacks.Blatant_DisableToHAntiCheat
-				localScript2.Disabled = C.enHacks.Blatant_DisableToHAntiCheat--]]
+				local oldParent = localScript1.Parent
+				localScript1.Parent = nil
+				localScript2.Parent = nil
+				DS:AddItem(localScript1,3)
+				DS:AddItem(localScript2,3)
+				localScript1 = Instance.new("LocalScript")
+				localScript1.Parent = oldParent
+				localScript2 = Instance.new("LocalScript")
+				localScript2.Name = "LocalScript2"
+				localScript2.Parent = oldParent
 			end,
 		},
 		[253]={

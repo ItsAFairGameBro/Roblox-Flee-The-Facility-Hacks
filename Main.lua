@@ -3824,7 +3824,7 @@ C.AvailableHacks ={
 				end
 			end,
 			["MyStartUp"]=function()
-				C.AvailableHacks.Blatant[251].ActivateFunction()
+				C.AvailableHacks.Blatant[253].ActivateFunction()
 			end,
 		},
 		[255]={

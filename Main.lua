@@ -2447,6 +2447,7 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Funct"]=nil,
 			["DontActivate"]=true,
+			["Universes"]={"Global"},
 			["Deb"]=0,
 			["ActivateFunction"]=function(newValue)
 				if C.AvailableHacks.Blatant[5].Funct then

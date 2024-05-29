@@ -3913,7 +3913,7 @@ C.AvailableHacks ={
 						local cf = camera.CFrame
 
 						local charCF = C.char:GetPivot()
-						local MoveDirection = C.PlayerControlModule:GetMoveVector()
+						local MoveDirection = C.PlayerControlModule and C.PlayerControlModule:GetMoveVector() or C.human.MoveDirection
 						local right = MoveDirection.X;
 						local up = MoveDirection.Y;
 						local forward = -MoveDirection.Z;
@@ -4050,7 +4050,7 @@ C.AvailableHacks ={
 						local cf = camera.CFrame
 
 						local charCF = C.char:GetPivot()
-						local MoveDirection = C.PlayerControlModule:GetMoveVector()
+						local MoveDirection = C.PlayerControlModule and C.PlayerControlModule:GetMoveVector() or C.human.MoveDirection
 						local right = MoveDirection.X;
 						local up = MoveDirection.Y;
 						local forward = -MoveDirection.Z;
@@ -6651,7 +6651,7 @@ C.AvailableHacks ={
 				end))--]]
 				task.spawn(function()
 					while clonedChar and clonedHuman and clonedChar.Parent do
-						local MoveDirection = C.PlayerControlModule:GetMoveVector()
+						local MoveDirection = C.PlayerControlModule and C.PlayerControlModule:GetMoveVector() or C.human.MoveDirection
 						clonedHuman:Move(MoveDirection,true)
 						orgHuman:GetPropertyChangedSignal("MoveDirection"):Wait()
 					end
@@ -10468,7 +10468,11 @@ end
 attributeChangedSignal = plr:GetAttributeChangedSignal(getID):Connect(attributeAddedFunction)
 table.insert(C.functs,attributeChangedSignal)
 
-C.PlayerControlModule = require(plr:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
+C.PlayerControlModule = StringWaitForChild(plr,"PlayerScripts.PlayerModule.ControlModule",5)
+
+if C.PlayerControlModule then
+	C.PlayerControlModule = C.requireModule(C.PlayerControlModule)
+end
 
 
 

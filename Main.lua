@@ -9641,7 +9641,7 @@ C.AvailableHacks ={
 							if not C.human or C.human.Health <= 0 then
 								return
 							end
-							if stage:WaitForChild("start").Position > C.char:GetPivot().Position then
+							if stage:WaitForChild("start").Position.Y > C.char:GetPivot().Position.Y then
 								print("We fell offf! :(")
 								return
 							end

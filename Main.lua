@@ -585,6 +585,7 @@ end
 --BIGGIE FUNCTIONS
 local TPStack = {}
 local isTeleporting = false
+C.LastTeleportLoc = CFrame.new(0,1e3,0)
 
 local function teleport_module_teleportQueue()
 	if isTeleporting then return end isTeleporting = true
@@ -596,6 +597,7 @@ local function teleport_module_teleportQueue()
 				or (C.human.RigType == Enum.HumanoidRigType.R15 and C.char:FindFirstChild("UpperTorso"))
 			if C.char.PrimaryPart then
 				C.char:SetPrimaryPartCFrame(currentTP)
+				C.LastTeleportLoc = currentTP
 				plr:SetAttribute("LastTP",os.clock())
 			end
 			table.remove(TPStack,1)
@@ -2437,6 +2439,36 @@ C.AvailableHacks ={
 				end
 			end,
 		},--]]
+		[5]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Teleport Back",
+			["Desc"]="Instantly teleport back",
+			["Shortcut"]="Blatant_TeleportBack",
+			["Default"]=false,
+			["Funct"]=nil,
+			["DontActivate"]=true,
+			["Deb"]=0,
+			["ActivateFunction"]=function(newValue)
+				if C.AvailableHacks.Blatant[5].Funct then
+					C.AvailableHacks.Blatant[5].Funct:Disconnect()
+					C.AvailableHacks.Blatant[5].Funct = nil
+				end
+				C.AvailableHacks.Blatant[5].Deb += 1 local SaveDeb = C.AvailableHacks.Blatant[5].Deb
+				local lastInput,newInput = C.char:GetPivot(), nil
+				while C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.enHacks.Blatant_TeleportBack do
+					newInput = C.char:GetPivot()
+					if (newInput.Position - lastInput.Position).Magnitude > 16 then
+						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
+							teleportMyself(lastInput)
+						end
+					end
+					RunS.RenderStepped:Wait()
+				end
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Blatant[5].ActivateFunction(C.enHacks.Blatant_TeleportBack)
+			end,
+		},
 		[10]={
 			["Type"]="ExTextButton",
 			["Title"]="Auto Close",

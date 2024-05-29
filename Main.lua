@@ -97,13 +97,14 @@ local newcclosure = isStudio and function(funct) return funct end or newcclosure
 local gethui = isStudio and function() return PlayerGui end or gethui
 local firetouchinterest = isStudio and function() return end or firetouchinterest
 local fireclickdetector = isStudio and function() return end or fireclickdetector
+local getloadedmodules = isStudio and function() return {game:GetService("Players").LocalPlayer.PlayerScripts.PlayerModule.ControlModule} end or getloadedmodules
 local request = not isStudio and request
 local isfolder = not isStudio and isfolder
 local readfile = not isStudio and readfile
 local isfile = not isStudio and isfile
 local makefolder = not isStudio and makefolder
 local writefile = not isStudio and writefile
-
+	
 --DEBUG--
 local _SETTINGS
 _SETTINGS={
@@ -10611,11 +10612,15 @@ end
 attributeChangedSignal = plr:GetAttributeChangedSignal(getID):Connect(attributeAddedFunction)
 table.insert(C.functs,attributeChangedSignal)
 
-C.PlayerControlModule = StringWaitForChild(plr,"PlayerScripts.PlayerModule.ControlModule",1) or StringWaitForChild(plr,"PlayerScripts.ControlScript.MasterControl",1)
+--C.PlayerControlModule = StringWaitForChild(plr,"PlayerScripts.PlayerModule.ControlModule",1) or StringWaitForChild(plr,"PlayerScripts.ControlScript.MasterControl",1)
 
-if C.PlayerControlModule then
-	C.PlayerControlModule = C.requireModule(C.PlayerControlModule)
+for num, module in ipairs(getloadedmodules()) do
+	if module and (module.Name == "MasterControl" or module.Name == "ControlScript") then
+		C.PlayerControlModule = C.requireModule(module)
+		break
+	end
 end
+
 
 
 

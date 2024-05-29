@@ -10468,7 +10468,7 @@ end
 attributeChangedSignal = plr:GetAttributeChangedSignal(getID):Connect(attributeAddedFunction)
 table.insert(C.functs,attributeChangedSignal)
 
-C.PlayerControlModule = StringWaitForChild(plr,"PlayerScripts.PlayerModule.ControlModule",5)
+C.PlayerControlModule = StringWaitForChild(plr,"PlayerScripts.PlayerModule.ControlModule",1) or StringWaitForChild(plr,"PlayerScripts.ControlScript.MasterControl",1)
 
 if C.PlayerControlModule then
 	C.PlayerControlModule = C.requireModule(C.PlayerControlModule)

@@ -2461,7 +2461,7 @@ C.AvailableHacks ={
 				end
 				local lastInput,newInput = C.char:GetPivot(), nil
 				local function CanRun()
-					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.enHacks.Blatant_TeleportBack
+					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and C.char.PrimaryPart and C.enHacks.Blatant_TeleportBack
 				end
 				task.spawn(function()
 					while CanRun() do
@@ -11802,5 +11802,7 @@ local function CloseMenu(actionName, inputState, inputObject)
 	end
 end
 CAS:BindActionAtPriority("CloseMenu"..C.saveIndex,CloseMenu,true,1e5,Enum.KeyCode.V)
+
+print(RS:GetDescendants())
 
 return "Hack Successfully Executed V1.02!"

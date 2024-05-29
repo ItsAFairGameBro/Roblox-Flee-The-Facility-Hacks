@@ -10764,7 +10764,7 @@ local initilizationTypes = ({
 			end
 			refreshTypes.ExTextButton(hackFrame,hackInfo)
 		end
-		local isDown
+		--[[local isDown
 		local function hackFrameToggleButtonFunction()
 			if (not isDown or os.clock() - isDown > .5) then
 				return
@@ -10780,11 +10780,53 @@ local initilizationTypes = ({
 		table.insert(C.functs,HackFrameMSBUp)
 		if ((C.getDictLength(hackInfo.Options))>=(2)) then
 			local function hackFrameReverseToggleButtonFunction()
+				
 				cycle(-1)
 			end
 			local MSBUp = hackFrame.Toggle.MouseButton2Up:Connect(hackFrameReverseToggleButtonFunction)
 			table.insert(C.functs,MSBUp)
+		end--]]
+		local function Button1Clicked(button,builtInDebounce)
+			assert(button,"invalid args!")
+			assert(button:IsA("TextButton") or button:IsA("ImageButton"),button:GetFullName().."must be a TextButton or ImageButton!")
+			local debounceLastPress = 0
+			local lastClickTime,lastClickPoso=0,Vector2.new()
+			local bindableEvent = Instance.new("BindableEvent")
+			bindableEvent.Name = "Button1Clicked"
+			table.insert(C.functs, button.MouseButton1Down:Connect(function(x,y)
+				lastClickTime,lastClickPoso=os.clock(),Vector2.new(x,y-36)
+			end))
+			table.insert(C.functs, button.MouseButton1Up:Connect(function(x,y)
+				if builtInDebounce and os.clock()-debounceLastPress<builtInDebounce then return end
+				local clickPosition = Vector2.new(x,y-36)
+				if (lastClickPoso-clickPosition).Magnitude>10 then return end
+				if os.clock()-lastClickTime>0.25 then return end
+				lastClickTime,lastClickPoso=0,Vector2.new()
+				bindableEvent:Fire(Enum.UserInputType.MouseButton1, clickPosition.X,clickPosition.Y)
+				debounceLastPress = os.clock()
+			end))
+			table.insert(C.functs, button.MouseButton2Down:Connect(function(x,y)
+				lastClickTime,lastClickPoso=os.clock(),Vector2.new(x,y-36)
+			end))
+			table.insert(C.functs, button.MouseButton2Up:Connect(function(x,y)
+				if builtInDebounce and os.clock()-debounceLastPress<builtInDebounce then return end
+				local clickPosition = Vector2.new(x,y-36)
+				if (lastClickPoso-clickPosition).Magnitude>10 then return end
+				if os.clock()-lastClickTime>0.25 then return end
+				lastClickTime,lastClickPoso=0,Vector2.new()
+				bindableEvent:Fire(Enum.UserInputType.MouseButton2, clickPosition.X,clickPosition.Y)
+				debounceLastPress = os.clock()
+			end))
+			table.insert(C.functs, button.Destroying:Connect(function()
+				bindableEvent:Destroy()
+			end))
+			
+			bindableEvent.Parent=button
+			return bindableEvent.Event
 		end
+		Button1Clicked(hackFrame.Toggle):Connect(function(userinputtype)
+			cycle(userinputtype == Enum.UserInputType.MouseButton1 and 1 or 2)
+		end)
 	end),
 	ExTextBox = function(hackInfo)
 		local hackFrame

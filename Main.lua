@@ -2455,6 +2455,9 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[5].Funct = nil
 				end
 				C.AvailableHacks.Blatant[5].Deb += 1 local SaveDeb = C.AvailableHacks.Blatant[5].Deb
+				if not C.enHacks.Blatant_TeleportBack then
+					return
+				end
 				local lastInput,newInput = C.char:GetPivot(), nil
 				while C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.enHacks.Blatant_TeleportBack do
 					newInput = C.char.PrimaryPart.CFrame
@@ -3800,7 +3803,7 @@ C.AvailableHacks ={
 			["Shortcut"]="JumpPower",
 			["Default"]=(C.gameUniverse=="Flee" and 36 or SP.CharacterJumpPower),
 			["MinBound"]=0,
-			["MaxBound"]=1e4,
+			["MaxBound"]=5e4,
 			["DontActivate"]=true,
 			["ActivateFunction"]=function(newValue)
 				local function setJump()
@@ -4488,7 +4491,7 @@ C.AvailableHacks ={
 			["Shortcut"]="MovementVerticalSpeed",
 			["Default"]=1,
 			["MinBound"]=0.01,
-			["MaxBound"]=50.00,
+			["MaxBound"]=100.00,
 		},
 		[6]={
 			["Type"]="ExTextBox",
@@ -4497,7 +4500,7 @@ C.AvailableHacks ={
 			["Shortcut"]="MovementHorizontalSpeed",
 			["Default"]=1,
 			["MinBound"]=0.01,
-			["MaxBound"]=50.00,
+			["MaxBound"]=100.00,
 		},
 		[12]={
 			["Type"]="ExTextButton",
@@ -4559,7 +4562,7 @@ C.AvailableHacks ={
 								return C.AvailableHacks.Render[28].ComputerTeleportFunctions[closestPC]()
 							else
 								inputPosition = mouse.Hit.Position;
-								local result,hitPart = C.raycast(camera.CFrame.Position,inputPosition,{"Blacklist",C.char},1000,1,C.AvailableHacks.Basic[4].IsActive and C.enHacks.Movement=="Noclip")
+								local result,hitPart = C.raycast(camera.CFrame.Position,inputPosition,{"Blacklist",C.char},15e3,1,C.AvailableHacks.Basic[4].IsActive and C.enHacks.Movement=="Noclip")
 								if not result then
 									return
 								else

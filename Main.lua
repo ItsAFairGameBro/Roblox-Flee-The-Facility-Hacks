@@ -5219,7 +5219,7 @@ C.AvailableHacks ={
 					if C.gameUniverse == "Tower" then
 						error("Purposeful Error!")
 					else
-						print("22The script has successfully intercepted an attempted kick.")
+						print("22The script has successfully intercepted an attempted kick from:",getcallingscript())
 					end
 					return false, nil
 				end) or nil)

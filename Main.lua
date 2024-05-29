@@ -11803,6 +11803,12 @@ local function CloseMenu(actionName, inputState, inputObject)
 end
 CAS:BindActionAtPriority("CloseMenu"..C.saveIndex,CloseMenu,true,1e5,Enum.KeyCode.V)
 
-print(RS:GetDescendants())
+task.spawn(function()
+	for num, event in ipairs(RS:GetDescendants()) do
+		if event:IsA("RemoteEvent") or event:IsA("RemoteFunction") then
+			print("Event",event.Name,event:GetFullName())
+		end
+	end	
+end)
 
 return "Hack Successfully Executed V1.02!"

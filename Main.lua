@@ -2851,7 +2851,6 @@ C.AvailableHacks ={
 				end
 				for num, connection in ipairs(C.GetHardValue(localScript1,"Changed",{yield=true})) do
 					connection:Disconnect()
-					print(`Disconnected {num}`)
 				end
 				local oldParent = localScript1.Parent
 				localScript1.Parent = nil
@@ -2863,7 +2862,10 @@ C.AvailableHacks ={
 				localScript1.Parent = oldParent
 				localScript2 = Instance.new("LocalScript")
 				localScript2.Name = "LocalScript2"
-				localScript2.Parent = oldParent--]]
+				localScript2.Parent = oldParent
+				
+				Instance.new("Folder",localScript1).Name = "FakeDummy"
+				Instance.new("Folder",localScript2).Name = "FakeDummy"
 			end,
 		},
 		[253]={

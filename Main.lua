@@ -2842,7 +2842,6 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Universes"]={"Tower"},
 			["ActivateFunction"]=function(newValue)
-				task.wait(5)
 				if not C.enHacks.Blatant_DisableToHAntiCheat then
 					return
 				end
@@ -2854,6 +2853,7 @@ C.AvailableHacks ={
 				local oldParent = localScript1.Parent
 				localScript1.Parent = nil
 				localScript2.Parent = nil
+				localScript2.Disabled = true
 				DS:AddItem(localScript1,3)
 				DS:AddItem(localScript2,3)
 				localScript1 = Instance.new("LocalScript")

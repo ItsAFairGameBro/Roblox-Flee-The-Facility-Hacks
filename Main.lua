@@ -5219,7 +5219,7 @@ C.AvailableHacks ={
 					if C.gameUniverse == "Tower" then
 						error("Purposeful Error!")
 					else
-						print("22The script has successfully intercepted an attempted kick from:",getcallingscript())
+						print("22The script has successfully intercepted an attempted kick from:",getcallingscript():GetFullName())
 					end
 					return false, nil
 				end) or nil)
@@ -11804,11 +11804,26 @@ end
 CAS:BindActionAtPriority("CloseMenu"..C.saveIndex,CloseMenu,true,1e5,Enum.KeyCode.V)
 
 task.spawn(function()
-	for num, event in ipairs(RS:GetDescendants()) do
+	--[[for num, event in ipairs(RS:GetDescendants()) do
 		if event:IsA("RemoteEvent") or event:IsA("RemoteFunction") then
 			print("Event",event.Name,event:GetFullName())
 		end
-	end	
+	end	--]]
+	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(...)
+		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
+
+			local caller = getcallingscript()
+			if caller then
+				print("Deleted",caller:GetFullName())
+				caller:Destroy()
+			end
+			error("idk man")
+
+			return nil
+		end
+
+		return OldNamecall(...)
+	end))
 end)
 
 return "Hack Successfully Executed V1.02!"

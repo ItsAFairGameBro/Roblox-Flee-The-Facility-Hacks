@@ -9613,6 +9613,7 @@ C.AvailableHacks ={
 			["Shortcut"]="Bot_AutoTowerTop",
 			["Universes"]={"Tower"},
 			["Funct"]=nil,
+			["LastPosition"]=nil,
 			["ActivateFunction"]=(function(newValue)
 				if C.AvailableHacks.Bot[215].Funct then
 					C.AvailableHacks.Bot[215].Funct:Disconnect()
@@ -9622,18 +9623,26 @@ C.AvailableHacks ={
 					return
 				end
 				local timerLeftButton = StringWaitForChild(PlayerGui,"timer.timeLeft")
+				local function disable()
+					if C.AvailableHacks.Bot[215].LastPosition then
+						C.human:MoveTo(C.AvailableHacks.Bot[215].LastPosition.Position)
+						teleportMyself(C.AvailableHacks.Bot[215].LastPosition)
+						C.AvailableHacks.Bot[215].LastPosition = nil
+					end
+				end
 				local function doUpdate()
 					if C.isCleared then
 						return
 					end
 					if (timerLeftButton.TextColor3.G > .8 and timerLeftButton.TextColor3.B < .8) then
 						print("Alr Sped! (Not White Text)")
+						disable()
 						return
 					end
 					if not C.char or not C.char.PrimaryPart or not C.human or C.human.Health <= 0 then
 						task.delay(1,doUpdate)
 					end
-					local savePoso = C.char:GetPivot()
+					C.AvailableHacks.Bot[215].LastPosition = C.char:GetPivot()
 					for num, stage in ipairs(workspace:WaitForChild("tower"):WaitForChild("sections"):GetChildren()) do
 						if stage.Name ~= "lobby" and stage.Name ~= "finish" then
 							teleportMyself(CFrame.new(stage:WaitForChild("start").Position+Vector3.new(0,3,0)))
@@ -9665,8 +9674,7 @@ C.AvailableHacks ={
 							break
 						end
 					end
-					teleportMyself(savePoso)
-					C.human:MoveTo(savePoso.Position)
+					disable()
 					task.delay(1,doUpdate)
 				end
 				C.AvailableHacks.Bot[215].Funct = timerLeftButton:GetPropertyChangedSignal("TextColor3"):Connect(doUpdate)

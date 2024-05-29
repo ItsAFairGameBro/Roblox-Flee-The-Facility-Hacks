@@ -2841,13 +2841,14 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Universes"]={"Tower"},
 			["ActivateFunction"]=function(newValue)
-				local localScript1 = StringWaitForChild(plr,"PlayerScripts.LocalScript",30)
+				task.wait(5)
+				--[[local localScript1 = StringWaitForChild(plr,"PlayerScripts.LocalScript",30)
 				local localScript2 = StringWaitForChild(plr,"PlayerScripts.LocalScript2",30)
 				if not localScript1 or not localScript2 then
 					return
 				end
 				localScript1.Disabled = C.enHacks.Blatant_DisableToHAntiCheat
-				localScript2.Disabled = C.enHacks.Blatant_DisableToHAntiCheat
+				localScript2.Disabled = C.enHacks.Blatant_DisableToHAntiCheat--]]
 			end,
 		},
 		[253]={
@@ -11232,7 +11233,8 @@ function C.RunCommand(inputMsg,shouldSave,noRefresh,canYield)
 				task.spawn(yieldFunction)
 			end
 		end
-	elseif inputCommand~="c" and inputCommand~="whisper" and inputCommand~="mute" and inputCommand~="unmute" then
+	elseif inputCommand~="c" and inputCommand~="whisper" and inputCommand~="mute" and inputCommand~="block" and inputCommand~="unblock"
+		and inputCommand~="unmute" and inputCommand~="e" then
 		C.CreateSysMessage(`Command Not Found: {inputCommand}`)
 	end
 end

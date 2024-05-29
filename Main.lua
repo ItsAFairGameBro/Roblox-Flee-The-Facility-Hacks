@@ -2463,8 +2463,8 @@ C.AvailableHacks ={
 							teleportMyself(lastInput)
 						end
 					end
+					lastInput = C.char.PrimaryPart.CFrame
 					C.char.PrimaryPart:GetPropertyChangedSignal("CFrame"):Wait() --RunS.RenderStepped:Wait()
-					print("teleported!")
 				end
 			end,
 			["MyStartUp"]=function()

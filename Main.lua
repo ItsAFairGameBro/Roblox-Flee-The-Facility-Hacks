@@ -2457,7 +2457,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[5].Deb += 1 local SaveDeb = C.AvailableHacks.Blatant[5].Deb
 				local lastInput,newInput = C.char:GetPivot(), nil
 				while C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.enHacks.Blatant_TeleportBack do
-					newInput = C.char:GetPivot()
+					newInput = C.char.PrimaryPart.CFrame
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
 							teleportMyself(lastInput)

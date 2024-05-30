@@ -11947,7 +11947,7 @@ task.spawn(function()
 		local old
 		old = hookfunction(getrenv().pcall,newcclosure(function(funct2Run)
 			if not checkcaller() then
-				warn(getcallingscript(),"tried to run a function, cancelled!")
+				print("A script tried to run a function, cancelled!")
 				return true, nil
 			end
 			return old(funct2Run)

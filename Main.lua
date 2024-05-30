@@ -11963,7 +11963,7 @@ task.spawn(function()
 				--print("Blocked BAC_",getnamecallmethod(),int)
 				getgenv().BAC = caller
 				if #tblPack(...) > 200 then
-					print(caller,int,'max args!',#tblPack(...))
+					print(caller,int,'max args!',#tblPack(...),tblPack(...)[8000])
 				else
 					print(caller,int,...)
 				end

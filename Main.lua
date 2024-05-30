@@ -1838,7 +1838,8 @@ C.AvailableHacks ={
 				local key
 				delay(.25,function()
 					--C.objectFuncts[theirChar]=C.objectFuncts[theirChar] or {}
-					while not C.isCleared and theirChar~=nil and theirChar.Parent~=nil do
+					local theirHumanoid = theirChar:WaitForChild("Humanoid",1000)
+					while not C.isCleared and theirChar~=nil and theirChar.Parent~=nil and theirHumanoid do
 						--if C.enHacks.ESP_Highlight then
 						--key=#C.objectFuncts[theirChar]+1
 						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
@@ -1861,7 +1862,7 @@ C.AvailableHacks ={
 								--changeRenderVisibility(theirViewportChar,1,(theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
 							end
 							task.wait()
-							while theirChar.Humanoid==camera.CameraSubject do
+							while theirHumanoid==camera.CameraSubject do
 								changeVisibility(robloxHighlight,1) --changeRenderVisibility(theirViewportChar,1)
 								camera:GetPropertyChangedSignal("CameraSubject"):Wait()
 							end

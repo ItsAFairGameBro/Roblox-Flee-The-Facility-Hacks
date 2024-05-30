@@ -2977,6 +2977,9 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
+					if not newTool:WaitForChild("Configuration",5) then
+						return
+					end
 					local list = {}
 					C.AvailableHacks.Blatant[300].AddInstance(list,newTool)
 					C.AvailableHacks.Blatant[300].RunStats(list)

@@ -11956,10 +11956,12 @@ task.spawn(function()
 	end
 	
 	local function conn(int)
-		if typeof(int) == "Instance" and int.ClassName == "RemoteEvent" and not conn[tostring(int)] then
-			conn[tostring(int)] = int.OnClientEvent:Connect(function(...)
-				warn("recieve,",int,...)
-			end)
+		if typeof(int) == "Instance" then
+			if not conn[tostring(int)] then
+				conn[tostring(int)] = int.OnClientEvent:Connect(function(...)
+					warn("recieve,",int,...)
+				end)
+			end
 		end
 	end
 

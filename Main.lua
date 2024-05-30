@@ -5232,8 +5232,8 @@ C.AvailableHacks ={
 								print("new BAC!!",RunScript.ClassName)
 							end
 							C.BAC = RunScript
-							--RunScript.Disabled = true
-							RunScript.Parent = workspace
+							RunScript.Enabled = false
+							--RunScript.Parent = workspace
 							--debrisAdditem(DS,RunScript,0)
 							--destroy(RunScript)
 							print("Parented!")

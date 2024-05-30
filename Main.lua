@@ -2929,6 +2929,7 @@ C.AvailableHacks ={
 				local function AddInstance(tool)
 					local Configuration = tool:FindFirstChild("Configuration")
 					if Configuration then
+						print("Added",tool)
 						table.insert(list,Configuration)
 					end
 				end

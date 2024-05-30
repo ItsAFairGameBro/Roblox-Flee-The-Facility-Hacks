@@ -11956,21 +11956,23 @@ task.spawn(function()
 	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(int,...)
 		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
 			--getcallingscript().Name=="BAC_"
-			local caller = getcallingscript()
+			local caller = getcallingscript() or "not found"
 			if caller then
 				--int.Parent = RunS
 				--task.spawn(set,caller)
 				--print("Deleted",getfenv())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)
-				debris(DS,caller,0)
-				getgenv().BAC = caller
+				--debris(DS,caller,0)
+				if caller ~= "not found" then
+					getgenv().BAC = caller
+				end
 				if #tblPack(...) > 200 then
 					print(caller,int,'max args!')--,#tblPack(...),tblPack(...)[8000])
 				else
 					print(caller,int,...)
 				end
-				
+				--error("idk man")
 			end
 			--error("idk man")
 

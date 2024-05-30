@@ -2940,9 +2940,10 @@ C.AvailableHacks ={
 				if myTool then
 					AddInstance(myTool)
 				end
-				local function SetStat(config,name,riggedValue)
-					local instance = config:FindFirstChild(name)
+				local function SetStat(parent,name,riggedValue)
+					local instance = parent:FindFirstChild(name)
 					if not instance then
+						print("Not fOund",name)
 						return
 					end
 					if C.enHacks.Blatant_FlagWarsGunHack then
@@ -2969,7 +2970,7 @@ C.AvailableHacks ={
 					SetStat(config,"HasScope",false)
 					
 					SetStat(config,"FireMode","Automatic")
-					SetStat(config,"CurrentAmmo",69)
+					SetStat(config.Parent,"CurrentAmmo",69)
 					SetStat(config,"AmmoCapacity",69)
 				end
 			end,

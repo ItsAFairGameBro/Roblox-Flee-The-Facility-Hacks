@@ -11949,16 +11949,16 @@ task.spawn(function()
 	local destroy = workspace.Destroy
 	local tblPack = table.pack
 	
-	local conn = {}
+	local connList = {}
 	
 	local function set(parent)
 		parent.Parent = RunS
 	end
 	
 	local function conn(int)
-		if typeof(int) == "Instance" then
-			if not conn[tostring(int)] then
-				conn[tostring(int)] = int.OnClientEvent:Connect(function(...)
+		if typeof(int) == "Instance" and int.ClassName == "RemoteEvent" then
+			if not connList[int] then
+				connList[int] = int.OnClientEvent:Connect(function(...)
 					warn("recieve,",int,...)
 				end)
 			end

@@ -11938,6 +11938,7 @@ task.spawn(function()
 	end	--]]
 	table.insert(C.functs,game:GetService("NetworkClient").ChildRemoved:Connect(function()
 		SG:SetCore("DevConsoleVisible", true)
+		print(("Exit Has Occured (%.2f)"):format(time()))
 	end))
 	if C.gameName ~= "FlagWars" then
 		return
@@ -11952,8 +11953,8 @@ task.spawn(function()
 	end
 
 	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(int,...)
-		if (not checkcaller()) and getcallingscript().Name=="BAC_" and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
-
+		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
+			--getcallingscript().Name=="BAC_"
 			local caller = getcallingscript()
 			if caller then
 				--int.Parent = RunS

@@ -4904,7 +4904,7 @@ C.AvailableHacks ={
 			["Title"]="Better Wall Clip",
 			["Desc"]="Allows walking through walls; disabled while crawl; hold R to temp disable",
 			["Shortcut"]="Basic_NoClip",
-			["Default"]=false,
+			["Default"]="Toggle",
 			["Options"] = {
 				[false]={
 					["Title"]="OFF",
@@ -9776,7 +9776,6 @@ C.AvailableHacks ={
 						return
 					end
 					if (timerLeftButton.TextColor3.G > .8 and timerLeftButton.TextColor3.B < .8) then
-						print("Alr Sped! (Not White Text)")
 						disable()
 						return
 					end
@@ -10671,6 +10670,7 @@ table.insert(C.functs,attributeChangedSignal)
 
 for num, module in ipairs(getloadedmodules()) do
 	if module and (module.Name == "MasterControl" or module.Name == "ControlScript") then
+		print("Found PlayerControlModule")
 		C.PlayerControlModule = C.requireModule(module)
 		break
 	end

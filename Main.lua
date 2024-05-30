@@ -11867,7 +11867,7 @@ task.spawn(function()
 
 		return OldNamecall(int,...)
 	end))--]]
-	if C.gameName == 'FlagWars' and false then
+	if C.gameName == 'FlagWars' then
 		while not C.BAC do
 			RunS.RenderStepped:Wait()
 		end
@@ -11889,11 +11889,12 @@ task.spawn(function()
 		--task.wait(2)--]]
 		task.wait(2)
 		--C.BAC.Enabled = false
-		C.BAC.Enabled = true
-		C.BAC.Enabled = false
+		
+		--C.BAC.Enabled = true
+		--C.BAC.Enabled = false
 		--C.BAC.Enabled = true
 
-		print(("Haha is %s"):format(C.BAC:GetFullName()))
+		print(("Haha is %s; before %s"):format(C.BAC:GetFullName(),tostring(sethiddenproperty(C.BAC,"Enabled",false))))
 		
 		getgenv().BAC = C.BAC
 		

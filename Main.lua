@@ -5220,13 +5220,16 @@ C.AvailableHacks ={
 				C.Hook(game,"__namecall","kick",newValue and (function()
 					if C.gameUniverse == "Tower" then
 						error("Purposeful Error!")
-					else
-						local RunScript = getcallingscript()
+					end
+					local RunScript = getcallingscript()
+					if C.gameUniverse == "FlagWars" then
 						if RunScript.Name=="BAC_" then
 							C.BAC = RunScript
 						end
-						print("22The script has successfully intercepted an attempted kick from:",RunScript:GetFullName(),RunScript.Parent or "nilpar")
-						taskwait(69)
+						error(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
+						--taskwait(69)
+					else
+						print(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 					end
 					return false, nil
 				end) or nil)

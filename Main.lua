@@ -11949,6 +11949,8 @@ task.spawn(function()
 	local destroy = workspace.Destroy
 	local tblPack = table.pack
 	
+	local conn = {}
+	
 	local function set(parent)
 		parent.Parent = RunS
 	end
@@ -11967,10 +11969,17 @@ task.spawn(function()
 				if caller ~= "not found" then
 					getgenv().BAC = caller
 				end
+				if not conn[int] and stringlower(getnamecallmethod()) == "fireserver" then
+					conn[int] = int.OnClientEvent:Connect(function(...)
+						warn("recieve,",int,...)
+					end)
+				end
 				if #tblPack(...) > 200 then
 					print(caller,int,'max args!')--,#tblPack(...),tblPack(...)[8000])
-				else
+				elseif (...)[1] and typeof((...)[1])=='table' and (...)[1] == (...)[1][1] then
 					print(caller,int,tostring(...))
+				else
+					print(caller,int,...)
 				end
 				--error("idk man")
 			end

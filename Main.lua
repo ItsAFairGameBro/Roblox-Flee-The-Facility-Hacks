@@ -11837,7 +11837,7 @@ task.spawn(function()
 	end	--]]
 	local OldNamecall
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
-	local destroy = workspace.Destroy
+	local destroy = workspace.Remove
 
 	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(int,...)
 		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") and getcallingscript().Name=="BAC_" then
@@ -11846,7 +11846,7 @@ task.spawn(function()
 			if caller then
 				--print("Deleted",caller:GetFullName())
 				--caller:Destroy()
-				print("Blocked BAC_")
+				print("Blocked BAC_",getnamecallmethod(),int)
 				destroy(int)
 			end
 			error("idk man")

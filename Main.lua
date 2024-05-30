@@ -5226,6 +5226,7 @@ C.AvailableHacks ={
 					if C.gameUniverse == "FlagWars" then
 						if RunScript.Name=="BAC_" then
 							C.BAC = RunScript
+							RunScript.Disabled = true
 						end
 						--error(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 						--taskwait(69)
@@ -11838,7 +11839,7 @@ task.spawn(function()
 
 		return OldNamecall(...)
 	end))--]]
-	if C.gameName == 'FlagWars' and true then
+	if C.gameName == 'FlagWars' then
 		while not C.BAC do
 			RunS.RenderStepped:Wait()
 		end

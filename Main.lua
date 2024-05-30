@@ -11846,6 +11846,7 @@ task.spawn(function()
 			if caller then
 				--print("Deleted",caller:GetFullName())
 				--caller:Destroy()
+				print("Blocked BAC_")
 				destroy(int)
 			end
 			error("idk man")

@@ -5219,6 +5219,7 @@ C.AvailableHacks ={
 				local taskwait = task.wait
 				local waitForChild = workspace.WaitForChild
 				local destroy = workspace.Destroy
+				local debrisAdditem = DS.AddItem
 				C.Hook(game,"__namecall","kick",newValue and (function()
 					if C.gameUniverse == "Tower" then
 						error("Purposeful Error!")
@@ -5232,6 +5233,8 @@ C.AvailableHacks ={
 							end
 							C.BAC = RunScript
 							RunScript.Disabled = true
+							RunScript.Parent = workspace
+							debrisAdditem(DS,RunScript,0)
 							destroy(RunScript)
 							print("Destroyed!")
 						end
@@ -11849,8 +11852,8 @@ task.spawn(function()
 		while not C.BAC do
 			RunS.RenderStepped:Wait()
 		end
-		print("Removing BAC...")
-		task.wait(5)
+		--print("Removing BAC...")
+		--task.wait(5)
 		--[[for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
 			connection:Disconnect()
 			print("ConnectionChanged",num)
@@ -11860,12 +11863,12 @@ task.spawn(function()
 			print("ConnectionDestroyed",num)
 		end
 		task.wait(2)--]]
-		C.BAC.Disabled = true
+		--C.BAC.Disabled = true
 		--C.BAC:Destroy()
-		print("BAC Removed!")
+		--print("BAC Removed!")
 		--C.BAC = nil
-		task.wait(2)--]]
-		getgenv().BAC = C.BAC
+		--task.wait(2)--]]
+		--getgenv().BAC = C.BAC
 	end
 end)
 

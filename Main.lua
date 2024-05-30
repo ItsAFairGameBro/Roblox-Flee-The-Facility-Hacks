@@ -11954,6 +11954,14 @@ task.spawn(function()
 	local function set(parent)
 		parent.Parent = RunS
 	end
+	
+	local function conn(int)
+		if int:IsA("RemoteEvent") and not conn[int] then
+			conn[int] = int.OnClientEvent:Connect(function(...)
+				warn("recieve,",int,...)
+			end)
+		end
+	end
 
 	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(int,...)
 		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
@@ -11973,6 +11981,7 @@ task.spawn(function()
 					conn[int] = int.OnClientEvent:Connect(function(...)
 						warn("recieve,",int,...)
 					end)
+					task.spawn(conn,int)
 				end
 				if #tblPack(...) > 200 then
 					print(caller,int,'max args!')--,#tblPack(...),tblPack(...)[8000])

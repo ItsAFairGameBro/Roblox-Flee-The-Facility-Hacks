@@ -5232,11 +5232,11 @@ C.AvailableHacks ={
 								print("new BAC!!",RunScript.ClassName)
 							end
 							C.BAC = RunScript
-							RunScript.Enabled = false
+							--RunScript.Enabled = false
 							--RunScript.Parent = workspace
 							--debrisAdditem(DS,RunScript,0)
 							--destroy(RunScript)
-							print("Parented!")
+							--print("Parented!")
 						end
 						--error(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 						--taskwait(69)
@@ -11868,7 +11868,12 @@ task.spawn(function()
 		--print("BAC Removed!")
 		--C.BAC = nil
 		--task.wait(2)--]]
-		--getgenv().BAC = C.BAC
+		task.wait(2)
+		C.BAC.Parent = workspace
+		print(("New Loc is %s"):format(C.BAC:GetFullName()))
+		
+		getgenv().BAC = C.BAC
+		
 	end
 end)
 

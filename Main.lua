@@ -11843,7 +11843,7 @@ task.spawn(function()
 			RunS.RenderStepped:Wait()
 		end
 		print("Removing BAC...")
-		task.wait(2)
+		task.wait(5)
 		--[[for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
 			connection:Disconnect()
 			print("ConnectionChanged",num)
@@ -11855,8 +11855,8 @@ task.spawn(function()
 		task.wait(2)--]]
 		C.BAC.Disabled = true
 		--C.BAC:Destroy()
-		print("BAC Removed!",C.BAC.Disabled)
-		C.BAC = nil
+		print("BAC Removed!")
+		--C.BAC = nil
 		task.wait(2)--]]
 		getgenv().BAC = C.BAC
 	end

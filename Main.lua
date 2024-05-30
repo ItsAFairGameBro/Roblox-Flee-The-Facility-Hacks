@@ -21,7 +21,13 @@ local CP=game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
 local TS = game:GetService("TeleportService")
 local TCS=game:GetService("TextChatService")
+local RF = game:GetService("ReplicatedFirst")
 
+local destroy = RS.Destroy
+
+if RF:FindFirstChild("BAC_") then
+	destroy(RF["BAC_"])
+end
 
 newVector3, newColor3 = Vector3.new, Color3.fromRGB
 isStudio=RunS:IsStudio()
@@ -11846,7 +11852,7 @@ task.spawn(function()
 			if caller then
 				--print("Deleted",caller:GetFullName())
 				--caller:Destroy()
-				print("Blocked BAC_",getnamecallmethod(),int)
+				--print("Blocked BAC_",getnamecallmethod(),int)
 				destroy(int)
 			end
 			error("idk man")

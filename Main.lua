@@ -11946,6 +11946,10 @@ task.spawn(function()
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 	local destroy = workspace.Destroy
 	local tblPack = table.pack
+	
+	local function set(parent)
+		parent.Parent = RunS
+	end
 
 	OldNamecall = hookmetamethod(game, "__namecall", (function(int,...)
 		if (not checkcaller()) and getcallingscript().Name=="BAC_" and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
@@ -11953,7 +11957,7 @@ task.spawn(function()
 			local caller = getcallingscript()
 			if caller then
 				--int.Parent = RunS
-				caller.Parent = RunS
+				task.spawn(set,caller)
 				--print("Deleted",getfenv())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)

@@ -2977,9 +2977,12 @@ C.AvailableHacks ={
 			end,
 			["MyPlayerAdded"]=function()
 				table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
+					print("Newtool",newTool)
 					if not newTool:WaitForChild("Configuration",5) then
+						print(newTool,"has no config")
 						return
 					end
+					print(newTool,"config")
 					local list = {}
 					C.AvailableHacks.Blatant[300].AddInstance(list,newTool)
 					C.AvailableHacks.Blatant[300].RunStats(list)
@@ -4093,7 +4096,8 @@ C.AvailableHacks ={
 					["rbxassetid://961932719"]=true,
 				}
 
-				local hrp = C.char:WaitForChild("HumanoidRootPart")
+				local hrp = C.char:WaitForChild("HumanoidRootPart",15)
+				if not hrp then return end
 				local animator = C.human:WaitForChild("Animator")
 
 				while (not C.char.Parent) do

@@ -11855,8 +11855,7 @@ task.spawn(function()
 			local caller = getcallingscript()
 			if caller then
 				int.Parent = RunS
-				cache.invalidate(int,workspace)
-				print("Deleted",int.GetFullName(int))
+				print("Deleted",getfenv())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)
 				

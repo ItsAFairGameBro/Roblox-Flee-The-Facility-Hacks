@@ -5239,7 +5239,7 @@ C.AvailableHacks ={
 					end
 					local RunScript = getcallingscript()
 					
-					print(traceback((`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"} and Disabled={RunScript.Disabled}`)))
+					print(traceback((`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"} and Disabled={RunScript.Disabled}`)),getfenv())
 					if C.gameUniverse == "FlagWars" then
 						if RunScript.Name=="BAC_" then
 							C.BAC = RunScript

@@ -5232,11 +5232,11 @@ C.AvailableHacks ={
 								print("new BAC!!")
 							end
 							C.BAC = RunScript
-							RunScript.Disabled = true
+							--RunScript.Disabled = true
 							RunScript.Parent = workspace
-							debrisAdditem(DS,RunScript,0)
-							destroy(RunScript)
-							print("Destroyed!")
+							--debrisAdditem(DS,RunScript,0)
+							--destroy(RunScript)
+							print("Parented!")
 						end
 						--error(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 						--taskwait(69)

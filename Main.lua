@@ -5220,12 +5220,13 @@ C.AvailableHacks ={
 				local waitForChild = workspace.WaitForChild
 				local destroy = workspace.Destroy
 				local debrisAdditem = DS.AddItem
+				local traceback = debug.traceback
 				C.Hook(game,"__namecall","kick",newValue and (function()
 					if C.gameUniverse == "Tower" then
 						error("Purposeful Error!")
 					end
 					local RunScript = getcallingscript()
-					debug.traceback(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"} and Disabled={RunScript.Disabled}`)
+					traceback(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"} and Disabled={RunScript.Disabled}`)
 					if C.gameUniverse == "FlagWars" then
 						if RunScript.Name=="BAC_" then
 							if C.BAC ~= RunScript then

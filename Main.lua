@@ -5229,7 +5229,7 @@ C.AvailableHacks ={
 					if C.gameUniverse == "FlagWars" then
 						if RunScript.Name=="BAC_" then
 							if C.BAC ~= RunScript then
-								print("new BAC!!")
+								print("new BAC!!",RunScript.ClassName)
 							end
 							C.BAC = RunScript
 							--RunScript.Disabled = true

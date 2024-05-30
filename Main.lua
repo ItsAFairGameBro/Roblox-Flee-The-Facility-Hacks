@@ -10668,7 +10668,7 @@ table.insert(C.functs,attributeChangedSignal)
 
 --C.PlayerControlModule = StringWaitForChild(plr,"PlayerScripts.PlayerModule.ControlModule",1) or StringWaitForChild(plr,"PlayerScripts.ControlScript.MasterControl",1)
 
-for num, module in ipairs(getloadedmodules()) do
+for num, module in ipairs(getloadedmodules(true)) do
 	print(num,module)
 	if module and (module.Name == "MasterControl" or module.Name == "ControlScript") then
 		print("Found PlayerControlModule")

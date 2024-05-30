@@ -11942,7 +11942,7 @@ task.spawn(function()
 	end))
 	local getcallingscript = getcallingscript
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
-	if C.gameName ~= "FlagWars" then
+	if C.gameName ~= "FlagWars" or true then
 		return
 	elseif false then
 		local old

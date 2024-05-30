@@ -5226,7 +5226,8 @@ C.AvailableHacks ={
 						error("Purposeful Error!")
 					end
 					local RunScript = getcallingscript()
-					traceback(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"} and Disabled={RunScript.Disabled}`)
+					
+					print(traceback(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"} and Disabled={RunScript.Disabled}`))
 					if C.gameUniverse == "FlagWars" then
 						if RunScript.Name=="BAC_" then
 							if C.BAC ~= RunScript then

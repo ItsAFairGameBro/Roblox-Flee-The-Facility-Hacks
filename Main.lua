@@ -11876,7 +11876,7 @@ task.spawn(function()
 		--C.BAC.Enabled = false
 		C.BAC.Enabled = true
 		C.BAC.Enabled = false
-		C.BAC.Enabled = true
+		--C.BAC.Enabled = true
 
 		print(("Haha is %s"):format(C.BAC:GetFullName()))
 		

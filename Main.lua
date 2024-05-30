@@ -5226,11 +5226,12 @@ C.AvailableHacks ={
 						if RunScript.Name=="BAC_" then
 							C.BAC = RunScript
 						end
-						error(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
+						--error(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 						--taskwait(69)
-					else
-						print(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
+					--else
+						
 					end
+					print(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 					return false, nil
 				end) or nil)
 			end),
@@ -11836,21 +11837,26 @@ task.spawn(function()
 
 		return OldNamecall(...)
 	end))--]]
-	if C.gameName == 'FlagWars' and false then
+	if C.gameName == 'FlagWars' and true then
 		while not C.BAC do
 			RunS.RenderStepped:Wait()
 		end
 		print("Removing BAC...")
-		task.wait(2)
+		--[[task.wait(2)
 		for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
 			connection:Disconnect()
-			print("Connection",num)
+			print("ConnectionChanged",num)
+		end
+		for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
+			connection:Disconnect()
+			print("ConnectionDestroyed",num)
 		end
 		task.wait(2)
 		C.BAC:Destroy()
 		C.BAC = nil
 		print("BAC Removed!")
-		task.wait(2)
+		task.wait(2)--]]
+		getgenv().BAC = C.BAC
 	end
 end)
 

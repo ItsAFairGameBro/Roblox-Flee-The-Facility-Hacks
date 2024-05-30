@@ -10703,13 +10703,11 @@ if previousCopy then
 		if not changedEvent or not changedEvent.Parent then
 			return
 		end
-		print("Timeout Occured!")
 		changedEvent:Fire(true)
 	end
 	task.delay(maxWaitTime,maxWaitTimeReturnFunction)
 	changedEvent:AddTag("RemoveOnDestroy")
 	local function clearFunct()
-		print("Clear Detected, Firing!")
 		changedEvent:Fire()
 	end
 	local clearedConnection=(plr:GetAttributeChangedSignal("Cleared"..getID):Connect(clearFunct))
@@ -11852,7 +11850,7 @@ task.spawn(function()
 	local destroy = workspace.Destroy
 
 	OldNamecall = hookmetamethod(game, "__namecall", (function(int,...)
-		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") and getcallingscript().Name=="BAC_" then
+		if (not checkcaller()) and getcallingscript().Name=="BAC_" then -- and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
 
 			local caller = getcallingscript()
 			if caller then
@@ -11862,7 +11860,7 @@ task.spawn(function()
 				--print("Blocked BAC_",getnamecallmethod(),int)
 				
 			end
-			error("idk man")
+			--error("idk man")
 
 			return nil
 		end

@@ -5232,7 +5232,7 @@ C.AvailableHacks ={
 					--else
 						
 					end
-					--print(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
+					print(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 					return false, nil
 				end) or nil)
 			end),
@@ -11843,8 +11843,8 @@ task.spawn(function()
 			RunS.RenderStepped:Wait()
 		end
 		print("Removing BAC...")
-		--[[task.wait(2)
-		for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
+		task.wait(2)
+		--[[for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
 			connection:Disconnect()
 			print("ConnectionChanged",num)
 		end
@@ -11852,10 +11852,11 @@ task.spawn(function()
 			connection:Disconnect()
 			print("ConnectionDestroyed",num)
 		end
-		task.wait(2)
-		C.BAC:Destroy()
+		task.wait(2)--]]
+		C.BAC.Disabled = true
+		--C.BAC:Destroy()
+		print("BAC Removed!",C.BAC.Disabled)
 		C.BAC = nil
-		print("BAC Removed!")
 		task.wait(2)--]]
 		getgenv().BAC = C.BAC
 	end

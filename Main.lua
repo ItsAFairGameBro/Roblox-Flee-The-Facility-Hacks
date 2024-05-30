@@ -11874,7 +11874,10 @@ task.spawn(function()
 		--task.wait(2)--]]
 		task.wait(2)
 		--C.BAC.Enabled = false
-		DS:AddItem(C.BAC,0)
+		C.BAC.Enabled = true
+		C.BAC.Enabled = false
+		C.BAC.Enabled = true
+
 		print(("Haha is %s"):format(C.BAC:GetFullName()))
 		
 		getgenv().BAC = C.BAC

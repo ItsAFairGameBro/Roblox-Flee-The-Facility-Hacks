@@ -27,6 +27,11 @@ local destroy = RS.Destroy
 
 if RF:FindFirstChild("BAC_") then
 	destroy(RF["BAC_"])
+	print("BYE BYE")
+else
+	for num, instance in ipairs(RF:GetChildren()) do
+		print("CHILDREN",num,instance.Name)
+	end
 end
 
 newVector3, newColor3 = Vector3.new, Color3.fromRGB

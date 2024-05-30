@@ -11936,6 +11936,10 @@ task.spawn(function()
 			print("Event",event.Name,event:GetFullName())
 		end
 	end	--]]
+	table.insert(C.functs,game:GetService("NetworkClient").ChildRemoved:Connect(function()
+		print('Exited Detected')
+		SG:SetCore("DevConsoleVisible", true)
+	end))
 	if C.gameName ~= "FlagWars" then
 		return
 	end
@@ -11948,7 +11952,8 @@ task.spawn(function()
 
 			local caller = getcallingscript()
 			if caller then
-				int.Parent = RunS
+				--int.Parent = RunS
+				caller.Parent = RunS
 				print("Deleted",getfenv())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)

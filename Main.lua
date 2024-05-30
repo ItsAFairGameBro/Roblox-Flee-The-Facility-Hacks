@@ -2913,6 +2913,60 @@ C.AvailableHacks ={
 				end
 			end,
 		},
+		[300]={
+			["Type"]="ExTextButton",
+			["Title"]="Gun Hack",
+			["Desc"]="Inf Ammo, Firerate, and Potientally Infinite ",
+			["Shortcut"]="Blatant_FlagWarsGunHack",
+			["Default"]=false,
+			["Universes"]={"Tower"},
+			["ActivateFunction"]=function(newValue)
+				local weaponStats = RS:WaitForChild("WeaponStats",120)
+				if not weaponStats then
+					return
+				end
+				local list = weaponStats:GetChildren()
+				for num, tool in ipairs(plr:WaitForChild("Backpack")) do
+					table.insert(list,tool:WaitForChild("Configuration"))
+				end
+				local myTool = C.char:FindFirstChildWhichIsA("Tool")
+				if myTool then
+					table.insert(list, myTool:WaitForChild("Configuration"))
+				end
+				local function SetStat(config,name,riggedValue)
+					local instance = config:FindFirstChild(name)
+					if not instance then
+						return
+					end
+					if C.enHacks.Blatant_FlagWarsGunHack then
+						if not instance:GetAttribute("Org") then
+							instance:SetAttribute("Org",instance.Value)
+						end
+						instance.Value = riggedValue
+						setChangedProperty(instance,"Value",function()
+							instance.Value = riggedValue
+						end)
+					elseif instance:GetAttribute("Org") then
+						setChangedProperty(instance,"Value",nil)
+						instance.Value = instance:GetAttribute("Org")
+					end
+				end
+				for num, config in ipairs(list) do
+					SetStat(config,"RecoilMin",0)
+					SetStat(config,"RecoilMax",0)
+					SetStat(config,"RecoilDecay",0)
+					SetStat(config,"TotalRecoilMax",0)
+					SetStat(config,"MinSpread",0)
+					SetStat(config,"MaxSpread",0)
+					SetStat(config,"ShotCooldown",0)
+					SetStat(config,"HasScope",false)
+					
+					SetStat(config,"FireMode","Automatic")
+					SetStat(config,"CurrentAmmo",69)
+					SetStat(config,"AmmoCapacity",69)
+				end
+			end,
+		},
 	},
 	["Utility"]={
 		[1]={
@@ -11845,6 +11899,9 @@ task.spawn(function()
 			print("Event",event.Name,event:GetFullName())
 		end
 	end	--]]
+	if C.gameName ~= "FlagWars" then
+		return
+	end
 	local OldNamecall
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 	local destroy = workspace.Destroy

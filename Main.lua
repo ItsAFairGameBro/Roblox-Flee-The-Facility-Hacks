@@ -41,6 +41,7 @@ C.gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==8939734
 	or (game.PlaceId==16070671286 and "UGCSpin")
 	or (game.PlaceId==537413528 and "BuildABoat")
 	or (game.PlaceId==15467338598 and "UGCClick")
+	or (game.PlaceId==3214114884 and "FlagWars")
 	or "Unknown")
 C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or C.gameName
 --C.myTSM,C.mySSM
@@ -5220,10 +5221,10 @@ C.AvailableHacks ={
 						error("Purposeful Error!")
 					else
 						local RunScript = getcallingscript()
-						print("22The script has successfully intercepted an attempted kick from:",RunScript:GetFullName(),RunScript.Parent or "nilpar")
 						if RunScript.Name=="BAC_" then
-							RunScript:Destroy()
+							C.BAC = RunScript
 						end
+						print("22The script has successfully intercepted an attempted kick from:",RunScript:GetFullName(),RunScript.Parent or "nilpar")
 					end
 					return false, nil
 				end) or nil)
@@ -11830,6 +11831,22 @@ task.spawn(function()
 
 		return OldNamecall(...)
 	end))--]]
+	if C.gameName == 'FlagWars' then
+		while not C.BAC do
+			RunS.RenderStepped:Wait()
+		end
+		print("Removing BAC...")
+		task.wait(2)
+		for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
+			connection:Disconnect()
+			print("Connection",num)
+		end
+		task.wait(2)
+		C.BAC:Destroy()
+		C.BAC = nil
+		print("BAC Removed!")
+		task.wait(2)
+	end
 end)
 
 return "Hack Successfully Executed V1.02!"

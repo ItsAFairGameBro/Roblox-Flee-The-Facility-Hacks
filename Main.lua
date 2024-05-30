@@ -5232,7 +5232,7 @@ C.AvailableHacks ={
 					--else
 						
 					end
-					print(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
+					--print(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 					return false, nil
 				end) or nil)
 			end),

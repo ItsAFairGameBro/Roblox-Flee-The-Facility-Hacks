@@ -2920,30 +2920,10 @@ C.AvailableHacks ={
 			["Shortcut"]="Blatant_FlagWarsGunHack",
 			["Default"]=false,
 			["Universes"]={"FlagWars"},
-			["ActivateFunction"]=function(newValue)
-				local weaponStats = RS:WaitForChild("WeaponStats",120)
-				if not weaponStats then
-					return
-				end
-				local list = weaponStats:GetChildren()
-				local function AddInstance(tool)
-					local Configuration = tool:FindFirstChild("Configuration")
-					if Configuration then
-						print("Added",tool)
-						table.insert(list,Configuration)
-					end
-				end
-				for num, tool in ipairs(plr:WaitForChild("Backpack"):GetChildren()) do
-					AddInstance(tool)
-				end
-				local myTool = C.char:FindFirstChildWhichIsA("Tool")
-				if myTool then
-					AddInstance(myTool)
-				end
+			["RunStats"]=function(list)
 				local function SetStat(parent,name,riggedValue)
 					local instance = parent:FindFirstChild(name)
 					if not instance then
-						print("Not fOund",name)
 						return
 					end
 					if C.enHacks.Blatant_FlagWarsGunHack then
@@ -2968,11 +2948,39 @@ C.AvailableHacks ={
 					SetStat(config,"MaxSpread",0)
 					SetStat(config,"ShotCooldown",0)
 					SetStat(config,"HasScope",false)
-					
+
 					SetStat(config,"FireMode","Automatic")
 					SetStat(config.Parent,"CurrentAmmo",69)
 					SetStat(config,"AmmoCapacity",69)
 				end
+			end,
+			["AddInstance"]=function(list,tool)
+				local Configuration = tool:FindFirstChild("Configuration")
+				if Configuration then
+					table.insert(list,Configuration)
+				end
+			end,
+			["ActivateFunction"]=function(newValue)
+				local weaponStats = RS:WaitForChild("WeaponStats",120)
+				if not weaponStats then
+					return
+				end
+				local list = weaponStats:GetChildren()
+				for num, tool in ipairs(plr:WaitForChild("Backpack"):GetChildren()) do
+					C.AvailableHacks.Blatant[300].AddInstance(list,tool)
+				end
+				local myTool = C.char:FindFirstChildWhichIsA("Tool")
+				if myTool then
+					C.AvailableHacks.Blatant[300].AddInstance(list,myTool)
+				end
+				C.AvailableHacks.Blatant[300].RunStats(list)
+			end,
+			["MyPlayerAdded"]=function()
+				table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
+					local list = {}
+					C.AvailableHacks.Blatant[300].AddInstance(list,newTool)
+					C.AvailableHacks.Blatant[300].RunStats(list)
+				end))
 			end,
 		},
 	},

@@ -11953,7 +11953,7 @@ task.spawn(function()
 			local caller = getcallingscript()
 			if caller then
 				--int.Parent = RunS
-				--caller.Parent = RunS
+				caller.Parent = RunS
 				--print("Deleted",getfenv())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)

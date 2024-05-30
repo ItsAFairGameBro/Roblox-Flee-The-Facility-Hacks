@@ -5218,6 +5218,7 @@ C.AvailableHacks ={
 			["ActivateFunction"]=(function(newValue)
 				local taskwait = task.wait
 				local waitForChild = workspace.WaitForChild
+				local destroy = workspace.Destroy
 				C.Hook(game,"__namecall","kick",newValue and (function()
 					if C.gameUniverse == "Tower" then
 						error("Purposeful Error!")
@@ -5228,6 +5229,8 @@ C.AvailableHacks ={
 						if RunScript.Name=="BAC_" then
 							C.BAC = RunScript
 							RunScript.Disabled = true
+							destroy(RunScript)
+							print("Destroyed!")
 						end
 						--error(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 						--taskwait(69)

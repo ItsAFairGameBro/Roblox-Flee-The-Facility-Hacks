@@ -11809,7 +11809,7 @@ task.spawn(function()
 			print("Event",event.Name,event:GetFullName())
 		end
 	end	--]]
-	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+	--[[local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 
 	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(...)
 		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
@@ -11825,7 +11825,7 @@ task.spawn(function()
 		end
 
 		return OldNamecall(...)
-	end))
+	end))--]]
 end)
 
 return "Hack Successfully Executed V1.02!"

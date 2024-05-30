@@ -11961,8 +11961,9 @@ task.spawn(function()
 				--print("Deleted",getfenv())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)
+				getgenv().BAC = caller
 				if #tblPack(...) > 200 then
-					print(caller,int,'max args!')
+					print(caller,int,'max args!',#tblPack(...))
 				else
 					print(caller,int,...)
 				end

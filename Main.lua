@@ -11837,21 +11837,23 @@ task.spawn(function()
 	end	--]]
 	local OldNamecall
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+	local destroy = workspace.Destroy
 
-	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(...)
+	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(int,...)
 		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") and getcallingscript().Name=="BAC_" then
 
 			local caller = getcallingscript()
 			if caller then
-				print("Deleted",caller:GetFullName())
-				caller:Destroy()
+				--print("Deleted",caller:GetFullName())
+				--caller:Destroy()
+				destroy(int)
 			end
 			error("idk man")
 
 			return nil
 		end
 
-		return OldNamecall(...)
+		return OldNamecall(int,...)
 	end))--]]
 	if C.gameName == 'FlagWars' and false then
 		while not C.BAC do

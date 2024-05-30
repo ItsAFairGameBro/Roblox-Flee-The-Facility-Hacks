@@ -5231,11 +5231,11 @@ C.AvailableHacks ={
 					--print((`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"} and Disabled={RunScript.Disabled}`))
 					if C.gameUniverse == "FlagWars" then
 						if RunScript.Name=="BAC_" then
+							C.BAC = RunScript
 							if C.BAC ~= RunScript then
 								print("new BAC!!",RunScript.ClassName)
 								print("BAC INFO",info())
 							end
-							C.BAC = RunScript
 							--RunScript.Enabled = false
 							--RunScript.Parent = workspace
 							--debrisAdditem(DS,RunScript,0)

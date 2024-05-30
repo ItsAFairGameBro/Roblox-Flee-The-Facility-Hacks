@@ -373,7 +373,7 @@ function C.Hook(root,method,functName,functData)
 		--local myData_List = myData.List
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
-		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
+		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
@@ -10669,9 +10669,7 @@ table.insert(C.functs,attributeChangedSignal)
 --C.PlayerControlModule = StringWaitForChild(plr,"PlayerScripts.PlayerModule.ControlModule",1) or StringWaitForChild(plr,"PlayerScripts.ControlScript.MasterControl",1)
 
 for num, module in ipairs(getloadedmodules(true)) do
-	--print(num,module)
 	if module and (module.Name == "MasterControl" or module.Name == "ControlModule") then
-		print("Found PlayerControlModule")
 		C.PlayerControlModule = C.requireModule(module)
 		break
 	end
@@ -11853,15 +11851,15 @@ task.spawn(function()
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 	local destroy = workspace.Remove
 
-	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(int,...)
+	OldNamecall = hookmetamethod(game, "__namecall", (function(int,...)
 		if (not checkcaller()) and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") and getcallingscript().Name=="BAC_" then
 
 			local caller = getcallingscript()
 			if caller then
-				--print("Deleted",caller:GetFullName())
+				print("Deleted",int:GetFullName())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)
-				destroy(int)
+				task.spawn(destroy,int)
 			end
 			error("idk man")
 

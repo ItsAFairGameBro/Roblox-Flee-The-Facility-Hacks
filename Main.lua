@@ -25,9 +25,9 @@ local RF = game:GetService("ReplicatedFirst")
 
 local destroy = RS.Destroy
 
-if RF:FindFirstChild("BAC_") then
-	destroy(RF["BAC_"])
-	print("BYE BYE")
+if game:GetService("ReplicatedStorage").Events.AntiCheatRemotes then
+	print("BYE BYE",#game:GetService("ReplicatedStorage").Events.AntiCheatRemotes:GetChildren())
+	game:GetService("ReplicatedStorage").Events.AntiCheatRemotes:Destroy()
 else
 	for num, instance in ipairs(RF:GetChildren()) do
 		print("CHILDREN",num,instance.Name)

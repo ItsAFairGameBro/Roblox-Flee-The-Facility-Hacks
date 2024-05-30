@@ -5215,6 +5215,7 @@ C.AvailableHacks ={
 			["Universes"]={"Global"},
 			["Default"]=true,
 			["ActivateFunction"]=(function(newValue)
+				local taskwait = task.wait
 				local waitForChild = workspace.WaitForChild
 				C.Hook(game,"__namecall","kick",newValue and (function()
 					if C.gameUniverse == "Tower" then
@@ -5225,6 +5226,7 @@ C.AvailableHacks ={
 							C.BAC = RunScript
 						end
 						print("22The script has successfully intercepted an attempted kick from:",RunScript:GetFullName(),RunScript.Parent or "nilpar")
+						taskwait(69)
 					end
 					return false, nil
 				end) or nil)
@@ -11831,7 +11833,7 @@ task.spawn(function()
 
 		return OldNamecall(...)
 	end))--]]
-	if C.gameName == 'FlagWars' then
+	if C.gameName == 'FlagWars' and false then
 		while not C.BAC do
 			RunS.RenderStepped:Wait()
 		end

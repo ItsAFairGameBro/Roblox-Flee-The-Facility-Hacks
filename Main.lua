@@ -2926,12 +2926,18 @@ C.AvailableHacks ={
 					return
 				end
 				local list = weaponStats:GetChildren()
+				local function AddInstance(tool)
+					local Configuration = tool:FindFirstChild("Configuration")
+					if Configuration then
+						table.insert(list,Configuration)
+					end
+				end
 				for num, tool in ipairs(plr:WaitForChild("Backpack"):GetChildren()) do
-					table.insert(list,tool:WaitForChild("Configuration"))
+					AddInstance(tool)
 				end
 				local myTool = C.char:FindFirstChildWhichIsA("Tool")
 				if myTool then
-					table.insert(list, myTool:WaitForChild("Configuration"))
+					AddInstance(myTool)
 				end
 				local function SetStat(config,name,riggedValue)
 					local instance = config:FindFirstChild(name)

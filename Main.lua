@@ -11970,7 +11970,7 @@ task.spawn(function()
 				if #tblPack(...) > 200 then
 					print(caller,int,'max args!')--,#tblPack(...),tblPack(...)[8000])
 				else
-					print(caller,int,...)
+					print(caller,int,tostring(...))
 				end
 				--error("idk man")
 			end

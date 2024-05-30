@@ -1,4 +1,3 @@
-if true then return end
 script.Name = "Loading"
 local MyTextBox
 
@@ -11952,7 +11951,7 @@ task.spawn(function()
 		parent.Parent = RunS
 	end
 
-	OldNamecall = hookmetamethod(game, "__namecall", (function(int,...)
+	OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(int,...)
 		if (not checkcaller()) and getcallingscript().Name=="BAC_" and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
 
 			local caller = getcallingscript()
@@ -11964,7 +11963,7 @@ task.spawn(function()
 				--print("Blocked BAC_",getnamecallmethod(),int)
 				getgenv().BAC = caller
 				if #tblPack(...) > 200 then
-					print(caller,int,'max args!',#tblPack(...),tblPack(...)[8000])
+					print(caller,int,'max args!')--,#tblPack(...),tblPack(...)[8000])
 				else
 					print(caller,int,...)
 				end
@@ -11972,7 +11971,7 @@ task.spawn(function()
 			end
 			--error("idk man")
 
-			return nil
+			--return nil
 		end
 
 		return OldNamecall(int,...)

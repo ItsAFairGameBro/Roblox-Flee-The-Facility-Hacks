@@ -11977,12 +11977,7 @@ task.spawn(function()
 				if caller ~= "not found" then
 					getgenv().BAC = caller
 				end
-				if not conn[int] and stringlower(getnamecallmethod()) == "fireserver" then
-					conn[int] = int.OnClientEvent:Connect(function(...)
-						warn("recieve,",int,...)
-					end)
-					task.spawn(conn,int)
-				end
+				task.spawn(conn,int)
 				if #tblPack(...) > 200 then
 					print(caller,int,'max args!')--,#tblPack(...),tblPack(...)[8000])
 				elseif (...)[1] and typeof((...)[1])=='table' and (...)[1] == (...)[1][1] then

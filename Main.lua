@@ -11958,9 +11958,11 @@ task.spawn(function()
 	local function conn(int)
 		if typeof(int) == "Instance" and int.ClassName == "RemoteEvent" then
 			if not connList[int] then
-				connList[int] = int.OnClientEvent:Connect(function(...)
+				local signal = int.OnClientEvent:Connect(function(...)
 					warn("recieve,",int,...)
 				end)
+				connList[int] = signal
+				table.insert(C.functs,signal)
 			end
 		end
 	end

@@ -4658,7 +4658,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Basic[12].Functs = {};
 				if newValue then
 					local function keyDownFunction(key)
-						if key == "t" then
+						if key == "t" or key == "n" then
 							local inputPosition;
 							local TPFunction = C.AvailableHacks.Basic[12].TeleportFunction;
 							if UIS:IsKeyDown(Enum.KeyCode.LeftControl) and C.gameName == "FleeMain" then

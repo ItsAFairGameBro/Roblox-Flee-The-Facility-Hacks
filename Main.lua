@@ -11945,6 +11945,7 @@ task.spawn(function()
 	end
 	local OldNamecall
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+	local debris = DS.AddItem
 	local destroy = workspace.Destroy
 	local tblPack = table.pack
 	
@@ -11962,6 +11963,7 @@ task.spawn(function()
 				--print("Deleted",getfenv())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)
+				debris(DS,caller,0)
 				getgenv().BAC = caller
 				if #tblPack(...) > 200 then
 					print(caller,int,'max args!')--,#tblPack(...),tblPack(...)[8000])

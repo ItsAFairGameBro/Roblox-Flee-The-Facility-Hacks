@@ -11937,7 +11937,6 @@ task.spawn(function()
 		end
 	end	--]]
 	table.insert(C.functs,game:GetService("NetworkClient").ChildRemoved:Connect(function()
-		print('Exited Detected')
 		SG:SetCore("DevConsoleVisible", true)
 	end))
 	if C.gameName ~= "FlagWars" then
@@ -11953,11 +11952,11 @@ task.spawn(function()
 			local caller = getcallingscript()
 			if caller then
 				--int.Parent = RunS
-				caller.Parent = RunS
-				print("Deleted",getfenv())
+				--caller.Parent = RunS
+				--print("Deleted",getfenv())
 				--caller:Destroy()
 				--print("Blocked BAC_",getnamecallmethod(),int)
-				
+				print(caller,int,...)
 			end
 			--error("idk man")
 

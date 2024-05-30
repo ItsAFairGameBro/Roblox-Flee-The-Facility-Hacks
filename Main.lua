@@ -11956,6 +11956,7 @@ task.spawn(function()
 	end
 	
 	local function conn(int)
+		print("Conn",int)
 		if int:IsA("RemoteEvent") and not conn[int] then
 			conn[int] = int.OnClientEvent:Connect(function(...)
 				warn("recieve,",int,...)

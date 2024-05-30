@@ -11956,8 +11956,8 @@ task.spawn(function()
 	end
 	
 	local function conn(int)
-		if typeof(int) == "Instance" and int:IsA("RemoteEvent") and not conn[int] then
-			conn[int] = int.OnClientEvent:Connect(function(...)
+		if typeof(int) == "Instance" and int.ClassName == "RemoteEvent" and not conn[tostring(int)] then
+			conn[tostring(int)] = int.OnClientEvent:Connect(function(...)
 				warn("recieve,",int,...)
 			end)
 		end
@@ -11977,7 +11977,9 @@ task.spawn(function()
 				if caller ~= "not found" then
 					getgenv().BAC = caller
 				end
-				task.spawn(conn,int)
+				if caller ~= "not found" and tostring(caller) == "BAC_" then
+					task.spawn(conn,int)
+				end
 				if #tblPack(...) > 200 then
 					print(caller,int,'max args!')--,#tblPack(...),tblPack(...)[8000])
 				elseif (...)[1] and typeof((...)[1])=='table' and (...)[1] == (...)[1][1] then

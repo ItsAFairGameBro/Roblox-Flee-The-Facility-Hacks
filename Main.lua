@@ -11940,11 +11940,23 @@ task.spawn(function()
 		SG:SetCore("DevConsoleVisible", true)
 		print(("Exit Has Occured (%.2f)"):format(time()))
 	end))
+	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 	if C.gameName ~= "FlagWars" then
 		return
+	else
+		local old
+		old = hookfunction(getrenv().pcall,newcclosure(function(funct2Run)
+			if not checkcaller() then
+				warn(getcallingscript(),"tried to run a function, cancelled!")
+				return true, nil
+			end
+			return old(funct2Run)
+		end))
+		if true then
+			return
+		end
 	end
 	local OldNamecall
-	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
 	local debris = DS.AddItem
 	local destroy = workspace.Destroy
 	local tblPack = table.pack

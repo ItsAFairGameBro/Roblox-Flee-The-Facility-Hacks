@@ -5219,7 +5219,11 @@ C.AvailableHacks ={
 					if C.gameUniverse == "Tower" then
 						error("Purposeful Error!")
 					else
-						print("22The script has successfully intercepted an attempted kick from:",getcallingscript():GetFullName())
+						local RunScript = getcallingscript()
+						print("22The script has successfully intercepted an attempted kick from:",RunScript:GetFullName(),RunScript.Parent or "nilpar")
+						if RunScript.Name=="BAC_" then
+							RunScript:Destroy()
+						end
 					end
 					return false, nil
 				end) or nil)

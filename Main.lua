@@ -2926,7 +2926,7 @@ C.AvailableHacks ={
 					return
 				end
 				local list = weaponStats:GetChildren()
-				for num, tool in ipairs(plr:WaitForChild("Backpack")) do
+				for num, tool in ipairs(plr:WaitForChild("Backpack"):GetChildren()) do
 					table.insert(list,tool:WaitForChild("Configuration"))
 				end
 				local myTool = C.char:FindFirstChildWhichIsA("Tool")

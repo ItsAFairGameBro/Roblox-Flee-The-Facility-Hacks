@@ -11873,9 +11873,9 @@ task.spawn(function()
 		--C.BAC = nil
 		--task.wait(2)--]]
 		task.wait(2)
-		C.BAC.Enabled = false
-		DS:AddItem(C.BAC)
-		print(("New Loc is %s"):format(C.BAC:GetFullName()))
+		--C.BAC.Enabled = false
+		DS:AddItem(C.BAC,0)
+		print(("Haha is %s"):format(C.BAC:GetFullName()))
 		
 		getgenv().BAC = C.BAC
 		

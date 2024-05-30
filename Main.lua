@@ -11948,7 +11948,7 @@ task.spawn(function()
 	local tblPack = table.pack
 
 	OldNamecall = hookmetamethod(game, "__namecall", (function(int,...)
-		if (not checkcaller()) and getcallingscript().Name=="BAC_" then -- and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
+		if (not checkcaller()) and getcallingscript().Name=="BAC_" and (stringlower(getnamecallmethod()) == "fireserver" or stringlower(getnamecallmethod()) == "invokeserver") then
 
 			local caller = getcallingscript()
 			if caller then

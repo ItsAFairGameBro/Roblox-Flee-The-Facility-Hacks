@@ -2962,10 +2962,10 @@ C.AvailableHacks ={
 				end
 			end,
 			["ActivateFunction"]=function(newValue)
-				local weaponStats = RS:WaitForChild("WeaponStats",120)
+				--[[local weaponStats = RS:WaitForChild("WeaponStats",120)
 				if not weaponStats then
 					return
-				end
+				end--]]
 				local list = {}--= weaponStats:GetChildren()
 				for num, tool in ipairs(plr:WaitForChild("Backpack"):GetChildren()) do
 					C.AvailableHacks.Blatant[300].AddInstance(list,tool)
@@ -2988,7 +2988,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[300].AddInstance(list,newTool)
 					C.AvailableHacks.Blatant[300].RunStats(list)
 				end))--]]
-				C.AvailableHacks.Blatant[300].ActivateFunction()
+				task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
 			end,
 		},
 	},

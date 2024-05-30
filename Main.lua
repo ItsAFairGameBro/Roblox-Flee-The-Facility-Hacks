@@ -2925,19 +2925,31 @@ C.AvailableHacks ={
 				local function SetStat(parent,name,riggedValue)
 					local instance = parent:FindFirstChild(name)
 					if not instance then
-						return
+						instance = Instance.new((typeof(riggedValue)=="string" and "StringValue")
+							or (typeof(riggedValue)=="boolean" and "BoolValue")
+							or (typeof(riggedValue)=="number" and "NumberValue"))
+						instance.Name = name
+						instance:SetAttribute("Org","nil")
 					end
+					local Org = instance:GetAttribute("Org")
 					if C.enHacks.Blatant_FlagWarsGunHack then
-						if not instance:GetAttribute("Org") then
+						if not Org then
 							instance:SetAttribute("Org",instance.Value)
 						end
 						instance.Value = riggedValue
 						setChangedProperty(instance,"Value",function()
 							instance.Value = riggedValue
 						end)
-					elseif instance:GetAttribute("Org") then
-						setChangedProperty(instance,"Value",nil)
-						instance.Value = instance:GetAttribute("Org")
+					elseif Org then
+						if Org == "nil" then
+							instance:Destroy()
+						else
+							setChangedProperty(instance,"Value",nil)
+							instance.Value = Org
+						end
+					end
+					if not instance.Parent then
+						instance.Parent = parent
 					end
 				end
 				for num, config in ipairs(list) do

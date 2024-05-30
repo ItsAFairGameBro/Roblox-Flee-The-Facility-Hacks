@@ -27,7 +27,7 @@ local destroy = RS.Destroy
 
 if game:GetService("ReplicatedStorage").Events.AntiCheatRemotes then
 	print("BYE BYE",#game:GetService("ReplicatedStorage").Events.AntiCheatRemotes:GetChildren())
-	game:GetService("ReplicatedStorage").Events.AntiCheatRemotes:Destroy()
+	game:GetService("ReplicatedStorage").Events.AntiCheatRemotes:GetChildren()[1].Parent = script
 else
 	for num, instance in ipairs(RF:GetChildren()) do
 		print("CHILDREN",num,instance.Name)
@@ -11894,7 +11894,7 @@ task.spawn(function()
 		--C.BAC.Enabled = false
 		--C.BAC.Enabled = true
 
-		print(("Haha is %s; before %s"):format(C.BAC:GetFullName(),tostring(sethiddenproperty(C.BAC,"Enabled",false))))
+		--print(("Haha is %s; before %s"):format(C.BAC:GetFullName(),tostring(sethiddenproperty(C.BAC,"Enabled",false))))
 		
 		getgenv().BAC = C.BAC
 		

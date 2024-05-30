@@ -2919,7 +2919,7 @@ C.AvailableHacks ={
 			["Desc"]="Inf Ammo, Firerate, and Potientally Infinite ",
 			["Shortcut"]="Blatant_FlagWarsGunHack",
 			["Default"]=false,
-			["Universes"]={"Tower"},
+			["Universes"]={"FlagWars"},
 			["ActivateFunction"]=function(newValue)
 				local weaponStats = RS:WaitForChild("WeaponStats",120)
 				if not weaponStats then

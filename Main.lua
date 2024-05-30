@@ -11869,7 +11869,8 @@ task.spawn(function()
 		--C.BAC = nil
 		--task.wait(2)--]]
 		task.wait(2)
-		C.BAC.Parent = workspace
+		C.BAC.Enabled = false
+		DS:AddItem(C.BAC)
 		print(("New Loc is %s"):format(C.BAC:GetFullName()))
 		
 		getgenv().BAC = C.BAC

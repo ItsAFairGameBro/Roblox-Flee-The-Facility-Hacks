@@ -19,7 +19,7 @@ local LS=game:GetService("Lighting")
 local SC=game:GetService("ScriptContext")
 local CP=game:GetService("ContentProvider")
 local PathfindingService = game:GetService("PathfindingService")
-local TS = game:GetService("TeleportService")
+local TeleportS = game:GetService("TeleportService")
 local TCS=game:GetService("TextChatService")
 local RF = game:GetService("ReplicatedFirst")
 
@@ -1377,9 +1377,9 @@ C.CommandFunctions = {
 		AfterTxt="%s",
 		Run=function(args)
 			if args[1][1] == "new" then
-				TS:Teleport(game.PlaceId, plr)
+				TeleportS:Teleport(game.PlaceId, plr)
 			elseif not args[1][1] or args[1][1]:len() == 0 then
-				TS:TeleportToPlaceInstance(game.PlaceId,game.JobId,plr)
+				TeleportS:TeleportToPlaceInstance(game.PlaceId,game.JobId,plr)
 			end
 			return true
 		end,

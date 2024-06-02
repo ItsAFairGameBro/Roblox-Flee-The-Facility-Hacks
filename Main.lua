@@ -2474,24 +2474,25 @@ C.AvailableHacks ={
 				if not C.enHacks.Blatant_TeleportBack then
 					return
 				end
+				local CenterPart = C.char:FindFirstChild("Torso") or C.char.PrimaryPart
 				local lastInput,newInput = C.char:GetPivot(), nil
 				local function CanRun()
-					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and C.char.PrimaryPart and C.enHacks.Blatant_TeleportBack
+					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and CenterPart and C.enHacks.Blatant_TeleportBack
 				end
 				task.spawn(function()
 					while CanRun() do
-						lastInput = C.char.PrimaryPart.CFrame
+						lastInput = CenterPart.CFrame
 						RunS.RenderStepped:Wait()
 					end
 				end)
 				while CanRun() do
-					newInput = C.char.PrimaryPart.CFrame
+					newInput = CenterPart.CFrame
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
 							teleportMyself(lastInput)
 						end
 					end
-					C.char.PrimaryPart:GetPropertyChangedSignal("CFrame"):Wait()
+					CenterPart:GetPropertyChangedSignal("CFrame"):Wait()
 				end
 			end,
 			["MyStartUp"]=function()

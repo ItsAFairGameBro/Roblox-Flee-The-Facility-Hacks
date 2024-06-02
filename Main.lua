@@ -11784,6 +11784,7 @@ if C.gameName=="FleeMain" then
 	local lastPC_time
 	local currentAnimation = C.myTSM:WaitForChild("CurrentAnimation")
 	local lastAnimationName
+	local PCFunctions = {}
 	local function getPC(obj)
 		if obj:HasTag("Computer") then
 			return obj
@@ -11792,10 +11793,16 @@ if C.gameName=="FleeMain" then
 		end
 		return getPC(obj.Parent)
 	end
-	local function updateAnimation()
+	local function Reset()
+		for num, conn in ipairs(PCFunctions) do
+			conn:Disconnect()
+		end PCFunctions = {}
+	end
+	local function updateAnimation(override)
 		local newValue = currentAnimation.Value
 		if newValue=="Typing" then
 			print("New PC Found!")
+			Rest()
 			local saveEvent = C.myTSM.ActionEvent.Value
 			lastHackedPC = getPC(C.myTSM.ActionEvent.Value)
 			if not lastHackedPC then
@@ -11811,12 +11818,20 @@ if C.gameName=="FleeMain" then
 				if onRequest then
 					local old = C.myTSM.ActionEvent.Value
 					C.RemoteEvent:FireServer("Input", "Trigger", saveEvent)
-					RunS.RenderStepped:Wait()
+					--RunS.RenderStepped:Wait()
 					stopCurrentAction(true)
-					C.RemoteEvent:FireServer("Input", "Trigger", old)
+					updateAnimation(true)
+					--C.RemoteEvent:FireServer("Input", "Trigger", old)
 				end
 			end,})
+			local screen = lastHackedPC:WaitForChild("Screen")
+			table.insert(PCFunctions,screen:GetPropertyChangedSignal("Color"):Connect(function()
+				updateAnimation(true)
+			end))
+		elseif (C.enHacks.Blatant_RemoteHackPCs and override ~= true) then
+			return
 		elseif lastHackedPC and lastAnimationName=="Typing" then
+			Reset()
 			lastPC_time = os.clock() print("Triggers Disabled")
 			C.RemoveAction(lastHackedPC.Name)
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})

@@ -10963,15 +10963,15 @@ local refreshTypes = ({
 local initilizationTypes = ({
 	ExTextButton = (function(hackInfo)
 		local hackFrame = hackInfo.MiniHackFrame;
-		local lastClick = os.clock()-10
+		--local lastClick = os.clock()-10
 		local function cycle(delta)
-			if hackInfo.Deb then
+			--[[if hackInfo.Deb then
 				local currentTime = os.clock()
 				if currentTime - lastClick < hackInfo.Deb then
 					return
 				end
 				lastClick = currentTime
-			end
+			end--]]
 			local totalNum, shortCutNum = 0, 0;
 			for Type,Vals in pairs(hackInfo.Options) do
 				if not Vals.Locked then
@@ -11068,7 +11068,7 @@ local initilizationTypes = ({
 			bindableEvent.Parent=button
 			return bindableEvent.Event
 		end
-		Button1Clicked(hackFrame.Toggle):Connect(function(userinputtype)
+		Button1Clicked(hackFrame.Toggle,hackInfo.Deb):Connect(function(userinputtype)
 			cycle(userinputtype == Enum.UserInputType.MouseButton1 and 1 or 2)
 		end)
 	end),

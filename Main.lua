@@ -11091,6 +11091,7 @@ local initilizationTypes = ({
 			refreshTypes.ExTextBox(hackFrame, hackInfo);
 		end);
 		table.insert(C.functs, myFocusLost_CONNECTION);
+		
 	end,
 })
 loadSaveData()
@@ -11794,6 +11795,7 @@ if C.gameName=="FleeMain" then
 	local function updateAnimation(newValue)
 		if newValue=="Typing" then
 			print("New PC Found!")
+			local saveEvent = C.myTSM.ActionEvent.Value
 			lastHackedPC = getPC(C.myTSM.ActionEvent.Value)
 			if not lastHackedPC then
 				if not C.myTSM.ActionEvent.Value then
@@ -11802,8 +11804,18 @@ if C.gameName=="FleeMain" then
 					warn("PC Not Found:",C.myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
+			C.AddAction({Name=lastHackedPC.Name,Time=function(ActionClone,info)
+				ActionClone.Time.Text = "Time: TBA"
+			end,Stop=function(onRequest)
+				if onRequest then
+					C.RemoteEvent:FireServer("Input", "Trigger", saveEvent)
+					RunS.RenderStepped:Wait()
+					stopCurrentAction(true)
+				end
+			end,})
 		elseif lastHackedPC and lastAnimationName=="Typing" then
 			lastPC_time = os.clock() print("Triggers Disabled")
+			C.RemoveAction(lastHackedPC.Name)
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
 			local timeNeeded = (0.15+math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
 
@@ -11938,7 +11950,7 @@ task.spawn(function()
 	end	--]]
 	table.insert(C.functs,game:GetService("NetworkClient").ChildRemoved:Connect(function()
 		SG:SetCore("DevConsoleVisible", true)
-		print(("Exit Has Occured (%.2f)"):format(time()))
+		print(("Client/Server Kick Has Occured (%.2f)"):format(time()))
 	end))
 	local getcallingscript = getcallingscript
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower

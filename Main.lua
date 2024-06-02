@@ -2475,18 +2475,18 @@ C.AvailableHacks ={
 					return
 				end
 				local CenterPart = (C.gameName == "FleeMain" and "HumanoidRootPart") or C.char:FindFirstChild("Torso") or C.char.PrimaryPart
-				local lastInput,newInput = C.char:GetPivot(), nil
+				local lastInput,newInput = CenterPart:GetPivot(), nil
 				local function CanRun()
 					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and CenterPart and C.enHacks.Blatant_TeleportBack
 				end
 				task.spawn(function()
 					while CanRun() do
-						lastInput = CenterPart.CFrame
+						lastInput = CenterPart:GetPivot()
 						RunS.RenderStepped:Wait()
 					end
 				end)
 				while CanRun() do
-					newInput = CenterPart.CFrame
+					newInput = CenterPart:GetPivot()
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
 							teleportMyself(lastInput)

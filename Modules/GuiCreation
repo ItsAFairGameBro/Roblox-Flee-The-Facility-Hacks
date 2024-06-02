@@ -439,6 +439,7 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	Actions.BorderSizePixel = 0
 	Actions.Position = UDim2.new(0, 0, 0.5, 0)
 	Actions.Size = UDim2.new(0.100000001, 0, 0.200000003, 0)
+	Actions.Visible = false
 
 	ActionsList.Name = "ActionsList"
 	ActionsList.Parent = Actions

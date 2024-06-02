@@ -410,6 +410,158 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	C.CommandBarLine.TextXAlignment = Enum.TextXAlignment.Left
 	C.CommandBarLine.RichText = true
 	C.CommandBarLine.TextWrapped = true
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	local Actions = Instance.new("Frame")
+	local ActionsList = Instance.new("ScrollingFrame")
+	local UIListLayout = Instance.new("UIListLayout")
+	local ActionsEx = Instance.new("Frame")
+	local Title = Instance.new("TextLabel")
+	local StopButton = Instance.new("TextButton")
+	local Time = Instance.new("TextLabel")
+	local ActionsTitleLabel = Instance.new("TextLabel")
+
+	--Properties:
+
+	Actions.Name = "Actions"
+	Actions.Parent = GuiElements.HackGUI
+	Actions.AnchorPoint = Vector2.new(0, 0.5)
+	Actions.BackgroundColor3 = Color3.fromRGB(58, 58, 58)
+	Actions.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Actions.BorderSizePixel = 0
+	Actions.Position = UDim2.new(0, 0, 0.5, 0)
+	Actions.Size = UDim2.new(0.100000001, 0, 0.200000003, 0)
+
+	ActionsList.Name = "ActionsList"
+	ActionsList.Parent = Actions
+	ActionsList.AnchorPoint = Vector2.new(0, 1)
+	ActionsList.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ActionsList.BackgroundTransparency = 1.000
+	ActionsList.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	ActionsList.BorderSizePixel = 0
+	ActionsList.Position = UDim2.new(0, 0, 0.958245993, 0)
+	ActionsList.Size = UDim2.new(1, 0, 0.80384773, 0)
+	ActionsList.ZIndex = 5001
+	ActionsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+	ActionsList.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
+
+	UIListLayout.Parent = ActionsList
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+	ActionsEx.Name = "ActionsEx"
+	ActionsEx.Parent = script
+	ActionsEx.BackgroundColor3 = Color3.fromRGB(255, 204, 74)
+	ActionsEx.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	ActionsEx.BorderSizePixel = 0
+	ActionsEx.Size = UDim2.new(1, 0, 0, 35)
+
+	Title.Name = "Title"
+	Title.Parent = ActionsEx
+	Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Title.BackgroundTransparency = 1.000
+	Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Title.BorderSizePixel = 0
+	Title.Size = UDim2.new(1, 0, 0.5, 0)
+	Title.Font = Enum.Font.SourceSans
+	Title.Text = "HACKING COMPUTER 5"
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.TextScaled = true
+	Title.TextSize = 14.000
+	Title.TextStrokeTransparency = 0.000
+	Title.TextWrapped = true
+
+	StopButton.Name = "StopButton"
+	StopButton.Parent = ActionsEx
+	StopButton.AnchorPoint = Vector2.new(1, 1)
+	StopButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+	StopButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	StopButton.BorderSizePixel = 0
+	StopButton.Position = UDim2.new(1, 0, 1, 0)
+	StopButton.Size = UDim2.new(0.5, 0, 0.5, 0)
+	StopButton.Font = Enum.Font.SourceSans
+	StopButton.Text = "STOP"
+	StopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	StopButton.TextScaled = true
+	StopButton.TextSize = 14.000
+	StopButton.TextStrokeTransparency = 0.000
+	StopButton.TextWrapped = true
+
+	Time.Name = "Time"
+	Time.Parent = ActionsEx
+	Time.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Time.BackgroundTransparency = 1.000
+	Time.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Time.BorderSizePixel = 0
+	Time.Position = UDim2.new(0, 0, 0.485714287, 0)
+	Time.Size = UDim2.new(0.519761801, 0, 0.5, 0)
+	Time.Font = Enum.Font.SourceSans
+	Time.Text = "34 m, 24 s"
+	Time.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Time.TextScaled = true
+	Time.TextSize = 14.000
+	Time.TextStrokeTransparency = 0.000
+	Time.TextWrapped = true
+
+	ActionsTitleLabel.Name = "ActionsTitleLabel"
+	ActionsTitleLabel.Parent = Actions
+	ActionsTitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ActionsTitleLabel.BackgroundTransparency = 1.000
+	ActionsTitleLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	ActionsTitleLabel.BorderSizePixel = 0
+	ActionsTitleLabel.Size = UDim2.new(1, 0, 0.100000001, 0)
+	ActionsTitleLabel.Font = Enum.Font.Fondamento
+	ActionsTitleLabel.Text = "Current Actions"
+	ActionsTitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ActionsTitleLabel.TextScaled = true
+	ActionsTitleLabel.TextSize = 14.000
+	ActionsTitleLabel.TextStrokeTransparency = 0.000
+	ActionsTitleLabel.TextWrapped = true
+	
+	GuiElements.Actions = Actions
+	GuiElements.ActionsList = ActionsList
+	GuiElements.ActionsEx = ActionsEx
+	ActionsEx:AddTag("RemoveOnDestroy")
+	
+	function C.AddAction(info)
+		if ActionsList:FindFirstChild(info.Name) then
+			warn("Duplicate Action Name `"..info.Name.."` Requested, Cancelling...")
+			return
+		end
+		local ActionClone = ActionsEx:Clone()
+		ActionClone.Name = info.Name
+		ActionClone.Title.Text = info.Name:gsub("/"," "):gsub("_"," ")
+		ActionClone.Visible = true
+		local StopEvent = Instance.new("BindableEvent",ActionClone)
+		StopEvent.Name = "StopEvent"
+		StopEvent.Event:Connect(function(onRequest)
+			StopEvent:Destroy()
+			info.Stop(onRequest)
+			ActionClone:Destroy()
+		end)
+		ActionClone.StopButton.MouseButton1Click:Connect(function()
+			StopEvent:Fire(true)
+		end)
+		ActionClone.Parent = ActionsList
+		task.spawn(info.Time,ActionClone,info)
+	end
+	
+	function C.RemoveAction(name)
+		local actionInstance = ActionsList:FindFirstChild(name)
+		if actionInstance then
+			local event = actionInstance:FindFirstChild("StopEvent")
+			if event then
+				event:Fire()
+			end
+		end
+	end
 
 	return GuiElements
 end

@@ -11815,6 +11815,7 @@ if C.gameName=="FleeMain" then
 					warn("PC Not Found:",C.myTSM.ActionEvent.Value:GetFullName())
 				end
 			end
+			C.RemoveAction("PC CoolDown")
 			C.AddAction({Name=lastHackedPC.Name,Time=function(ActionClone,info)
 				ActionClone.Time.Text = "Time: TBA"
 			end,Stop=function(onRequest)

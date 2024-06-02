@@ -11809,9 +11809,11 @@ if C.gameName=="FleeMain" then
 				ActionClone.Time.Text = "Time: TBA"
 			end,Stop=function(onRequest)
 				if onRequest then
+					local old = C.myTSM.ActionEvent.Value
 					C.RemoteEvent:FireServer("Input", "Trigger", saveEvent)
 					RunS.RenderStepped:Wait()
 					stopCurrentAction(true)
+					C.RemoteEvent:FireServer("Input", "Trigger", old)
 				end
 			end,})
 		elseif lastHackedPC and lastAnimationName=="Typing" then

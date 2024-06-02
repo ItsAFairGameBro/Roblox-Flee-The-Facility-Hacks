@@ -11833,7 +11833,7 @@ if C.gameName=="FleeMain" then
 		defaultFunction("AnimationChanged",newValue)
 	end
 	setChangedProperty(currentAnimation,"Value",updateAnimation)
-	updateAnimation()
+	task.delay(2,updateAnimation)
 	trigger_setTriggers("StartUp",{Computer=false})
 	task.delay(5,trigger_setTriggers,"StartUp",{Computer=true})--careful with computers at the start!
 	table.insert(C.functs,C.myTSM:WaitForChild("ActionProgress").Changed:Connect(function(newVal)

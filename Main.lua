@@ -181,7 +181,9 @@ local GuiElements = {}
 C.hackGUIParent = gethui()
 --MODULE LOADER
 C.Modules = {}
-getgenv().SavedHttp = getgenv().SavedHttp or {}
+if not getgenv().SavedHttp or true then
+	getgenv().SavedHttp = {}
+end
 function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
 
@@ -11836,16 +11838,16 @@ if C.gameName=="FleeMain" then
 			C.RemoveAction(lastHackedPC.Name)
 			
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
+			local timeNeeded = (0.15+math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
 			C.AddAction({Name="PC CoolDown",Stop=function(onRequest)
-				local timeNeeded = (0.15+math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
 
 				--task.delay(timeNeeded,function()
-					if (os.clock() - lastPC_time) >= timeNeeded then
+					--if (os.clock() - lastPC_time) >= timeNeeded then
 						trigger_setTriggers("LastPC",{Computer=true})
 						print("Triggers Enabled After",timeNeeded)
-					end
+					--end
 				--end)
-			end, Time=15,})
+			end, Time=timeNeeded,})
 			print("Triggers Disabled")	
 		end
 		lastAnimationName = newValue

@@ -11839,7 +11839,7 @@ if C.gameName=="FleeMain" then
 			C.RemoveAction(lastHackedPC.Name)
 			
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
-			local timeNeeded = (0.15+math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
+			local timeNeeded = 15--(math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
 			C.AddAction({Name="PC CoolDown",Stop=function(onRequest)
 
 				--task.delay(timeNeeded,function()

@@ -11832,17 +11832,21 @@ if C.gameName=="FleeMain" then
 			return
 		elseif lastHackedPC and lastAnimationName=="Typing" then
 			ResetPCEvents()
-			lastPC_time = os.clock() print("Triggers Disabled")
+			lastPC_time = os.clock()
 			C.RemoveAction(lastHackedPC.Name)
+			
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
-			local timeNeeded = (0.15+math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
+			C.AddAction({Name="PC CoolDown",Stop=function(onRequest)
+				local timeNeeded = (0.15+math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
 
-			task.delay(timeNeeded,function()
-				if (os.clock() - lastPC_time) >= timeNeeded then
-					trigger_setTriggers("LastPC",{Computer=true})
-					print("Triggers Enabled After",timeNeeded)
-				end
-			end)
+				--task.delay(timeNeeded,function()
+					if (os.clock() - lastPC_time) >= timeNeeded then
+						trigger_setTriggers("LastPC",{Computer=true})
+						print("Triggers Enabled After",timeNeeded)
+					end
+				--end)
+			end, Time=15,})
+			print("Triggers Disabled")	
 		end
 		lastAnimationName = newValue
 		defaultFunction("AnimationChanged",newValue)

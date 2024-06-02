@@ -11793,7 +11793,7 @@ if C.gameName=="FleeMain" then
 		end
 		return getPC(obj.Parent)
 	end
-	local function Reset()
+	local function ResetPCEvents()
 		for num, conn in ipairs(PCFunctions) do
 			conn:Disconnect()
 		end PCFunctions = {}
@@ -11802,7 +11802,7 @@ if C.gameName=="FleeMain" then
 		local newValue = currentAnimation.Value
 		if newValue=="Typing" then
 			print("New PC Found!")
-			Rest()
+			ResetPCEvents()
 			local saveEvent = C.myTSM.ActionEvent.Value
 			lastHackedPC = getPC(C.myTSM.ActionEvent.Value)
 			if not lastHackedPC then
@@ -11831,7 +11831,7 @@ if C.gameName=="FleeMain" then
 		elseif (C.enHacks.Blatant_RemoteHackPCs and override ~= true) then
 			return
 		elseif lastHackedPC and lastAnimationName=="Typing" then
-			Reset()
+			ResetPCEvents()
 			lastPC_time = os.clock() print("Triggers Disabled")
 			C.RemoveAction(lastHackedPC.Name)
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})

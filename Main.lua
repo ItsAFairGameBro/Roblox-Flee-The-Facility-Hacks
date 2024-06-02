@@ -11792,7 +11792,8 @@ if C.gameName=="FleeMain" then
 		end
 		return getPC(obj.Parent)
 	end
-	local function updateAnimation(newValue)
+	local function updateAnimation()
+		local newValue = currentAnimation.Value
 		if newValue=="Typing" then
 			print("New PC Found!")
 			local saveEvent = C.myTSM.ActionEvent.Value

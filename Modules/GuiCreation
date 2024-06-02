@@ -544,6 +544,7 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 		StopEvent.Event:Connect(function(onRequest)
 			StopEvent:Destroy()
 			info.Stop(onRequest)
+			Actions.Visible = #ActionsList:GetChildren()-1 > 1 -- If there's something else apart from UIListLayout and the deleted instance!
 			ActionClone:Destroy()
 		end)
 		ActionClone.StopButton.MouseButton1Click:Connect(function()
@@ -566,6 +567,7 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 		else
 			task.spawn(info.Time,ActionClone,info)
 		end
+		Actions.Visible = true
 	end
 	
 	function C.RemoveAction(name)

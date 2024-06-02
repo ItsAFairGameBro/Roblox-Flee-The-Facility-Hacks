@@ -2481,12 +2481,12 @@ C.AvailableHacks ={
 				end
 				task.spawn(function()
 					while CanRun() do
-						lastInput = CenterPart:GetPivot()
+						lastInput = C.char:GetPivot()
 						RunS.RenderStepped:Wait()
 					end
 				end)
 				while CanRun() do
-					newInput = CenterPart:GetPivot()
+					newInput = C.char:GetPivot()
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
 							teleportMyself(lastInput)

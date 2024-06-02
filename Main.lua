@@ -11069,7 +11069,7 @@ local initilizationTypes = ({
 			return bindableEvent.Event
 		end
 		Button1Clicked(hackFrame.Toggle,hackInfo.Deb):Connect(function(userinputtype)
-			cycle(userinputtype == Enum.UserInputType.MouseButton1 and 1 or 2)
+			cycle(userinputtype == Enum.UserInputType.MouseButton1 and 1 or -1)
 		end)
 	end),
 	ExTextBox = function(hackInfo)

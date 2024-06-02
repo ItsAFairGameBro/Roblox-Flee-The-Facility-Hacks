@@ -2474,7 +2474,7 @@ C.AvailableHacks ={
 				if not C.enHacks.Blatant_TeleportBack then
 					return
 				end
-				local CenterPart = C.char:FindFirstChild("Torso") or C.char.PrimaryPart
+				local CenterPart = (C.gameName == "FleeMain" and "HumanoidRootPart") or C.char:FindFirstChild("Torso") or C.char.PrimaryPart
 				local lastInput,newInput = C.char:GetPivot(), nil
 				local function CanRun()
 					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and CenterPart and C.enHacks.Blatant_TeleportBack

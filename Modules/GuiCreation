@@ -537,7 +537,7 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 		end
 		local ActionClone = ActionsEx:Clone()
 		ActionClone.Name = info.Name
-		ActionClone.Title.Text = info.Name:gsub("/"," "):gsub("_"," ")
+		ActionClone.Title.Text = info.Name:gsub("/"," "):gsub("_"," "):gsub("%l%u",function(old) return old:sub(1,1) .. " " .. old:sub(2) end)
 		ActionClone.Visible = true
 		local StopEvent = Instance.new("BindableEvent",ActionClone)
 		StopEvent.Name = "StopEvent"
@@ -550,7 +550,22 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 			StopEvent:Fire(true)
 		end)
 		ActionClone.Parent = ActionsList
-		task.spawn(info.Time,ActionClone,info)
+		if typeof(info.Time) == "number" then
+			task.spawn(function()
+				for s = info.Time, 1, -1 do
+					if not ActionClone.Parent then
+						return
+					end
+					ActionClone.Time.Text = s
+					task.wait(1)
+				end
+				if StopEvent.Parent then
+					StopEvent:Fire()
+				end
+			end)
+		else
+			task.spawn(info.Time,ActionClone,info)
+		end
 	end
 	
 	function C.RemoveAction(name)

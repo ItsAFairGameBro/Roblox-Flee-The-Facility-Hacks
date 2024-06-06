@@ -7965,7 +7965,6 @@ C.AvailableHacks ={
 							C.char.Torso.CanTouch = false
 							trigger_setTriggers("Typing",{AllowExceptions={actionValue.Parent.Parent}})
 							local actionSign = actionValue.Parent.ActionSign
-							local savedActionSign = actionSign.Value
 							C.AvailableHacks.Runner[4].Changed = C.myTSM.CurrentAnimation.Changed:Connect(function()
 								task.wait(1/3)--RunS.RenderStepped:Wait()
 								actionValue.Parent.Parent.Screen.SoundTyping:Stop()
@@ -7974,13 +7973,12 @@ C.AvailableHacks ={
 									table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Runner[4].Changed))
 									C.AvailableHacks.Runner[4].Changed:Disconnect()
 								end
-								while actionSign.Value == savedActionSign and not C.isCleared do
+								while actionSign.Value == 0 and not C.isCleared do
 									if actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Playing then
 										actionValue.Parent.Parent.Screen.SoundWindowsPopUp:Stop()
 									end
 									actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Played:Wait()
 								end
-								print("ActionSign Changed",actionSign.Value,savedActionSign)
 							end)
 							table.insert(C.functs,C.AvailableHacks.Runner[4].Changed)
 							return

@@ -7964,13 +7964,21 @@ C.AvailableHacks ={
 						if C.enHacks.Blatant_RemoteHackPCs then
 							C.char.Torso.CanTouch = false
 							trigger_setTriggers("Typing",{AllowExceptions={actionValue.Parent.Parent}})
+							local actionSign = actionValue.Parent.ActionSign
+							local savedActionSign = actionSign.Value
 							C.AvailableHacks.Runner[4].Changed = C.myTSM.CurrentAnimation.Changed:Connect(function()
-								task.wait(1)--RunS.RenderStepped:Wait()
+								task.wait(1/3)--RunS.RenderStepped:Wait()
 								actionValue.Parent.Parent.Screen.SoundTyping:Stop()
 								C.myTSM.CurrentAnimation.Value = ""
 								if C.AvailableHacks.Runner[4].Changed then
 									table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Runner[4].Changed))
 									C.AvailableHacks.Runner[4].Changed:Disconnect()
+								end
+								while actionSign.Value == savedActionSign and not C.isCleared do
+									if actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Playing then
+										actionValue.Parent.Parent.Screen.SoundWindowsPopUp:Stop()
+									end
+									actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Played:Wait()
 								end
 							end)
 							table.insert(C.functs,C.AvailableHacks.Runner[4].Changed)
@@ -11828,6 +11836,7 @@ if C.gameName=="FleeMain" then
 					--C.RemoteEvent:FireServer("Input", "Trigger", old)
 				end
 			end,})
+
 			local screen = lastHackedPC:WaitForChild("Screen")
 			table.insert(PCFunctions,screen:GetPropertyChangedSignal("Color"):Connect(function()
 				updateAnimation(true)

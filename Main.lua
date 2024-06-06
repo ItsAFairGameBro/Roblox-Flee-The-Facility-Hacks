@@ -7977,8 +7977,11 @@ C.AvailableHacks ={
 									if actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Playing then
 										actionValue.Parent.Parent.Screen.SoundWindowsPopUp:Stop()
 									end
+									warn("Waiting")
 									actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Played:Wait()
+									warn("Play Event")
 								end
+								warn("ActionSign Changed",actionSign.Value)
 							end)
 							table.insert(C.functs,C.AvailableHacks.Runner[4].Changed)
 							return

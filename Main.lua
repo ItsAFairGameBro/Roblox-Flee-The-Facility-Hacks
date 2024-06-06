@@ -7980,6 +7980,7 @@ C.AvailableHacks ={
 									end
 									actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Played:Wait()
 								end
+								print("ActionSign Changed",actionSign.Value,savedActionSign)
 							end)
 							table.insert(C.functs,C.AvailableHacks.Runner[4].Changed)
 							return

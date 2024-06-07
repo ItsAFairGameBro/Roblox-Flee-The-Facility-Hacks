@@ -1379,7 +1379,29 @@ C.CommandFunctions = {
 		AfterTxt="%s",
 		Run=function(args)
 			if args[1][1] == "new" then
-				TeleportS:Teleport(game.PlaceId, plr)
+				local result, servers = pcall(game.HttpGet,game,`https://games.roblox.com/v1/games/{game.PlaceId}/servers/0?sortOrder=2&excludeFullGames=true&limit=100`)
+				if not result then
+					return false, "Request Failed: "..servers
+				end
+				local decoded = HS:JSONDecode(servers.data)
+
+				local ServerJobIds = {}
+
+				local Rand = Random.new(tick())
+
+				for i, v in ipairs(decoded) do
+					if v.id ~= game.JobId then
+						ServerJobIds[#ServerJobIds + 1] = v.id
+					end
+				end
+				local bool = #ServerJobIds ~= 0
+				if not bool then
+					return false, "No other servers found!"
+				end
+				assert(bool,"Couldnt find servers more than one")
+				local random = Rand:NextInteger(1,#ServerJobIds)
+
+				TeleportS:TeleportToPlaceInstance(game.PlaceId,ServerJobIds[random],plr)
 			elseif not args[1][1] or args[1][1]:len() == 0 then
 				TeleportS:TeleportToPlaceInstance(game.PlaceId,game.JobId,plr)
 			end

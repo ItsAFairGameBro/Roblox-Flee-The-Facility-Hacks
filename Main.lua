@@ -1886,7 +1886,7 @@ C.AvailableHacks ={
 						while C.enHacks.ESP_Highlight and nameTag.Parent and nameTag.Parent.Parent and HRP and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
 							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (C.gameName~="FleeMain" or (({C.isInGame(theirChar)})[1])==({C.isInGame(camera.CameraSubject.Parent)})[1]) then
 								--local didHit,instance=true,theirChar.PrimaryPart
-								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil,function(result)
+								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.01,nil,function(result)
 									local instance = result and result.Instance
 									local Character = instance and instance.Parent and instance.Parent.Parent and instance.Parent.Parent.Parent
 										and ((instance.Parent:FindFirstChild("Humanoid") and instance.Parent)
@@ -1897,6 +1897,7 @@ C.AvailableHacks ={
 									end
 									return false
 								end)
+								print("Instance",instance)
 								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,nameTag_UserName.TextColor3)
 								--(C.Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
 								--myRenderer:step(0)

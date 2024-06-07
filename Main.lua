@@ -1027,7 +1027,6 @@ C.CommandFunctions = {
 			humanDesc:SetAccessories(accessories,true)--]]
 			if not isDefault and humanDesc.Head ~= 86498048 then--humanDesc.Head ~= 0 and humanDesc.Head ~= 86498048 then--not isDefault then
 				humanDesc.Head = 15093053680
-				print("Added Headless")
 			end
 			local AnimationUpdateConnection
 			if AnimationEffectData and AnimationEffectData.Update then
@@ -1883,7 +1882,7 @@ C.AvailableHacks ={
 						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
 							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (C.gameName~="FleeMain" or (({C.isInGame(theirChar)})[1])==({C.isInGame(camera.CameraSubject.Parent)})[1]) then
 								--local didHit,instance=true,theirChar.PrimaryPart
-								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil--[[,function(result)
+								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,true--[[,function(result)
 									local instance = result and result.Instance
 									if instance and instance.Parent and 
 										(instance.Parent:FindFirstChild("Humanoid") or (instance.Parent.Parent and instance.Parent.Parent:FindFirstChild("Humanoid"))
@@ -1987,7 +1986,7 @@ C.AvailableHacks ={
 								if (C.Map~=nil and Screen~=nil) then    
 									local castArgument = camera.CameraSubject~=nil and camera.CameraSubject.Parent
 									local castArray = {"Blacklist", castArgument}
-									didHit,instance=C.raycast(camera.CFrame.p, Screen.Position, castArray, 100, 0.001)
+									didHit,instance=C.raycast(camera.CFrame.p, Screen.Position, castArray, 100, 0.001, true)
 								end 
 								changeVisibility(robloxHighlight,(didHit and Computer:IsAncestorOf(instance) and 1 or 0),Screen.Color)
 							else
@@ -2100,7 +2099,7 @@ C.AvailableHacks ={
 				end
 			end,
 			["ComputerAdded"]=function(PC)
-				local progress=PC:GetAttribute("Progress")
+				local progress=PC:GetAttribute("Progress") or 0 -- Implement Zero to indicate no progress
 				if progress~=nil then
 					C.AvailableHacks.Render[7].SetBar(PC,progress)
 				end

@@ -3055,7 +3055,9 @@ C.AvailableHacks ={
 			["Universes"]={"FlagWars"},
 			["ActivateFunction"]=function(newValue)
 				local function getClosest()
-					if not C.human or C.human.Health <= 0 then return end
+					local myHRP = C.char and C.char.PrimaryPart
+					if not C.human or C.human.Health <= 0 or not myHRP then return end
+					
 
 					local closest = nil;
 					local distance = math.huge;
@@ -3063,10 +3065,14 @@ C.AvailableHacks ={
 					for i, v in pairs(PS:GetPlayers()) do
 						if v == plr then continue end
 						if v.Team == plr.Team then continue end
-						if not v.Character then continue end
-						if not v.Character:FindFirstChildOfClass("Humanoid") then continue end
+						local theirChar = v.Character
+						if not theirChar then continue end
+						local theirHumanoid = theirChar:FindFirstChildOfClass("Humanoid")
+						if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
+						local theirHRP = theirChar.PrimaryPart
+						if not theirHRP then return end
 
-						local d = (v.Character.HumanoidRootPart.Position - C.char.HumanoidRootPart.Position).Magnitude
+						local d = (theirHRP.Position - myHRP.Position).Magnitude
 
 						if d < distance then
 							distance = d

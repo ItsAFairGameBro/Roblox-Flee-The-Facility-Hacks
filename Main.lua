@@ -1025,7 +1025,7 @@ C.CommandFunctions = {
 				table.insert(accessories,{AssetId=id,AccessoryType=Enum.AccessoryType. })
 			end
 			humanDesc:SetAccessories(accessories,true)--]]
-			if humanDesc.Head ~= 0 and humanDesc.Head ~= 86498048 then--not isDefault then
+			if not isDefault and humanDesc.Head ~= 0 then--humanDesc.Head ~= 0 and humanDesc.Head ~= 86498048 then--not isDefault then
 				humanDesc.Head = 15093053680
 			end
 			local AnimationUpdateConnection
@@ -1383,8 +1383,10 @@ C.CommandFunctions = {
 				if not result then
 					return false, "Request Failed: "..servers
 				end
-				print("Res",servers)
-				local decoded = HS:JSONDecode(servers)
+				local result2, decoded = pcall(HS.JSONDecode,HS,servers)
+				if not result2 then
+					return false, "Request Decode Failed: "..decoded
+				end
 
 				local ServerJobIds = {}
 

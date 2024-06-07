@@ -1264,9 +1264,9 @@ C.CommandFunctions = {
 	},
 	["time"]={
 		Type="Player",
-		AfterTxt="",
+		AfterTxt="%.2f",
 		Run=function(args)
-			return ("%.2f"):format(time())
+			return true,time()
 		end,
 	},
 	["follow"]={

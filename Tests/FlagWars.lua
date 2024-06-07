@@ -7,16 +7,16 @@ OldRemoteEvent = hookfunction(Instance.new("RemoteEvent").FireServer,function(ev
 
 
 	if tostring(getcallingscript()) == "BAC_" then
-		if tostring(event) == "NewMessage" and (arguments[1] == "B-1" or arguments[1] == "A-1") then
+		local arg1 = (...)[1]
+		if typeof(arg1)=="table" then
+			for num, val in pairs(arg1) do
+				print("Key/Val",num,val)
+			end
+		end
+		if tostring(event) == "NewMessage" and (arguments[1] == "B-1" or arguments[1] == "A-1" or typeof(arg1)=="table") then
 			print("Prevented BAC_ with",event.Name,...)
 			return error("Nope")
 		else
-			local arg1 = (...)[1]
-			if typeof(arg1)=="table" then
-				for num, val in pairs(arg1) do
-					print("Key/Val",num,val)
-				end
-			end
 			print("Passed BAC_ with",event.Name,...)
 		end
 	end

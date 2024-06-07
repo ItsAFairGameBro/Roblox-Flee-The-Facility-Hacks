@@ -71,6 +71,8 @@ return function(C,_SETTINGS)
 				lastInstance = result.Instance;
 				table.insert(filter, lastInstance);
 				raycastParams.FilterDescendantsInstances = filter;
+			else
+				break
 			end
 		end
 		if result~=nil and result.Instance~=nil and result.Instance.Parent~=nil then

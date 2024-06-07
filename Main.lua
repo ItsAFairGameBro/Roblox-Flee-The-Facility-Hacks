@@ -3084,10 +3084,12 @@ C.AvailableHacks ={
 				end
 				C.Hook(game,"__namecall","fireserver",newValue and (function(method,event,arg1,arg2)
 					if tostring(event) == "WeaponHit" then
+						print("WeaponHit")
 						local Closest = getClosest()
 						if Closest then
 							arg2["part"] = Closest.Character.Head
 							arg2["h"] = Closest.Character.Head
+							print("SEt CLOsest!"arg2)
 						end
 					end
 					return true, {event,arg1,arg2}

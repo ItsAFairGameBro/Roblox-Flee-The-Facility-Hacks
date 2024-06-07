@@ -2110,6 +2110,7 @@ C.AvailableHacks ={
 					task.spawn(SetMiniGameResultFunction)--]]
 				end
 				setChangedProperty(ActionProgress,"Value",ActionChanged)
+				
 				ActionChanged()
 			end,
 		},
@@ -7987,13 +7988,14 @@ C.AvailableHacks ={
 									end
 									--warn("Play Event")
 								end
-								warn("ActionSign Changed",actionSign.Value)
+								--warn("ActionSign Changed",actionSign.Value)
 							end)
 							table.insert(C.functs,C.AvailableHacks.Runner[4].Changed)
 							return
 						else
 							if actionValue.Parent and not table.find(C.char.Torso:GetTouchingParts(),actionValue.Parent) then
 								task.spawn(stopCurrentAction,true)
+								C.PurgeActionsWithTag("Computer")
 							end
 						end
 					end
@@ -11755,6 +11757,9 @@ local function updateCurrentMap(newMap,firstRun)
 		local clonedMap = C.Map;
 		C.Map = nil; C.Beast = nil;
 		defaultFunction("CleanUp",{clonedMap});
+		
+		C.PurgeActionsWithTag("Map")
+		C.PurgeActionsWithTag("Computer")
 	end
 end
 

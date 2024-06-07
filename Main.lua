@@ -12064,6 +12064,18 @@ task.spawn(function()
 				return OldRemoteEvent(event,...)
 			end)
 			
+			local OldPreloadAsync
+			
+			OldPreloadAsync = hookfunction(CP.PreloadAsync,function(CP_2,assets,callerFunction)
+				
+				if tostring(getcallingscript()) == "BAC_" then
+					print("Blocked BAC_ from calling",assets)
+					return
+				end
+				
+				return OldPreloadAsync(CP_2,assets,callerFunction)
+			end)
+			
 			
 			return
 		end

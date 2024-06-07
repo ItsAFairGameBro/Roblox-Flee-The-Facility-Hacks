@@ -1888,8 +1888,10 @@ C.AvailableHacks ={
 								--local didHit,instance=true,theirChar.PrimaryPart
 								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil,function(result)
 									local instance = result and result.Instance
-									local Character = instance and instance.Parent and ((instance.Parent:FindFirstChild("Humanoid") and instance.Parent))
-										or ((instance.Parent.Parent and instance.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent))
+									local Character = instance and instance.Parent and instance.Parent.Parent and instance.Parent.Parent.Parent
+										and ((instance.Parent:FindFirstChild("Humanoid") and instance.Parent))
+										or (instance.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent)
+										or (instance.Parent.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent.Parent)
 									if Character ~= theirChar then
 										return true
 									end

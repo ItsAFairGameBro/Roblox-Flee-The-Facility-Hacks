@@ -1378,11 +1378,7 @@ C.CommandFunctions = {
 		Type="",
 		AfterTxt="%s",
 		Run=function(args)
-			if true then
-				print(args)
-				return
-			end
-			if args[1][1] == "new" then
+			if args[1] == "new" then
 				local result, servers = pcall(game.HttpGet,game,`https://games.roblox.com/v1/games/{game.PlaceId}/servers/0?sortOrder=2&excludeFullGames=true&limit=100`)
 				if not result then
 					return false, "Request Failed: "..servers
@@ -1405,7 +1401,7 @@ C.CommandFunctions = {
 				local random = Rand:NextInteger(1,#ServerJobIds)
 
 				TeleportS:TeleportToPlaceInstance(game.PlaceId,ServerJobIds[random],plr)
-			elseif not args[1][1] or args[1][1]:len() == 0 then
+			elseif not args[1] or args[1]:len() == 0 then
 				TeleportS:TeleportToPlaceInstance(game.PlaceId,game.JobId,plr)
 			end
 			return true

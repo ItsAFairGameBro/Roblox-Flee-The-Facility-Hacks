@@ -66,11 +66,12 @@ return function(C,_SETTINGS)
 				break;
 			end
 			
-
-			from = result.Position:lerp(target,.01);
-			lastInstance = result.Instance;
-			table.insert(filter, lastInstance);
-			raycastParams.FilterDescendantsInstances = filter;
+			if result then
+				from = result.Position:lerp(target,.01);
+				lastInstance = result.Instance;
+				table.insert(filter, lastInstance);
+				raycastParams.FilterDescendantsInstances = filter;
+			end
 		end
 		if result~=nil and result.Instance~=nil and result.Instance.Parent~=nil then
 			return result,result.Instance;

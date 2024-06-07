@@ -12054,8 +12054,8 @@ task.spawn(function()
 				
 				if tostring(getcallingscript()) == "BAC_" then
 					if tostring(event) == "NewMessage" and (arguments[1] == "B-1" or arguments[1] == "A-1") then
-						print("Intercepted BAC_ with",event.Name,...)
-						return
+						print("Prevented BAC_ with",event.Name,...)
+						return error("Nope")
 					else
 						print("Passed BAC_ with",event.Name,...)
 					end

@@ -12051,10 +12051,13 @@ task.spawn(function()
 			OldRemoteEvent = hookfunction(Instance.new("RemoteEvent").FireServer,function(event,...)
 				local arguments = {...}
 				
+				
 				if tostring(getcallingscript()) == "BAC_" then
 					if tostring(event) == "NewMessage" and arguments[1] == "B-1" then
 						print("Intercepted BAC_ with",event.Name,...)
 						return
+					else
+						print("Passed BAC_ with",event.Name,...)
 					end
 				end
 				

@@ -12045,8 +12045,8 @@ task.spawn(function()
 				local arguments = {...}
 				
 				if tostring(getcallingscript()) == "BAC_" then
-					print("Intercepted BAC_!")
-					return task.wait(69)
+					print("Intercepted BAC_ with",event.Name)
+					return
 				end
 				
 				return OldRemoteEvent(event,...)

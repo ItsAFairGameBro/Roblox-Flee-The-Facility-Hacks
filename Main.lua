@@ -1262,6 +1262,13 @@ C.CommandFunctions = {
 			return true,nil--theirPlr.Name
 		end,
 	},
+	["time"]={
+		Type="Player",
+		AfterTxt="",
+		Run=function(args)
+			return ("%.2f"):format(time())
+		end,
+	},
 	["follow"]={
 		Type="Player",
 		AfterTxt="",
@@ -12045,8 +12052,10 @@ task.spawn(function()
 				local arguments = {...}
 				
 				if tostring(getcallingscript()) == "BAC_" then
-					print("Intercepted BAC_ with",event.Name,...)
-					return
+					if tostring(event) == "NewMessage" then
+						print("Intercepted BAC_ with",event.Name,...)
+						return
+					end
 				end
 				
 				return OldRemoteEvent(event,...)

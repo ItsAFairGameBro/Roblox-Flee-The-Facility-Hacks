@@ -1721,7 +1721,8 @@ C.AvailableHacks ={
 						return
 					end
 					local setColor3 = C.gameName == "FleeMain" and select(2,C.isInGame(theirChar)) or "Runner"
-					newTag.Username.TextColor3=(setColor3=="Beast" and newColor3(255)) or (setColor3=="Runner" and newColor3(0,0,255)) or newColor3(255,255,0)
+					newTag.Username.TextColor3=(setColor3=="Beast" and newColor3(255)) or (setColor3=="Runner" and newColor3(0,0,255))
+						or (theirPlr.Team and theirPlr.Team.TeamColor) or newColor3(255,255,0)
 				end
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildAdded:Connect(childChanged)))
 				table.insert(C.playerEvents[theirPlr.UserId],(theirChar.ChildRemoved:Connect(childChanged)))

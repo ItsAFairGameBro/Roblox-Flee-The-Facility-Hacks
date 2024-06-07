@@ -376,20 +376,24 @@ function C.Hook(root,method,functName,functData)
 		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
 		local OldFunction
 		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
+			local arguments = tblPack(...)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(getnamecallmethod())
 				for functName, theirRun in inPairs(myData) do
 					if method == functName then
-						local result,values = theirRun(method,...)
-						if result then
+						local result,values = theirRun(method,arguments)
+						if result == true then--"override" then
 							return tblUnpack(values)
+						elseif result == "replace" then
+							arguments = values
+							break
 						end
 					end
 				end
 			end
 
-			return OldFunction(...)
+			return OldFunction(tblUnpack(arguments))
 		end)) or MethodFunction(method,(function(...)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
@@ -3082,17 +3086,18 @@ C.AvailableHacks ={
 
 					return closest
 				end
-				C.Hook(game,"__namecall","fireserver",newValue and (function(method,event,arg1,arg2)
+				C.Hook(game,"__namecall","fireserver",newValue and (function(method,args)
+					local event = args[1]
 					if tostring(event) == "WeaponHit" then
 						print("WeaponHit")
 						local Closest = getClosest()
 						if Closest then
-							arg2["part"] = Closest.Character.Head
-							arg2["h"] = Closest.Character.Head
-							print("SEt CLOsest!",arg2)
+							args[2]["part"] = Closest.Character.Head
+							args[2]["h"] = Closest.Character.Head
+							print("SEt CLOsest!",args[2])
 						end
 					end
-					return true, {event,arg1,arg2}
+					return "replace", args
 				end))
 			end,
 		},
@@ -5444,7 +5449,7 @@ C.AvailableHacks ={
 					--else
 						
 					end
-					return false, nil
+					return true, nil
 				end) or nil)
 			end),
 		}) or nil),

@@ -7973,13 +7973,18 @@ C.AvailableHacks ={
 									table.remove(C.functs,table.find(C.functs,C.AvailableHacks.Runner[4].Changed))
 									C.AvailableHacks.Runner[4].Changed:Disconnect()
 								end
-								while actionSign.Value == 0 and not C.isCleared do
-									if actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Playing then
+								local function CanRun()
+									return actionSign.Value == 0 and not C.isCleared
+								end
+								while CanRun() do
+									while CanRun() and actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Playing do
 										actionValue.Parent.Parent.Screen.SoundWindowsPopUp:Stop()
+										RunS.RenderStepped:Wait()
 									end
-									warn("Waiting")
-									actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Played:Wait()
-									warn("Play Event")
+									--warn("Waiting")
+									actionValue.Parent.Parent.Screen.SoundWindowsPopUp:GetAttributeChangedSignal("Playing"):Wait()
+									RunS.RenderStepped:Wait()
+									--warn("Play Event")
 								end
 								warn("ActionSign Changed",actionSign.Value)
 							end)

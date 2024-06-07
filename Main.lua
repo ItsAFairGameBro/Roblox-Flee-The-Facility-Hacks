@@ -2958,8 +2958,8 @@ C.AvailableHacks ={
 		},
 		[300]={
 			["Type"]="ExTextButton",
-			["Title"]="Gun Hack",
-			["Desc"]="Inf Ammo, Firerate, and Potientally Infinite ",
+			["Title"]="Weapon Stats Hack",
+			["Desc"]="Inf Ammo, Firerate, and Accuracy",
 			["Shortcut"]="Blatant_FlagWarsGunHack",
 			["Default"]=false,
 			["DontActivate"]=true,
@@ -3044,6 +3044,48 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[300].RunStats(list)
 				end))--]]
 				task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
+			end,
+		},
+		[301]={
+			["Type"]="ExTextButton",
+			["Title"]="Gun Hack",
+			["Desc"]="Inf Ammo, Firerate, and Potientally Infinite ",
+			["Shortcut"]="Blatant_FlagWarsGunHack",
+			["Default"]=false,
+			["Universes"]={"FlagWars"},
+			["ActivateFunction"]=function(newValue)
+				local function getClosest()
+					if not C.human or C.human.Health <= 0 then return end
+
+					local closest = nil;
+					local distance = math.huge;
+
+					for i, v in pairs(PS:GetPlayers()) do
+						if v == plr then continue end
+						if v.Team == plr.Team then continue end
+						if not v.Character then continue end
+						if not v.Character:FindFirstChildOfClass("Humanoid") then continue end
+
+						local d = (v.Character.HumanoidRootPart.Position - C.char.HumanoidRootPart.Position).Magnitude
+
+						if d < distance then
+							distance = d
+							closest = v
+						end
+					end
+
+					return closest
+				end
+				C.Hook(game,"__namecall","fireserver",newValue and (function(method,event,arg1,arg2)
+					if tostring(event) == "WeaponHit" then
+						local Closest = getClosest()
+						if Closest then
+							arg2["part"] = Closest.Character.Head
+							arg2["h"] = Closest.Character.Head
+						end
+					end
+					return true, {event,arg1,arg2}
+				end))
 			end,
 		},
 	},

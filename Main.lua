@@ -1383,7 +1383,7 @@ C.CommandFunctions = {
 				if not result then
 					return false, "Request Failed: "..servers
 				end
-				print("Res",servers.data)
+				print("Res",servers)
 				local decoded = HS:JSONDecode(servers.data)
 
 				local ServerJobIds = {}

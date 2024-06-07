@@ -11758,7 +11758,7 @@ local function updateCurrentMap(newMap,firstRun)
 		C.Map = nil; C.Beast = nil;
 		defaultFunction("CleanUp",{clonedMap});
 		
-		C.PurgeActionsWithTag("Map")
+		C.PurgeActionsWithTag("Game")
 		C.PurgeActionsWithTag("Computer")
 	end
 end
@@ -11837,7 +11837,7 @@ if C.gameName=="FleeMain" then
 				end
 			end
 			C.RemoveAction("PC CoolDown")
-			C.AddAction({Name=lastHackedPC.Name,Time=function(ActionClone,info)
+			C.AddAction({Name=lastHackedPC.Name,Tags={"Game","Computer"},Time=function(ActionClone,info)
 				ActionClone.Time.Text = "Time: TBA"
 			end,Stop=function(onRequest)
 				if onRequest then
@@ -11863,7 +11863,7 @@ if C.gameName=="FleeMain" then
 			
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
 			local timeNeeded = 15--(math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
-			C.AddAction({Name="PC CoolDown",Stop=function(onRequest)
+			C.AddAction({Name="PC CoolDown",Tags={"Game","Computer"},Stop=function(onRequest)
 
 				--task.delay(timeNeeded,function()
 					--if (os.clock() - lastPC_time) >= timeNeeded then

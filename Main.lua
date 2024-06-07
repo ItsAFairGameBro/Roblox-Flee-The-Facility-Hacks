@@ -3073,14 +3073,14 @@ C.AvailableHacks ={
 						if not theirChar then continue end
 						local theirHumanoid = theirChar:FindFirstChildOfClass("Humanoid")
 						if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
-						local theirHRP = theirChar.PrimaryPart
-						if not theirHRP then return end
+						local theirHead = theirChar:FindFirstChild("Head")
+						if not theirHead then return end
 
-						local d = (theirHRP.Position - myHRP.Position).Magnitude
+						local d = (theirHead.Position - myHRP.Position).Magnitude
 
 						if d < distance then
 							distance = d
-							closest = v
+							closest = theirHead
 						end
 					end
 
@@ -3090,10 +3090,10 @@ C.AvailableHacks ={
 					local event = args[1]
 					if tostring(event) == "WeaponHit" then
 						print("WeaponHit")
-						local Closest = getClosest()
-						if Closest then
-							args[2]["part"] = Closest.Character.Head
-							args[2]["h"] = Closest.Character.Head
+						local ClosestHead = getClosest()
+						if ClosestHead then
+							args[2]["part"] = ClosestHead
+							args[2]["h"] = ClosestHead
 							print("SEt CLOsest!",args[2])
 						end
 					end

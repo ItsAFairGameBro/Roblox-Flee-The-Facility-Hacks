@@ -12069,7 +12069,7 @@ task.spawn(function()
 			OldPreloadAsync = hookfunction(CP.PreloadAsync,function(CP_2,assets,callerFunction)
 				
 				if tostring(getcallingscript()) == "BAC_" then
-					print("Blocked BAC_ from calling",assets)
+					print("Blocked BAC_ from calling",#assets)
 					return
 				end
 				

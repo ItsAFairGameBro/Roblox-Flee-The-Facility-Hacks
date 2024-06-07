@@ -1384,13 +1384,13 @@ C.CommandFunctions = {
 					return false, "Request Failed: "..servers
 				end
 				print("Res",servers)
-				local decoded = HS:JSONDecode(servers.data)
+				local decoded = HS:JSONDecode(servers)
 
 				local ServerJobIds = {}
 
 				local Rand = Random.new(tick())
 
-				for i, v in ipairs(decoded) do
+				for i, v in ipairs(decoded.data) do
 					if v.id ~= game.JobId then
 						ServerJobIds[#ServerJobIds + 1] = v.id
 					end

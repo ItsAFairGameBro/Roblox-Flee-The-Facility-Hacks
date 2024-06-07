@@ -1892,7 +1892,6 @@ C.AvailableHacks ={
 										and ((instance.Parent:FindFirstChild("Humanoid") and instance.Parent)
 										or (instance.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent)
 										or (instance.Parent.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent.Parent))
-									print(Character)
 									if Character and Character ~= theirChar then
 										return true
 									end

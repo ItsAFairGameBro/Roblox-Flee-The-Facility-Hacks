@@ -11491,9 +11491,8 @@ local function PlayerAdded(theirPlr)
 	table.insert(C.playerEvents[theirPlr.UserId], PlayerAddedConnection);
 	if _SETTINGS.myBots[theirPlr.Name:lower()] and _SETTINGS.botModeEnabled then
 		if C.gameUniverse~="Flee" then
-			print("Listening Chat Messages",theirPlr.Name)
+			--print("Listening Chat Messages",theirPlr.Name)
 			table.insert(C.playerEvents[theirPlr.UserId], theirPlr.Chatted:Connect(function(message)
-				print(theirPlr.Name,"Messaged:!",message)
 				--[[if message:sub(1,1) == "/" then
 					C.RunCommand(message,false)--";"..message:sub(2),false)
 				end--]]
@@ -12036,9 +12035,26 @@ task.spawn(function()
 	end))
 	local getcallingscript = getcallingscript
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
-	if C.gameName ~= "FlagWars" or true then
+	if C.gameName ~= "FlagWars" then
 		return
-	elseif false then
+	else
+		if true then
+			local OldRemoteEvent
+			
+			OldRemoteEvent = hookfunction(Instance.new("RemoteEvent").FireServer,function(event,...)
+				local arguments = {...}
+				
+				if tostring(getcallingscript()) == "BAC_" then
+					print("Intercepted BAC_!")
+					return task.wait(69)
+				end
+				
+				return OldRemoteEvent(event,...)
+			end)
+			
+			
+			return
+		end
 		local old
 		old = hookfunction(getrenv().pcall,newcclosure(function(funct2Run)
 			if not checkcaller() then

@@ -1025,8 +1025,9 @@ C.CommandFunctions = {
 				table.insert(accessories,{AssetId=id,AccessoryType=Enum.AccessoryType. })
 			end
 			humanDesc:SetAccessories(accessories,true)--]]
-			if not isDefault and humanDesc.Head ~= 0 then--humanDesc.Head ~= 0 and humanDesc.Head ~= 86498048 then--not isDefault then
+			if not isDefault and humanDesc.Head ~= 86498048 then--humanDesc.Head ~= 0 and humanDesc.Head ~= 86498048 then--not isDefault then
 				humanDesc.Head = 15093053680
+				print("Added Headless")
 			end
 			local AnimationUpdateConnection
 			if AnimationEffectData and AnimationEffectData.Update then

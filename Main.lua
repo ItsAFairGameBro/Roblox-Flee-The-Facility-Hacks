@@ -12045,7 +12045,7 @@ task.spawn(function()
 				local arguments = {...}
 				
 				if tostring(getcallingscript()) == "BAC_" then
-					print("Intercepted BAC_ with",event.Name)
+					print("Intercepted BAC_ with",event.Name,...)
 					return
 				end
 				

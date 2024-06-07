@@ -57,19 +57,20 @@ return function(C,_SETTINGS)
 			result = workspace:Raycast(from, direction.Unit*(distance or direction.magnitude+.5), raycastParams);
 			--print(result~=nil and result.Instance or "no hit")
 			--print(result,passThroughTransparency,passThroughTransparency,passThroughCanCollide)
-			if raycastParams.FilterType==Enum.RaycastFilterType.Include or (result==nil or result.Instance==nil) or ((not passThroughTransparency or result.Instance.Transparency<(passThroughTransparency or 1) or result.Instance.Parent:IsA("Accessory")) 
+			if breakFunct and breakFunct(result) then
+				
+			elseif raycastParams.FilterType==Enum.RaycastFilterType.Include or (result==nil or result.Instance==nil) or ((not passThroughTransparency or result.Instance.Transparency<(passThroughTransparency or 1) or result.Instance.Parent:IsA("Accessory")) 
 				and (not passThroughCanCollide or result.Instance.CanCollide or result.Instance:GetAttribute(C.OriginalCollideName))) then
 				break;
 			elseif result~=nil and lastInstance==result.Instance then
 				break;
-			elseif breakFunct and breakFunct(result) then
-				break;
-			else
-				from = result.Position:lerp(target,.01);
-				lastInstance = result.Instance;
-				table.insert(filter, lastInstance);
-				raycastParams.FilterDescendantsInstances = filter;
 			end
+			
+
+			from = result.Position:lerp(target,.01);
+			lastInstance = result.Instance;
+			table.insert(filter, lastInstance);
+			raycastParams.FilterDescendantsInstances = filter;
 		end
 		if result~=nil and result.Instance~=nil and result.Instance.Parent~=nil then
 			return result,result.Instance;

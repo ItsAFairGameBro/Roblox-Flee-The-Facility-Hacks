@@ -543,6 +543,7 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 			warn("Duplicate Action Name `"..info.Name.."` Requested, Cancelling...")
 			return
 		end
+		info.Tags = info.Tags or {}
 		local ActionClone = ActionsEx:Clone()
 		ActionClone.Name = info.Name
 		ActionClone.Title.Text = info.Name:gsub("/"," "):gsub("_"," "):gsub("%l%u",function(old) return old:sub(1,1) .. " " .. old:sub(2) end)
@@ -589,6 +590,14 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 		end
 		if getgenv().ActionsList[name] then
 			getgenv().ActionsList[name] = nil
+		end
+	end
+	
+	function C.PurgeActionsWithTag(tagName:string)
+		for name, data in pairs(getgenv().ActionsList) do
+			if table.find(data.Tags,tagName) then
+				C.RemoveAction(name)
+			end
 		end
 	end
 

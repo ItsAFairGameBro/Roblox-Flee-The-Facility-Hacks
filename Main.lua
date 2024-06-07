@@ -12072,7 +12072,7 @@ task.spawn(function()
 				if tostring(getcallingscript()) == "BAC_" then
 					if Print2 then
 						Print2 = false
-						print("PreloadAsync Instances:",assets)
+						print("PreloadAsync Instance: "..assets[1]:GetFullName())
 					else
 						print("Blocked BAC_ from calling",#assets)
 					end

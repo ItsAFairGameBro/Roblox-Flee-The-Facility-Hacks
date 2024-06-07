@@ -387,12 +387,13 @@ function C.Hook(root,method,functName,functData)
 							return tblUnpack(values)
 						elseif result == "replace" then
 							arguments = values
+							print('replaced!')
 							break
 						end
 					end
 				end
 			end
-
+			
 			return OldFunction(tblUnpack(arguments))
 		end)) or MethodFunction(method,(function(...)
 			local canDefault = checkcaller()

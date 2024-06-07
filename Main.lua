@@ -1880,10 +1880,10 @@ C.AvailableHacks ={
 				delay(.25,function()
 					--C.objectFuncts[theirChar]=C.objectFuncts[theirChar] or {}
 					local theirHumanoid = theirChar:WaitForChild("Humanoid",1000)
-					while not C.isCleared and theirChar~=nil and theirChar.Parent~=nil and theirHumanoid do
+					while not C.isCleared and theirChar~=nil and theirChar.Parent~=nil and theirHumanoid and HRP do
 						--if C.enHacks.ESP_Highlight then
 						--key=#C.objectFuncts[theirChar]+1
-						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
+						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and HRP and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
 							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (C.gameName~="FleeMain" or (({C.isInGame(theirChar)})[1])==({C.isInGame(camera.CameraSubject.Parent)})[1]) then
 								--local didHit,instance=true,theirChar.PrimaryPart
 								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil,function(result)

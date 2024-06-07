@@ -7978,12 +7978,13 @@ C.AvailableHacks ={
 								end
 								while CanRun() do
 									while CanRun() and actionValue.Parent.Parent.Screen.SoundWindowsPopUp.Playing do
-										actionValue.Parent.Parent.Screen.SoundWindowsPopUp:Stop()
+										actionSign.Parent.Parent.Screen.SoundWindowsPopUp:Stop()
 										RunS.RenderStepped:Wait()
 									end
 									--warn("Waiting")
-									actionValue.Parent.Parent.Screen.SoundWindowsPopUp:GetAttributeChangedSignal("Playing"):Wait()
-									RunS.RenderStepped:Wait()
+									if CanRun() then
+										actionSign.Parent.Parent.Screen.SoundWindowsPopUp:GetPropertyChangedSignal("Playing"):Wait()
+									end
 									--warn("Play Event")
 								end
 								warn("ActionSign Changed",actionSign.Value)

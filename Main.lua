@@ -1886,7 +1886,7 @@ C.AvailableHacks ={
 						while C.enHacks.ESP_Highlight and nameTag.Parent and nameTag.Parent.Parent and HRP and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
 							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (C.gameName~="FleeMain" or (({C.isInGame(theirChar)})[1])==({C.isInGame(camera.CameraSubject.Parent)})[1]) then
 								--local didHit,instance=true,theirChar.PrimaryPart
-								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.01,nil,function(result)
+								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 300, 0.01,nil,function(result)
 									local instance = result and result.Instance
 									local Character = instance and instance.Parent and instance.Parent.Parent and instance.Parent.Parent.Parent
 										and ((instance.Parent:FindFirstChild("Humanoid") and instance.Parent)

@@ -1892,12 +1892,13 @@ C.AvailableHacks ={
 										and ((instance.Parent:FindFirstChild("Humanoid") and instance.Parent)
 										or (instance.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent)
 										or (instance.Parent.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent.Parent))
+									print(Character)
 									if Character and Character ~= theirChar then
 										return true
 									end
 									return false
 								end)
-								print("Instance",instance)
+								--print("Instance",instance)
 								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,nameTag_UserName.TextColor3)
 								--(C.Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
 								--myRenderer:step(0)

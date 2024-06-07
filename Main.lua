@@ -7330,7 +7330,8 @@ C.AvailableHacks ={
 				else
 					task.wait(1)
 				end
-				for num, instance in ipairs(C.Map:GetChildren()) do
+				local loopInstance = C.Map.Name == "The Library by Drainhp" and StringWaitForChild(C.Map,"Misc.Vents") or C.Map
+				for num, instance in ipairs(loopInstance:GetChildren()) do
 					if instance.Name == "Vent" or instance.Name=="AirVent" then
 						local VentBlock = instance:FindFirstChild("VentBlock")
 						if VentBlock then
@@ -7995,7 +7996,7 @@ C.AvailableHacks ={
 						else
 							if actionValue.Parent and not table.find(C.char.Torso:GetTouchingParts(),actionValue.Parent) then
 								task.spawn(stopCurrentAction,true)
-								C.PurgeActionsWithTag("Computer")
+								C.PurgeActionsWithTag("ComputerHack")
 							end
 						end
 					end
@@ -11760,6 +11761,7 @@ local function updateCurrentMap(newMap,firstRun)
 		
 		C.PurgeActionsWithTag("Game")
 		C.PurgeActionsWithTag("Computer")
+		C.PurgeActionsWithTag("ComputerHack")
 	end
 end
 
@@ -11837,7 +11839,7 @@ if C.gameName=="FleeMain" then
 				end
 			end
 			C.RemoveAction("PC CoolDown")
-			C.AddAction({Name=lastHackedPC.Name,Tags={"Game","Computer"},Time=function(ActionClone,info)
+			C.AddAction({Name=lastHackedPC.Name,Tags={"Game","ComputerHack","Computer"},Time=function(ActionClone,info)
 				ActionClone.Time.Text = "Time: TBA"
 			end,Stop=function(onRequest)
 				if onRequest then

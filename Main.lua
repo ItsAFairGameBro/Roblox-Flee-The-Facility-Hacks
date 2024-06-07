@@ -181,9 +181,9 @@ local GuiElements = {}
 C.hackGUIParent = gethui()
 --MODULE LOADER
 C.Modules = {}
-if not getgenv().SavedHttp or true then
-	getgenv().SavedHttp = {}
-end
+--if not getgenv().SavedHttp or true then
+--	getgenv().SavedHttp = {}
+--end
 function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
 
@@ -886,6 +886,10 @@ C.CommandFunctions = {
 		Priority=10,
 		RequiresRefresh=true,
 		Run=function(args)
+			if args[1] and args[1]:lower()=="all" then
+				getgenv().SavedHttp = {}
+				print("SavedHttp Cleared")
+			end
 			C.AvailableHacks.Basic[99].ActivateFunction()
 			return true
 		end,
@@ -1882,15 +1886,15 @@ C.AvailableHacks ={
 						while C.enHacks.ESP_Highlight and nameTag.Parent~=nil and nameTag.Parent.Parent~=nil and not C.isCleared do--table.insert(C.objectFuncts[theirChar],key,RunS.RenderStepped:Connect(function(dt)
 							if (HRP.Position-camera.CFrame.p).magnitude<=nameTag.MaxDistance and (C.gameName~="FleeMain" or (({C.isInGame(theirChar)})[1])==({C.isInGame(camera.CameraSubject.Parent)})[1]) then
 								--local didHit,instance=true,theirChar.PrimaryPart
-								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,true--[[,function(result)
+								local didHit,instance=C.raycast(camera.CFrame.p, HRP.Position, {"Blacklist",camera.CameraSubject.Parent}, 100, 0.001,nil,function(result)
 									local instance = result and result.Instance
-									if instance and instance.Parent and 
-										(instance.Parent:FindFirstChild("Humanoid") or (instance.Parent.Parent and instance.Parent.Parent:FindFirstChild("Humanoid"))
-											or (instance.Parent.Parent.Parent and instance.Parent.Parent.Parent:FindFirstChild("Humanoid"))) then
-										return false
+									local Character = instance and instance.Parent and ((instance.Parent:FindFirstChild("Humanoid") and instance.Parent))
+										or ((instance.Parent.Parent and instance.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent))
+									if Character ~= theirChar then
+										return true
 									end
-									return true
-								end--]])
+									return false
+								end)
 								changeVisibility(robloxHighlight,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0,nameTag_UserName.TextColor3)
 								--(C.Beast==theirChar and newColor3(255) or newColor3(0,0,255)))--changeRenderVisibility(theirViewportChar,(didHit and theirChar:IsAncestorOf(instance)) and 1 or 0, (theirChar:FindFirstChild("Hammer")==nil and newColor3(0,0,255) or newColor3(255)))
 								--myRenderer:step(0)
@@ -1986,7 +1990,7 @@ C.AvailableHacks ={
 								if (C.Map~=nil and Screen~=nil) then    
 									local castArgument = camera.CameraSubject~=nil and camera.CameraSubject.Parent
 									local castArray = {"Blacklist", castArgument}
-									didHit,instance=C.raycast(camera.CFrame.p, Screen.Position, castArray, 100, 0.001, true)
+									didHit,instance=C.raycast(camera.CFrame.p, Screen.Position, castArray, 100, 0.001)
 								end 
 								changeVisibility(robloxHighlight,(didHit and Computer:IsAncestorOf(instance) and 1 or 0),Screen.Color)
 							else

@@ -181,9 +181,9 @@ local GuiElements = {}
 C.hackGUIParent = gethui()
 --MODULE LOADER
 C.Modules = {}
---if not getgenv().SavedHttp or true then
---	getgenv().SavedHttp = {}
---end
+if not getgenv().SavedHttp then
+	getgenv().SavedHttp = {}
+end
 function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
 

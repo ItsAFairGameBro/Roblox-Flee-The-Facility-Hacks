@@ -3089,7 +3089,7 @@ C.AvailableHacks ={
 						if Closest then
 							arg2["part"] = Closest.Character.Head
 							arg2["h"] = Closest.Character.Head
-							print("SEt CLOsest!"arg2)
+							print("SEt CLOsest!",arg2)
 						end
 					end
 					return true, {event,arg1,arg2}

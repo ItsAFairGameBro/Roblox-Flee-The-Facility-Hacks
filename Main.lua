@@ -2998,7 +2998,7 @@ C.AvailableHacks ={
 							instance.Value = Org
 						end
 					end
-					if not instance.Parent and parent.Parent and not parent.Parent.Parent then
+					if instance.Parent and parent.Parent and parent.Parent.Parent then
 						instance.Parent = parent
 					end
 				end

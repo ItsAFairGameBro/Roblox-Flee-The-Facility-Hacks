@@ -3021,7 +3021,7 @@ C.AvailableHacks ={
 
 					SetStat(config,"FireMode","Automatic",true)
 					SetStat(config.Parent,"CurrentAmmo",69)
-					SetStat(config,"AmmoCapacity",69)
+					SetStat(config,"AmmoCapacity",69,true)
 					config.Parent:SetAttribute("Modded",true)
 				end
 			end,

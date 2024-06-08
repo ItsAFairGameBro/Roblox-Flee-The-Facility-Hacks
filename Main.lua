@@ -382,6 +382,7 @@ function C.Hook(root,method,functName,functData)
 				local method = stringlower(getnamecallmethod())
 				for functName, theirRun in inPairs(myData) do
 					if method == functName then
+						warn("FunctName/TheirRun",functName,theirRun)
 						local result,values = theirRun(method,arguments)
 						if result == true then--"override" then
 							return tblUnpack(values or {})

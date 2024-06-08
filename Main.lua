@@ -380,6 +380,7 @@ function C.Hook(root,method,functName,functData)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(method == "__index" and arguments[2] or getnamecallmethod())
+				print(root,method)
 				for functName, theirRun in inPairs(myData) do
 					if method == functName then
 						local result,values = theirRun(method,arguments)

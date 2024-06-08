@@ -3984,16 +3984,17 @@ C.AvailableHacks ={
 			["Shortcut"]="Utility_DisableErrorLogging",
 			["Universes"]={"FlagWars"},
 			["ActivateFunction"]=(function(newValue)
-				for num, connection in ipairs(getconnections(SC.Error)) do--C.GetHardValue(SC,"Error",{yield=true})) do
+				local Connections = getconnections(SC.Error)
+				for num, connection in ipairs() do--C.GetHardValue(SC,"Error",{yield=true})) do
 					if connection.Function ~= C.BetterConsole_onErrorOut or not newValue then
 						if connection.Enabled then
 							connection:Disable()
-							warn("Disabled "..num)
+							warn("Disabled "..num.."/"..#Connections)
 						end
 					else
 						if not connection.Enabled then
 							connection:Enable()
-							warn("Enabled "..num)
+							warn("Enabled "..num.."/"..#Connections)
 						end
 					end
 				end

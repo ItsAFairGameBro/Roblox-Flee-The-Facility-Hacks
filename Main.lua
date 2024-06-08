@@ -3099,6 +3099,8 @@ C.AvailableHacks ={
 							dataTbl["p"] = ClosestHead.Position
 							dataTbl["h"] = ClosestHead
 							dataTbl["d"] = Distance
+							dataTbl["m"] = ClosestHead.Material
+							dataTbl['n'] = (ClosestHead - C.char:GetPivot().Position).Unit
 							dataTbl["maxDist"] = Distance + .3
 							
 							--dataTbl[""] = ClosestHead

@@ -3080,7 +3080,7 @@ C.AvailableHacks ={
 						local theirHead = theirChar.FindFirstChild(theirChar,"Head")
 						if not theirHead then continue end
 						local ForceField = theirChar.FindFirstChildWhichIsA(theirChar,"ForceField")
-						if ForceField and ForceField.Visible then print("FF FOund!") continue end
+						if ForceField and ForceField.Visible then continue end
 						
 						local d = (theirHead.Position - myHRP.Position).Magnitude
 

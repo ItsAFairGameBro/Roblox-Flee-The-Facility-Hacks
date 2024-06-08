@@ -15,7 +15,7 @@ return function(C,GuiElements,comma_value,checkcaller)
 	local BetterConsole_CheckCaller_MsgEnd = {" Died"}
 	local BetterConsole_CheckCaller_MsgExact = {"local beast power script destroyed","Playing Announcements","not Playing Announcements",
 		"ContextActionService could not find the function passed in, doing nothing.","beast landed","Power Activated","Power Recharge","Power Recharge Done",
-
+		"trying to set locked parent!",
 		"attempt to index nil with 'Name'"
 	}
 

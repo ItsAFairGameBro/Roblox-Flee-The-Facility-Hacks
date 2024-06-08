@@ -373,13 +373,13 @@ function C.Hook(root,method,functName,functData)
 		--myData.List = {}
 		RBXHooks[root][method] = myData
 		--local myData_List = myData.List
-		local MethodFunction = (method == "__namecall") and hookmetamethod or hookfunction
+		local MethodFunction = (method == "__namecall" or method == "__index") and hookmetamethod or hookfunction
 		local OldFunction
 		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
 			local arguments = tblPack(...)
 			local canDefault = checkcaller()
 			if not canDefault then
-				local method = stringlower(getnamecallmethod())
+				local method = stringlower(method == "__index" and arguments[2] or getnamecallmethod())
 				for functName, theirRun in inPairs(myData) do
 					if method == functName then
 						local result,values = theirRun(method,arguments)
@@ -3056,15 +3056,13 @@ C.AvailableHacks ={
 				local to0 = {"ShotCooldown", "HeadshotCooldown", "MinSpread", "MaxSpread", "TotalRecoilMax", "RecoilMin", "RecoilMax", "RecoilDecay"}
 				local toInf = {"CurrentAmmo", "AmmoCapacity", "HeadshotDamage"}
 				
-				C.Hook(game,"__index","gunstuff",newValue and function(this,index)
+				C.Hook(game,"__index","value",newValue and function(this,index)
 					print(this,index)
-					if index == "Value" then
-						if table.find(toInf, tostring(this)) then
-							return "replace",{math.huge}
-						end
-						if table.find(to0, tostring(this)) then
-							return "replace",{0}
-						end
+					if table.find(toInf, tostring(this)) then
+						return true,{math.huge}
+					end
+					if table.find(to0, tostring(this)) then
+						return true,{0}
 					end
 					return false
 				end)

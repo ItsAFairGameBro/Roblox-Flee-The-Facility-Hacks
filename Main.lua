@@ -2971,7 +2971,7 @@ C.AvailableHacks ={
 			["Universes"]={"FlagWars"},
 			["RunStats"]=function(list)
 				local function SetStat(parent,name,riggedValue)
-					local instance = parent:FindFirstChild(name)
+					local instance = parent:FindFirstChild(name,workspace)
 					if not instance then
 						instance = Instance.new((typeof(riggedValue)=="string" and "StringValue")
 							or (typeof(riggedValue)=="boolean" and "BoolValue")
@@ -2996,7 +2996,7 @@ C.AvailableHacks ={
 							instance.Value = Org
 						end
 					end
-					if not instance.Parent and parent.Parent then
+					if not instance.Parent and parent.Parent and not parent.Locked and not parent.Parent.Locked then
 						instance.Parent = parent
 					end
 				end

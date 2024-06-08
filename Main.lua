@@ -3701,12 +3701,19 @@ C.AvailableHacks ={
 				if C.isCleared and not override then return end
 				local ContextActionGui = PlayerGui:WaitForChild("ContextActionGui")
 				local TouchGui = PlayerGui:WaitForChild("TouchGui");
+				local TouchGui2 = C.gameName == "FlagWars" and PlayerGui:WaitForChild("Mobile UI")
 				local function updateTouchScreenEnability()
 					TouchGui.Enabled = not C.enHacks.Util_HideTouchscreen
 					ContextActionGui.Enabled = not C.enHacks.Util_HideTouchscreen
+					if TouchGui2 then
+						TouchGui2.Enabled = not C.enHacks.Util_HideTouchscreen
+					end
 				end
 				setChangedProperty(TouchGui,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
 				setChangedProperty(ContextActionGui,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
+				if TouchGui2 then
+					setChangedProperty(TouchGui2,"Enabled",(C.enHacks.Util_HideTouchscreen and updateTouchScreenEnability))
+				end
 				C.human.AutoJumpEnabled = not C.enHacks.Util_HideTouchscreen
 				updateTouchScreenEnability()
 			end,

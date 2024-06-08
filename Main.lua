@@ -2973,9 +2973,12 @@ C.AvailableHacks ={
 			["Funct"]=nil,
 			["Universes"]={"FlagWars"},
 			["RunStats"]=function(list)
-				local function SetStat(parent,name,riggedValue)
+				local function SetStat(parent,name,riggedValue,doInsert)
 					local instance = parent:FindFirstChild(name)
 					if not instance then
+						if not doInsert then
+							return -- don't insert if unnecessary
+						end
 						instance = Instance.new((typeof(riggedValue)=="string" and "StringValue")
 							or (typeof(riggedValue)=="boolean" and "BoolValue")
 							or (typeof(riggedValue)=="number" and "NumberValue"), workspace)
@@ -3011,9 +3014,10 @@ C.AvailableHacks ={
 					SetStat(config,"MinSpread",0)
 					SetStat(config,"MaxSpread",0)
 					SetStat(config,"ShotCooldown",0)
+					SetStat(config,"Cooldown",0)
 					SetStat(config,"HasScope",false)
 
-					SetStat(config,"FireMode","Automatic")
+					SetStat(config,"FireMode","Automatic",true)
 					SetStat(config.Parent,"CurrentAmmo",69)
 					SetStat(config,"AmmoCapacity",69)
 					config.Parent:SetAttribute("Modded",true)

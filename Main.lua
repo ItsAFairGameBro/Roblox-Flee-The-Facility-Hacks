@@ -3078,7 +3078,7 @@ C.AvailableHacks ={
 						local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
 						if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
 						local theirHead = theirChar.FindFirstChild(theirChar,"Head")
-						if not theirHead then return end
+						if not theirHead or theirChar:FindFirstChildWhichIsA("ForceField") then return end
 
 						
 						local d = (theirHead.Position - myHRP.Position).Magnitude
@@ -3115,7 +3115,7 @@ C.AvailableHacks ={
 					end
 					return false -- do not change!
 				end))
-				C.Hook(RS, workspace.Raycast,"raycast",newValue and (function(method,args)
+				C.Hook(workspace, workspace.Raycast,"raycast",newValue and (function(method,args)
 					print("Raycast")
 					local workspace,origin,direction,raycastParams = tblUnpack(args)
 					

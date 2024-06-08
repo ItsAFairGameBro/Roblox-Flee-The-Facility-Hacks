@@ -3046,14 +3046,11 @@ C.AvailableHacks ={
 			--	task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
 				table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
 					if newTool:GetAttribute("Modded") then
-						return print(newTool,"Already Modded!")
-					end
-					print("Newtool",newTool)
-					if not newTool:WaitForChild("Configuration",5) then
-						print(newTool,"has no config")
 						return
 					end
-					print(newTool,"config")
+					if not newTool:WaitForChild("Configuration",5) then
+						return
+					end
 					local list = {}
 					C.AvailableHacks.Blatant[300].AddInstance(list,newTool)
 					C.AvailableHacks.Blatant[300].RunStats(list)

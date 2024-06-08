@@ -3096,8 +3096,9 @@ C.AvailableHacks ={
 						if ClosestHead then
 							local dataTbl = args[3]
 							dataTbl["part"] = ClosestHead
+							dataTbl["p"] = ClosestHead.Position
 							dataTbl["h"] = ClosestHead
-							print("DataTbl",dataTbl)
+							--print("DataTbl",dataTbl)
 							return "replace", args
 						end
 					end

@@ -3097,6 +3097,7 @@ C.AvailableHacks ={
 							local dataTbl = args[3]
 							dataTbl["part"] = ClosestHead
 							dataTbl["h"] = ClosestHead
+							print("DataTbl",dataTbl)
 							return "replace", args
 						end
 					end

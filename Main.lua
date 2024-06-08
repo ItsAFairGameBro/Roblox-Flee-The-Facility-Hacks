@@ -3016,6 +3016,7 @@ C.AvailableHacks ={
 					SetStat(config,"FireMode","Automatic")
 					SetStat(config.Parent,"CurrentAmmo",69)
 					SetStat(config,"AmmoCapacity",69)
+					config.Parent:SetAttribute("Modded",true)
 				end
 			end,
 			["AddInstance"]=function(list,tool)
@@ -3040,6 +3041,9 @@ C.AvailableHacks ={
 			--end,
 			["MyPlayerAdded"]=function()
 				table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
+					if newTool:GetAttribute("Modded") then
+						return print(newTool,"Already Modded!")
+					end
 					print("Newtool",newTool)
 					if not newTool:WaitForChild("Configuration",5) then
 						print(newTool,"has no config")

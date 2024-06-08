@@ -3112,6 +3112,8 @@ C.AvailableHacks ={
 							--dataTbl[""] = ClosestHead
 							--print("DataTbl",dataTbl)
 							return "replace", args
+						else
+							return true--do nothing lol, don't kill yaself!
 						end
 					end
 					return false -- do not change!

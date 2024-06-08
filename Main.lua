@@ -3061,14 +3061,12 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				local function getClosest()
 					local myHRP = C.char and C.char.PrimaryPart
-					print('p1')
 					if not C.human or C.human.Health <= 0 or not myHRP then return end
 					
 
 					local closest = nil;
 					local distance = math.huge;
 
-					print('p2')
 
 					for i, v in pairs(PS.GetPlayers(PS)) do
 						if v == plr then continue end
@@ -3080,12 +3078,10 @@ C.AvailableHacks ={
 						local theirHead = theirChar.FindFirstChild(theirChar,"Head")
 						if not theirHead then return end
 
-						print('p3')
 						
 						local d = (theirHead.Position - myHRP.Position).Magnitude
 
 						if d < distance then
-							print('p4')
 							distance = d
 							closest = theirHead
 						end
@@ -3099,10 +3095,11 @@ C.AvailableHacks ={
 						print("WeaponHit")
 						local ClosestHead = getClosest()
 						if ClosestHead then
-							print('p5')
+							print('Found')
+							print("Args",args)
 							args[2]["part"] = ClosestHead
 							args[2]["h"] = ClosestHead
-							print("SEt CLOsest!")
+							print("Set Closest!")
 							return "replace", args
 						end
 					end

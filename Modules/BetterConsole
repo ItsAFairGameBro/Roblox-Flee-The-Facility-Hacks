@@ -637,6 +637,7 @@ return function(C,GuiElements,comma_value,checkcaller)
 	end
 	table.insert(C.functs,LogS.MessageOut:Connect(BetterConsole_onMessageOut))
 	table.insert(C.functs,SC.Error:Connect(BetterConsole_onErrorOut))
+	C.BetterConsole_onErrorOut = BetterConsole_onErrorOut
 	local logSuccess,logResult = pcall(function()
 		local logHistory = LogS:GetLogHistory()
 		if logHistory then -- it should exist, right?

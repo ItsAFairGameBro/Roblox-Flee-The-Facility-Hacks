@@ -3984,16 +3984,16 @@ C.AvailableHacks ={
 			["Shortcut"]="Utility_DisableErrorLogging",
 			["Universes"]={"FlagWars"},
 			["ActivateFunction"]=(function(newValue)
-				for num, connection in ipairs(C.GetHardValue(SC,"Error",{yield=true})) do
+				for num, connection in ipairs(getconnections(SC.Error)) do--C.GetHardValue(SC,"Error",{yield=true})) do
 					if connection.ForeignState or not newValue then
 						if connection.Enabled then
 							connection:Disable()
-							warn("Disabled",num)
+							warn("Disabled "..num)
 						end
 					else
 						if not connection.Enabled then
 							connection:Enable()
-							warn("Enabled",num)
+							warn("Enabled "..num)
 						end
 					end
 				end
@@ -10178,7 +10178,7 @@ C.AvailableHacks ={
 			["Type"]="ExTextButton",
 			["Title"]="Get Console Logs",
 			["Desc"]="Activate To See Console Logs",
-			["Shortcut"]="ClearConsole",
+			["Shortcut"]="GetConsoleLogs",
 			["Default"]=true,
 			["DontActivate"]=true,
 			["Options"]={
@@ -10554,7 +10554,7 @@ C.AvailableHacks ={
 			["Type"]="ExTextButton",
 			["Title"]="TouchTransmitters",
 			["Desc"]="Activates All Possible TouchTransmitters",
-			["Shortcut"]="Commands_ClickDetectors",
+			["Shortcut"]="Commands_TouchTransmitters",
 			["Default"]=true,
 			["DontActivate"]=true,
 			["Options"]={
@@ -10567,7 +10567,7 @@ C.AvailableHacks ={
 			["CoreFunction"]=function(loopInstance)
 				local fireclickdetector = fireclickdetector
 				for num, obj in ipairs(loopInstance:GetDescendants()) do
-					if obj:IsA("TouchTransmitter") 
+					if obj:IsA("TouchTransmitter")
 						and (C.gameName ~= "GlassBridge" or (obj.Parent and obj.Parent.Parent and obj.Parent.Parent.Parent and 
 							obj.Parent.Parent.Parent.Name=="Bridge")) then --and (not obj.Parent.CanCollide or (obj:GetAttribute(C.OriginalCollideName)) <= 0))) then
 						local parent = obj.Parent

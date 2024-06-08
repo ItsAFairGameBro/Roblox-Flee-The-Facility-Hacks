@@ -3987,19 +3987,19 @@ C.AvailableHacks ={
 				local Connections = getconnections(SC.Error)
 				for num, connection in ipairs(Connections) do--C.GetHardValue(SC,"Error",{yield=true})) do
 					if connection.ForeignState then
-						warn(`Connection {num} is a ForeignState!`)
+						--warn(`Connection {num} is a ForeignState!`)
 						continue
 					end
 					if connection.Function ~= C.BetterConsoleErrorFunction and newValue then
-						warn("FunctDiff:",connection.Function,tostring(C.BetterConsoleErrorFunction))
+						--warn("FunctDiff:",connection.Function,C.BetterConsoleErrorFunction)
 						if connection.Enabled then
 							connection:Disable()
-							warn("Disabled "..num.."/"..#Connections)
+							--warn("Disabled "..num.."/"..#Connections)
 						end
 					else
 						if not connection.Enabled then
 							connection:Enable()
-							warn("Enabled "..num.."/"..#Connections)
+							--warn("Enabled "..num.."/"..#Connections)
 						end
 					end
 				end

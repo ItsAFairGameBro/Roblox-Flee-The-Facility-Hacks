@@ -3078,7 +3078,7 @@ C.AvailableHacks ={
 						local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
 						if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
 						local theirHead = theirChar.FindFirstChild(theirChar,"Head")
-						if not theirHead or theirChar:FindFirstChildWhichIsA("ForceField") then return end
+						if not theirHead or theirChar:FindFirstChildWhichIsA("ForceField") then continue end
 
 						
 						local d = (theirHead.Position - myHRP.Position).Magnitude

@@ -373,7 +373,7 @@ function C.Hook(root,method,functName,functData)
 		--myData.List = {}
 		RBXHooks[root][method] = myData
 		--local myData_List = myData.List
-		local MethodFunction = method == "__namecall" and hookmetamethod or hookfunction
+		local MethodFunction = (method == "__namecall") and hookmetamethod or hookfunction
 		local OldFunction
 		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
 			local arguments = tblPack(...)
@@ -2972,7 +2972,7 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["Funct"]=nil,
 			["Universes"]={"FlagWars"},
-			["RunStats"]=function(list)
+			--[[["RunStats"]=function(list)
 				local function SetStat(parent,name,riggedValue)
 					local instance = parent:FindFirstChild(name)
 					if not instance then
@@ -3024,13 +3024,8 @@ C.AvailableHacks ={
 					table.insert(list,Configuration)
 				end
 			end,
-			["ActivateFunction"]=function(newValue)
-				--[[local weaponStats = RS:WaitForChild("WeaponStats",120)
-				if not weaponStats then
-					return
-				end--]]
-				
-				local list = {}--= weaponStats:GetChildren()
+			["ActivateFunction"]=function(newValue)				
+				local list = {}
 				for num, tool in ipairs(plr:WaitForChild("Backpack"):GetChildren()) do
 					C.AvailableHacks.Blatant[300].AddInstance(list,tool)
 				end
@@ -3054,8 +3049,29 @@ C.AvailableHacks ={
 					local list = {}
 					C.AvailableHacks.Blatant[300].AddInstance(list,newTool)
 					C.AvailableHacks.Blatant[300].RunStats(list)
-				end))--]]
+				end))
 				task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
+			end,--]]
+			["ActivateFunction"] = function(newValue)
+				local to0 = {"ShotCooldown", "HeadshotCooldown", "MinSpread", "MaxSpread", "TotalRecoilMax", "RecoilMin", "RecoilMax", "RecoilDecay"}
+				local toInf = {"CurrentAmmo", "AmmoCapacity", "HeadshotDamage"}
+				
+				C.Hook(game,"__index","gunstuff",function(this,index)
+					if not checkcaller() and index == "Value" then
+						if table.find(toInf, tostring(this)) then
+							return "replace",{math.huge}
+						end
+						if table.find(to0, tostring(this)) then
+							return "replace",{0}
+						end
+					end
+					return false
+				end)
+				
+
+				-- retarded gun mods (re-equip your weapon)
+				--local old2; old2 = hookmetamethod(game, "__index", function(this, index)
+				--end)
 			end,
 		},
 		[301]={

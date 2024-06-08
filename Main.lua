@@ -3093,16 +3093,12 @@ C.AvailableHacks ={
 				C.Hook(game,"__namecall","fireserver",newValue and (function(method,args)
 					local event = args[1]
 					if tostring(event) == "WeaponHit" then
-						print("WeaponHit")
 						local ClosestHead = getClosest()
 						if ClosestHead then
 							print('Found')
-							print("Args",args)
 							local dataTbl = args[2]
-							dataTbl["part"] = ClosestHead
-							print("Pre SEt")
-							dataTbl["h"] = ClosestHead
-							print("Set Closest!")
+							dataTbl.part = ClosestHead
+							dataTbl.h = ClosestHead
 							return "replace", args
 						end
 					end

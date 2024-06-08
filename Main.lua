@@ -380,7 +380,6 @@ function C.Hook(root,method,functName,functData)
 			local canDefault = checkcaller()
 			if not canDefault then
 				local method = stringlower(method == "__index" and arguments[2] or getnamecallmethod())
-				print(root,method)
 				for functName, theirRun in inPairs(myData) do
 					if method == functName then
 						local result,values = theirRun(method,arguments)
@@ -2973,7 +2972,7 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["Funct"]=nil,
 			["Universes"]={"FlagWars"},
-			--[[["RunStats"]=function(list)
+			["RunStats"]=function(list)
 				local function SetStat(parent,name,riggedValue)
 					local instance = parent:FindFirstChild(name)
 					if not instance then
@@ -3053,8 +3052,8 @@ C.AvailableHacks ={
 				end))
 				task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
 			end,--]]
-			["ActivateFunction"] = function(newValue)
-				local to0 = {"ShotCooldown", "HeadshotCooldown", "MinSpread", "MaxSpread", "TotalRecoilMax", "RecoilMin", "RecoilMax", "RecoilDecay"}
+			--["ActivateFunction"] = function(newValue)
+				--[[local to0 = {"ShotCooldown", "HeadshotCooldown", "MinSpread", "MaxSpread", "TotalRecoilMax", "RecoilMin", "RecoilMax", "RecoilDecay"}
 				local toInf = {"CurrentAmmo", "AmmoCapacity", "HeadshotDamage"}
 				
 				C.Hook(game,"__index","value",newValue and function(this,index)
@@ -3066,13 +3065,13 @@ C.AvailableHacks ={
 						return true,{0}
 					end
 					return false
-				end)
+				end)--]]
 				
 
 				-- retarded gun mods (re-equip your weapon)
 				--local old2; old2 = hookmetamethod(game, "__index", function(this, index)
 				--end)
-			end,
+			--end,
 		},
 		[301]={
 			["Type"]="ExTextButton",

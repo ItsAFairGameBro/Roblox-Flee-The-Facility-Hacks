@@ -3070,14 +3070,14 @@ C.AvailableHacks ={
 
 					print('p2')
 
-					for i, v in pairs(PS:GetPlayers()) do
+					for i, v in pairs(PS.GetPlayers(PS)) do
 						if v == plr then continue end
 						if v.Team == plr.Team then continue end
 						local theirChar = v.Character
 						if not theirChar then continue end
-						local theirHumanoid = theirChar:FindFirstChildOfClass("Humanoid")
+						local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
 						if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
-						local theirHead = theirChar:FindFirstChild("Head")
+						local theirHead = theirChar.FindFirstChild(theirChar,"Head")
 						if not theirHead then return end
 
 						print('p3')
@@ -3103,8 +3103,8 @@ C.AvailableHacks ={
 							args[2]["part"] = ClosestHead
 							args[2]["h"] = ClosestHead
 							print("SEt CLOsest!")
+							return "replace", args
 						end
-						return "replace", args
 					end
 					return false -- do not change!
 				end))

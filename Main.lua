@@ -3099,6 +3099,7 @@ C.AvailableHacks ={
 							local dataTbl = args[2]
 							dataTbl.part = ClosestHead
 							dataTbl.h = ClosestHead
+							print("replaced")
 							return "replace", args
 						end
 					end

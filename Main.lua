@@ -2971,11 +2971,11 @@ C.AvailableHacks ={
 			["Universes"]={"FlagWars"},
 			["RunStats"]=function(list)
 				local function SetStat(parent,name,riggedValue)
-					local instance = parent:FindFirstChild(name,workspace)
+					local instance = parent:FindFirstChild(name)
 					if not instance then
 						instance = Instance.new((typeof(riggedValue)=="string" and "StringValue")
 							or (typeof(riggedValue)=="boolean" and "BoolValue")
-							or (typeof(riggedValue)=="number" and "NumberValue"))
+							or (typeof(riggedValue)=="number" and "NumberValue"), workspace)
 						instance.Name = name
 						instance:SetAttribute("Org","nil")
 					end

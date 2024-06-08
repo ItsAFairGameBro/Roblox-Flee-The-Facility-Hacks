@@ -3056,8 +3056,9 @@ C.AvailableHacks ={
 				local to0 = {"ShotCooldown", "HeadshotCooldown", "MinSpread", "MaxSpread", "TotalRecoilMax", "RecoilMin", "RecoilMax", "RecoilDecay"}
 				local toInf = {"CurrentAmmo", "AmmoCapacity", "HeadshotDamage"}
 				
-				C.Hook(game,"__index","gunstuff",function(this,index)
-					if not checkcaller() and index == "Value" then
+				C.Hook(game,"__index","gunstuff",newValue and function(this,index)
+					print(this,index)
+					if index == "Value" then
 						if table.find(toInf, tostring(this)) then
 							return "replace",{math.huge}
 						end

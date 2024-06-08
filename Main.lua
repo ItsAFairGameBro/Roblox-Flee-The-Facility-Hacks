@@ -3139,6 +3139,7 @@ C.AvailableHacks ={
 							--print("DataTbl",dataTbl)
 							return "replace", args
 						else
+							print("did nothing")
 							return true--do nothing lol, don't kill yaself!
 						end
 					end

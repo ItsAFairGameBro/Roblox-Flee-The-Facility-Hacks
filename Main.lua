@@ -3036,10 +3036,8 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Blatant[300].RunStats(list)
 			end,
-			--["MyStartUp"]=function()
+			["MyStartUp"]=function()
 			--	task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
-			--end,
-			["MyPlayerAdded"]=function()
 				table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
 					if newTool:GetAttribute("Modded") then
 						return print(newTool,"Already Modded!")
@@ -3054,6 +3052,9 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[300].AddInstance(list,newTool)
 					C.AvailableHacks.Blatant[300].RunStats(list)
 				end))
+
+			end,
+			["MyPlayerAdded"]=function()
 				task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
 			end,--]]
 			--["ActivateFunction"] = function(newValue)

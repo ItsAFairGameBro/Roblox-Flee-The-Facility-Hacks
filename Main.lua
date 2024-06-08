@@ -3053,8 +3053,8 @@ C.AvailableHacks ={
 		},
 		[301]={
 			["Type"]="ExTextButton",
-			["Title"]="Gun Hack",
-			["Desc"]="Inf Ammo, Firerate, and Potientally Infinite ",
+			["Title"]="Hit Hack",
+			["Desc"]="Automatically hits closest person!",
 			["Shortcut"]="Blatant_FlagWarsGunHack",
 			["Default"]=false,
 			["Universes"]={"FlagWars"},

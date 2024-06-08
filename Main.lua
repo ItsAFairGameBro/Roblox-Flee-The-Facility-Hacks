@@ -3976,7 +3976,7 @@ C.AvailableHacks ={
 				end
 			end
 		},
-		[15] = {
+		[14] = {
 			["Type"]="ExTextButton",
 			["Title"]="Disable Error Logging",
 			["Desc"]="Disables Error Logging",
@@ -3985,7 +3985,7 @@ C.AvailableHacks ={
 			["Universes"]={"FlagWars"},
 			["ActivateFunction"]=(function(newValue)
 				for num, connection in ipairs(getconnections(SC.Error)) do--C.GetHardValue(SC,"Error",{yield=true})) do
-					if connection.ForeignState or not newValue then
+					if connection.Function ~= C.BetterConsole_onErrorOut or not newValue then
 						if connection.Enabled then
 							connection:Disable()
 							warn("Disabled "..num)

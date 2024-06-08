@@ -2970,6 +2970,7 @@ C.AvailableHacks ={
 			["Shortcut"]="Blatant_FlagWarsStatsHack",
 			["Default"]=false,
 			["DontActivate"]=true,
+			["Funct"]=nil,
 			["Universes"]={"FlagWars"},
 			["RunStats"]=function(list)
 				local function SetStat(parent,name,riggedValue)
@@ -3028,6 +3029,7 @@ C.AvailableHacks ={
 				if not weaponStats then
 					return
 				end--]]
+				
 				local list = {}--= weaponStats:GetChildren()
 				for num, tool in ipairs(plr:WaitForChild("Backpack"):GetChildren()) do
 					C.AvailableHacks.Blatant[300].AddInstance(list,tool)
@@ -3038,8 +3040,11 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Blatant[300].RunStats(list)
 			end,
-			["MyStartUp"]=function()
-				--[[table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
+			--["MyStartUp"]=function()
+			--	task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
+			--end,
+			["MyPlayerAdded"]=function()
+				table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
 					print("Newtool",newTool)
 					if not newTool:WaitForChild("Configuration",5) then
 						print(newTool,"has no config")

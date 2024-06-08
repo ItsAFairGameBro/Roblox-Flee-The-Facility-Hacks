@@ -384,7 +384,7 @@ function C.Hook(root,method,functName,functData)
 					if method == functName then
 						local result,values = theirRun(method,arguments)
 						if result == true then--"override" then
-							return tblUnpack(values)
+							return tblUnpack(values or {})
 						elseif result == "replace" then
 							arguments = values
 							print('replaced!')
@@ -2996,7 +2996,7 @@ C.AvailableHacks ={
 							instance.Value = Org
 						end
 					end
-					if not instance.Parent then
+					if not instance.Parent and parent.Parent then
 						instance.Parent = parent
 					end
 				end
@@ -3102,10 +3102,11 @@ C.AvailableHacks ={
 							print('p5')
 							args[2]["part"] = ClosestHead
 							args[2]["h"] = ClosestHead
-							print("SEt CLOsest!",args[2])
+							print("SEt CLOsest!")
 						end
+						return "replace", args
 					end
-					return "replace", args
+					return false -- do not change!
 				end))
 			end,
 		},

@@ -10064,68 +10064,82 @@ C.AvailableHacks ={
 		},
 		[300] = {
 			["Type"]="ExTextButton",
-			["Title"]="Auto Grind Money",
-			["Desc"]="Gets Money",
+			["Title"]="Disable Error Logging",
+			["Desc"]="Disables Error Logging",
 			["Default"]=true,
-			["Shortcut"]="Bot_AutoGrindBAB",
-			["Universes"]={"BuildABoat"},
-			["Functs"]={},
-			["Deb"] = 0,
-			["DontActivate"]=true,
+			["Shortcut"]="Utility_DisableErrorLogging",
+			["Universes"]={"FlagWars"},
 			["ActivateFunction"]=(function(newValue)
-				C.AvailableHacks.Bot[300].Deb+=1 local SaveDeb = C.AvailableHacks.Bot[300].Deb
-				if not newValue then
-					--C.char.PrimaryPart.Anchored = false
-					return
-				end
-				local SaveChar = C.char
-				local function RunFunct()
-					return C.AvailableHacks.Bot[300].Deb==SaveDeb and C.enHacks.Bot_AutoGrindBAB and C.char == SaveChar and C.char.PrimaryPart
-				end
-				for num, funct in ipairs(C.AvailableHacks.Bot[300].Functs) do
-					funct:Disconnect()
-				end C.AvailableHacks.Bot[300].Functs = {}
-
-				task.wait(3 - (os.clock() - C.AvailableHacks.Bot[300].Spawned))
-
-
-				--while RunFunct() do
-				local TPPosition=Vector3.new(-55.17,-356.49,9491.75)
-				for num,stage in pairs(workspace.BoatStages.NormalStages:GetChildren()) do
-					if not RunFunct() then return end
-					if stage:FindFirstChild("DarknessPart")~=nil then
-						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,1)
-						teleportMyself(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
-						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
-						task.wait(1/4)
-						if not RunFunct() then return end
-						teleportMyself(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
-						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
-						task.wait(1/4)
-						--C.char:SetPrimaryPartCFrame(CFrame.new(stage.DarknessPart.Position)+Vector3.new(0,15,0))
-						--task.wait(1/2)
-						--firetouchinterest(C.char.PrimaryPart,stage.DarknessPart,0)
-						--task.wait(1/4)
+				for num, connection in ipairs(C.GetHardValue(SC,"Error",{yield=true})) do
+					if connection.ForeignState or not newValue then
+						connection:Disable()
+					else
+						connection:Enable()
 					end
 				end
-				if not RunFunct() then return end
-				while RunFunct() do
-					teleportMyself(CFrame.new(TPPosition))
-					if C.human then
-						C.human:ChangeState(Enum.HumanoidStateType.Jumping)
-					end
-					task.wait(1)
-				end
-				--end
 			end),
+		},
+		[1]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Hack PC",
+			["Desc"]="Automatically does PC hack",
+			["Shortcut"]="Util_AutoHack",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["ActivateFunction"]=function(newValue)
+				local TSM=plr:WaitForChild("TempPlayerStatsModule")
+				while C.enHacks.Util_AutoHack do
+					while C.enHacks.Util_AutoHack and not plr.PlayerGui:WaitForChild("ScreenGui"):WaitForChild("TimingCircle").Visible do
+						plr.PlayerGui:WaitForChild("ScreenGui"):WaitForChild("TimingCircle"):GetPropertyChangedSignal("Visible"):Wait()
+					end
+					while C.enHacks.Util_AutoHack and plr.PlayerGui:WaitForChild("ScreenGui"):WaitForChild("TimingCircle").Visible do
+						--plr.PlayerGui:WaitForChild("ScreenGui"):WaitForChild("TimingCircle"):GetPropertyChangedSignal("Visible"):Wait()
+						--TSM.OnTrigger.Value=false
+						--print(plr.PlayerGui.ScreenGui.TimingCircle.TimingPin.Rotation,plr.PlayerGui.ScreenGui.TimingCircle.TimingBase.Rotation)
+						if plr.PlayerGui.ScreenGui.TimingCircle.TimingPin.Rotation>=plr.PlayerGui.ScreenGui.TimingCircle.TimingBase.Rotation+45 then
+							TSM.ActionInput.Value=true
+							if not TSM.MinigameResult.Value then
+								--RS.C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+							end
+						end
+						task.wait()
+					end	
+					for s=3,1,-1 do
+						if not C.enHacks.Util_AutoHack then
+							return
+						end
+						if not TSM.MinigameResult.Value then
+							--RS.C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+						end 	
+						task.wait()
+					end
+					if not C.enHacks.Util_AutoHack then
+						return
+					end
+					--TSM.OnTrigger.Value=true
+					TSM.ActionInput.Value=false
+					--for s=1,1,-1 dof
+
+					--end
+
+				end
+			end,
 			["MyStartUp"]=function()
-				task.wait(2)
-				workspace.ClaimRiverResultsGold:FireServer()
-				C.AvailableHacks.Bot[300].Spawned = os.clock()
-				C.AvailableHacks.Bot[300].ActivateFunction(C.enHacks.Bot_AutoGrindBAB)
+				C.AvailableHacks.Utility[1].ActivateFunction(C.enHacks.Util_AutoHack)
+			end,
+			["MyPlayerAdded"] = function()
+				local minigameResult = C.myTSM:WaitForChild("MinigameResult")
+				local function updateMiniGameResult()
+					if minigameResult and C.enHacks.Util_AutoHack then
+						C.RemoteEvent:FireServer("SetPlayerMinigameResult", true)
+					end
+				end
+				setChangedProperty(minigameResult,"Value",updateMiniGameResult)
+				updateMiniGameResult()
+
+
 			end,
 		},
-
 	},
 	["Commands"]={
 		[2]={

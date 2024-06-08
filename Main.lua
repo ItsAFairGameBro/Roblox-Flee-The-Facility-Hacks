@@ -3017,7 +3017,7 @@ C.AvailableHacks ={
 					SetStat(config,"Cooldown",0)
 					SetStat(config,"SwingCooldown",0)
 					SetStat(config,"HitRate",0)
-					SetStat(config,"HasScope",false)
+					--SetStat(config,"HasScope",false)
 
 					SetStat(config,"FireMode","Automatic",true)
 					SetStat(config.Parent,"CurrentAmmo",69)

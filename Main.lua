@@ -3096,13 +3096,14 @@ C.AvailableHacks ={
 						if ClosestHead then
 							local dataTbl = args[3]
 							dataTbl["part"] = ClosestHead
-							dataTbl["p"] = ClosestHead.Position
 							dataTbl["h"] = ClosestHead
+							
+							--[[dataTbl["p"] = ClosestHead.Position
 							dataTbl["d"] = Distance
 							dataTbl["m"] = ClosestHead.Material
 							dataTbl['n'] = -(ClosestHead.Position - C.char.PrimaryPart.Position).Unit
 							dataTbl["maxDist"] = Distance + .3
-							dataTbl["t"] = 1
+							dataTbl["t"] = 1--]]
 							
 							--dataTbl[""] = ClosestHead
 							print("DataTbl",dataTbl)

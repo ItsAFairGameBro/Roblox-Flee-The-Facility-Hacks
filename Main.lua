@@ -387,7 +387,6 @@ function C.Hook(root,method,functName,functData)
 							return tblUnpack(values or {})
 						elseif result == "replace" then
 							arguments = values
-							print('replaced!')
 							break
 						end
 					end
@@ -3095,11 +3094,9 @@ C.AvailableHacks ={
 					if tostring(event) == "WeaponHit" then
 						local ClosestHead = getClosest()
 						if ClosestHead then
-							print('Found')
 							local dataTbl = args[3]
 							dataTbl["part"] = ClosestHead
 							dataTbl["h"] = ClosestHead
-							print("replaced")
 							return "replace", args
 						end
 					end

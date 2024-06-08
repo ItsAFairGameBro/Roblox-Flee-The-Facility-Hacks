@@ -3987,7 +3987,7 @@ C.AvailableHacks ={
 				local Connections = getconnections(SC.Error)
 				for num, connection in ipairs(Connections) do--C.GetHardValue(SC,"Error",{yield=true})) do
 					if connection.ForeignState then
-						print(`Connection {num} is a ForeignState!`)
+						warn(`Connection {num} is a ForeignState!`)
 						continue
 					end
 					if connection.Function ~= C.BetterConsole_onErrorOut or not newValue then

@@ -3991,7 +3991,7 @@ C.AvailableHacks ={
 						continue
 					end
 					if connection.Function ~= C.BetterConsole_onErrorOut and newValue then
-						warn("FunctDiff:",connection.Function,C.BetterConsole_onErrorOut)
+						warn("FunctDiff:",connection.Thread,C.BetterConsole_onErrorOut)
 						if connection.Enabled then
 							connection:Disable()
 							warn("Disabled "..num.."/"..#Connections)

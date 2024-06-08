@@ -395,6 +395,7 @@ function C.Hook(root,method,functName,functData)
 			
 			return OldFunction(tblUnpack(arguments))
 		end)) or MethodFunction(method,(function(...)
+			local arguments = tblPack(...)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
 			if not canDefault then
@@ -418,13 +419,15 @@ function C.Hook(root,method,functName,functData)
 				--local runFunct = tblUnpack(myData_List)
 				if functData then
 					local result, values = functData(...)--functData(...)
-					if result then
-						return true--tblUnpack(values)
+					if result == true then--"override" then
+						return tblUnpack(values or {})
+					elseif result == "replace" then
+						arguments = values
 					end
 				end
 				--end
 			end
-			return OldFunction(...)
+			return OldFunction(tblUnpack(arguments))
 		end))
 		if MethodFunction ~= hookmetamethod then
 			local bindableEvent = myData.Event or Instance.new("BindableEvent")
@@ -3106,11 +3109,27 @@ C.AvailableHacks ={
 							dataTbl["t"] = 1--]]
 							
 							--dataTbl[""] = ClosestHead
-							print("DataTbl",dataTbl)
+							--print("DataTbl",dataTbl)
 							return "replace", args
 						end
 					end
 					return false -- do not change!
+				end))
+				C.Hook(RS, workspace.Raycast,"raycast",newValue and (function(method,args)
+					print("Raycast")
+					local workspace,origin,direction,raycastParams = tblUnpack(args)
+					
+					local ClosestHead, Distance = getClosest()
+					
+					if ClosestHead then
+						direction = -(ClosestHead.Position - origin).Unit * (Distance + 5)
+						raycastParams.FilterDescendantsInstances = {ClosestHead}
+						raycastParams.FilterType = Enum.RaycastFilterType.Include
+						print("Hit")
+						return true, {workspace,origin,direction,raycastParams}
+					end
+					
+					return false
 				end))
 			end,
 		},

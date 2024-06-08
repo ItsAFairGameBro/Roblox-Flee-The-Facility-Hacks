@@ -3015,6 +3015,8 @@ C.AvailableHacks ={
 					SetStat(config,"MaxSpread",0)
 					SetStat(config,"ShotCooldown",0)
 					SetStat(config,"Cooldown",0)
+					SetStat(config,"SwingCooldown",0)
+					SetStat(config,"HitRate",0)
 					SetStat(config,"HasScope",false)
 
 					SetStat(config,"FireMode","Automatic",true)
@@ -3056,11 +3058,9 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[300].AddInstance(list,newTool)
 					C.AvailableHacks.Blatant[300].RunStats(list)
 				end))
-
+				task.delay(0.5,C.AvailableHacks.Blatant[300].ActivateFunction)
 			end,
-			["MyPlayerAdded"]=function()
-				task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
-			end,--]]
+			--]]
 			--["ActivateFunction"] = function(newValue)
 				--[[local to0 = {"ShotCooldown", "HeadshotCooldown", "MinSpread", "MaxSpread", "TotalRecoilMax", "RecoilMin", "RecoilMax", "RecoilDecay"}
 				local toInf = {"CurrentAmmo", "AmmoCapacity", "HeadshotDamage"}

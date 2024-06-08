@@ -3990,7 +3990,7 @@ C.AvailableHacks ={
 						warn(`Connection {num} is a ForeignState!`)
 						continue
 					end
-					if connection.Function ~= C.BetterConsole_onErrorOut or not newValue then
+					if connection.Function ~= C.BetterConsole_onErrorOut and newValue then
 						if connection.Enabled then
 							connection:Disable()
 							warn("Disabled "..num.."/"..#Connections)

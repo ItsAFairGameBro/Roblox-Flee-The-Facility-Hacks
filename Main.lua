@@ -2965,7 +2965,7 @@ C.AvailableHacks ={
 			["Type"]="ExTextButton",
 			["Title"]="Weapon Stats Hack",
 			["Desc"]="Inf Ammo, Firerate, and Accuracy",
-			["Shortcut"]="Blatant_FlagWarsGunHack",
+			["Shortcut"]="Blatant_FlagWarsStatsHack",
 			["Default"]=false,
 			["DontActivate"]=true,
 			["Universes"]={"FlagWars"},
@@ -2980,7 +2980,7 @@ C.AvailableHacks ={
 						instance:SetAttribute("Org","nil")
 					end
 					local Org = instance:GetAttribute("Org")
-					if C.enHacks.Blatant_FlagWarsGunHack then
+					if C.enHacks.Blatant_FlagWarsStatsHack then
 						if not Org then
 							instance:SetAttribute("Org",instance.Value)
 						end
@@ -3850,29 +3850,6 @@ C.AvailableHacks ={
 				C.AvailableHacks.Utility[9].Funct = musicSound.Played:Connect(C.AvailableHacks.Utility[9].ActivateFunction)
 			end,
 		},
-		[10] = {
-			["Type"]="ExTextButton",
-			["Title"]="Disable Error Logging",
-			["Desc"]="Disables Error Logging",
-			["Default"]=true,
-			["Shortcut"]="Utility_DisableErrorLogging",
-			["Universes"]={"FlagWars"},
-			["ActivateFunction"]=(function(newValue)
-				for num, connection in ipairs(C.GetHardValue(SC,"Error",{yield=true})) do
-					if connection.ForeignState or not newValue then
-						if connection.Enabled then
-							connection:Disable()
-							warn("Disabled",num)
-						end
-					else
-						if not connection.Enabled then
-							connection:Enable()
-							warn("Enabled",num)
-						end
-					end
-				end
-			end),
-		},
 
 		[15]={
 			["Type"]="ExTextBox",
@@ -3998,6 +3975,29 @@ C.AvailableHacks ={
 					C.AvailableHacks.Utility[10].Funct = false
 				end
 			end
+		},
+		[15] = {
+			["Type"]="ExTextButton",
+			["Title"]="Disable Error Logging",
+			["Desc"]="Disables Error Logging",
+			["Default"]=true,
+			["Shortcut"]="Utility_DisableErrorLogging",
+			["Universes"]={"FlagWars"},
+			["ActivateFunction"]=(function(newValue)
+				for num, connection in ipairs(C.GetHardValue(SC,"Error",{yield=true})) do
+					if connection.ForeignState or not newValue then
+						if connection.Enabled then
+							connection:Disable()
+							warn("Disabled",num)
+						end
+					else
+						if not connection.Enabled then
+							connection:Enable()
+							warn("Enabled",num)
+						end
+					end
+				end
+			end),
 		},
 		[22]={
 			["Type"]="ExTextButton",
@@ -11243,8 +11243,7 @@ loadSaveData()
 
 --print(("Hacks Starting %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 
-local hacks2LoopThru = (C.AvailableHacks or {})
-for categoryName, differentHacks in pairs(hacks2LoopThru) do
+for categoryName, differentHacks in pairs(C.AvailableHacks) do
 	local newButton, newProperty
 	for num,hack in pairs(differentHacks) do
 		if C.isCleared then
@@ -11281,9 +11280,13 @@ for categoryName, differentHacks in pairs(hacks2LoopThru) do
 						end
 					end
 				end
-				newButton.MouseButton1Up:Connect(newButtonMB1Up)
+				newButton.MouseButton1Up:Connect(newButtonMB1Up)--This should be cleaned up automatically!
 			end
 
+			if C.enHacks[hack.Shortcut] ~= nil then
+				warn(`⚠️⚠️HACK TYPE DUPLICATE FOUND: {hack.Shortcut} in {categoryName}, ONE IS {differentHacks.Title}⚠️⚠️`)	
+			end
+			
 			hack.Options = (hack.Options or (defaultOptionsTable))
 			assert(C.getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
 			local overrideDefault

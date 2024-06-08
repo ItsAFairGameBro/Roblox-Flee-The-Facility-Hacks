@@ -3089,6 +3089,7 @@ C.AvailableHacks ={
 
 					return closest
 				end
+				local tblPack, tblUnpack = table.pack,table.unpack
 				C.Hook(game,"__namecall","fireserver",newValue and (function(method,args)
 					local event = args[1]
 					if tostring(event) == "WeaponHit" then
@@ -3097,9 +3098,10 @@ C.AvailableHacks ={
 						if ClosestHead then
 							print('Found')
 							print("Args",args)
-							args[2]["part"] = ClosestHead
+							local dataTbl = args[2]
+							dataTbl["part"] = ClosestHead
 							print("Pre SEt")
-							args[2]["h"] = ClosestHead
+							dataTbl["h"] = ClosestHead
 							print("Set Closest!")
 							return "replace", args
 						end

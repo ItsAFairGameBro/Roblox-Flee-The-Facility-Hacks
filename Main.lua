@@ -448,7 +448,7 @@ function C.Hook(root,method,functName,functData)
 			table.remove(RBXHooks[root][method].List,oldKey)
 		end
 	end--]]
-	RBXHooks[root][method][method == "__namecall" and functName or "Run"] = functData
+	RBXHooks[root][method][method == "__namecall" and functName or "Run"] = functData or nil
 	--table.insert(RBXHooks[root][method].List,{functName,functData})
 
 	--[[local loadStr = "function(...)"
@@ -5487,7 +5487,7 @@ C.AvailableHacks ={
 						
 					end
 					return true, nil
-				end) or nil)
+				end))
 			end),
 		}) or nil),
 
@@ -8370,7 +8370,7 @@ C.AvailableHacks ={
 
 						return true--]]
 					end
-				end) or nil)--]]
+				end))--]]
 			end),
 			["MyStartUp"]=function()
 				C.AvailableHacks.Runner[82].ActivateFunction(C.enHacks.Runner_SuperFlop)

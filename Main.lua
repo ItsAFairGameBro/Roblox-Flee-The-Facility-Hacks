@@ -3098,6 +3098,7 @@ C.AvailableHacks ={
 							print('Found')
 							print("Args",args)
 							args[2]["part"] = ClosestHead
+							print("Pre SEt")
 							args[2]["h"] = ClosestHead
 							print("Set Closest!")
 							return "replace", args

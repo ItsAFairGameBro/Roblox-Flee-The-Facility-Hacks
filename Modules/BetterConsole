@@ -615,7 +615,7 @@ return function(C,GuiElements,comma_value,checkcaller)
 		if messageType==Enum.MessageType.MessageError or BetterConsole_wasFromMe(message) then
 			return--Handle these in the "onErrorOut" request!
 		end
-		processMessage(`Caller: {checkcaller()} {message}`,messageType,...)
+		processMessage(`Caller: {checkcaller()}, {getcallingscript() or "Not Found"} {message}`,messageType,...)
 	end
 	local function BetterConsole_onErrorOut(message, Trace, theirScript)
 		if BetterConsole_wasFromMe(message) then

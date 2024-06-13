@@ -3181,7 +3181,7 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Blatant[302].Funct = workspace.Camera.ChildAdded:Connect(function(bullet)
 						if bullet.Name == "Bullet" then
-							print(bullet.Attachment0.Part0,bullet.Attachment0.Part1,bullet.Attachment1.Part0,bullet.Attachment1.Part1)
+							print("Bullet")--print(bullet.Attachment0.Part0,bullet.Attachment0.Part1,bullet.Attachment1.Part0,bullet.Attachment1.Part1)
 						end
 					end)
 				end

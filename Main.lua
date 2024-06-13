@@ -3021,7 +3021,7 @@ C.AvailableHacks ={
 
 					SetStat(config,"FireMode","Automatic",true)
 					SetStat(config.Parent,"CurrentAmmo",69)
-					SetStat(config,"AmmoCapacity",69,true)
+					SetStat(config,"AmmoCapacity",69)
 					config.Parent:SetAttribute("Modded",true)
 				end
 			end,
@@ -3139,7 +3139,7 @@ C.AvailableHacks ={
 							--print("DataTbl",dataTbl)
 							return "replace", args
 						else
-							print("did nothing")
+							--print("did nothing")
 							return true--do nothing lol, don't kill yaself!
 						end
 					end

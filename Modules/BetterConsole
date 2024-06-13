@@ -621,10 +621,11 @@ return function(C,GuiElements,comma_value,checkcaller)
 		if BetterConsole_wasFromMe(message) then
 			return
 		end
+		local theirDisplayName = theirScript and theirScript.Name or "FleeMasterHack"
 		if message:sub(1,1)==":" then
-			message = "<b>Hack."..theirScript.Name .. "</b>" .. message
+			message = "<b>Hack."..theirDisplayName .. "</b>" .. message
 		end
-		if theirScript.Name == "LocalPlayerScript" and message:find("attempt to index nil with 'Value'") then
+		if theirDisplayName == "LocalPlayerScript" and message:find("attempt to index nil with 'Value'") then
 			if C.human then
 				task.delay(1,function()
 					C.human:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)

@@ -2992,6 +2992,9 @@ C.AvailableHacks ={
 						end
 						instance.Value = riggedValue
 						setChangedProperty(instance,"Value",function()
+							if instance.Value ~= riggedValue then
+								instance:SetAttribute("Org",instance.Value)
+							end
 							instance.Value = riggedValue
 						end)
 					elseif Org then
@@ -3021,7 +3024,7 @@ C.AvailableHacks ={
 
 					SetStat(config,"FireMode","Automatic",true)
 					SetStat(config.Parent,"CurrentAmmo",69)
-					SetStat(config,"AmmoCapacity",69)
+					--SetStat(config,"AmmoCapacity",69)
 					config.Parent:SetAttribute("Modded",true)
 				end
 			end,
@@ -3161,6 +3164,27 @@ C.AvailableHacks ={
 					
 					return false
 				end))
+			end,
+		},
+		[302]={
+			["Type"]="ExTextButton",
+			["Title"]="Raycast Hacks",
+			["Desc"]="Bullets go through walls",
+			["Shortcut"]="Blatant_GoThroughWalls",
+			["Default"]=false,
+			["Universes"]={"FlagWars"},
+			["Funct"] = nil,
+			["ActivateFunction"]=function(newValue)
+				if C.AvailableHacks.Blatant[302].Funct then
+					C.AvailableHacks.Blatant[302].Funct:Disconnect()
+				end
+				if newValue then
+					C.AvailableHacks.Blatant[302].Funct = workspace.Camera.ChildAdded:Connect(function(bullet)
+						if bullet.Name == "Bullet" then
+							print("Bullet FOund!")
+						end
+					end)
+				end
 			end,
 		},
 	},

@@ -3101,7 +3101,7 @@ C.AvailableHacks ={
 
 					for i, v in pairs(PS.GetPlayers(PS)) do
 						if v == plr then continue end
-						--if v.Team == plr.Team then continue end
+						if v.Team == plr.Team then continue end
 						local theirChar = v.Character
 						if not theirChar then continue end
 						local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")

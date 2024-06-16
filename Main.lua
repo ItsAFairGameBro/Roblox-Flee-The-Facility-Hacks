@@ -10705,7 +10705,8 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				if C.gameName == "Bloxburg" then
 					local DataService = StringWaitForChild(RS,"Modules.DataService")
-					for name, funct in pairs(C.requireModule(DataService)) do
+					
+					for name, funct in pairs(C.GetHardValue(DataService,"env",{yield=true,noCache=true})) do
 						if typeof(funct) == "function" then
 							warn("Hooked",name)
 							C.Hook(DataService,funct,name,newValue and (function(method,args)

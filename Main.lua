@@ -10704,7 +10704,7 @@ C.AvailableHacks ={
 			["Universes"] = C.PlaceIdsForDebug,
 			["ActivateFunction"]=function(newValue)
 				if C.gameName == "Bloxburg" then
-					local DataService = RS:WaitForChild("DataService")
+					local DataService = StringWaitForChild(RS,"Modules.DataService")
 					for name, funct in pairs(C.requireModule(DataService)) do
 						if typeof(funct) == "function" then
 							warn("Hooked",name)

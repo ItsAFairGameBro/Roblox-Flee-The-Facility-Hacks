@@ -377,7 +377,7 @@ function C.Hook(root,method,functName,functData)
 		--local myData_List = myData.List
 		local MethodFunction = (method == "__namecall" or method == "__index") and hookmetamethod or hookfunction
 		local OldFunction
-		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, (function(...)
+		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
 			local arguments = tblPack(...)
 			local canDefault = checkcaller()
 			if not canDefault then
@@ -396,7 +396,7 @@ function C.Hook(root,method,functName,functData)
 			end
 			
 			return OldFunction(tblUnpack(arguments))
-		end)) or MethodFunction(method,(function(...)
+		end)) or MethodFunction(method,newcclosure(function(...)
 			local arguments = tblPack(...)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
@@ -10706,7 +10706,7 @@ C.AvailableHacks ={
 				if C.gameName == "Bloxburg" then
 					local DataService = StringWaitForChild(RS,"Modules.DataService")
 					
-					for name, funct in pairs(C.GetHardValue(DataService,"env",{yield=true,noCache=true})) do
+					for name, funct in pairs(C.requireModule(DataService)) do
 						if typeof(funct) == "function" then
 							warn("Hooked",name)
 							C.Hook(DataService,funct,name,newValue and (function(method,args)

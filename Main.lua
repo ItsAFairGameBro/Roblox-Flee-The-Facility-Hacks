@@ -396,7 +396,7 @@ function C.Hook(root,method,functName,functData)
 			end
 			
 			return OldFunction(tblUnpack(arguments))
-		end)) or MethodFunction(method,newcclosure(function(...)
+		end)) or MethodFunction(method,(function(...)
 			local arguments = tblPack(...)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)

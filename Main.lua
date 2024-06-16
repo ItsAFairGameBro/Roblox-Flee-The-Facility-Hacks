@@ -10705,7 +10705,9 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				C.Hook(game,"__namecall","fireserver",newValue and (function(method,args)
 					local event = args[1]
-					print("Remote Spy",getcallingscript(),args)
+					if tostring(event.Parent) ~= "DataService" and tostring(event.Parent.Parent) ~= "DataService" then
+						print("Remote Spy",getcallingscript(),args)
+					end
 					
 					return false -- do not change!
 				end))

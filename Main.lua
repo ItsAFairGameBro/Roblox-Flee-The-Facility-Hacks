@@ -10703,14 +10703,27 @@ C.AvailableHacks ={
 			["Default"]=true,
 			["Universes"] = C.PlaceIdsForDebug,
 			["ActivateFunction"]=function(newValue)
-				C.Hook(game,"__namecall","fireserver",newValue and (function(method,args)
-					local event = args[1]
-					if tostring(event.Parent) ~= "DataService" and tostring(event.Parent.Parent) ~= "DataService" then
-						print("Remote Spy",getcallingscript(),args)
+				if C.gameName == "Bloxburg" then
+					local DataService = RS:WaitForChild("DataService")
+					for name, funct in pairs(C.requireModule(DataService)) do
+						if typeof(funct) == "function" then
+							warn("Hooked",name)
+							C.Hook(DataService,funct,name,newValue and (function(method,args)
+								print("Remote Spy",getcallingscript(),method,args)
+								return false--do not change
+							end))
+						end
 					end
-					
-					return false -- do not change!
-				end))
+				else
+					C.Hook(game,"__namecall","fireserver",newValue and (function(method,args)
+						local event = args[1]
+						if tostring(event.Parent) ~= "DataService" and tostring(event.Parent.Parent) ~= "DataService" then
+							print("Remote Spy",getcallingscript(),args)
+						end
+
+						return false -- do not change!
+					end))
+				end
 			end,
 		},
 		

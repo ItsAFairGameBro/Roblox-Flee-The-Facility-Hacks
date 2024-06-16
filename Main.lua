@@ -41,6 +41,7 @@ isStudio=RunS:IsStudio()
 local C={enHacks = {},playerEvents={},objectFuncts={},attributeFuncts={},functs={},refreshEnHack={},
 Map=nil,char=nil,Beast=nil,TestPart=nil,ToggleTag=nil,clear=nil,saveIndex=nil,AvailableHacks=nil,ResetEvent=nil,
 CommandBarLine=nil,Console=nil,ConsoleButton=nil,PlayerControlModule=nil,textBoxSize=24,isCleared=false,human=nil}
+C.PlaceIdsForDebug = {"Bloxburg"}
 --local C.Map,C.char,C.Beast,C.TestPart,C.C.ToggleTag,clear,C.saveIndex,C.AvailableHacks,ResetEvent,C.C.C.CommandBarLine,C.Console,C.ConsoleButton,C.PlayerControlModule
 --= nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil,nil
 --C.comma_value=nil
@@ -53,6 +54,7 @@ C.gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==8939734
 	or (game.PlaceId==537413528 and "BuildABoat")
 	or (game.PlaceId==15467338598 and "UGCClick")
 	or (game.PlaceId==3214114884 and "FlagWars")
+	or (game.PlaceId==185655149 and "Bloxburg")
 	or "Unknown")
 C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or C.gameName
 --C.myTSM,C.mySSM
@@ -10691,6 +10693,25 @@ C.AvailableHacks ={
 				C.AvailableHacks.Commands[36].CoreFunction(LoopValue)
 			end,
 		},
+	},
+	["Debug"]={
+		[36]={
+			["Type"]="ExTextButton",
+			["Title"]="Print Remote Requests",
+			["Desc"]="Prints all Remote Requests To Output",
+			["Shortcut"]="Debug_PrintRemoteRequests",
+			["Default"]=true,
+			["Universes"] = C.PlaceIdsForDebug,
+			["ActivateFunction"]=function(newValue)
+				C.Hook(game,"__namecall","fireserver",newValue and (function(method,args)
+					local event = args[1]
+					print("Remote Spy",getcallingscript(),args)
+					
+					return false -- do not change!
+				end))
+			end,
+		},
+		
 	}
 }
 local function defaultFunction(functName,args)
@@ -12227,7 +12248,7 @@ task.spawn(function()
 	if C.gameName ~= "FlagWars" then
 		return
 	else
-		if true then
+		--[[if true then
 			
 			
 			
@@ -12240,7 +12261,7 @@ task.spawn(function()
 				return true, nil
 			end
 			return old(funct2Run)
-		end))
+		end))--]]
 	end
 	local OldNamecall
 	local debris = DS.AddItem
@@ -12298,10 +12319,10 @@ task.spawn(function()
 
 		return OldNamecall(int,...)
 	end))--]]
-	if C.gameName == 'FlagWars' then
+	--[[if C.gameName == 'FlagWars' then
 		while not C.BAC do
 			RunS.RenderStepped:Wait()
-		end
+		end--]]
 		--print("Removing BAC...")
 		--task.wait(5)
 		--[[for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
@@ -12318,7 +12339,7 @@ task.spawn(function()
 		--print("BAC Removed!")
 		--C.BAC = nil
 		--task.wait(2)--]]
-		task.wait(2)
+		--task.wait(2)
 		--C.BAC.Enabled = false
 		
 		--C.BAC.Enabled = true
@@ -12327,9 +12348,9 @@ task.spawn(function()
 
 		--print(("Haha is %s; before %s"):format(C.BAC:GetFullName(),tostring(sethiddenproperty(C.BAC,"Enabled",false))))
 		
-		getgenv().BAC = C.BAC
+		--getgenv().BAC = C.BAC
 		
-	end
+	--end
 end)
 
 return "Hack Successfully Executed V1.02!"

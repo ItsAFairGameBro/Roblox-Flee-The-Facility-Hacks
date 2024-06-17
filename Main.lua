@@ -10704,24 +10704,24 @@ C.AvailableHacks ={
 			["Universes"] = C.PlaceIdsForDebug,
 			["ActivateFunction"]=function(newValue)
 				if C.gameName == "Bloxburg" then
-					local DataService = StringWaitForChild(RS,"Modules.DataService")
+					--[[local DataService = StringWaitForChild(RS,"Modules.DataService")
 					local DataStoreDict = C.requireModule(DataService)
 		
 					for name, funct in pairs(DataStoreDict) do
 						if typeof(funct) == "function" and (name == "InvokeServer" or name == "FireServer") then
 							warn("Hooking",name)
 							local Old = funct
-							DataStoreDict[name] = function(self,input,...)--Old = hookfunction(funct,function(...)
+							DataStoreDict[name] = function(input,...) --Old = hookfunction(funct,function(...)
 								--local Return = table.pack(Old(self,input,...))
 								--if typeof(input) ~= "table" or (input.Type ~= "LookDir" and input.Type ~= "FloorPos") then
-								--	print(name,"Called",input,...,"Return",Return)
+								--	print(name .. " Called " .. input,...,"Return: " .. Return)
 								--end
 								--return table.unpack(Return)
-								return Old(self,input,...)
+								return Old(input,...)
 							end
 
 						end
-					end
+					end--]]
 				else
 					C.Hook(game,"__namecall","fireserver",newValue and (function(method,args)
 						local event = args[1]

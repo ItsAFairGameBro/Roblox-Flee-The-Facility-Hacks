@@ -10705,14 +10705,20 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				if C.gameName == "Bloxburg" then
 					local DataService = StringWaitForChild(RS,"Modules.DataService")
-					
-					for name, funct in pairs(C.requireModule(DataService)) do
+					local DataStoreDict = C.requireModule(DataService)
+		
+					for name, funct in pairs(DataStoreDict) do
 						if typeof(funct) == "function" then
-							warn("Hooked",name)
-							C.Hook(DataService,funct,name,newValue and (function(method,args)
-								print("Remote Spy",getcallingscript(),method,args)
-								return false--do not change
-							end))
+							warn("Hooking",name)
+							local Old = funct
+							DataStoreDict[name] = function(self,input,...)--Old = hookfunction(funct,function(...)
+								local Return = table.pack(Old(self,input))
+								if typeof(input) ~= "table" or (input.Type ~= "LookDir" and input.Type ~= "FloorPos") then
+									print(name,"Called",input,...,"Return",Return)
+								end
+								return table.unpack(Return)
+							end
+
 						end
 					end
 				else

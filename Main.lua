@@ -10708,7 +10708,7 @@ C.AvailableHacks ={
 					local DataStoreDict = C.requireModule(DataService)
 		
 					for name, funct in pairs(DataStoreDict) do
-						if typeof(funct) == "function" and name ~= "OnEvent" then
+						if typeof(funct) == "function" and (name == "InvokeServer" or name == "FireServer") then
 							warn("Hooking",name)
 							local Old = funct
 							DataStoreDict[name] = function(self,input,...)--Old = hookfunction(funct,function(...)

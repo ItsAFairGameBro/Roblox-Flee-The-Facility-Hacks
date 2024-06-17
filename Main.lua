@@ -10712,11 +10712,12 @@ C.AvailableHacks ={
 							warn("Hooking",name)
 							local Old = funct
 							DataStoreDict[name] = function(self,input,...)--Old = hookfunction(funct,function(...)
-								local Return = table.pack(Old(self,input))
-								if typeof(input) ~= "table" or (input.Type ~= "LookDir" and input.Type ~= "FloorPos") then
-									print(name,"Called",input,...,"Return",Return)
-								end
-								return table.unpack(Return)
+								--local Return = table.pack(Old(self,input,...))
+								--if typeof(input) ~= "table" or (input.Type ~= "LookDir" and input.Type ~= "FloorPos") then
+								--	print(name,"Called",input,...,"Return",Return)
+								--end
+								--return table.unpack(Return)
+								return Old(self,input,...)
 							end
 
 						end

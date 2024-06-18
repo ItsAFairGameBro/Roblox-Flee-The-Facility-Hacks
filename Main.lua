@@ -10719,7 +10719,8 @@ C.AvailableHacks ={
 								if typeof(Data) ~= "table" or not table.find(IgnoreTypesList,Data.Type) then
 									if name == "FireServer" then
 										print("RemoteEvent",args)
-										return funct(self,table.unpack(args))
+										funct(self,table.unpack(args))
+										return
 									elseif name == "InvokeServer" then
 										local returns = {funct(self,table.unpack(args))}
 										print("RemoteFunction",args,returns)

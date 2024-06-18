@@ -10726,8 +10726,9 @@ C.AvailableHacks ={
 										print("RemoteFunction",args,returns)
 										return table.unpack(returns)
 									end
+								elseif name == "InvokeServer" then
+									return funct(self,table.unpack(args))
 								end
-								return funct(self,table.unpack(args))
 							end)
 							--[[Old = hookfunction(funct,function(self,...)
 								local args = {...}

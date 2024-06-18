@@ -400,7 +400,7 @@ function C.Hook(root,method,functName,functData)
 			end))
 
 		else
-			local getcallingscript = getcallingscript
+			--local getcallingscript = getcallingscript
 			OldFunction = MethodFunction(method,(function(...)
 				local arguments = tblPack(...)
 				local canDefault = checkcaller()
@@ -425,7 +425,7 @@ function C.Hook(root,method,functName,functData)
 					--for s = 1, #myData_List, 1 do
 					--local runFunct = tblUnpack(myData_List)
 					if functData then
-						local result, values = functData(getcallingscript(),tblPack(...))--functData(...)
+						local result, values = functData(nil,tblPack(...))--functData(...)
 						if result == true then--"override" then
 							return tblUnpack(values or {})
 						elseif result == "replace" then

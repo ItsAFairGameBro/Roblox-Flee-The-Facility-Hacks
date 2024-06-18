@@ -10704,6 +10704,9 @@ C.AvailableHacks ={
 			["Universes"] = C.PlaceIdsForDebug,
 			["ActivateFunction"]=function(newValue)
 				if C.gameName == "Bloxburg" then
+					if not newValue then
+						return
+					end
 					local DataService = StringWaitForChild(RS,"Modules.DataService")
 					local DataModule = C.requireModule(DataService)
 					--DataModule.HookFunction = nil

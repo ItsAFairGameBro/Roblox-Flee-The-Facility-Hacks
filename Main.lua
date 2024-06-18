@@ -364,6 +364,7 @@ end
 function C.Hook(root,method,functName,functData)
 	local inPairs, hookfunction, hookmetamethod = pairs, hookfunction, hookmetamethod
 	local getnamecallmethod, newcclosure, checkcaller, stringlower = getnamecallmethod, newcclosure, checkcaller, string.lower
+	local getcallingscript = getcallingscript
 	local tblPack,tblUnpack = table.pack,table.unpack
 
 	if not RBXHooks[root] then
@@ -420,7 +421,7 @@ function C.Hook(root,method,functName,functData)
 				--for s = 1, #myData_List, 1 do
 				--local runFunct = tblUnpack(myData_List)
 				if functData then
-					local result, values = functData(...)--functData(...)
+					local result, values = functData(getcallingscript(),tblPack(...))--functData(...)
 					if result == true then--"override" then
 						return tblUnpack(values or {})
 					elseif result == "replace" then
@@ -3150,7 +3151,7 @@ C.AvailableHacks ={
 					end
 					return false -- do not change!
 				end))
-				C.Hook(workspace, workspace.Raycast,"raycast",newValue and (function(method,args)
+				--[[C.Hook(workspace, workspace.Raycast,"raycast",newValue and (function(method,args)
 					print("Raycast")
 					local workspace,origin,direction,raycastParams = tblUnpack(args)
 					
@@ -3165,7 +3166,7 @@ C.AvailableHacks ={
 					end
 					
 					return false
-				end))
+				end))--]]
 			end,
 		},
 		[302]={
@@ -8437,7 +8438,9 @@ C.AvailableHacks ={
 				if not CharacterScriptEnv then
 					task.delay(1,C.AvailableHacks.Runner[82].ActivateFunction,C.enHacks.Runner_SuperFlop,true)
 				end
-				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and RagdollValue.Value and (function(_,inputState)
+				local tblUnpack = table.unpack
+				C.Hook(CharacterScriptInstance,CharacterScriptEnv.FlopAction,"Runner_SuperFlop",newValue and RagdollValue.Value and (function(caller,args)
+					local _,inputState = tblUnpack(args)
 					if inputState == Enum.UserInputState.Begin then
 						print("Flop:",inputState.Name)
 						if not C.enHacks.Runner_SuperFlop then
@@ -10743,12 +10746,12 @@ C.AvailableHacks ={
 								end
 								return Old(self,table.unpack(args))
 							end)--]]
-							C.Hook(DataService,funct,name,newValue and (function(method,args)
+							C.Hook(DataService,funct,name,newValue and (function(caller,args)
 								local self = args[1]
 								local Data = args[2]
 								local shouldIgnore = typeof(Data) == "table" and table.find(IgnoreTypesList,Data.Type)
 								if not shouldIgnore then
-									print("Remote Spy",name,getcallingscript(),method,args)
+									print(name,caller,select(2,table.unpack(args)))
 								end 
 								return false--do not change
 							end))--]]

@@ -10721,7 +10721,7 @@ C.AvailableHacks ={
 								end
 								return Old(self,table.unpack(args))
 							end)--]]
-							C.Hook(DataService,funct,name,newValue and (function(method,args)
+							--[[C.Hook(DataService,funct,name,newValue and (function(method,args)
 								local self = args[1]
 								local Data = args[2]
 								if typeof(Data) ~= "table" or not table.find(IgnoreTypesList,Data.Type) then

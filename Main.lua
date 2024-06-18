@@ -10728,6 +10728,8 @@ C.AvailableHacks ={
 									end
 								elseif name == "InvokeServer" then
 									return funct(self,table.unpack(args))
+								else
+									print("No Return For",Data)
 								end
 							end)
 							--[[Old = hookfunction(funct,function(self,...)

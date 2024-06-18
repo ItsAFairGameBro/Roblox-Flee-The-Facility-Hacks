@@ -10717,7 +10717,7 @@ C.AvailableHacks ={
 								if typeof(Data) ~= "table" or (Data.Type ~="LookDir" and Data.Type~="FloorPos") then
 									print("Remote Spy",getcallingscript(),args)
 								end
-								return Old(self,table.unpack(...))
+								return Old(self,table.unpack(args))
 							end)
 							--[[C.Hook(DataService,funct,name,newValue and (function(method,args)
 								local self = args[1]

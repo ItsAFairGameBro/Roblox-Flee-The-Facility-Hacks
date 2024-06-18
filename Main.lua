@@ -397,7 +397,7 @@ function C.Hook(root,method,functName,functData)
 			end
 			
 			return OldFunction(tblUnpack(arguments))
-		end)) or MethodFunction(method,(function(...)
+		end)) or MethodFunction(method,newcclosure(function(...)
 			local arguments = tblPack(...)
 			local canDefault = checkcaller()
 			--print("Intercepted","Caller:",canDefault,...)
@@ -10707,9 +10707,6 @@ C.AvailableHacks ={
 			["Universes"] = C.PlaceIdsForDebug,
 			["ActivateFunction"]=function(newValue)
 				if C.gameName == "Bloxburg" then
-					if not newValue then
-						return
-					end
 					local DataService = StringWaitForChild(RS,"Modules.DataService")
 					local DataModule = C.requireModule(DataService)
 					--DataModule.HookFunction = nil

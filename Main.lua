@@ -10716,7 +10716,8 @@ C.AvailableHacks ={
 							DataModule[name] = newcclosure(function(self,...)
 								local args = {...}
 								local Data = args[1]
-								if typeof(Data) ~= "table" or not table.find(IgnoreTypesList,Data.Type) then
+								local shouldIgnore = typeof(Data) ~= "table" or table.find(IgnoreTypesList,Data.Type)
+								if shouldIgnore then
 									if name == "FireServer" then
 										print("RemoteEvent",args)
 										funct(self,table.unpack(args))
@@ -10728,9 +10729,10 @@ C.AvailableHacks ={
 									end
 								elseif name == "InvokeServer" then
 									return funct(self,table.unpack(args))
-								else
+								elseif not shouldIgnore then
 									print("No Return For",Data)
 								end
+								return funct(self,table.unpack(args))
 							end)
 							--[[Old = hookfunction(funct,function(self,...)
 								local args = {...}

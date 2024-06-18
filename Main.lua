@@ -10710,44 +10710,49 @@ C.AvailableHacks ={
 					local IgnoreTypesList = {"LookDir","FloorPos","CheckOwnsAsset","GetServerTime"}
 					
 					for name, funct in pairs(DataModule) do
-						if typeof(funct) == "function" and (name=="FireServer" or name=="InvokeServer") then
-							warn("Hooked",name)
-							local Old = funct
-							DataModule[name] = (function(self,...)
-								local args = {...}
-								local Data = args[1]
-								local shouldIgnore = typeof(Data) == "table" and table.find(IgnoreTypesList,Data.Type)
-								if not shouldIgnore then
-									if name == "FireServer" then
-										local returns = {funct(self,table.unpack(args))}
-										print("RemoteEvent",args,returns)
-										return table.unpack(returns)
+						if typeof(funct) == "function"  then
+							if name=="FireServer" or name=="InvokeServer" then
+								warn("Hooked",name)
+								local Old = funct
+								DataModule[name] = (function(self,...)
+									local args = {...}
+									local Data = args[1]
+									local shouldIgnore = typeof(Data) == "table" and table.find(IgnoreTypesList,Data.Type)
+									if not shouldIgnore then
+										if name == "FireServer" then
+											local returns = {funct(self,table.unpack(args))}
+											print("RemoteEvent",args,returns)
+											return table.unpack(returns)
+										elseif name == "InvokeServer" then
+											local returns = {funct(self,table.unpack(args))}
+											print("RemoteFunction",args,returns)
+											return table.unpack(returns)
+										end
 									elseif name == "InvokeServer" then
-										local returns = {funct(self,table.unpack(args))}
-										print("RemoteFunction",args,returns)
-										return table.unpack(returns)
+										return funct(self,table.unpack(args))
 									end
-								elseif name == "InvokeServer" then
 									return funct(self,table.unpack(args))
-								end
-								return funct(self,table.unpack(args))
-							end)
-							--[[Old = hookfunction(funct,function(self,...)
-								local args = {...}
-								local Data = args[1]
-								if typeof(Data) ~= "table" or (Data.Type ~="LookDir" and Data.Type~="FloorPos") then
-									print("Remote Spy",getcallingscript(),args)
-								end
-								return Old(self,table.unpack(args))
-							end)
-							C.Hook(DataService,funct,name,newValue and (function(method,args)
-								local self = args[1]
-								local Data = args[2]
-								if typeof(Data) ~= "table" or not table.find(IgnoreTypesList,Data.Type) then
-									print("Remote Spy",name,getcallingscript(),method,args)
-								end 
-								return false--do not change
-							end))--]]
+								end)
+								--[[Old = hookfunction(funct,function(self,...)
+									local args = {...}
+									local Data = args[1]
+									if typeof(Data) ~= "table" or (Data.Type ~="LookDir" and Data.Type~="FloorPos") then
+										print("Remote Spy",getcallingscript(),args)
+									end
+									return Old(self,table.unpack(args))
+								end)
+								C.Hook(DataService,funct,name,newValue and (function(method,args)
+									local self = args[1]
+									local Data = args[2]
+									if typeof(Data) ~= "table" or not table.find(IgnoreTypesList,Data.Type) then
+										print("Remote Spy",name,getcallingscript(),method,args)
+									end 
+									return false--do not change
+								end))--]]
+							elseif name == "HookFunction" then
+								DataModule[name] = nil
+							end
+							
 						end
 					end
 				else

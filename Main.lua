@@ -10719,9 +10719,9 @@ C.AvailableHacks ={
 								local shouldIgnore = typeof(Data) ~= "table" or table.find(IgnoreTypesList,Data.Type)
 								if shouldIgnore then
 									if name == "FireServer" then
-										print("RemoteEvent",args)
-										funct(self,table.unpack(args))
-										return
+										local returns = {funct(self,table.unpack(args))}
+										print("RemoteEvent",args,returns)
+										return table.unpack(returns)
 									elseif name == "InvokeServer" then
 										local returns = {funct(self,table.unpack(args))}
 										print("RemoteFunction",args,returns)

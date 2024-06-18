@@ -10707,6 +10707,7 @@ C.AvailableHacks ={
 					local DataService = StringWaitForChild(RS,"Modules.DataService")
 					local DataModule = C.requireModule(DataService)
 					DataModule.HookFunction = nil
+					local IgnoreTypesList = {"LookDir","FloorPos","CheckOwnsAsset","GetServerTime"}
 					
 					for name, funct in pairs(DataModule) do
 						if typeof(funct) == "function" and (name=="FireServer" or name=="InvokeServer") then
@@ -10723,8 +10724,8 @@ C.AvailableHacks ={
 							C.Hook(DataService,funct,name,newValue and (function(method,args)
 								local self = args[1]
 								local Data = args[2]
-								if typeof(Data) ~= "table" or (Data.Type ~="LookDir" and Data.Type~="FloorPos") then
-									print("Remote Spy",getcallingscript(),method,args)
+								if typeof(Data) ~= "table" or not table.find(IgnoreTypesList,Data.Type) then
+									print("Remote Spy",name,getcallingscript(),method,args)
 								end 
 								return false--do not change
 							end))--]]

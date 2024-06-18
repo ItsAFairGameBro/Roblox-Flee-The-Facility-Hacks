@@ -10713,11 +10713,11 @@ C.AvailableHacks ={
 						if typeof(funct) == "function" and (name=="FireServer" or name=="InvokeServer") then
 							warn("Hooked",name)
 							local Old = funct
-							DataModule[name] = newcclosure(function(self,...)
+							DataModule[name] = (function(self,...)
 								local args = {...}
 								local Data = args[1]
-								local shouldIgnore = typeof(Data) ~= "table" or table.find(IgnoreTypesList,Data.Type)
-								if shouldIgnore then
+								local shouldIgnore = typeof(Data) == "table" and table.find(IgnoreTypesList,Data.Type)
+								if not shouldIgnore then
 									if name == "FireServer" then
 										local returns = {funct(self,table.unpack(args))}
 										print("RemoteEvent",args,returns)
@@ -10729,8 +10729,6 @@ C.AvailableHacks ={
 									end
 								elseif name == "InvokeServer" then
 									return funct(self,table.unpack(args))
-								elseif not shouldIgnore then
-									print("No Return For",Data)
 								end
 								return funct(self,table.unpack(args))
 							end)

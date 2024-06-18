@@ -10709,14 +10709,24 @@ C.AvailableHacks ={
 					for name, funct in pairs(C.requireModule(DataService)) do
 						if typeof(funct) == "function" and (name=="FireServer" or name=="InvokeServer") then
 							warn("Hooked",name)
-							C.Hook(DataService,funct,name,newValue and (function(method,args)
+							local Old
+							Old = hookfunction(funct,function(self,...)
+								local args = {...}
+								local self = args[1]
+								local Data = args[2]
+								if typeof(Data) ~= "table" or (Data.Type ~="LookDir" and Data.Type~="FloorPos") then
+									print("Remote Spy",getcallingscript(),args)
+								end
+								return Old(self,table.unpack(...))
+							end)
+							--[[C.Hook(DataService,funct,name,newValue and (function(method,args)
 								local self = args[1]
 								local Data = args[2]
 								if typeof(Data) ~= "table" or (Data.Type ~="LookDir" and Data.Type~="FloorPos") then
 									print("Remote Spy",getcallingscript(),method,args)
 								end 
 								return false--do not change
-							end))
+							end))--]]
 						end
 					end
 				else

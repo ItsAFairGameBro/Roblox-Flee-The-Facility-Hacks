@@ -362,15 +362,14 @@ if not RBXHooks then
 	getgenv().RBXHooks = RBXHooks
 end
 function C.Hook(root,method,functName,functData)
-	local inPairs, hookfunction, hookmetamethod = pairs, hookfunction, hookmetamethod
-	local getnamecallmethod, newcclosure, checkcaller, stringlower = getnamecallmethod, newcclosure, checkcaller, string.lower
-	local getcallingscript = getcallingscript
 	local tblPack,tblUnpack = table.pack,table.unpack
 
 	if not RBXHooks[root] then
 		RBXHooks[root] = {}
 	end
 	if not RBXHooks[root][method] then
+		local getnamecallmethod, newcclosure, checkcaller, stringlower = getnamecallmethod, newcclosure, checkcaller, string.lower
+		local inPairs = pairs
 		--print("New2 Hook",root)
 		local myData = {}
 		--myData.List = {}
@@ -378,60 +377,66 @@ function C.Hook(root,method,functName,functData)
 		--local myData_List = myData.List
 		local MethodFunction = (method == "__namecall" or method == "__index") and hookmetamethod or hookfunction
 		local OldFunction
-		OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
-			local arguments = tblPack(...)
-			local canDefault = checkcaller()
-			if not canDefault then
-				local method = stringlower(method == "__index" and arguments[2] or getnamecallmethod())
-				for functName, theirRun in inPairs(myData) do
-					if method == functName then
-						local result,values = theirRun(method,arguments)
+		if MethodFunction == hookmetamethod then
+			OldFunction = MethodFunction==hookmetamethod and MethodFunction(root, method, newcclosure(function(...)
+				local arguments = tblPack(...)
+				local canDefault = checkcaller()
+				if not canDefault then
+					local method = stringlower(method == "__index" and arguments[2] or getnamecallmethod())
+					for functName, theirRun in inPairs(myData) do
+						if method == functName then
+							local result,values = theirRun(method,arguments)
+							if result == true then--"override" then
+								return tblUnpack(values or {})
+							elseif result == "replace" then
+								arguments = values
+								break
+							end
+						end
+					end
+				end
+
+				return OldFunction(tblUnpack(arguments))
+			end))
+
+		else
+			local getcallingscript = getcallingscript
+			OldFunction = MethodFunction(method,(function(...)
+				local arguments = tblPack(...)
+				local canDefault = checkcaller()
+				--print("Intercepted","Caller:",canDefault,...)
+				if not canDefault then
+					--for s = 1, #myData.List, 1 do --for functName, theirRun in inPairs(myData) do
+					--local functName,theirRun = tblUnpack(myData.List)
+					--local result,values = theirRun(method,...)
+						--[[for num, val in ipairs(results) do
+							if val ~= nil then
+								return tblUnpack(results)
+							else
+								break
+							end
+						end--]]
+					--if result then
+					--	return tblUnpack(values)
+					--end
+					--end--]]
+					--print("Intercepted",...)
+					--RBXHooks[root][method][functName].loadstring()(...)
+					--for s = 1, #myData_List, 1 do
+					--local runFunct = tblUnpack(myData_List)
+					if functData then
+						local result, values = functData(getcallingscript(),tblPack(...))--functData(...)
 						if result == true then--"override" then
 							return tblUnpack(values or {})
 						elseif result == "replace" then
 							arguments = values
-							break
 						end
 					end
+					--end
 				end
-			end
-			
-			return OldFunction(tblUnpack(arguments))
-		end)) or MethodFunction(method,newcclosure(function(...)
-			local arguments = tblPack(...)
-			local canDefault = checkcaller()
-			--print("Intercepted","Caller:",canDefault,...)
-			if not canDefault then
-				--for s = 1, #myData.List, 1 do --for functName, theirRun in inPairs(myData) do
-				--local functName,theirRun = tblUnpack(myData.List)
-				--local result,values = theirRun(method,...)
-					--[[for num, val in ipairs(results) do
-						if val ~= nil then
-							return tblUnpack(results)
-						else
-							break
-						end
-					end--]]
-				--if result then
-				--	return tblUnpack(values)
-				--end
-				--end--]]
-				--print("Intercepted",...)
-				--RBXHooks[root][method][functName].loadstring()(...)
-				--for s = 1, #myData_List, 1 do
-				--local runFunct = tblUnpack(myData_List)
-				if functData then
-					local result, values = functData(getcallingscript(),tblPack(...))--functData(...)
-					if result == true then--"override" then
-						return tblUnpack(values or {})
-					elseif result == "replace" then
-						arguments = values
-					end
-				end
-				--end
-			end
-			return OldFunction(tblUnpack(arguments))
-		end))
+				return OldFunction(tblUnpack(arguments))
+			end))
+		end
 		if MethodFunction ~= hookmetamethod then
 			local bindableEvent = myData.Event or Instance.new("BindableEvent")
 			myData.Event = bindableEvent

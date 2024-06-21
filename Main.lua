@@ -55,6 +55,7 @@ C.gameName=((game.PlaceId==1738581510 and "FleeTrade") or (game.PlaceId==8939734
 	or (game.PlaceId==15467338598 and "UGCClick")
 	or (game.PlaceId==3214114884 and "FlagWars")
 	or (game.PlaceId==185655149 and "Bloxburg")
+	or (game.PlaceId==2210085102 and "NavalWarefare")
 	or "Unknown")
 C.gameUniverse=(C.gameName:find("Tower") and "Tower") or (C.gameName:find("Flee") and "Flee") or C.gameName
 --C.myTSM,C.mySSM
@@ -1404,8 +1405,9 @@ C.CommandFunctions = {
 		Type="",
 		AfterTxt="%s",
 		Run=function(args)
-			if args[1] == "new" then
-				local result, servers = pcall(game.HttpGet,game,`https://games.roblox.com/v1/games/{game.PlaceId}/servers/0?sortOrder=2&excludeFullGames=true&limit=100`)
+			if args[1] == "new" or args[1] == "small" then
+				local result, servers = pcall(game.HttpGet,game,`https://games.roblox.com/v1/games/{game.PlaceId}/servers/0?sortOrder={
+					args[1]=="small" and 1 or 2}&excludeFullGames=true&limit=100`)
 				if not result then
 					return false, "Request Failed: "..servers
 				end
@@ -3194,6 +3196,18 @@ C.AvailableHacks ={
 						end
 					end)
 				end
+			end,
+		},
+		[315]={
+			["Type"]="ExTextButton",
+			["Title"]="Raycast Hacks",
+			["Desc"]="Bullets go through walls",
+			["Shortcut"]="Blatant_GoThroughWalls",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["Funct"] = nil,
+			["ActivateFunction"]=function(newValue)
+				
 			end,
 		},
 	},

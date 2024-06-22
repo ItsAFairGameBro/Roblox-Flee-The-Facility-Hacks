@@ -3427,8 +3427,8 @@ C.AvailableHacks ={
 				local VehicleType = Vehicle:WaitForChild("HitCode").Value
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				local MainVelocity = LineVelocity.Parent
-				local LowestAcceptablePoint = 25
-				local PullUpSpeed = 3
+				local LowestAcceptablePoint = 15
+				local PullUpSpeed = 12
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" then
 					while C.human and C.human.SeatPart == seatPart do

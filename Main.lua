@@ -3302,9 +3302,11 @@ C.AvailableHacks ={
 			["Desc"]="Teleports to enemies to kill them. Make sure you equip Rifle and have Kill Aura enabled",
 			["Shortcut"]="Blatant_NavalLoopKill",
 			["Default"]=false,
+			["LastSpotted"]=nil,
 			["DontActivate"]=true,
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)
+				
 				local Title = "Loop Kill Enemies"
 				if newValue then
 					C.AddAction({Name=Title,Time=function(ActionClone,info)
@@ -3312,6 +3314,9 @@ C.AvailableHacks ={
 					end,Stop=function(onRequest)
 						C.refreshEnHack["Blatant_NavalLoopKill"](false)
 					end,})
+					if not C.AvailableHacks.Blatant[317].LastSpotted and C.char and C.char.PrimaryPart then
+						C.AvailableHacks.Blatant[317].LastSpotted = C.char:GetPivot()
+					end
 					local saveChar = C.char
 					while C.enHacks.Blatant_NavalLoopKill and C.char == saveChar and C.char.PrimaryPart and C.human and C.human.Health>0 do
 						local theirHead, dist = C.getClosest()
@@ -3324,6 +3329,9 @@ C.AvailableHacks ={
 					end
 				else
 					C.RemoveAction(Title)
+					if C.AvailableHacks.Blatant[317].LastSpotted then
+						teleportMyself(C.AvailableHacks.Blatant[317].LastSpotted)
+					end
 				end
 			end,
 			["MyStartUp"]=function()

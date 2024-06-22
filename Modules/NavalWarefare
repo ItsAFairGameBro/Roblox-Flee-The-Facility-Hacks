@@ -11,7 +11,7 @@ return function(C,_SETTINGS)
 		if not player then
 			return false, "Neutral"--No player, no team!
 		end
-		if not theirChar.PrimayPart or theirChar.PrimaryPart < -260 then
+		if not theirChar.PrimaryPart or theirChar.PrimaryPart < -260 then
 			return false, player.Team -- Player, but in lobby!
 		end
 

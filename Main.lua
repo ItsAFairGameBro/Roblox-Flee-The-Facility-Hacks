@@ -3364,7 +3364,6 @@ C.AvailableHacks ={
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						local isOn = LineVelocity.MaxForce > 10
-						print(isOn)
 						LineVelocity.VectorVelocity = lastSet
 						LineVelocity.MaxAxesForce = 1000 * Vector3.one * SpeedMult
 						LineVelocity.MaxForce = isOn and (31.148e3 * math.ceil(SpeedMult/8)) or 0 --* SpeedMult/8) or 0

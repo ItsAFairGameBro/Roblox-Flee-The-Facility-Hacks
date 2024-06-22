@@ -3365,7 +3365,7 @@ C.AvailableHacks ={
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						LineVelocity.VectorVelocity = lastSet
 						AlignOrientation.Responsiveness = 20 * (TurnMult/2)
-						AlignOrientation.Torque = 33.5e3 * TurnMult
+						AlignOrientation.MaxTorque = 33.5e3 * TurnMult
 					end
 					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
 					Upd()

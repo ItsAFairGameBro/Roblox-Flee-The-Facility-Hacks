@@ -1529,7 +1529,15 @@ local function saveSaveData()
 end
 
 function C.requireModule(module: ModuleScript): Table
-	return getrenv().require(module)
+	while true do
+		local tbl, err = pcall(getrenv().require,module)
+		if tbl then
+			return(module)
+		else
+			warn("Failed To Get "..tostring(module)..": "..err)
+			task.wait(1)
+		end
+	end
 end
 --Module 0: XP + Stats
 

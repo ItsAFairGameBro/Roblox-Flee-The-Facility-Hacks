@@ -3380,7 +3380,7 @@ C.AvailableHacks ={
 						LineVelocity.VectorVelocity = lastSet
 						
 						LineVelocity.MaxAxesForce = Vector3.new(1000,1000,1000) * SpeedMult
-						LineVelocity.MaxForce = isOn and (31.148e3 * math.max(1,SpeedMult/6)) or 0 --* SpeedMult/8) or 0
+						LineVelocity.MaxForce = isOn and ((VehicleType=="Ship" and 49.281604e6 or 31.148e3) * math.max(1,SpeedMult/6)) or 0 --* SpeedMult/8) or 0
 						AlignOrientation.Responsiveness = 20 * (TurnMult/16)
 						AlignOrientation.MaxTorque = isOn and (33.5e3 * TurnMult) or 0
 					end

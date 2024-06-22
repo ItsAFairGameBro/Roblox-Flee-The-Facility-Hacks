@@ -191,7 +191,7 @@ function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
 
 	local ModuleNames = {"GuiCreation","BetterConsole","DraggableModule","Env","SimplePathfinding","Raycast"}
-	if C.gameName == "FleeMain" then
+	if C.gameName == "FleeMain" or C.gameName == "NavalWarefare" then
 		table.insert(ModuleNames,C.gameName)
 		if C.gameName == "FleeMain" then
 			table.insert(ModuleNames,"LocalClubScript")
@@ -607,6 +607,7 @@ local function GuiCreationFunction()
 	if GlobalSettings.BetterConsole then
 		C.Modules.BetterConsole(C,GuiElements,C.comma_value,checkcaller)
 	end
+	--Load game specific module!
 	if C.Modules[C.gameName] then
 		C.Modules[C.gameName](C,_SETTINGS)
 	end
@@ -3229,40 +3230,11 @@ C.AvailableHacks ={
 			["Universes"]={"NavalWarefare"},
 			["Deb"]=0,
 			["ActivateFunction"]=function(newValue)
-				local function getClosest()
-					local myHRP = C.char and C.char.PrimaryPart
-					if not C.human or C.human.Health <= 0 or not myHRP then return end
-
-
-					local closest = nil;
-					local distance = math.huge;
-
-
-					for i, v in pairs(PS.GetPlayers(PS)) do
-						if v == plr then continue end
-						if v.Team == plr.Team then continue end
-						local theirChar = v.Character
-						if not theirChar then continue end
-						local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
-						if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
-						local theirHead = theirChar.FindFirstChild(theirChar,"Head")
-						if not theirHead or theirHead.Position.Y < -260 then continue end
-
-						local d = (theirHead.Position - myHRP.Position).Magnitude
-
-						if d < distance then
-							distance = d
-							closest = theirHead
-						end
-					end
-
-					return closest, distance
-				end
 				C.AvailableHacks.Blatant[315].Deb += 1
 				local saveDeb = C.AvailableHacks.Blatant[315].Deb
 				local Tool = C.char:FindFirstChildWhichIsA("Tool")
 				while C.AvailableHacks.Blatant[315].Deb == saveDeb and not C.isCleared do
-					local Target, Distance = getClosest()
+					local Target, Distance = C.getClosest()
 					if Target and Distance <= 450 then
 						RS.Event:FireServer("shootRifle","",{Target}) 
 						RS.Event:FireServer("shootRifle","hit",{Target.Parent:FindFirstChild("Humanoid")})
@@ -3287,25 +3259,6 @@ C.AvailableHacks ={
 			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
 				local c = 800 -- bullet velocity you can put between 799-800
-				local function d()
-					return C.char and C.char:FindFirstChild("HumanoidRootPart") and (function()
-						local f = C.char.HumanoidRootPart.Position
-						local g, h = nil, math.huge
-						for _, i in ipairs(PS:GetPlayers()) do
-							if i ~= plr and i.Team ~= plr.Team and i.Character and i.Character:FindFirstChild("HumanoidRootPart") then
-								local j = (i.Character.HumanoidRootPart.Position - f).Magnitude
-								if j < h then
-									local k = i.Character:FindFirstChildOfClass("Humanoid")
-									if k and k.Health > 0 then
-										h = j
-										g = i
-									end
-								end
-							end
-						end
-						return g
-					end)()
-				end
 				local function l(m, n)
 					if not m then return m.Position end
 					local o = m.Velocity
@@ -3326,13 +3279,13 @@ C.AvailableHacks ={
 						if inputObject.KeyCode == Enum.KeyCode.F then
 							
 							while UIS:IsKeyDown(Enum.KeyCode.F) do
-								local u = d()
+								local u = C.getClosest()
 								if u then
 									local v = u.Character:FindFirstChild("HumanoidRootPart")
 									if v then
 										local w = p(v.Position)
 										local x = l(v, w)
-										RS:WaitForChild("Event"):FireServer("aim", {x})
+										C.RemoteEvent:FireServer("aim", {x})
 									end
 								end
 								RunS.RenderStepped:Wait()
@@ -3340,6 +3293,39 @@ C.AvailableHacks ={
 						end
 					end)
 				end
+			end,
+		},
+		[317]={
+			["Type"]="ExTextButton",
+			["Title"]="Loop Kill Enemies",
+			["Desc"]="Teleports to enemies to kill them. Make sure you equip Rifle and have Kill Aura enabled",
+			["Shortcut"]="Blatant_NavalLoopKill",
+			["Default"]=false,
+			["DontActivate"]=true,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				local Title = "Loop Kill Enemies"
+				if newValue then
+					C.AddAction({Name=Title,Time=function(ActionClone,info)
+						ActionClone.Time.Text = "Time: FOREVER"
+					end,Stop=function(onRequest)
+						C.refreshEnHack["Blatant_NavalLoopKill"](false)
+					end,})
+					local saveChar = C.char
+					while C.enHacks.Blatant_NavalLoopKill and C.char == saveChar and C.human and C.human.Health>0 do
+						local theirHead, dist = C.getClosest()
+						if theirHead then
+							teleportMyself(theirHead:GetPivot() * CFrame.new(0,-1.5,6))
+							C.char.PrimaryPart.Anchored = true
+						end
+						RunS.RenderStepped:Wait()
+					end
+				else
+					C.RemoveAction(Title)
+				end
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Blatant[317].ActivateFunction(C.enHacks.Blatant_NavalLoopKill)
 			end,
 		},
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))

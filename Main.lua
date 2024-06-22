@@ -3422,12 +3422,11 @@ C.AvailableHacks ={
 			["Universes"]={"NavalWarefare"},
 			["Funct"]=nil,
 			["MySeatAdded"]=function(seatPart)
-				C.AvailableHacks.Blatant[320].MySeatRemoved()
 				local Vehicle = seatPart.Parent
 				local VehicleType = Vehicle:WaitForChild("HitCode").Value
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				local MainVelocity = LineVelocity.Parent
-				local LowestAcceptablePoint = 11
+				local LowestAcceptablePoint = 10
 				local PullUpSpeed = 12
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" then
@@ -3440,11 +3439,6 @@ C.AvailableHacks ={
 						end
 						RunS.RenderStepped:Wait()
 					end
-				end
-			end,
-			["MySeatRemoved"]=function()
-				if C.AvailableHacks.Blatant[320].Funct then
-					C.AvailableHacks.Blatant[320].Funct:Disconnect()
 				end
 			end,
 		}

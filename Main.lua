@@ -610,7 +610,6 @@ local function GuiCreationFunction()
 	end
 	--Load game specific module!
 	if C.Modules[C.gameName] then
-		print("loaded game specific module")
 		C.Modules[C.gameName](C,_SETTINGS)
 	end
 	--StartBetterConsole()
@@ -3351,16 +3350,19 @@ C.AvailableHacks ={
 			["MySeatAdded"]=function(seatPart)
 				C.AvailableHacks.Blatant[320].MySeatRemoved()
 				local Vehicle = seatPart.Parent
-				local BodyVelocity = Vehicle:FindFirstChildWhichIsA("BodyVelocity",true)
-				if BodyVelocity then
+				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
+				--The "BodyVelocity" is actually "LineVelocity"
+				if LineVelocity then
 					local lastSet
-					C.AvailableHacks.Blatant[320].Funct = BodyVelocity:GetPropertyChangedSignal("Velocity"):Connect(function()
-						if lastSet == BodyVelocity.Velocity then
+					local function Upd()
+						if LineVelocity.LineVelocity == lastSet then
 							return
 						end
-						lastSet = BodyVelocity.Velocity * C.enHacks.Blatant_NavalVehicleSpeed
-						BodyVelocity.Velocity = lastSet
-					end)
+						lastSet = 40 * LineVelocity.LineVelocity
+						LineVelocity.Velocity = lastSet
+					end
+					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("LineVelocity"):Connect(Upd)
+					Upd()
 				else
 					print("Warning, Vehicle Type has no BodyVelocity:",Vehicle)
 				end

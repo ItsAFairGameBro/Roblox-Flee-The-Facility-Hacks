@@ -1529,7 +1529,7 @@ local function saveSaveData()
 end
 
 function C.requireModule(module: ModuleScript): Table
-	return require(module)
+	return getrenv().require(module)
 end
 --Module 0: XP + Stats
 
@@ -3247,7 +3247,7 @@ C.AvailableHacks ={
 						RS.Event:FireServer("shootRifle","hit",{game.Players.SuitedForBans9.Character.Humanoid})
 					end
 					RunS.RenderStepped:Wait()
-					while Tool:IsA("Tool") and not Tool or not Tool.Parent or not Tool.Parent.Parent do
+					while not Tool or not Tool:IsA("Tool") or not Tool.Parent or not Tool.Parent.Parent do
 						Tool = C.char.ChildAdded:Wait() -- Wait for new tool!
 					end
 				end

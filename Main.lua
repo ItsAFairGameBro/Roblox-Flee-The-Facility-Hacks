@@ -4455,7 +4455,7 @@ C.AvailableHacks ={
 							v:Stop()
 						end
 					end
-					if C.char:FindFirstChild("Animate") ~=nil and game.GameId~=372226183 then
+					if C.char:FindFirstChild("Animate") ~=nil and game.GameId~=372226183 and C.gameName ~= "NavalWarefare" then
 						C.char.Animate.Disabled=C.AvailableHacks.Basic[4].IsActive
 					end
 				end
@@ -4586,7 +4586,7 @@ C.AvailableHacks ={
 							v:Stop()
 						end
 					end
-					local shouldActivate = (C.char:FindFirstChild("Animate") ~=nil and game.GameId~=372226183)
+					local shouldActivate = (C.char:FindFirstChild("Animate") ~=nil and game.GameId~=372226183 and C.gameName ~= "NavalWarefare")
 					if shouldActivate then
 						C.char.Animate.Disabled = C.AvailableHacks.Basic[4].IsActive
 					end

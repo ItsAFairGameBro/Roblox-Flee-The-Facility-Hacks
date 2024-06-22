@@ -72,6 +72,7 @@ local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
 GlobalSettings.MinimumHeight = GlobalSettings.MinimumHeight or 1.5
 GlobalSettings.BetterConsole = true
+GlobalSettings.AlwaysRefreshModules = true
 
 local getID="HackGUI1"
 local emojiDesc = {
@@ -184,7 +185,7 @@ local GuiElements = {}
 C.hackGUIParent = gethui()
 --MODULE LOADER
 C.Modules = {}
-if not getgenv().SavedHttp then
+if not getgenv().SavedHttp or GlobalSettings.AlwaysRefreshModules then
 	getgenv().SavedHttp = {}
 end
 function C.LoadModules()

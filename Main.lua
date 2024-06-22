@@ -1530,7 +1530,7 @@ end
 
 function C.requireModule(module: ModuleScript): Table
 	while true do
-		local tbl, err = pcall(getrenv().require,module)
+		local tbl, err = pcall(getgenv().require,module)
 		if tbl then
 			return(module)
 		else
@@ -12481,4 +12481,4 @@ task.spawn(function()
 	--end
 end)
 
-return "Hack Successfully Executed V1.02!"
+return "Hack Successfully Executed V1.03!"

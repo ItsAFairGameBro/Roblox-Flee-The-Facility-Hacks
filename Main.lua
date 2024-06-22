@@ -1532,7 +1532,7 @@ function C.requireModule(module: ModuleScript): Table
 	while true do
 		local tbl, err = pcall(getgenv().require,module)
 		if tbl then
-			return(module)
+			return tbl
 		else
 			warn("Failed To Get "..tostring(module)..": "..err)
 			task.wait(1)
@@ -12481,4 +12481,4 @@ task.spawn(function()
 	--end
 end)
 
-return "Hack Successfully Executed V1.03!"
+return "Hack Successfully Executed V1.02!"

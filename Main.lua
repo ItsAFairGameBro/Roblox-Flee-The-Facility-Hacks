@@ -3363,7 +3363,7 @@ C.AvailableHacks ={
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						LineVelocity.VectorVelocity = lastSet
-						AlignOrientation.Reponsiveness = 20 * SpeedMult
+						AlignOrientation.Responsiveness = 20 * SpeedMult
 					end
 					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
 					Upd()

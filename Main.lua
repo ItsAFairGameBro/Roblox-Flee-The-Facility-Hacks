@@ -3240,7 +3240,7 @@ C.AvailableHacks ={
 
 					for i, v in pairs(PS.GetPlayers(PS)) do
 						if v == plr then continue end
-						--if v.Team == plr.Team then continue end
+						if v.Team == plr.Team then continue end
 						local theirChar = v.Character
 						if not theirChar then continue end
 						local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
@@ -3292,7 +3292,7 @@ C.AvailableHacks ={
 						local f = C.char.HumanoidRootPart.Position
 						local g, h = nil, math.huge
 						for _, i in ipairs(PS:GetPlayers()) do
-							if i ~= C.plr and i.Team ~= C.plr.Team and i.Character and i.Character:FindFirstChild("HumanoidRootPart") then
+							if i ~= plr and i.Team ~= plr.Team and i.Character and i.Character:FindFirstChild("HumanoidRootPart") then
 								local j = (i.Character.HumanoidRootPart.Position - f).Magnitude
 								if j < h then
 									local k = i.Character:FindFirstChildOfClass("Humanoid")
@@ -3324,6 +3324,7 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Blatant[316].Funct = UIS.InputBegan:Connect(function(inputObject,gameProcessed)
 						if inputObject.KeyCode == Enum.KeyCode.F then
+							
 							while UIS:IsKeyDown(Enum.KeyCode.F) do
 								local u = d()
 								if u then
@@ -3331,7 +3332,7 @@ C.AvailableHacks ={
 									if v then
 										local w = p(v.Position)
 										local x = l(v, w)
-										game:GetService("ReplicatedStorage"):WaitForChild("Event"):FireServer("aim", {x})
+										RS:WaitForChild("Event"):FireServer("aim", {x})
 									end
 								end
 								RunS.RenderStepped:Wait()

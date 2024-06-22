@@ -3367,7 +3367,7 @@ C.AvailableHacks ={
 						print(isOn)
 						LineVelocity.VectorVelocity = lastSet
 						LineVelocity.MaxAxesForce = 1000 * Vector3.one * SpeedMult
-						LineVelocity.MaxForce = isOn and (31.148e3) or 0 --* SpeedMult/8) or 0
+						LineVelocity.MaxForce = isOn and (31.148e3 * math.ceil(SpeedMult/8)) or 0 --* SpeedMult/8) or 0
 						AlignOrientation.Responsiveness = 20 * (TurnMult/2)
 						AlignOrientation.MaxTorque = isOn and (33.5e3 * TurnMult) or 0
 					end

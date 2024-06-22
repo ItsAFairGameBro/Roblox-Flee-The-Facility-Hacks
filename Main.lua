@@ -4537,6 +4537,7 @@ C.AvailableHacks ={
 					["rbxassetid://894494203"]=true,
 					["rbxassetid://894494919"]=true,
 					["rbxassetid://961932719"]=true,
+					["rbxassetid://6802445333"]=true,
 				}
 				local RunS = game:GetService("RunService")
 

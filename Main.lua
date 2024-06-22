@@ -3282,8 +3282,7 @@ C.AvailableHacks ={
 							while UIS:IsKeyDown(Enum.KeyCode.F) do
 								local u = C.getClosest()
 								if u then
-									u = u.Parent -- its the head
-									local v = u.Character:FindFirstChild("HumanoidRootPart")
+									local v = u.Parent:FindFirstChild("HumanoidRootPart")
 									if v then
 										local w = p(v.Position)
 										local x = l(v, w)

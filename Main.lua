@@ -3347,6 +3347,11 @@ C.AvailableHacks ={
 			["MaxBound"]=100,
 			["Universes"]={"NavalWarefare"},
 			["Functs"]={},
+			["ActivateFunction"]=function()
+				if C.human and C.human.SeatPart then
+					C.AvailableHacks.Blatant[320].MySeatAdded(C.human.SeatPart)
+				end
+			end,
 			["MySeatAdded"]=function(seatPart)
 				C.AvailableHacks.Blatant[320].MySeatRemoved()
 				local Vehicle = seatPart.Parent

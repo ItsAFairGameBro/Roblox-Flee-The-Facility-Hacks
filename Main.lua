@@ -3354,6 +3354,7 @@ C.AvailableHacks ={
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				--The "BodyVelocity" is actually "LineVelocity"
 				if LineVelocity then
+					local AlignOrientation = LineVelocity.Parent:WaitForChild("BodyGyro")
 					local lastSet
 					local function Upd()
 						if lastSet and (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
@@ -3362,7 +3363,7 @@ C.AvailableHacks ={
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						LineVelocity.VectorVelocity = lastSet
-						LineVelocity.Reponsiveness = 20 * SpeedMult
+						AlignOrientation.Reponsiveness = 20 * SpeedMult
 					end
 					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
 					Upd()

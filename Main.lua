@@ -187,6 +187,7 @@ C.hackGUIParent = gethui()
 C.Modules = {}
 if not getgenv().SavedHttp or GlobalSettings.AlwaysRefreshModules then
 	getgenv().SavedHttp = {}
+	print("Cleared Saved HTTP")
 end
 function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"

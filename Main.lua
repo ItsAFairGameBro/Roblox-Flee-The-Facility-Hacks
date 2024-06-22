@@ -3356,7 +3356,7 @@ C.AvailableHacks ={
 				local FlyButton = StringWaitForChild(PlayerGui,"ScreenGui.InfoFrame.Fly")
 				--The "BodyVelocity" is actually "LineVelocity"
 				if LineVelocity then
-					local AlignOrientation = LineVelocity.Parent:WaitForChildWhichIsA("AlignOrientation")
+					local AlignOrientation = LineVelocity.Parent:FindFirstChildWhichIsA("AlignOrientation")
 					local lastSet
 					local function Upd()
 						if lastSet and (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then

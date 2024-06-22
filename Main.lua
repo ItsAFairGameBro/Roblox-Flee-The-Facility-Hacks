@@ -3238,8 +3238,8 @@ C.AvailableHacks ={
 				while C.AvailableHacks.Blatant[315].Deb == saveDeb and not C.isCleared do
 					local Target, Distance = C.getClosest()
 					if Target and Distance <= 450 then
-						RS.Event:FireServer("shootRifle","",{Target}) 
-						RS.Event:FireServer("shootRifle","hit",{Target.Parent:FindFirstChild("Humanoid")})
+						C.RemoteEvent:FireServer("shootRifle","",{Target}) 
+						C.RemoteEvent:FireServer("shootRifle","hit",{Target.Parent:FindFirstChild("Humanoid")})
 					end
 					RunS.RenderStepped:Wait()
 					while not Tool or not Tool:IsA("Tool") or not Tool.Parent or not Tool.Parent.Parent do
@@ -3309,7 +3309,7 @@ C.AvailableHacks ={
 				
 				local Title = "Loop Kill Enemies"
 				if newValue then
-					C.AddAction({Name=Title,Time=function(ActionClone,info)
+					C.AddAction({Name=Title,Tags={"RemoveOnDestroy"},Time=function(ActionClone,info)
 						ActionClone.Time.Text = "Time: FOREVER"
 					end,Stop=function(onRequest)
 						C.refreshEnHack["Blatant_NavalLoopKill"](false)
@@ -3321,10 +3321,10 @@ C.AvailableHacks ={
 					while C.enHacks.Blatant_NavalLoopKill and C.char == saveChar and C.char.PrimaryPart and C.human and C.human.Health>0 do
 						local theirHead, dist = C.getClosest()
 						if theirHead then
-							teleportMyself(theirHead:GetPivot() * CFrame.new(0,-1.5,6))
-							C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
-							C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
+							teleportMyself(theirHead.Parent:GetPivot() * CFrame.new(0,0,6))
 						end
+						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
+						C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
 						RunS.RenderStepped:Wait()
 					end
 				else
@@ -3336,6 +3336,39 @@ C.AvailableHacks ={
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Blatant[317].ActivateFunction(C.enHacks.Blatant_NavalLoopKill)
+			end,
+		},
+		[320]={
+			["Type"]="ExTextBox",
+			["Title"]="Vehicle Speed",
+			["Desc"]="How much fast vehicles that you drive go. Zero for default",
+			["Shortcut"]="Blatant_NavalVehicleSpeed",
+			["Default"]=1,
+			["MinBound"]=0.1,
+			["MaxBound"]=10,
+			["Universes"]={"NavalWarefare"},
+			["Funct"]=nil,
+			["MySeatAdded"]=function(seatPart)
+				C.AvailableHacks.Blatant[320].MySeatRemoved()
+				local Vehicle = seatPart.Parent
+				local BodyVelocity = Vehicle:FindFirstChildWhichIsA("BodyVelocity",true)
+				if BodyVelocity then
+					local lastSet
+					C.AvailableHacks.Blatant[320].Funct = BodyVelocity:GetPropertyChangedSignal("Velocity"):Connect(function()
+						if lastSet == BodyVelocity.Velocity then
+							return
+						end
+						lastSet = BodyVelocity.Velocity * C.enHacks.Blatant_NavalVehicleSpeed
+						BodyVelocity.Velocity = lastSet
+					end)
+				else
+					print("Warning, Vehicle Type has no BodyVelocity:",Vehicle)
+				end
+			end,
+			["MySeatRemoved"]=function()
+				if C.AvailableHacks.Blatant[320].Funct then
+					C.AvailableHacks.Blatant[320].Funct:Disconnect()
+				end
 			end,
 		},
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
@@ -11024,6 +11057,7 @@ C.clear = function(isManualClear)
 		end;
 	end;--]]
 	C.DestroyAllTaggedObjects("RemoveOnDestroy")
+	C.PurgeActionsWithTag("RemoveOnDestroy")
 	for userID,functList in pairs(C.playerEvents) do
 		for num,funct in pairs(functList or {}) do
 			funct:Disconnect();
@@ -11172,7 +11206,6 @@ C.clear = function(isManualClear)
 	CAS:UnbindAction("OpenBetterConsole"..C.saveIndex)
 	CAS:UnbindAction("hack_jump2"..C.saveIndex)
 	CAS:UnbindAction("AutoRemoveRope"..C.saveIndex)
-
 	RunS:UnbindFromRenderStep("Follow"..C.saveIndex)
 
 
@@ -11726,6 +11759,11 @@ local function CharacterAdded(theirChar,firstRun)
 	C.objectFuncts[theirHumanoid]["Died"] = {theirHumanoid.Died:Connect(function()
 		defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
 	end)}
+	if isMyChar then
+		C.objectFuncts[theirHumanoid]["Seated"] = {theirHumanoid.Seated:Connect(function(active,seatPart)
+			defaultFunction(active and "MySeatAdded" or "MySeatRemoved",{seatPart})
+		end)}
+	end
 	if C.gameUniverse=="Flee" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");
 		local theirTSM_module = require(theirTSM);

@@ -3427,12 +3427,15 @@ C.AvailableHacks ={
 				local VehicleType = Vehicle:WaitForChild("HitCode").Value
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				local MainVelocity = LineVelocity.Parent
+				local LowestAcceptablePoint = 20
+				local PullUpSpeed = 1
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" then
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
-						if C.enHacks.Blatant_NavalAntiWater and seatPart.Position.Y < 20 and OldVelocity.Y < 0 then
-							MainVelocity.AssemblyLinearVelocity = Vector3.new(OldVelocity.X,0,OldVelocity.Z)
+						local PullUpSpeed = (LowestAcceptablePoint - seatPart.Position.Y) * PullUpSpeed
+						if C.enHacks.Blatant_NavalAntiWater and seatPart.Position.Y < LowestAcceptablePoint and OldVelocity.Y < PullUpSpeed then
+							MainVelocity.AssemblyLinearVelocity = Vector3.new(OldVelocity.X,PullUpSpeed,OldVelocity.Z)
 							print("Going up")
 						end
 						RunS.RenderStepped:Wait()

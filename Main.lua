@@ -3360,8 +3360,9 @@ C.AvailableHacks ={
 						end
 						lastSet = C.enHacks.Blatant_NavalVehicleSpeed * LineVelocity.VectorVelocity
 						LineVelocity.VectorVelocity = lastSet
+						print("Up")
 					end
-					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("LineVelocity"):Connect(Upd)
+					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
 					Upd()
 				else
 					print("Warning, Vehicle Type has no BodyVelocity:",Vehicle)

@@ -3269,7 +3269,7 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-			["CharacterAdded"]=function()
+			["MyStartUp"]=function()
 				C.AvailableHacks.Blatant[315].ActivateFunction(C.enHacks.Blatant_NavalKillAura)
 			end,
 		},

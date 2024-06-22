@@ -3352,6 +3352,8 @@ C.AvailableHacks ={
 				local Vehicle = seatPart.Parent
 				local VehicleType = Vehicle:WaitForChild("HitCode").Value
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
+				local FuelLeft = Vehicle:FindFirstChild("Fuel")
+				local FlyButton = StringWaitForChild(PlayerGui,"ScreenGui.InfoFrame.Fly")
 				--The "BodyVelocity" is actually "LineVelocity"
 				if LineVelocity then
 					local AlignOrientation = LineVelocity.Parent:WaitForChild("BodyGyro")
@@ -3363,8 +3365,10 @@ C.AvailableHacks ={
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
-						local isOn = LineVelocity.MaxForce > 10 or C.enHacks.Blatant_NavalInfPlaneFuel
+						local isOn = (LineVelocity.MaxForce > 10 and (not FuelLeft or FuelLeft.Value > 0)) or 
+							(FlyButton.BackgroundColor3.R*255>250 and C.enHacks.Blatant_NavalInfPlaneFuel)
 						LineVelocity.VectorVelocity = lastSet
+						
 						LineVelocity.MaxAxesForce = 1000 * Vector3.one * SpeedMult
 						LineVelocity.MaxForce = isOn and (31.148e3 * math.max(2,SpeedMult/6)) or 0 --* SpeedMult/8) or 0
 						AlignOrientation.Responsiveness = 20 * (TurnMult/2)

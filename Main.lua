@@ -3344,12 +3344,13 @@ C.AvailableHacks ={
 			["Shortcut"]="Blatant_NavalVehicleSpeed",
 			["Default"]=1,
 			["MinBound"]=0.1,
-			["MaxBound"]=10,
+			["MaxBound"]=100,
 			["Universes"]={"NavalWarefare"},
 			["Funct"]=nil,
 			["MySeatAdded"]=function(seatPart)
 				C.AvailableHacks.Blatant[320].MySeatRemoved()
 				local Vehicle = seatPart.Parent
+				local VehicleType = Vehicle:WaitForChild("HitCode").Value
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				--The "BodyVelocity" is actually "LineVelocity"
 				if LineVelocity then
@@ -3358,9 +3359,9 @@ C.AvailableHacks ={
 						if lastSet and (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
 							return
 						end
-						lastSet = C.enHacks.Blatant_NavalVehicleSpeed * LineVelocity.VectorVelocity
+						lastSet = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(2,C.enHacks.Blatant_NavalVehicleSpeed))
+							* LineVelocity.VectorVelocity
 						LineVelocity.VectorVelocity = lastSet
-						print("Up")
 					end
 					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
 					Upd()

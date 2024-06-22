@@ -1536,12 +1536,17 @@ local function saveSaveData()
 end
 
 function C.requireModule(module: ModuleScript): Table
+	getgenv().RequireModuleCache = getgenv().RequireModuleCache or {}
+	if getgenv().RequireModuleCache[module] then
+		return getgenv().RequireModuleCache[module]
+	end
 	while true do
 		local tbl, err = pcall(getgenv().require,module)
 		if tbl then
+			getgenv().RequireModuleCache[module] = err
 			return err
 		else
-			warn("Failed To Get "..tostring(module)..": "..err)
+			warn("Failed To Get Module `"..tostring(module).."`: "..err)
 			task.wait(1)
 		end
 	end

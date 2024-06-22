@@ -3313,11 +3313,12 @@ C.AvailableHacks ={
 						C.refreshEnHack["Blatant_NavalLoopKill"](false)
 					end,})
 					local saveChar = C.char
-					while C.enHacks.Blatant_NavalLoopKill and C.char == saveChar and C.human and C.human.Health>0 do
+					while C.enHacks.Blatant_NavalLoopKill and C.char == saveChar and C.char.PrimaryPart and C.human and C.human.Health>0 do
 						local theirHead, dist = C.getClosest()
 						if theirHead then
 							teleportMyself(theirHead:GetPivot() * CFrame.new(0,-1.5,6))
-							C.char.PrimaryPart.Anchored = true
+							C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
+							C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
 						end
 						RunS.RenderStepped:Wait()
 					end

@@ -3254,10 +3254,10 @@ C.AvailableHacks ={
 				end
 				C.AvailableHacks.Blatant[315].Deb += 1
 				local saveDeb = C.AvailableHacks.Blatant[315].Deb
-				local Tool
+				local Tool = C.char:FindFirstChildWhichIsA("Tool")
 				while C.AvailableHacks.Blatant[315].Deb == saveDeb and not C.isCleared do
 					local Target, Distance = getClosest()
-					if Target and Distance < 600 then
+					if Target and Distance < 2000 then
 						RS.Event:FireServer("shootRifle","",{Target}) 
 						RS.Event:FireServer("shootRifle","hit",{Target.Parent:FindFirstChild("Humanoid")})
 						print(("Closest: %.2f"):format(Distance))

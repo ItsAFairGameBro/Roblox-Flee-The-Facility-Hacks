@@ -3363,10 +3363,10 @@ C.AvailableHacks ={
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
-						local isOn = LineVelocity.MaxForce > 10
+						local isOn = LineVelocity.MaxForce > 10 or C.enHacks.Blatant_NavalInfPlaneFuel
 						LineVelocity.VectorVelocity = lastSet
 						LineVelocity.MaxAxesForce = 1000 * Vector3.one * SpeedMult
-						LineVelocity.MaxForce = isOn and (31.148e3 * math.ceil(SpeedMult/8)) or 0 --* SpeedMult/8) or 0
+						LineVelocity.MaxForce = isOn and (31.148e3 * math.max(2,SpeedMult/6)) or 0 --* SpeedMult/8) or 0
 						AlignOrientation.Responsiveness = 20 * (TurnMult/2)
 						AlignOrientation.MaxTorque = isOn and (33.5e3 * TurnMult) or 0
 					end
@@ -3422,7 +3422,15 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-		}
+		},
+		[323]={
+			["Type"]="ExTextButton",
+			["Title"]="Plane Infinite Fuel",
+			["Desc"]="You may need to turn back on your engine if you run out",
+			["Shortcut"]="Blatant_NavalInfPlaneFuel",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},			
+		},
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
 	},
 	["Utility"]={

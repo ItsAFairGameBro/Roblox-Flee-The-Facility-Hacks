@@ -11766,6 +11766,9 @@ local function CharacterAdded(theirChar,firstRun)
 		C.objectFuncts[theirHumanoid]["Seated"] = {theirHumanoid.Seated:Connect(function(active,seatPart)
 			defaultFunction(active and "MySeatAdded" or "MySeatRemoved",{seatPart})
 		end)}
+		if theirHumanoid.SeatPart then
+			defaultFunction("MySeatAdded",{theirHumanoid.SeatPart})
+		end
 	end
 	if C.gameUniverse=="Flee" then
 		local theirTSM = theirPlr:WaitForChild("TempPlayerStatsModule");

@@ -3427,7 +3427,7 @@ C.AvailableHacks ={
 				local VehicleType = Vehicle:WaitForChild("HitCode").Value
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				local MainVelocity = LineVelocity.Parent
-				local LowestAcceptablePoint = 12
+				local LowestAcceptablePoint = 11
 				local PullUpSpeed = 12
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" then

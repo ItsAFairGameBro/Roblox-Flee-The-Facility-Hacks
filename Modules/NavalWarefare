@@ -49,7 +49,7 @@ return function(C,_SETTINGS)
 
 		return closest, distance
 	end
-	print("Loaded C.getclosest()")
+	warn("Loaded NEW")
 	getgenv().isInGame = C.isInGame
 	if C.gameUniverse=="NavalWarefare" then
 		C.RemoteEvent = RS:WaitForChild("Event") -- image naming something "Event"

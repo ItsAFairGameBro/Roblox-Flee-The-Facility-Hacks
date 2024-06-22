@@ -609,6 +609,7 @@ local function GuiCreationFunction()
 	end
 	--Load game specific module!
 	if C.Modules[C.gameName] then
+		print("loaded game specific module")
 		C.Modules[C.gameName](C,_SETTINGS)
 	end
 	--StartBetterConsole()

@@ -1437,7 +1437,14 @@ C.CommandFunctions = {
 			end
 			return true
 		end,
-	}
+	},
+	["console"]={
+		Type="",
+		AfterTxt="%s",
+		Run=function(args)
+			SG:SetCore("DevConsoleVisible", true)
+		end,
+	},
 }
 
 --SAVE/LOAD MODULE
@@ -3249,10 +3256,12 @@ C.AvailableHacks ={
 				local saveDeb = C.AvailableHacks.Blatant[315].Deb
 				local Tool
 				while C.AvailableHacks.Blatant[315].Deb == saveDeb and not C.isCleared do
+					print("Running")
 					local Target, Distance = getClosest()
 					if Target and Distance < 100 then
-						RS.Event:FireServer("shootRifle","",{game.Players.SuitedForBans9.Character["Head"]}) 
-						RS.Event:FireServer("shootRifle","hit",{game.Players.SuitedForBans9.Character.Humanoid})
+						RS.Event:FireServer("shootRifle","",{Target}) 
+						RS.Event:FireServer("shootRifle","hit",{Target.Parent:FindFirstChild("Humanoid")})
+						print("Fired")
 					end
 					RunS.RenderStepped:Wait()
 					while not Tool or not Tool:IsA("Tool") or not Tool.Parent or not Tool.Parent.Parent do

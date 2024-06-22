@@ -3355,7 +3355,7 @@ C.AvailableHacks ={
 				if LineVelocity then
 					local lastSet
 					local function Upd()
-						if (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
+						if lastSet and (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
 							return
 						end
 						lastSet = C.enHacks.Blatant_NavalVehicleSpeed * LineVelocity.VectorVelocity

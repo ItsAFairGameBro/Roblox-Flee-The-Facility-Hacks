@@ -3376,7 +3376,7 @@ C.AvailableHacks ={
 							end
 						end
 						local isOn = (LineVelocity.MaxForce > 10 and (not FuelLeft or (FuelLeft:GetAttribute("RealFuel") or FuelLeft.Value) > 0)) or 
-							(FlyButton.BackgroundColor3.R*255>250 and C.enHacks.Blatant_NavalInfPlaneFuel)
+							(FlyButton.BackgroundColor3.R*255>250 and C.enHacks.Blatant_NavalInfPlaneFuel) or VehicleType == "Ship"
 						LineVelocity.VectorVelocity = lastSet
 						
 						LineVelocity.MaxAxesForce = Vector3.new(1000,1000,1000) * SpeedMult

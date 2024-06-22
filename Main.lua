@@ -3363,10 +3363,12 @@ C.AvailableHacks ={
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
+						local isOn = lastSet.Magnitude > 10
 						LineVelocity.VectorVelocity = lastSet
 						LineVelocity.MaxAxesForce = 1000 * Vector3.one * SpeedMult
+						LineVelocity.MaxForce = isOn and (31.148e3 * SpeedMult) or 0
 						AlignOrientation.Responsiveness = 20 * (TurnMult/2)
-						AlignOrientation.MaxTorque = 33.5e3 * TurnMult
+						AlignOrientation.MaxTorque = isOn and (33.5e3 * TurnMult) or 0
 					end
 					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
 					Upd()

@@ -3339,8 +3339,8 @@ C.AvailableHacks ={
 		},
 		[320]={
 			["Type"]="ExTextBox",
-			["Title"]="Vehicle Speed",
-			["Desc"]="How much fast vehicles that you drive go. Zero for default",
+			["Title"]="Vehicle Speed Multiplier",
+			["Desc"]="How much fast vehicles that you drive go. Max For Ships Is x1.8",
 			["Shortcut"]="Blatant_NavalVehicleSpeed",
 			["Default"]=1,
 			["MinBound"]=0.1,
@@ -3359,7 +3359,7 @@ C.AvailableHacks ={
 						if lastSet and (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
 							return
 						end
-						lastSet = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(2,C.enHacks.Blatant_NavalVehicleSpeed))
+						lastSet = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 							* LineVelocity.VectorVelocity
 						LineVelocity.VectorVelocity = lastSet
 					end
@@ -3375,6 +3375,76 @@ C.AvailableHacks ={
 				end
 			end,
 		},
+		--[[[321]={
+			["Type"]="ExTextBox",
+			["Title"]="Vehicle Turn Multiplier",
+			["Desc"]="How much fast vehicles that you drive go. Max For Ships Is x1.8",
+			["Shortcut"]="Blatant_NavalVehicleSpeed",
+			["Default"]=1,
+			["MinBound"]=0.1,
+			["MaxBound"]=100,
+			["Universes"]={"NavalWarefare"},
+			["Funct"]=nil,
+			["MySeatAdded"]=function(seatPart)
+				C.AvailableHacks.Blatant[320].MySeatRemoved()
+				local Vehicle = seatPart.Parent
+				local VehicleType = Vehicle:WaitForChild("HitCode").Value
+				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
+				--The "BodyVelocity" is actually "LineVelocity"
+				if LineVelocity then
+					local lastSet
+					local function Upd()
+						if lastSet and (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
+							return
+						end
+						lastSet = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
+							* LineVelocity.VectorVelocity
+						LineVelocity.VectorVelocity = lastSet
+					end
+					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
+					Upd()
+				else
+					print("Warning, Vehicle Type has no BodyVelocity:",Vehicle)
+				end
+			end,
+			["MySeatRemoved"]=function()
+				if C.AvailableHacks.Blatant[320].Funct then
+					C.AvailableHacks.Blatant[320].Funct:Disconnect()
+				end
+			end,
+		},--]]
+		[322]={
+			["Type"]="ExTextButton",
+			["Title"]="Anti Water",
+			["Desc"]="Prevents your plane from going into the Pacific!",
+			["Shortcut"]="Blatant_NavalAntiWater",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["Funct"]=nil,
+			["MySeatAdded"]=function(seatPart)
+				C.AvailableHacks.Blatant[320].MySeatRemoved()
+				local Vehicle = seatPart.Parent
+				local VehicleType = Vehicle:WaitForChild("HitCode").Value
+				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
+				local MainVelocity = LineVelocity.Parent
+				--The "BodyVelocity" is actually "LineVelocity"
+				if VehicleType=="Plane" then
+					while C.human and C.human.SeatPart == seatPart do
+						local OldVelocity = MainVelocity.AssemblyLinearVelocity
+						if C.enHacks.Blatant_NavalAntiWater and seatPart.Position.Y < 20 and OldVelocity.Y < 0 then
+							MainVelocity.AssemblyLinearVelocity = Vector3.new(OldVelocity.X,0,OldVelocity.Z)
+							print("Going up")
+						end
+						RunS.RenderStepped:Wait()
+					end
+				end
+			end,
+			["MySeatRemoved"]=function()
+				if C.AvailableHacks.Blatant[320].Funct then
+					C.AvailableHacks.Blatant[320].Funct:Disconnect()
+				end
+			end,
+		}
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
 	},
 	["Utility"]={

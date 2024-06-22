@@ -1,0 +1,22 @@
+local RS = game:GetService("ReplicatedStorage")
+local PS = game:GetService("Players")
+return function(C,_SETTINGS)
+	function C.isInGame(theirChar,noDefactoAllowed)
+		if theirChar and theirChar.Name == "InviClone" then
+			theirChar = C.char
+		end
+		local player=PS:GetPlayerFromCharacter(theirChar)
+		if not player then
+			return false, "Neutral"--No player, no team!
+		end
+		if not theirChar.PrimayPart or theirChar.PrimaryPart < -260 then
+			return false, player.Team -- Player, but in lobby!
+		end
+
+		return true, player.Team -- Player exists!
+	end
+	getgenv().isInGame = C.isInGame
+	if C.gameUniverse=="NavalWarefare" then
+		C.RemoteEvent = RS:WaitForChild("Event") -- image naming something "Event"
+	end
+end

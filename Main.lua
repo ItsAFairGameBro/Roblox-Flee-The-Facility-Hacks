@@ -3355,11 +3355,11 @@ C.AvailableHacks ={
 				if LineVelocity then
 					local lastSet
 					local function Upd()
-						if LineVelocity.LineVelocity == lastSet then
+						if (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
 							return
 						end
-						lastSet = 40 * LineVelocity.LineVelocity
-						LineVelocity.Velocity = lastSet
+						lastSet = C.enHacks.Blatant_NavalVehicleSpeed * LineVelocity.VectorVelocity
+						LineVelocity.VectorVelocity = lastSet
 					end
 					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("LineVelocity"):Connect(Upd)
 					Upd()

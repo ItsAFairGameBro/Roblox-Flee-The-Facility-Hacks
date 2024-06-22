@@ -3361,9 +3361,11 @@ C.AvailableHacks ={
 							return
 						end
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
+						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						LineVelocity.VectorVelocity = lastSet
-						AlignOrientation.Responsiveness = 20 * SpeedMult
+						AlignOrientation.Responsiveness = 20 * (TurnMult/2)
+						AlignOrientation.Torque = 33.5e3 * TurnMult
 					end
 					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
 					Upd()
@@ -3377,7 +3379,7 @@ C.AvailableHacks ={
 				end
 			end,
 		},
-		--[[[321]={
+		[321]={
 			["Type"]="ExTextBox",
 			["Title"]="Vehicle Turn Multiplier",
 			["Desc"]="How much faster vehicles that you drive turn",
@@ -3385,36 +3387,8 @@ C.AvailableHacks ={
 			["Default"]=1,
 			["MinBound"]=0.1,
 			["MaxBound"]=100,
-			["Universes"]={"NavalWarefare"},
-			["Funct"]=nil,
-			["MySeatAdded"]=function(seatPart)
-				C.AvailableHacks.Blatant[320].MySeatRemoved()
-				local Vehicle = seatPart.Parent
-				local VehicleType = Vehicle:WaitForChild("HitCode").Value
-				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
-				--The "BodyVelocity" is actually "LineVelocity"
-				if LineVelocity then
-					local lastSet
-					local function Upd()
-						if lastSet and (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
-							return
-						end
-						lastSet = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleTurnSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleTurnSpeed))
-							* LineVelocity.VectorVelocity
-						LineVelocity.VectorVelocity = lastSet
-					end
-					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
-					Upd()
-				else
-					print("Warning, Vehicle Type has no BodyVelocity:",Vehicle)
-				end
-			end,
-			["MySeatRemoved"]=function()
-				if C.AvailableHacks.Blatant[320].Funct then
-					C.AvailableHacks.Blatant[320].Funct:Disconnect()
-				end
-			end,
-		},--]]
+			["Universes"]={"NavalWarefare"},			
+		},
 		[322]={
 			["Type"]="ExTextButton",
 			["Title"]="Anti Water",

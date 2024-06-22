@@ -3216,7 +3216,7 @@ C.AvailableHacks ={
 		[315]={
 			["Type"]="ExTextButton",
 			["Title"]="Kill Aura",
-			["Desc"]="Maximum Dist of ~200, Must Equip Rifle",
+			["Desc"]="Maximum Dist of ~450, Must Equip Rifle",
 			["Shortcut"]="Blatant_NavalKillAura",
 			["Default"]=false,
 			["DontActivate"]=true,
@@ -3257,10 +3257,9 @@ C.AvailableHacks ={
 				local Tool = C.char:FindFirstChildWhichIsA("Tool")
 				while C.AvailableHacks.Blatant[315].Deb == saveDeb and not C.isCleared do
 					local Target, Distance = getClosest()
-					if Target and Distance < 2000 then
+					if Target and Distance <= 450 then
 						RS.Event:FireServer("shootRifle","",{Target}) 
 						RS.Event:FireServer("shootRifle","hit",{Target.Parent:FindFirstChild("Humanoid")})
-						print(("Closest: %.2f"):format(Distance))
 					end
 					RunS.RenderStepped:Wait()
 					while not Tool or not Tool:IsA("Tool") or not Tool.Parent or not Tool.Parent.Parent do
@@ -3272,6 +3271,71 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[315].ActivateFunction(C.enHacks.Blatant_NavalKillAura)
 			end,
 		},
+		[316]={
+			["Type"]="ExTextButton",
+			["Title"]="Auto Aim",
+			["Desc"]="Aims wielded turrets to the nearest enemey",
+			["Shortcut"]="Blatant_NavalAutoAim",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["Funct"]=nil,
+			["ActivateFunction"]=function(newValue)
+				local c = 800 -- bullet velocity you can put between 799-800
+				local function d()
+					return C.char and C.char:FindFirstChild("HumanoidRootPart") and (function()
+						local f = C.char.HumanoidRootPart.Position
+						local g, h = nil, math.huge
+						for _, i in ipairs(PS:GetPlayers()) do
+							if i ~= C.plr and i.Team ~= C.plr.Team and i.Character and i.Character:FindFirstChild("HumanoidRootPart") then
+								local j = (i.Character.HumanoidRootPart.Position - f).Magnitude
+								if j < h then
+									local k = i.Character:FindFirstChildOfClass("Humanoid")
+									if k and k.Health > 0 then
+										h = j
+										g = i
+									end
+								end
+							end
+						end
+						return g
+					end)()
+				end
+				local function l(m, n)
+					if not m then return m.Position end
+					local o = m.Velocity
+					return m.Position + (o * n)
+				end
+				local function p(q)
+					local r = plr.Character
+					if not r or not r:FindFirstChild("HumanoidRootPart") then return 0 end
+					local s = r.HumanoidRootPart.Position
+					local t = (q - s).Magnitude
+					return t / c
+				end
+				if C.AvailableHacks.Blatant[316].Funct then
+					C.AvailableHacks.Blatant[316].Funct:Disconnect()
+				end
+				if newValue then
+					C.AvailableHacks.Blatant[316].Funct = UIS.InputBegan:Connect(function(inputObject,gameProcessed)
+						if inputObject.KeyCode == Enum.KeyCode.F then
+							while UIS:IsKeyDown(Enum.KeyCode.F) do
+								local u = d()
+								if u then
+									local v = u.Character:FindFirstChild("HumanoidRootPart")
+									if v then
+										local w = p(v.Position)
+										local x = l(v, w)
+										game:GetService("ReplicatedStorage"):WaitForChild("Event"):FireServer("aim", {x})
+									end
+								end
+								RunS.RenderStepped:Wait()
+							end
+						end
+					end)
+				end
+			end,
+		},
+		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
 	},
 	["Utility"]={
 		[1]={

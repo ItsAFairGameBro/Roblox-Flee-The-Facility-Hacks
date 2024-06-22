@@ -3200,14 +3200,60 @@ C.AvailableHacks ={
 		},
 		[315]={
 			["Type"]="ExTextButton",
-			["Title"]="Raycast Hacks",
-			["Desc"]="Bullets go through walls",
-			["Shortcut"]="Blatant_GoThroughWalls",
+			["Title"]="Kill Aura",
+			["Desc"]="Maximum Dist of ~100, Must Equip Rifle",
+			["Shortcut"]="Blatant_NavalKillAura",
 			["Default"]=false,
+			["DontActivate"]=true,
 			["Universes"]={"NavalWarefare"},
-			["Funct"] = nil,
+			["Deb"]=0,
 			["ActivateFunction"]=function(newValue)
-				
+				local function getClosest()
+					local myHRP = C.char and C.char.PrimaryPart
+					if not C.human or C.human.Health <= 0 or not myHRP then return end
+
+
+					local closest = nil;
+					local distance = math.huge;
+
+
+					for i, v in pairs(PS.GetPlayers(PS)) do
+						if v == plr then continue end
+						if v.Team == plr.Team then continue end
+						local theirChar = v.Character
+						if not theirChar then continue end
+						local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
+						if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
+						local theirHead = theirChar.FindFirstChild(theirChar,"Head")
+						if not theirHead then continue end
+
+						local d = (theirHead.Position - myHRP.Position).Magnitude
+
+						if d < distance then
+							distance = d
+							closest = theirHead
+						end
+					end
+
+					return closest, distance
+				end
+				C.AvailableHacks.Blatant[315].Deb += 1
+				local saveDeb = C.AvailableHacks.Blatant[315].Deb
+				local Tool
+				while C.AvailableHacks.Blatant[315].Deb == saveDeb and not C.isCleared do
+					local Target, Distance = getClosest()
+					if Target and Distance < 100 then
+						RS.Event:FireServer("shootRifle","",{game.Players.SuitedForBans9.Character["Head"]}) 
+						RS.Event:FireServer("shootRifle","hit",{game.Players.SuitedForBans9.Character.Humanoid})
+					end
+					RunS.RenderStepped:Wait()
+					while Tool:IsA("Tool") and not Tool or not Tool.Parent or not Tool.Parent.Parent do
+						Tool = C.char.ChildAdded:Wait() -- Wait for new tool!
+					end
+				end
+			end,
+			["CharacterAdded"]=function()
+				C.AvailableHacks.Blatant[315].ActivateFunction(C.enHacks.Blatant_NavalKillAura)
 			end,
 		},
 	},
@@ -8628,7 +8674,7 @@ C.AvailableHacks ={
 						C.AvailableHacks.Blatant[15].DoorFuncts[Trigger.Parent]()
 						if wasClosed then
 							task.wait(2/3)
-							RS.C.RemoteEvent:FireServer("Input", "Trigger", false)
+							C.RemoteEvent:FireServer("Input", "Trigger", false)
 						else
 							RunS.RenderStepped:Wait()
 						end

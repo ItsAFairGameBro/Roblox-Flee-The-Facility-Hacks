@@ -1532,7 +1532,7 @@ function C.requireModule(module: ModuleScript): Table
 	while true do
 		local tbl, err = pcall(getgenv().require,module)
 		if tbl then
-			return tbl
+			return err
 		else
 			warn("Failed To Get "..tostring(module)..": "..err)
 			task.wait(1)

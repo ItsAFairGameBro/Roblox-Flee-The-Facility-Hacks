@@ -3364,6 +3364,7 @@ C.AvailableHacks ={
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						LineVelocity.VectorVelocity = lastSet
+						LineVelocity.MaxAxesForce = 1000 * Vector3.one * SpeedMult
 						AlignOrientation.Responsiveness = 20 * (TurnMult/2)
 						AlignOrientation.MaxTorque = 33.5e3 * TurnMult
 					end

@@ -72,7 +72,7 @@ local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
 GlobalSettings.MinimumHeight = GlobalSettings.MinimumHeight or 1.5
 GlobalSettings.BetterConsole = true
-GlobalSettings.AlwaysRefreshModules = true
+GlobalSettings.AlwaysRefreshModules = true -- Always refreshs Modules on refresh, no caching!
 
 local getID="HackGUI1"
 local emojiDesc = {
@@ -187,7 +187,6 @@ C.hackGUIParent = gethui()
 C.Modules = {}
 if not getgenv().SavedHttp or GlobalSettings.AlwaysRefreshModules then
 	getgenv().SavedHttp = {}
-	print("Cleared Saved HTTP")
 end
 function C.LoadModules()
 	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
@@ -207,7 +206,7 @@ function C.LoadModules()
 			else
 				local TheURL = ModuleLoaderLink:format(moduleName)
 				if not getgenv().SavedHttp[TheURL] then
-					local success, result = pcall(request,{Url=TheURL,Method="GET"})
+					local success, result = pcall(request,{Url=TheURL,Method="GET",Headers={["Cache-Control"]="no-cache"}})
 					local failMessage = (not success and result) or (not result.Success and "HttpReq Fail")
 					if failMessage then
 						warn("FLEEMASTERHACKV1: Failed to load module "..moduleName.." because "..failMessage)

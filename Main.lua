@@ -3365,8 +3365,6 @@ C.AvailableHacks ={
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
-						local isOn = (LineVelocity.MaxForce > 10 and (not FuelLeft or FuelLeft.Value > 0)) or 
-							(FlyButton.BackgroundColor3.R*255>250 and C.enHacks.Blatant_NavalInfPlaneFuel)
 						if C.enHacks.Blatant_NavalInfPlaneFuel then
 							if FuelLeft.Value < 500 then
 								FuelLeft:SetAttribute("RealFuel",FuelLeft.Value)
@@ -3375,6 +3373,8 @@ C.AvailableHacks ={
 						elseif FuelLeft:GetAttribute("RealFuel") then
 							FuelLeft.Value = FuelLeft:GetAttribute("RealFuel")
 						end
+						local isOn = (LineVelocity.MaxForce > 10 and (not FuelLeft or (FuelLeft:GetAttribute("RealFuel") or FuelLeft.Value) > 0)) or 
+							(FlyButton.BackgroundColor3.R*255>250 and C.enHacks.Blatant_NavalInfPlaneFuel)
 						LineVelocity.VectorVelocity = lastSet
 						
 						LineVelocity.MaxAxesForce = 1000 * Vector3.one * SpeedMult

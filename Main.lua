@@ -3216,7 +3216,7 @@ C.AvailableHacks ={
 		[315]={
 			["Type"]="ExTextButton",
 			["Title"]="Kill Aura",
-			["Desc"]="Maximum Dist of ~100, Must Equip Rifle",
+			["Desc"]="Maximum Dist of ~200, Must Equip Rifle",
 			["Shortcut"]="Blatant_NavalKillAura",
 			["Default"]=false,
 			["DontActivate"]=true,
@@ -3257,7 +3257,7 @@ C.AvailableHacks ={
 				local Tool
 				while C.AvailableHacks.Blatant[315].Deb == saveDeb and not C.isCleared do
 					local Target, Distance = getClosest()
-					if Target and Distance < 100 then
+					if Target and Distance < 200 then
 						RS.Event:FireServer("shootRifle","",{Target}) 
 						RS.Event:FireServer("shootRifle","hit",{Target.Parent:FindFirstChild("Humanoid")})
 					end

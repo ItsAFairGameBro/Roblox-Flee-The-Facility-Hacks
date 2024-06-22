@@ -3346,7 +3346,7 @@ C.AvailableHacks ={
 			["MinBound"]=0.1,
 			["MaxBound"]=100,
 			["Universes"]={"NavalWarefare"},
-			["Funct"]=nil,
+			["Functs"]={},
 			["MySeatAdded"]=function(seatPart)
 				C.AvailableHacks.Blatant[320].MySeatRemoved()
 				local Vehicle = seatPart.Parent
@@ -3363,23 +3363,26 @@ C.AvailableHacks ={
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
-						local isOn = lastSet.Magnitude > 10
+						local isOn = LineVelocity.MaxForce > 10
+						print(isOn)
 						LineVelocity.VectorVelocity = lastSet
 						LineVelocity.MaxAxesForce = 1000 * Vector3.one * SpeedMult
-						LineVelocity.MaxForce = isOn and (31.148e3 * SpeedMult) or 0
+						LineVelocity.MaxForce = isOn and (31.148e3 * SpeedMult/8) or 0
 						AlignOrientation.Responsiveness = 20 * (TurnMult/2)
 						AlignOrientation.MaxTorque = isOn and (33.5e3 * TurnMult) or 0
 					end
-					C.AvailableHacks.Blatant[320].Funct = LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd)
+					table.insert(C.AvailableHacks.Blatant[320].Functs,LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd))
+					--table.insert(C.AvailableHacks.Blatant[320].Functs,LineVelocity:GetPropertyChangedSignal("MaxAxesForce"):Connect(Upd))
+					--table.insert(C.AvailableHacks.Blatant[320].Functs,LineVelocity:GetPropertyChangedSignal("MaxAxesForce"):Connect(Upd))
 					Upd()
 				else
 					print("Warning, Vehicle Type has no BodyVelocity:",Vehicle)
 				end
 			end,
 			["MySeatRemoved"]=function()
-				if C.AvailableHacks.Blatant[320].Funct then
-					C.AvailableHacks.Blatant[320].Funct:Disconnect()
-				end
+				for num, funct in ipairs(C.AvailableHacks.Blatant[320].Functs) do
+					funct:Disconnect()
+				end C.AvailableHacks.Blatant[320].Functs = {}
 			end,
 		},
 		[321]={

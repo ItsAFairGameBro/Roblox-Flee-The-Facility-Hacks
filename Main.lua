@@ -3367,7 +3367,8 @@ C.AvailableHacks ={
 						if lastSet and (LineVelocity.VectorVelocity - lastSet).Magnitude < 0.3 then
 							return
 						end
-						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed or math.min(1.8,C.enHacks.Blatant_NavalVehicleSpeed))
+						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed 
+							or math.min(C.enHacks.Blatant_NavalAutoTeleportBack and math.huge or 1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed or 1
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						if FuelLeft then

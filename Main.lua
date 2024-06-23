@@ -11033,7 +11033,7 @@ C.AvailableHacks ={
 		
 	}
 }
-local function defaultFunction(functName,args)
+function C.defaultFunction(functName,args)
 	if not C.AvailableHacks then
 		return;
 	end
@@ -11800,8 +11800,8 @@ local function BeastAdded(theirPlr,theirChar)
 		theirChar
 	};
 	local function2Input = theirPlr==plr and "MyBeastAdded" or "OthersBeastAdded";
-	defaultFunction(function2Input,inputArray);
-	defaultFunction("BeastAdded",inputArray);
+	C.defaultFunction(function2Input,inputArray);
+	C.defaultFunction("BeastAdded",inputArray);
 	table.insert(C.functs,Hammer.Destroying:Connect(function(newParent)
 		--if newParent then
 		--return
@@ -11809,7 +11809,7 @@ local function BeastAdded(theirPlr,theirChar)
 		--warn("Hammer Destroying!")
 		C.Beast=nil
 		local inputArray = {theirPlr,theirChar}
-		defaultFunction((theirPlr==plr and "MyBeastRemoved" or "OthersBeastRemoved"),(inputArray))
+		C.defaultFunction((theirPlr==plr and "MyBeastRemoved" or "OthersBeastRemoved"),(inputArray))
 	end))
 end
 local function CharacterAdded(theirChar,firstRun)
@@ -11837,18 +11837,18 @@ local function CharacterAdded(theirChar,firstRun)
 		C.human=theirHumanoid
 	end
 	local inputFunctions = {theirPlr,theirChar,firstRun}
-	defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
-	defaultFunction("StartUp",inputFunctions)
+	C.defaultFunction(isMyChar and "MyStartUp" or "OthersStartUp",inputFunctions)
+	C.defaultFunction("StartUp",inputFunctions)
 	C.objectFuncts[theirHumanoid] = C.objectFuncts[theirHumanoid] or {}
 	C.objectFuncts[theirHumanoid]["Died"] = {theirHumanoid.Died:Connect(function()
-		defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
+		C.defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
 	end)}
 	if isMyChar then
 		C.objectFuncts[theirHumanoid]["Seated"] = {theirHumanoid.Seated:Connect(function(active,seatPart)
-			defaultFunction(active and "MySeatAdded" or "MySeatRemoved",{seatPart})
+			C.defaultFunction(active and "MySeatAdded" or "MySeatRemoved",{seatPart})
 		end)}
 		if theirHumanoid.SeatPart then
-			defaultFunction("MySeatAdded",{theirHumanoid.SeatPart})
+			C.defaultFunction("MySeatAdded",{theirHumanoid.SeatPart})
 		end
 	end
 	if C.gameUniverse=="Flee" then
@@ -11876,7 +11876,7 @@ local function CharacterRemoving(theirPlr,theirChar)
 	end
 	local isMyChar=theirPlr==plr
 	local inputFunctions = ({theirPlr,theirChar})
-	defaultFunction((isMyChar and "MyShutDown" or "OthersShutDown"),inputFunctions)
+	C.defaultFunction((isMyChar and "MyShutDown" or "OthersShutDown"),inputFunctions)
 end
 C.savedCommands = getgenv().lastCommands
 if not C.savedCommands then
@@ -12016,7 +12016,7 @@ local function PlayerAdded(theirPlr)
 	if isMe then
 		characterFunctionName = "MyPlayerAdded";
 	end
-	defaultFunction(characterFunctionName, myPlayerAddedInputArray);
+	C.defaultFunction(characterFunctionName, myPlayerAddedInputArray);
 	local CharacterAddedConnection = theirPlr.CharacterAdded:Connect(CharacterAdded);
 	table.insert(C.playerEvents[theirPlr.UserId], CharacterAddedConnection);
 	local function characterRemovingFunction(removingChar)
@@ -12189,7 +12189,7 @@ local function PlayerAdded(theirPlr)
 
 
 			end))
-			defaultFunction("ChatBarAdded",{chatBar,firstRun})
+			C.defaultFunction("ChatBarAdded",{chatBar,firstRun})
 		end
 		if not hasNewChat then
 			table.insert(C.functs,StringWaitForChild(PlayerGui,"Chat.Frame.ChatBarParentFrame").ChildAdded:Connect(function(child)
@@ -12219,16 +12219,16 @@ local function PlayerAdded(theirPlr)
 end;
 local function DescendantRemoving(child)
 	if string.sub(child.Name,1,13)=="ComputerTable" then
-		defaultFunction("ComputerRemoved",{child})
+		C.defaultFunction("ComputerRemoved",{child})
 	elseif string.sub(child.Name,1,9)=="FreezePod" then
 		CS:RemoveTag(child,"Capsule")
-		defaultFunction("CapsuleRemoved",{child})
+		C.defaultFunction("CapsuleRemoved",{child})
 	elseif child.Name=="SingleDoor" or child.Name=="DoubleDoor" or child.Name=="ExitDoor" then
 		CS:RemoveTag(child,"DoorAndExit")
 		CS:RemoveTag(child,"Door")
 		CS:RemoveTag(child,"Exit")
 		local inputArray = {child,child.Name}
-		defaultFunction("DoorRemoved",inputArray)
+		C.defaultFunction("DoorRemoved",inputArray)
 	end
 end
 local function MapChildAdded(child,shouldntWait)
@@ -12250,14 +12250,14 @@ local function MapChildAdded(child,shouldntWait)
 			end;
 		end;
 		child.Name = "ComputerTable/"..(#CS:GetTagged("Computer"));
-		defaultFunction("ComputerAdded",{child});
+		C.defaultFunction("ComputerAdded",{child});
 	elseif string.sub(child.Name,1,9)=="FreezePod" then
 		local PodTrigger=child:WaitForChild("PodTrigger",3);
 		if PodTrigger~=nil then
 			CS:AddTag(PodTrigger,"Trigger");
 		end;
 		CS:AddTag(child,"Capsule");
-		defaultFunction("CapsuleAdded",({child}));
+		C.defaultFunction("CapsuleAdded",({child}));
 		table.insert(C.functs,child.Destroying:Connect(function()
 			DescendantRemoving(child)
 		end));
@@ -12280,7 +12280,7 @@ local function MapChildAdded(child,shouldntWait)
 			CS:AddTag(doorTrigger,doorTrigger_NAME);
 		end;
 		local doorAdded_NAME = "DoorAdded";
-		defaultFunction(doorAdded_NAME, inputArray);
+		C.defaultFunction(doorAdded_NAME, inputArray);
 	end
 end
 local function registerObject(object,registerfunct,shouldntWait)
@@ -12314,7 +12314,7 @@ local function updateCurrentMap(newMap,firstRun)
 		task.wait(1);
 		if C.isCleared then return end
 		local inputArray = {newMap};
-		defaultFunction("MapAdded",{newMap,firstRun});
+		C.defaultFunction("MapAdded",{newMap,firstRun});
 		task.spawn(registerObject,newMap,MapChildAdded);
 		table.insert(C.functs,newMap.Destroying:Connect(function(newParent)
 			task.wait(2);--give a hefty wait time before deleting components, so that individual children can be erased first!
@@ -12325,7 +12325,7 @@ local function updateCurrentMap(newMap,firstRun)
 		task.wait(2); -- Delay this to avoid lag spikes
 		local clonedMap = C.Map;
 		C.Map = nil; C.Beast = nil;
-		defaultFunction("CleanUp",{clonedMap});
+		C.defaultFunction("CleanUp",{clonedMap});
 		
 		C.PurgeActionsWithTag("Game")
 		C.PurgeActionsWithTag("Computer")
@@ -12445,7 +12445,7 @@ if C.gameName=="FleeMain" then
 			print("Triggers Disabled")	
 		end
 		lastAnimationName = newValue
-		defaultFunction("AnimationChanged",newValue)
+		C.defaultFunction("AnimationChanged",newValue)
 	end
 	setChangedProperty(currentAnimation,"Value",updateAnimation)
 	task.delay(2,updateAnimation)

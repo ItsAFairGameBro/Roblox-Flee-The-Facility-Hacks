@@ -3473,6 +3473,44 @@ C.AvailableHacks ={
 				end
 			end,
 		},
+		[327]={
+			["Type"]="ExTextButton",
+			["Title"]="Ship Auto Teleport Back", ["CategoryAlias"] = "Vehicle",
+			["Desc"]="Automatically Teleports Your Ship Back To Where It Was",
+			["Shortcut"]="Blatant_NavalLevitationHeight",
+			["Default"]=false,
+			["Funct"]=nil,
+			["Universes"]={"NavalWarefare"},
+			["MySeatAdded"]=function(seatPart)
+				C.AvailableHacks.Blatant[327].MySeatRemoved()
+				local Ship = seatPart.Parent
+				if Ship:WaitForChild("HitCode").Value ~= "Ship" then
+					return
+				end
+				local function CanRun()
+					return C.human and seatPart == C.human.SeatPart and not C.isCleared
+				end
+				local lastInput
+				task.spawn(function()
+					while CanRun() do
+						lastInput = Ship:GetPivot()
+						RunS.RenderStepped:Wait()
+					end
+				end)
+				C.AvailableHacks.Blatant[327].Funct = Ship:WaitForChild("MainBody"):GetPropertyChangedSignal("CFrame"):Connect(function()
+					if not CanRun() then return end
+					local newInput = Ship:GetPivot()
+					if (newInput.Position - lastInput.Position).Magnitude > 10 then
+						Ship:PivotTo(lastInput)
+					end
+				end)
+			end,
+			["MySeatRemoved"]=function(seatPart)
+				if C.AvailableHacks.Blatant[327].Funct then
+					C.AvailableHacks.Blatant[327].Funct:Disconnect()
+				end C.AvailableHacks.Blatant[327].Funct = nil
+			end,
+		},
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
 	},
 	["Utility"]={

@@ -11111,6 +11111,7 @@ function C.defaultFunction(functName,args)
 	end
 	for hackType,hackList in pairs(C.AvailableHacks) do
 		for num,hackInfo in pairs(hackList) do
+			if not hackInfo then continue end
 			local funct2Run = hackInfo[functName];
 			if funct2Run then
 				task.spawn(funct2Run, table.unpack(args));
@@ -11118,6 +11119,8 @@ function C.defaultFunction(functName,args)
 		end;
 	end;
 	for commandIndex, data in pairs(C.CommandFunctions) do
+		if not hackInfo then continue end
+
 		local funct2Run = data[functName];
 		if funct2Run then
 			task.spawn(funct2Run, table.unpack(args));

@@ -3351,12 +3351,12 @@ C.AvailableHacks ={
 			["MySeatAdded"]=function(seatPart)
 				C.AvailableHacks.Blatant[320].MySeatRemoved()
 				local Vehicle = seatPart.Parent
-				local VehicleType = Vehicle:WaitForChild("HitCode").Value
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				local FuelLeft = Vehicle:FindFirstChild("Fuel")
 				local FlyButton = StringWaitForChild(PlayerGui,"ScreenGui.InfoFrame.Fly")
 				--The "BodyVelocity" is actually "LineVelocity"
 				if LineVelocity then
+					local VehicleType = Vehicle:WaitForChild("HitCode").Value
 					local AlignOrientation = LineVelocity.Parent:FindFirstChildWhichIsA("AlignOrientation")
 					local lastSet
 					local function Upd()

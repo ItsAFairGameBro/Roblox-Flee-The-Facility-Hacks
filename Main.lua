@@ -11753,6 +11753,10 @@ loadSaveData()
 if C.Modules.Developer then
 	C.Modules.Developer(C,_SETTINGS)
 end
+--Load game specific module!
+if C.Modules[C.gameName] then
+	C.Modules[C.gameName](C,_SETTINGS)
+end
 
 GuiElements.TempStoreCache = {}
 
@@ -12461,11 +12465,6 @@ for num,theirPlr in ipairs(PS:GetPlayers()) do
 end
 
 --print(("Players Loaded %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
-
---Load game specific module!
-if C.Modules[C.gameName] then
-	C.Modules[C.gameName](C,_SETTINGS)
-end
 
 --MENU FUNCTS
 if C.gameName=="FleeMain" then

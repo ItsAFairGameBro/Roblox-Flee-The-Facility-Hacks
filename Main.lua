@@ -11704,17 +11704,18 @@ for categoryName, differentHacks in pairs(C.AvailableHacks) do
 					newProperty.Parent = GuiElements.Properties
 					newProperty.Name = overrideCategoryName
 					newProperty.Visible=false
+					local saveNewProperty, saveNewButton = newProperty, newButton
 					local function newButtonMB1Up()
 						C.Console.Visible = false
 						GuiElements.Properties.Visible = true
 						for num,prop in pairs(GuiElements.Properties:GetChildren()) do
 							if prop.ClassName=="ScrollingFrame" then
-								prop.Visible = (prop==newProperty)
+								prop.Visible = (prop==saveNewProperty)
 							end
 						end
 						for num,button in pairs(GuiElements.myList:GetChildren()) do
 							if button.ClassName=="TextButton" then
-								button.Font = (button==newButton and textFontBold or textFont)
+								button.Font = (button==saveNewButton and textFontBold or textFont)
 							end
 						end
 					end

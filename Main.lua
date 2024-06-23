@@ -3485,6 +3485,7 @@ C.AvailableHacks ={
 			end,
 			["MySeatRemoved"]=function()
 				C.AvailableHacks.Blatant[326].Enabled = false
+				C.AvailableHacks.Blatant[326].ActivateFunction()
 			end,
 		},
 		[327]={

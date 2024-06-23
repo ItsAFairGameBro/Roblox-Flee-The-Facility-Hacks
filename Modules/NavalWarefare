@@ -54,7 +54,8 @@ return function(C,_SETTINGS)
 		C.RemoteEvent = RS:WaitForChild("Event") -- image naming something "Event"
 		local BasesToLookFor = {"USDock","JapanDock","Island"}
 		C.Bases = {Dock={},Island={}}
-		for num, instance in ipairs(workspace:GetChildren()) do
+		local function newChild(instance)
+			local num
 			if table.find(BasesToLookFor,instance.Name) then
 				local HitCode = instance:WaitForChild("HitCode")
 				table.insert(C.Bases,instance)
@@ -71,6 +72,10 @@ return function(C,_SETTINGS)
 					C.objectFuncts[instance] = nil
 				end)}
 			end
+		end
+		table.insert(C.functs,workspace.ChildAdded:Connect(newChild))
+		for num, instance in ipairs(workspace:GetChildren()) do
+			newChild(instance)
 		end
 		print("Finished YE2P!")
 	end

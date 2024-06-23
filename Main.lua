@@ -3455,6 +3455,24 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Universes"]={"NavalWarefare"},			
 		},
+		[326]={
+			["Type"]="ExTextBox",
+			["Title"]="Vehicle Levitation Height", ["CategoryAlias"] = "Vehicle",
+			["Desc"]="How high off the ground the ships float",
+			["Shortcut"]="Blatant_NavalLevitationHeight",
+			["Default"]=0,
+			["MinBound"]=0,
+			["MaxBound"]=4,
+			["LevitationPart"]=nil,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function()
+				for num, part in ipairs(StringWaitForChild(workspace,"Setting.WaterColliders"):GetChildren()) do
+					if part:IsA("BasePart") then
+						TS:Create(part,TweenInfo.new(1),{Position=Vector3.new(part.Position.X, -52 + C.enHacks.Blatant_NavalLevitationHeight, part.Position.Z)}):Play()
+					end
+				end
+			end,
+		},
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
 	},
 	["Utility"]={

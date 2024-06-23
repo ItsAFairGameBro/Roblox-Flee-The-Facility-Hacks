@@ -3465,12 +3465,26 @@ C.AvailableHacks ={
 			["MaxBound"]=100,
 			["LevitationPart"]=nil,
 			["Universes"]={"NavalWarefare"},
+			["Enabled"]=true,
 			["ActivateFunction"]=function()
 				for num, part in ipairs(StringWaitForChild(workspace,"Setting.WaterColliders"):GetChildren()) do
 					if part:IsA("BasePart") then
-						TS:Create(part,TweenInfo.new(1),{Position=Vector3.new(part.Position.X, -52 + C.enHacks.Blatant_NavalLevitationHeight, part.Position.Z)}):Play()
+						TS:Create(part,TweenInfo.new(1),{Position=Vector3.new(part.Position.X, -52 
+							+ (C.AvailableHacks.Blatant[326].Enabled and C.enHacks.Blatant_NavalLevitationHeight or 0), part.Position.Z)}):Play()
 					end
 				end
+			end,
+			["MySeatAdded"]=function(seatPart)
+				local Ship = seatPart.Parent
+				if Ship:WaitForChild("HitCode").Value ~= "Ship" then
+					C.AvailableHacks.Blatant[326].Enabled = false
+				else
+					C.AvailableHacks.Blatant[326].Enabled = true
+				end
+				C.AvailableHacks.Blatant[326].ActivateFunction()
+			end,
+			["MySeatRemoved"]=function()
+				C.AvailableHacks.Blatant[326].Enabled = false
 			end,
 		},
 		[327]={

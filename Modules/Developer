@@ -41,7 +41,7 @@ return function(C,_SETTINGS)
 			["ActivateFunction"]=function(newValue)
 				local CollisionGroups = PhysicsS:GetRegisteredCollisionGroups()
 				for key, val in ipairs(CollisionGroups) do
-					print(val.name.." collides:")
+					print(val.name.." (" .. val.mask ..") collides:")
 					for num, val2 in pairs(CollisionGroups) do
 						print("\t"..val2.name,PhysicsS:CollisionGroupsAreCollidable(val2.name,val.name),"\n")
 					end

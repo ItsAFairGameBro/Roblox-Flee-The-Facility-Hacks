@@ -11688,7 +11688,7 @@ for categoryName, differentHacks in pairs(C.AvailableHacks) do
 		local overrideCategoryName = hack.CategoryAlias or categoryName
 		local canPass = overrideCategoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,C.gameUniverse))) or (not hack.Universes and not hack.Places and C.gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,C.gameName)));
 		if canPass then
-			if not newButton or not newProperty then
+			if not newButton or not newProperty or overrideCategoryName ~= categoryName then
 				local Data = GuiElements.TempStoreCache[overrideCategoryName]
 				if Data then
 					newButton, newProperty = table.unpack(Data)

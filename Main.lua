@@ -3465,7 +3465,7 @@ C.AvailableHacks ={
 			["MaxBound"]=100,
 			["LevitationPart"]=nil,
 			["Universes"]={"NavalWarefare"},
-			["Enabled"]=true,
+			["Enabled"]=false,
 			["ActivateFunction"]=function()
 				for num, part in ipairs(StringWaitForChild(workspace,"Setting.WaterColliders"):GetChildren()) do
 					if part:IsA("BasePart") then

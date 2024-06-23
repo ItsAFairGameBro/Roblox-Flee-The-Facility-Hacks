@@ -49,9 +49,26 @@ return function(C,_SETTINGS)
 
 		return closest, distance
 	end
-	warn("Loaded NEW")
 	getgenv().isInGame = C.isInGame
 	if C.gameUniverse=="NavalWarefare" then
 		C.RemoteEvent = RS:WaitForChild("Event") -- image naming something "Event"
+		local BasesToLookFor = {"USDock","JapanDock","Island"}
+		C.Bases = {Dock={},Island={}}
+		for num, instance in ipairs(workspace:GetChildren()) do
+			if table.find(BasesToLookFor,instance.Name) then
+				local HitCode = instance:WaitForChild("HitCode")
+				print("Inserted",instance)
+				table.insert(C.Bases,instance)
+				C.objectFuncts[instance]["AncestryChanged"] = {instance.AncestryChanged:Connect(function()
+					--Disconnect the event
+					num = table.find(BasesToLookFor, instance)
+					if num then
+						table.remove(C.Bases,num)
+					end
+					C.objectFuncts[instance] = nil
+				end)}
+			end
+		end
+		print("Finished Navalwrefar!")
 	end
 end

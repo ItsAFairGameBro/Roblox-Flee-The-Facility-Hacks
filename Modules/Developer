@@ -1,0 +1,52 @@
+local RS = game:GetService("ReplicatedStorage")
+local PS = game:GetService("Players")
+local SG = game:GetService("StarterGui")
+local PhysicsS = game:GetService("PhysicsService")
+
+local plr = PS.LocalPlayer
+return function(C,_SETTINGS)
+	C.AvailableHacks["Developer"]={
+		[1]={
+			["Type"]="ExTextButton",
+			["Title"]="View Console",
+			["Desc"]="Views default Roblox Console",
+			["Shortcut"]="Developer_ViewConsole",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Universes"] = {"Global"},
+			["Options"]={
+				[true]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=Color3.fromRGB(0,0,170),
+				},
+			},
+			["ActivateFunction"]=function(newValue)
+				SG:SetCore("DevConsoleVisible", true)
+			end,
+		},
+		[2]={
+			["Type"]="ExTextButton",
+			["Title"]="Get Collisions Groups",
+			["Desc"]="Gets all possible collision groups, and prints it to the chat",
+			["Shortcut"]="Developer_PrintCollisionGroups",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Universes"] = {"Global"},
+			["Options"]={
+				[true]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=Color3.fromRGB(0,170),
+				},
+			},
+			["ActivateFunction"]=function(newValue)
+				local CollisionGroups = PhysicsS:GetRegisteredCollisionGroups()
+				for key, val in ipairs(CollisionGroups) do
+					print(val.name.." collides:")
+					for num, val2 in pairs(CollisionGroups) do
+						print("\t"..val2.name,PhysicsS:CollisionGroupsAreCollidable(val2.name,val),"\n")
+					end
+				end
+			end,
+		}
+	}
+end

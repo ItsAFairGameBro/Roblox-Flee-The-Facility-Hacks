@@ -59,6 +59,7 @@ return function(C,_SETTINGS)
 				local HitCode = instance:WaitForChild("HitCode")
 				print("Inserted",instance)
 				table.insert(C.Bases,instance)
+				C.objectFuncts[instance] = C.objectFuncts[instance] or {}
 				C.objectFuncts[instance]["AncestryChanged"] = {instance.AncestryChanged:Connect(function()
 					--Disconnect the event
 					num = table.find(BasesToLookFor, instance)

@@ -3335,7 +3335,7 @@ C.AvailableHacks ={
 		},
 		[320]={
 			["Type"]="ExTextBox",
-			["Title"]="Vehicle Speed Multiplier",
+			["Title"]="Vehicle Speed Multiplier", ["CategoryAlias"] = "Vehicle",
 			["Desc"]="How much faster vehicles that you drive go. Max For Ships Is x1.4",
 			["Shortcut"]="Blatant_NavalVehicleSpeed",
 			["Default"]=1,
@@ -3401,7 +3401,7 @@ C.AvailableHacks ={
 		},
 		[321]={
 			["Type"]="ExTextBox",
-			["Title"]="Vehicle Turn Multiplier",
+			["Title"]="Vehicle Turn Multiplier",["CategoryAlias"] = "Vehicle",
 			["Desc"]="How much faster vehicles that you drive turn",
 			["Shortcut"]="Blatant_NavalVehicleTurnSpeed",
 			["Default"]=1,
@@ -3416,7 +3416,7 @@ C.AvailableHacks ={
 		},
 		[322]={
 			["Type"]="ExTextButton",
-			["Title"]="Anti Water",
+			["Title"]="Anti Water", ["CategoryAlias"] = "Vehicle",
 			["Desc"]="Prevents your plane from going into the Pacific!",
 			["Shortcut"]="Blatant_NavalAntiWater",
 			["Default"]=false,
@@ -3445,7 +3445,7 @@ C.AvailableHacks ={
 		},
 		[323]={
 			["Type"]="ExTextButton",
-			["Title"]="Plane Infinite Fuel",
+			["Title"]="Plane Infinite Fuel", ["CategoryAlias"] = "Vehicle",
 			["Desc"]="You may need to turn back on your engine if you run out",
 			["Shortcut"]="Blatant_NavalInfPlaneFuel",
 			["Default"]=false,
@@ -11683,19 +11683,20 @@ for categoryName, differentHacks in pairs(C.AvailableHacks) do
 			differentHacks[num] = nil -- clear this so that it isn't referenced again-
 			continue -- skip this lolo!
 		end
-		local canPass = categoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,C.gameUniverse))) or (not hack.Universes and not hack.Places and C.gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,C.gameName)));
+		local overrideCategoryName = hack.CategoryAlias or categoryName
+		local canPass = overrideCategoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,C.gameUniverse))) or (not hack.Universes and not hack.Places and C.gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,C.gameName)));
 		if canPass then
 			if not newButton or not newProperty then
 				newButton = GuiElements.MainListEx:Clone()
-				newButton.Text = categoryName
-				newButton.TextColor3 = ComputeNameColor(categoryName)
-				newButton.Name = categoryName
-				newButton.LayoutOrder = (categoryName=="Commands" and 1 or 0)
+				newButton.Text = overrideCategoryName
+				newButton.TextColor3 = ComputeNameColor(overrideCategoryName)
+				newButton.Name = overrideCategoryName
+				newButton.LayoutOrder = (overrideCategoryName=="Commands" and 1 or 0)
 				newButton.Parent=GuiElements.myList
 
 				newProperty = GuiElements.PropertiesEx:Clone()
 				newProperty.Parent = GuiElements.Properties
-				newProperty.Name = categoryName
+				newProperty.Name = overrideCategoryName
 				newProperty.Visible=false
 				local function newButtonMB1Up()
 					C.Console.Visible = false
@@ -11715,11 +11716,11 @@ for categoryName, differentHacks in pairs(C.AvailableHacks) do
 			end
 
 			if C.enHacks[hack.Shortcut] ~= nil then
-				warn(`⚠️⚠️HACK TYPE DUPLICATE FOUND: {hack.Shortcut} in {categoryName}, ONE IS {differentHacks.Title}⚠️⚠️`)	
+				warn(`⚠️⚠️HACK TYPE DUPLICATE FOUND: {hack.Shortcut} in {overrideCategoryName}, ONE IS {differentHacks.Title}⚠️⚠️`)	
 			end
 			
 			hack.Options = (hack.Options or (defaultOptionsTable))
-			assert(C.getDictLength(hack.Options)>0,("Options Table Empty for "..categoryName.." "..hack.Title))
+			assert(C.getDictLength(hack.Options)>0,("Options Table Empty for "..overrideCategoryName.." "..hack.Title))
 			local overrideDefault
 			if not hack.ForceDefault then
 				if GlobalSettings.enHacks and GlobalSettings.enHacks[hack.Shortcut]~=nil then

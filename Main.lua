@@ -11674,6 +11674,8 @@ loadSaveData()
 
 --print(("Hacks Starting %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
 
+GuiElements.TempStoreCache = {}
+
 for categoryName, differentHacks in pairs(C.AvailableHacks) do
 	local newButton, newProperty
 	for num,hack in pairs(differentHacks) do
@@ -11687,32 +11689,38 @@ for categoryName, differentHacks in pairs(C.AvailableHacks) do
 		local canPass = overrideCategoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,C.gameUniverse))) or (not hack.Universes and not hack.Places and C.gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,C.gameName)));
 		if canPass then
 			if not newButton or not newProperty then
-				newButton = GuiElements.MainListEx:Clone()
-				newButton.Text = overrideCategoryName
-				newButton.TextColor3 = ComputeNameColor(overrideCategoryName)
-				newButton.Name = overrideCategoryName
-				newButton.LayoutOrder = (overrideCategoryName=="Commands" and 1 or 0)
-				newButton.Parent=GuiElements.myList
+				local Data = GuiElements.TempStoreCache[overrideCategoryName]
+				if Data then
+					newButton, newProperty = table.unpack(Data)
+				else
+					newButton = GuiElements.MainListEx:Clone()
+					newButton.Text = overrideCategoryName
+					newButton.TextColor3 = ComputeNameColor(overrideCategoryName)
+					newButton.Name = overrideCategoryName
+					newButton.LayoutOrder = (overrideCategoryName=="Commands" and 1 or 0)
+					newButton.Parent=GuiElements.myList
 
-				newProperty = GuiElements.PropertiesEx:Clone()
-				newProperty.Parent = GuiElements.Properties
-				newProperty.Name = overrideCategoryName
-				newProperty.Visible=false
-				local function newButtonMB1Up()
-					C.Console.Visible = false
-					GuiElements.Properties.Visible = true
-					for num,prop in pairs(GuiElements.Properties:GetChildren()) do
-						if prop.ClassName=="ScrollingFrame" then
-							prop.Visible = (prop==newProperty)
+					newProperty = GuiElements.PropertiesEx:Clone()
+					newProperty.Parent = GuiElements.Properties
+					newProperty.Name = overrideCategoryName
+					newProperty.Visible=false
+					local function newButtonMB1Up()
+						C.Console.Visible = false
+						GuiElements.Properties.Visible = true
+						for num,prop in pairs(GuiElements.Properties:GetChildren()) do
+							if prop.ClassName=="ScrollingFrame" then
+								prop.Visible = (prop==newProperty)
+							end
+						end
+						for num,button in pairs(GuiElements.myList:GetChildren()) do
+							if button.ClassName=="TextButton" then
+								button.Font = (button==newButton and textFontBold or textFont)
+							end
 						end
 					end
-					for num,button in pairs(GuiElements.myList:GetChildren()) do
-						if button.ClassName=="TextButton" then
-							button.Font = (button==newButton and textFontBold or textFont)
-						end
-					end
+					newButton.MouseButton1Up:Connect(newButtonMB1Up)--This should be cleaned up automatically!
+					GuiElements.TempStoreCache[overrideCategoryName] = {newButton,newProperty}
 				end
-				newButton.MouseButton1Up:Connect(newButtonMB1Up)--This should be cleaned up automatically!
 			end
 
 			if C.enHacks[hack.Shortcut] ~= nil then
@@ -11766,6 +11774,9 @@ for categoryName, differentHacks in pairs(C.AvailableHacks) do
 			end
 		else
 			differentHacks[num]=nil
+		end
+		if overrideCategoryName ~= categoryName then
+			newButton, newProperty = nil, nil
 		end
 	end
 end

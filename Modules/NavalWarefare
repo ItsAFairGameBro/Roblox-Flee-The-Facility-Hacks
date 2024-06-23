@@ -57,19 +57,21 @@ return function(C,_SETTINGS)
 		for num, instance in ipairs(workspace:GetChildren()) do
 			if table.find(BasesToLookFor,instance.Name) then
 				local HitCode = instance:WaitForChild("HitCode")
-				print("Inserted",instance)
 				table.insert(C.Bases,instance)
+				local ID = instance.Name:find("Dock") and "Dock" or instance.Name -- Dock or Island
+				C.defaultFunction(ID .. "Added",{instance})
 				C.objectFuncts[instance] = C.objectFuncts[instance] or {}
-				C.objectFuncts[instance]["AncestryChanged"] = {instance.AncestryChanged:Connect(function()
+				C.objectFuncts[instance]["Destroying"] = {instance.Destroying:Connect(function()
 					--Disconnect the event
 					num = table.find(BasesToLookFor, instance)
 					if num then
 						table.remove(C.Bases,num)
 					end
+					C.defaultFunction(ID .. "Removed",{instance})
 					C.objectFuncts[instance] = nil
 				end)}
 			end
 		end
-		print("Finished YEP!")
+		print("Finished YE2P!")
 	end
 end

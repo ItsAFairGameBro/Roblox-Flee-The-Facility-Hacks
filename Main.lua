@@ -3491,7 +3491,7 @@ C.AvailableHacks ={
 			["Type"]="ExTextButton",
 			["Title"]="Ship Auto Teleport Back", ["CategoryAlias"] = "Vehicle",
 			["Desc"]="Automatically Teleports Your Ship Back To Where It Was",
-			["Shortcut"]="Blatant_NavalLevitationHeight",
+			["Shortcut"]="Blatant_NavalAutoTeleportBack",
 			["Default"]=false,
 			["Funct"]=nil,
 			["Universes"]={"NavalWarefare"},
@@ -3514,7 +3514,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[327].Funct = Ship:WaitForChild("MainBody"):GetPropertyChangedSignal("CFrame"):Connect(function()
 					if not CanRun() then return end
 					local newInput = Ship:GetPivot()
-					if (newInput.Position - lastInput.Position).Magnitude > 10 then
+					if (newInput.Position - lastInput.Position).Magnitude > 10 and C.enHacks.Blatant_NavalAutoTeleportBack then
 						Ship:PivotTo(lastInput)
 					end
 				end)

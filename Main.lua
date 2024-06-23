@@ -164,6 +164,7 @@ _SETTINGS={
 	minTimeBetweenTeleport = .005,
 	defaultCharacterWalkSpeed=SP.CharacterWalkSpeed,
 	defaultCharacterJumpPower=SP.CharacterJumpPower,
+	developer=true,
 }
 
 if not _SETTINGS.myBots[plr.Name:lower()] then
@@ -197,6 +198,9 @@ function C.LoadModules()
 		if C.gameName == "FleeMain" then
 			table.insert(ModuleNames,"LocalClubScript")
 		end
+	end
+	if _SETTINGS.developer then
+		table.insert(ModuleNames,"Developer")
 	end
 	local ModulesLoaded = 0
 	for num, moduleName in ipairs(ModuleNames) do
@@ -11673,6 +11677,10 @@ local initilizationTypes = ({
 loadSaveData()
 
 --print(("Hacks Starting %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
+
+if C.Modules.Developer then
+	C.Modules.Developer(C,_SETTINGS)
+end
 
 GuiElements.TempStoreCache = {}
 

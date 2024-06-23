@@ -70,6 +70,6 @@ return function(C,_SETTINGS)
 				end)}
 			end
 		end
-		print("Finished Navalwrefar!")
+		print("Finished YEP!")
 	end
 end

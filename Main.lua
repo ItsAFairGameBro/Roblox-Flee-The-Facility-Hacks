@@ -3305,7 +3305,6 @@ C.AvailableHacks ={
 			["DontActivate"]=true,
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)
-				
 				local Title = "Loop Kill Enemies"
 				if newValue then
 					C.AddAction({Name=Title,Tags={"RemoveOnDestroy"},Time=function(ActionClone,info)
@@ -3320,7 +3319,7 @@ C.AvailableHacks ={
 					while C.enHacks.Blatant_NavalLoopKill and C.char == saveChar and C.char.PrimaryPart and C.human and C.human.Health>0 do
 						local theirHead, dist = C.getClosest()
 						if theirHead then
-							teleportMyself(theirHead.Parent:GetPivot() * CFrame.new(0,0,6))
+							teleportMyself(theirHead.Parent:GetPivot() * CFrame.new(0,100,0))
 						end
 						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 						C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
@@ -3334,6 +3333,12 @@ C.AvailableHacks ={
 				end
 			end,
 			["MyStartUp"]=function()
+				if C.enHacks.Blatant_NavalLoopKill then
+					local Rifle = StringWaitForChild(plr,"Backpack.Rifle",5)
+					if Rifle then
+						Rifle:Activate()
+					end
+				end
 				C.AvailableHacks.Blatant[317].ActivateFunction(C.enHacks.Blatant_NavalLoopKill)
 			end,
 		},
@@ -11119,8 +11124,7 @@ function C.defaultFunction(functName,args)
 		end;
 	end;
 	for commandIndex, data in pairs(C.CommandFunctions) do
-		if not hackInfo then continue end
-
+		if not data then continue end
 		local funct2Run = data[functName];
 		if funct2Run then
 			task.spawn(funct2Run, table.unpack(args));

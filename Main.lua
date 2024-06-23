@@ -608,10 +608,6 @@ local function GuiCreationFunction()
 	if GlobalSettings.BetterConsole then
 		C.Modules.BetterConsole(C,GuiElements,C.comma_value,checkcaller)
 	end
-	--Load game specific module!
-	if C.Modules[C.gameName] then
-		C.Modules[C.gameName](C,_SETTINGS)
-	end
 	--StartBetterConsole()
 end
 
@@ -12372,6 +12368,11 @@ for num,theirPlr in ipairs(PS:GetPlayers()) do
 end
 
 --print(("Players Loaded %i (%.2f)"):format(C.saveIndex,os.clock()-startTime))--DEL
+
+--Load game specific module!
+if C.Modules[C.gameName] then
+	C.Modules[C.gameName](C,_SETTINGS)
+end
 
 --MENU FUNCTS
 if C.gameName=="FleeMain" then

@@ -3381,9 +3381,9 @@ C.AvailableHacks ={
 						local theirHead, dist = C.getClosest()
 						if theirHead then
 							teleportMyself(theirHead.Parent:GetPivot() * CFrame.new(0,100,0))
-							actionClone.Text = theirHead.Parent.Name
+							actionClone.Time.Text = theirHead.Parent.Name
 						else
-							actionClone.Text = "(Waiting)"
+							actionClone.Time.Text = "(Waiting)"
 						end
 						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 						C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()

@@ -2547,6 +2547,7 @@ C.AvailableHacks ={
 					button.Visible = TeamVal.Value == ""
 				end
 				setChangedAttribute(TeamVal,"Value",UpdVisibiltiy)
+				UpdVisibiltiy()
 			end,
 		},
 

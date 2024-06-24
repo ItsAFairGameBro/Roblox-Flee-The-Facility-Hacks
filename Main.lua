@@ -3526,6 +3526,61 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Universes"]={"NavalWarefare"},			
 		},
+		[325]={
+			["Type"]="ExTextButton",
+			["Title"]="Plane Instant Refuel", ["CategoryAlias"] = "Vehicle",
+			["Desc"]="Auto Re-Fuels at Harbor after bombs run out. Teleports back as well.",
+			["Shortcut"]="Blatant_NavalInstantRefuel",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["Funct"]=nil,
+			["ActivateFunction"]=function(newValue)
+				if not newValue then
+					C.RemoveAction("Plane Refuel") -- Cancel the action
+				end
+			end,
+			["MySeatAdded"]=function(seatPart)
+				C.AvailableHacks.Blatant[325].MySeatRemoved()
+				local Plane = seatPart.Parent
+				local HitCode = Plane:WaitForChild("HitCode")
+				if HitCode and HitCode.Value == "Plane" then
+					local BombC = Plane:WaitForChild("BombC")
+					local function canRun()
+						return Plane and Plane.Parent and C.human and seatPart == C.human and not C.isCleared
+					end
+					local Origin = Plane:GetPivot()
+					local function CheckDORefuel()
+						if not canRun() then
+							return
+						end
+						if BombC.Value > 0  then
+							local Harbor = workspace:WaitForChild(plr.Team.Name.."Harbor")
+							local HarborMain = Harbor:WaitForChild("MainBody")
+							local actionClone, info = C.AddAction({Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
+								Plane:PivotTo(Origin)
+							end,})
+							actionClone.Time.Text = "~3s"
+							while canRun() and info.Enabled do
+								if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
+									Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,15,0))
+								end
+								RunS.RenderStepped:Wait()
+							end
+						else -- Refueled!
+							C.RemoveAction("Plane Refuel")
+						end
+					end
+					C.AvailableHacks.Blatant[325].Funct = BombC.Changed:Connect(CheckDORefuel)
+					CheckDORefuel()
+				end
+			end,
+			["MySeatRemoved"]=function()
+				if C.AvailableHacks.Blatant[325].Funct then
+					C.AvailableHacks.Blatant[325].Funct:Disconnect()
+					C.AvailableHacks.Blatant[325].Funct=nil
+				end
+			end,
+		},
 		[326]={
 			["Type"]="ExTextBox",
 			["Title"]="Vehicle Levitation Height", ["CategoryAlias"] = "Vehicle",

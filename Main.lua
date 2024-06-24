@@ -2491,9 +2491,9 @@ C.AvailableHacks ={
 		},
 		[33]={
 			["Type"]="ExTextButton",
-			["Title"]="Kill Aura",
-			["Desc"]="Maximum Dist of ~450, Must Equip Rifle",
-			["Shortcut"]="Blatant_NavalKillAura",
+			["Title"]="Island Capture Button",
+			["Desc"]="Auto captures from wherever you are",
+			["Shortcut"]="Render_IslandCaptureButton",
 			["Default"]=false,
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)

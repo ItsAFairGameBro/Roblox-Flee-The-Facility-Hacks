@@ -577,6 +577,7 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 			task.spawn(info.Time,ActionClone,info)
 		end
 		Actions.Visible = true
+		return ActionClone
 	end
 	
 	function C.RemoveAction(name)

@@ -2518,11 +2518,11 @@ C.AvailableHacks ={
 				local IslandCode = island:WaitForChild("IslandCode").Value
 				local FlagPad = island:WaitForChild("Flag"):WaitForChild("FlagPad")
 				local button = newTag:WaitForChild("Toggle")
-				button.Text = "Capture"
 				local isEn = false
 				local Info = {Name="Capturing "..IslandCode,Tags={"RemoveOnDestroy"}}
 				local function activate(new)
 					isEn = new
+					button.Text = isEn and "Pause" or "Capture"
 					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,0,255)
 					if new then
 						local ActionClone = C.AddAction(Info)
@@ -3531,7 +3531,7 @@ C.AvailableHacks ={
 			["Desc"]="How high off the ground the ships float",
 			["Shortcut"]="Blatant_NavalLevitationHeight",
 			["Default"]=0,
-			["MinBound"]=0,
+			["MinBound"]=-50,
 			["MaxBound"]=100,
 			["LevitationPart"]=nil,
 			["Universes"]={"NavalWarefare"},

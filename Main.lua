@@ -2544,10 +2544,9 @@ C.AvailableHacks ={
 				end)
 				activate(isEn)
 				local function UpdVisibiltiy()
-					print(IslandCode,TeamVal.Value,TeamVal.Value=="")
 					button.Visible = TeamVal.Value == ""
 				end
-				setChangedAttribute(TeamVal,"Value",UpdVisibiltiy)
+				setChangedProperty(TeamVal,"Value",UpdVisibiltiy)
 				UpdVisibiltiy()
 			end,
 		},

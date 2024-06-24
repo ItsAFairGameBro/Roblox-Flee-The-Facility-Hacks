@@ -2506,6 +2506,7 @@ C.AvailableHacks ={
 				newTag.Name = "Island"
 				newTag.Parent=GuiElements.HackGUI
 				newTag.StudsOffsetWorldSpace = Vector3.new(30, 0, 0)
+				newTag.ExtentsOffsetWorldSpace = Vector3.zero
 				newTag.Adornee=island:WaitForChild("MainBody")
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"GameHackDisplays")

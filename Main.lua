@@ -2522,12 +2522,12 @@ C.AvailableHacks ={
 				local Info = {Name="Capturing "..IslandCode,Tags={"RemoveOnDestroy"}}
 				local function activate(new)
 					isEn = new
-					button.BackgroundColor3 = isEn and Color3.fromRGB(170,0,255) or Color3.fromRGB(255)
+					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,0,255)
 					if new then
 						local ActionClone = C.AddAction(Info)
 						local Touching = false
 						while Info.Enabled do
-							ActionClone.Time.Text = (HPVal.Value / 2500):format("%.2f%%")
+							ActionClone.Time.Text = ("%.2f%%"):format(HPVal.Value / 2500)
 							Touching = not Touching
 							local PrimaryPart = C.char and C.char.PrimaryPart
 							if PrimaryPart then
@@ -2541,7 +2541,7 @@ C.AvailableHacks ={
 				button.MouseButton1Up:Connect(function()
 					activate(not isEn)
 				end)
-				activate()
+				activate(isEn)
 			end,
 		},
 

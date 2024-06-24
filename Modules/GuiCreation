@@ -535,6 +535,10 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	GuiElements.ActionsList = ActionsList
 	GuiElements.ActionsEx = ActionsEx
 	ActionsEx:AddTag("RemoveOnDestroy")
+	if C.gameUniverse == "NavalWarefare" then
+		Actions.AnchorPoint = Vector2.new(1,0)
+		Actions.Position = UDim2.fromScale(1,.5)
+	end
 	
 	getgenv().ActionsList = getgenv().ActionsList or {}
 	

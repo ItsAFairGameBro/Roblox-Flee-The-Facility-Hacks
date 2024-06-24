@@ -3336,6 +3336,7 @@ C.AvailableHacks ={
 				if C.enHacks.Blatant_NavalLoopKill then
 					local Rifle = StringWaitForChild(plr,"Backpack.Rifle",5)
 					if Rifle then
+						task.wait(1)
 						Rifle:Activate()
 					end
 				end

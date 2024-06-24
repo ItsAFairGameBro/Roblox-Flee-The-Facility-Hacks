@@ -1540,13 +1540,13 @@ end
 
 function C.requireModule(module: ModuleScript): Table
 	getgenv().RequireModuleCache = getgenv().RequireModuleCache or {}
-	if getgenv().RequireModuleCache[module] then
-		return getgenv().RequireModuleCache[module]
+	if getgenv().RequireModuleCache[module.Name] then
+		return getgenv().RequireModuleCache[module.Name]
 	end
 	while true do
 		local tbl, err = pcall(getgenv().require,module)
 		if tbl then
-			getgenv().RequireModuleCache[module] = err
+			getgenv().RequireModuleCache[module.Name] = err
 			return err
 		else
 			warn("Failed To Get Module `"..tostring(module).."`: "..err)

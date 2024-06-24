@@ -2489,6 +2489,62 @@ C.AvailableHacks ={
 				hackedTeleportFunction()
 			end,
 		},
+		[33]={
+			["Type"]="ExTextButton",
+			["Title"]="Kill Aura",
+			["Desc"]="Maximum Dist of ~450, Must Equip Rifle",
+			["Shortcut"]="Blatant_NavalKillAura",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				for num, tag in pairs(CS:GetTagged("GameHackDisplays")) do
+					tag.Enabled=newValue
+				end
+			end,
+			["IslandAdded"]=function(island)
+				local newTag=C.ToggleTag:Clone()
+				newTag.Name = "Island"
+				newTag.Parent=GuiElements.HackGUI
+				newTag.ExtentsOffsetWorldSpace = Vector3.new(0, 5, 0)
+				newTag.Adornee=island:WaitForChild("MainBody")
+				CS:AddTag(newTag,"RemoveOnDestroy")
+				CS:AddTag(newTag,"GameHackDisplays")
+				setChangedProperty(island,"Parent",function()
+					newTag:Destroy()
+				end)
+				local TeamVal = island:WaitForChild("Team")
+				local HPVal = island:WaitForChild("HP")
+				local IslandCode = island:WaitForChild("IslandCode").Value
+				local FlagPad = island:WaitForChild("Flag"):WaitForChild("FlagPad")
+				local button = newTag:WaitForChild("Button")
+				button.Text = "Capture"
+				local isEn = false
+				local Info = {Name="Capturing "..IslandCode,Tags={"RemoveOnDestroy"}}
+				local function activate(new)
+					isEn = new
+					button.BackgroundColor3 = isEn and Color3.fromRGB(170,0,255) or Color3.fromRGB(255)
+					if new then
+						local ActionClone = C.AddAction(Info)
+						local Touching = false
+						while Info.Enabled do
+							ActionClone.Time.Text = (HPVal.Value / 2500):format("%.2f%%")
+							Touching = not Touching
+							local PrimaryPart = C.char and C.char.PrimaryPart
+							if PrimaryPart then
+								firetouchinterest(FlagPad, C.char.PrimaryPart, Touching and 0 or 1)
+							end
+							RunS.RenderStepped:Wait()
+						end
+					end
+					C.RemoveAction(Info.Name)
+				end
+				button.MouseButton1Up:Connect(function()
+					activate(not isEn)
+				end)
+				activate()
+			end,
+		},
+
 	},
 	["Blatant"]={
 		--[[[1]={
@@ -3222,7 +3278,7 @@ C.AvailableHacks ={
 		},
 		[315]={
 			["Type"]="ExTextButton",
-			["Title"]="Kill Aura",
+			["Title"]="Kill Aura", ["CategoryAlias"] = "Weapon",
 			["Desc"]="Maximum Dist of ~450, Must Equip Rifle",
 			["Shortcut"]="Blatant_NavalKillAura",
 			["Default"]=false,
@@ -3251,7 +3307,7 @@ C.AvailableHacks ={
 		},
 		[316]={
 			["Type"]="ExTextButton",
-			["Title"]="Auto Aim",
+			["Title"]="Auto Aim", ["CategoryAlias"] = "Weapon",
 			["Desc"]="Aims wielded turrets to the nearest enemey",
 			["Shortcut"]="Blatant_NavalAutoAim",
 			["Default"]=false,
@@ -3296,8 +3352,8 @@ C.AvailableHacks ={
 		},
 		[317]={
 			["Type"]="ExTextButton",
-			["Title"]="Loop Kill Enemies",
-			["Desc"]="Teleports to enemies to kill them. Make sure you equip Rifle and have Kill Aura enabled",
+			["Title"]="Loop Kill Enemies", ["CategoryAlias"] = "Weapon",
+			["Desc"]="Make sure you equip Rifle and have Kill Aura enabled",
 			["Shortcut"]="Blatant_NavalLoopKill",
 			["Default"]=false,
 			["LastSpotted"]=nil,
@@ -3306,9 +3362,7 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				local Title = "Loop Kill Enemies"
 				if newValue then
-					C.AddAction({Name=Title,Tags={"RemoveOnDestroy"},Time=function(ActionClone,info)
-						ActionClone.Time.Text = "Time: FOREVER"
-					end,Stop=function(onRequest)
+					local actionClone = C.AddAction({Name=Title,Tags={"RemoveOnDestroy"},Stop=function(onRequest)
 						C.refreshEnHack["Blatant_NavalLoopKill"](false)
 					end,})
 					if not C.AvailableHacks.Blatant[317].LastSpotted and C.char and C.char.PrimaryPart then
@@ -3319,6 +3373,9 @@ C.AvailableHacks ={
 						local theirHead, dist = C.getClosest()
 						if theirHead then
 							teleportMyself(theirHead.Parent:GetPivot() * CFrame.new(0,100,0))
+							actionClone.Text = theirHead.Parent.Name
+						else
+							actionClone.Text = "(Waiting)"
 						end
 						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 						C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
@@ -3344,7 +3401,7 @@ C.AvailableHacks ={
 		[320]={
 			["Type"]="ExTextBox",
 			["Title"]="Vehicle Speed Multiplier", ["CategoryAlias"] = "Vehicle",
-			["Desc"]="How much faster vehicles that you drive go. Max For Ships Is x1.4",
+			["Desc"]="How much faster vehicles that you drive go. Max For Ships Is x1.4 Unless AutoTeleportBack is enabled",
 			["Shortcut"]="Blatant_NavalVehicleSpeed",
 			["Default"]=1,
 			["MinBound"]=0.1,

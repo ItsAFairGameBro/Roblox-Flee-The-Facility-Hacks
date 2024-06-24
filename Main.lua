@@ -2550,6 +2550,7 @@ C.AvailableHacks ={
 				setChangedProperty(TeamVal,"Value",UpdVisibiltiy)
 				UpdVisibiltiy()
 				newTag.Adornee=FlagPad
+				newTag.Enabled = C.Render_IslandCaptureButton
 			end,
 		},
 

@@ -3333,11 +3333,15 @@ C.AvailableHacks ={
 				end
 			end,
 			["MyStartUp"]=function(_,firstRun)
+				print("Hack",C.enHacks.Blatant_NavalLoopKill,firstRun)
 				if C.enHacks.Blatant_NavalLoopKill and not firstRun then
 					task.wait(1)					
 					local Rifle = plr:WaitForChild("Backpack"):WaitForChild("M1 Garand",5)
 					if Rifle then
 						C.human:EquipTool(Rifle)
+						print("Equip")
+					else
+						warn("Rifle Not Found!")
 					end
 				end
 				C.AvailableHacks.Blatant[317].ActivateFunction(C.enHacks.Blatant_NavalLoopKill)

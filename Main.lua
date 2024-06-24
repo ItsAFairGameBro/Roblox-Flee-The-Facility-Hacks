@@ -72,7 +72,7 @@ local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
 GlobalSettings.MinimumHeight = GlobalSettings.MinimumHeight or 1.5
 GlobalSettings.BetterConsole = true
-GlobalSettings.AlwaysRefreshModules = true -- Always refreshs Modules on refresh, no caching! May cause errors.
+GlobalSettings.AlwaysRefreshModules = false -- Always refreshs Modules on refresh, no caching! May cause errors.
 
 local getID="HackGUI1"
 local emojiDesc = {
@@ -122,8 +122,7 @@ local makefolder = not isStudio and makefolder
 local writefile = not isStudio and writefile
 	
 --DEBUG--
-local _SETTINGS
-_SETTINGS={
+local _SETTINGS={
 	botModeEnabled=GlobalSettings.botModeEnabled;
 	myBots={--has faster default walkspeed for all my bot's and their usernames
 		["itsafairgamebro"]=true,
@@ -3332,7 +3331,7 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-			["MyStartUp"]=function(_,firstRun)
+			["MyStartUp"]=function(_,_,firstRun)
 				print("Hack",C.enHacks.Blatant_NavalLoopKill,firstRun)
 				if C.enHacks.Blatant_NavalLoopKill and not firstRun then
 					task.wait(1)					

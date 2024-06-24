@@ -3553,7 +3553,7 @@ C.AvailableHacks ={
 						if not canRun() then
 							return
 						end
-						if BombC.Value > 0  then
+						if BombC.Value == 0  then
 							local Harbor = workspace:WaitForChild(plr.Team.Name.."Harbor")
 							local HarborMain = Harbor:WaitForChild("MainBody")
 							local actionClone, info = C.AddAction({Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)

@@ -560,22 +560,27 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 		end)
 		getgenv().ActionsList[info.Name] = info
 		ActionClone.Parent = ActionsList
-		if typeof(info.Time) == "number" then
-			task.spawn(function()
-				for s = info.Time, 1, -1 do
-					if not ActionClone.Parent then
-						return
+		if info.Time then
+			if typeof(info.Time) == "number" then
+				task.spawn(function()
+					for s = info.Time, 1, -1 do
+						if not ActionClone.Parent then
+							return
+						end
+						ActionClone.Time.Text = s
+						task.wait(1)
 					end
-					ActionClone.Time.Text = s
-					task.wait(1)
-				end
-				if StopEvent.Parent then
-					StopEvent:Fire()
-				end
-			end)
+					if StopEvent.Parent then
+						StopEvent:Fire()
+					end
+				end)
+			else
+				task.spawn(info.Time,ActionClone,info)
+			end
 		else
-			task.spawn(info.Time,ActionClone,info)
+			--Probably utilized elsewhere!
 		end
+		
 		Actions.Visible = true
 		return ActionClone
 	end

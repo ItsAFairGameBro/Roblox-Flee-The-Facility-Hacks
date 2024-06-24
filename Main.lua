@@ -3545,7 +3545,9 @@ C.AvailableHacks ={
 				local HitCode = Plane:WaitForChild("HitCode")
 				if HitCode and HitCode.Value == "Plane" then
 					local BombC = Plane:WaitForChild("BombC")
+					print("Plane Seat")
 					local function canRun()
+						print("Check",Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared)
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
 					end
 					local Origin = Plane:GetPivot()

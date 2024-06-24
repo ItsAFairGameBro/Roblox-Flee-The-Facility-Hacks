@@ -2529,7 +2529,7 @@ C.AvailableHacks ={
 					if new then
 						local ActionClone = C.AddAction(Info)
 						local Touching = false
-						while Info.Enabled do
+						while Info.Enabled and TeamVal.Value == "" do
 							ActionClone.Time.Text = ("%.2f%%"):format(100 * (HPVal.Value / 2500))
 							Touching = not Touching
 							local PrimaryPart = C.char and C.char.PrimaryPart

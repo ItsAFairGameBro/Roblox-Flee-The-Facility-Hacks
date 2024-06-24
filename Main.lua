@@ -3333,9 +3333,8 @@ C.AvailableHacks ={
 				end
 			end,
 			["MyStartUp"]=function()
-				task.wait(1)
 				if C.enHacks.Blatant_NavalLoopKill then
-					local Rifle = StringWaitForChild(plr,"Backpack.Rifle",5)
+					local Rifle = StringWaitForChild(plr,"Backpack.M1 Garand",5)
 					if Rifle then
 						Rifle:Activate()
 					end

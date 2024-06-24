@@ -2498,10 +2498,7 @@ C.AvailableHacks ={
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)
 				for num, tag in pairs(CS:GetTagged("GameHackDisplays")) do
-					local TeamVal = tag.Adornee.Parent:FindFirstChild("Team")
-					if TeamVal then
-						tag.Enabled=TeamVal.Value == "" and newValue
-					end
+					tag.Enabled=newValue
 				end
 			end,
 			["IslandAdded"]=function(island)
@@ -2529,8 +2526,8 @@ C.AvailableHacks ={
 					if new then
 						local ActionClone = C.AddAction(Info)
 						local Touching = false
-						while Info.Enabled and TeamVal.Value == "" do
-							ActionClone.Time.Text = ("%.2f%%"):format(100 * (HPVal.Value / (3.2 * 2500)))
+						while Info.Enabled and TeamVal.Value == "" and ActionClone and ActionClone.Parent do
+							ActionClone.Time.Text = ("%.2f%%"):format(100 * (HPVal.Value / (8000)))
 							Touching = not Touching
 							local PrimaryPart = C.char and C.char.PrimaryPart
 							if PrimaryPart then
@@ -2546,9 +2543,10 @@ C.AvailableHacks ={
 					activate(not isEn)
 				end)
 				activate(isEn)
-				setChangedAttribute(TeamVal,"Value",function()
-					button.Visible = TeamVal.Value == "" and C.enHacks.Render_IslandCaptureButton
-				end)
+				local function UpdVisibiltiy()
+					button.Visible = TeamVal.Value == ""
+				end
+				setChangedAttribute(TeamVal,"Value",UpdVisibiltiy)
 			end,
 		},
 

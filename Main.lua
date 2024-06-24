@@ -3332,11 +3332,11 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-			["MyStartUp"]=function()
-				if C.enHacks.Blatant_NavalLoopKill then
+			["MyStartUp"]=function(_,firstRun)
+				if C.enHacks.Blatant_NavalLoopKill and not firstRun then
 					local Rifle = StringWaitForChild(plr,"Backpack.M1 Garand",5)
 					if Rifle then
-						Rifle:Activate()
+						C.human:EquipTool(Rifle)
 					end
 				end
 				C.AvailableHacks.Blatant[317].ActivateFunction(C.enHacks.Blatant_NavalLoopKill)

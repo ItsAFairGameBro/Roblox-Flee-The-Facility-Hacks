@@ -540,7 +540,6 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	
 	function C.AddAction(info)
 		if ActionsList:FindFirstChild(info.Name) then
-			warn("Duplicate Action Name `"..info.Name.."` Requested, Cancelling...")
 			return
 		end
 		info.Tags = info.Tags or {}

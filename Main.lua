@@ -2516,7 +2516,7 @@ C.AvailableHacks ={
 				local HPVal = island:WaitForChild("HP")
 				local IslandCode = island:WaitForChild("IslandCode").Value
 				local FlagPad = island:WaitForChild("Flag"):WaitForChild("FlagPad")
-				local button = newTag:WaitForChild("Button")
+				local button = newTag:WaitForChild("Toggle")
 				button.Text = "Capture"
 				local isEn = false
 				local Info = {Name="Capturing "..IslandCode,Tags={"RemoveOnDestroy"}}

@@ -2633,10 +2633,10 @@ C.AvailableHacks ={
 					return
 				end
 				local CenterPart = (C.gameName == "FleeMain" and C.char:FindFirstChild("HumanoidRootPart")) 
-					or (C.human.RigType == Enum.HumanoidRigType.R6 and C.char:WaitForChild("Torso")) or C.char:WaitForChild("HumanoidRootPart")
+					or (C.human.RigType == Enum.HumanoidRigType.R6 and C.char:WaitForChild("Torso",2)) or C.char:WaitForChild("HumanoidRootPart")
 				local newInput = nil
 				C.LastLoc = CenterPart:GetPivot() -- Inital Starting Position
-				local teleported = false
+				local blockTeleports = C.gameUniverse ~= "NavalWarefare"
 				local function CanRun()
 					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and CenterPart and C.enHacks.Blatant_TeleportBack
 				end
@@ -2648,9 +2648,13 @@ C.AvailableHacks ={
 				end)
 				local function TeleportDetected()
 					newInput = C.char:GetPivot()
-					if (newInput.Position - C.LastLoc.Position).Magnitude > 16 and (C.isInGame and C.isInGame(C.char)) then
-						C.LastTeleportLoc = C.LastLoc
-						C.char:PivotTo(C.LastLoc)
+					if (newInput.Position - C.LastLoc.Position).Magnitude > 16 and blockTeleports then
+						if blockTeleports then
+							C.LastTeleportLoc = C.LastLoc
+							C.char:PivotTo(C.LastLoc)
+						elseif (C.isInGame and C.isInGame(C.char)) then
+							blockTeleports = false
+						end
 					end
 				end
 				local function AddToCFrameDetection(part)
@@ -3660,7 +3664,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[327].MySeatRemoved()
 				local Ship = seatPart.Parent
 				local HitCode = Ship:WaitForChild("HitCode",5)
-				if HitCode and HitCode.Value ~= "Ship" then
+				if not HitCode or HitCode.Value ~= "Ship" then
 					return
 				end
 				local function CanRun()

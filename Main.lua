@@ -2593,10 +2593,12 @@ C.AvailableHacks ={
 							local HitCode = Plane:FindFirstChild("HitCode")
 							if HitCode and HitCode.Value == "Plane" then
 								tag.Enabled = C.enHacks.Render_IslandBombBase and Team.Value ~= plr.Team.Name and Team.Value ~= ""
+								return
 							end
 						end
 					end
 				end
+				tag.Enabled = false
 			end,
 			["MyPlayerAdded"]=function()
 				C.AvailableHacks.Render[36].Funct = plr:GetPropertyChangedSignal("Team"):Connect(C.AvailableHacks.Render[36].ActivateFunction)
@@ -3829,7 +3831,7 @@ C.AvailableHacks ={
 		},
 		[330]={
 			["Type"]="ExTextButton",
-			["Title"]="NEENOO's God Mode",
+			["Title"]=({"OP","Balanced","NEENOO's","NotAVirus","Easy"})[math.random(1,5)].." God Mode",
 			["Desc"]="Only works in planes and when unseated",
 			["Shortcut"]="Blatant_NavalWarefareGodMode",
 			["Default"]=false,
@@ -3850,7 +3852,8 @@ C.AvailableHacks ={
 					if canRun() then
 						local FF = C.char:FindFirstChildWhichIsA("ForceField")
 						if FF then
-							DS:AddItem(FF,5) -- Delete it after 5 seconds!
+							FF.Visible = false
+							DS:AddItem(FF,12) -- Delete it after 12 seconds!
 							FF.AncestryChanged:Wait() -- Wait until we're defenseless!
 						elseif C.human.SeatPart then
 							C.human:GetPropertyChangedSignal("SeatPart"):Wait()

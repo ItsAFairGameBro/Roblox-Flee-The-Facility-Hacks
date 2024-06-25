@@ -2589,7 +2589,7 @@ C.AvailableHacks ={
 					local Team = Base:WaitForChild("Team",5)
 					if Team then
 						local Plane = C.human and C.human.SeatPart and C.human.SeatPart.Parent
-						if Plane then
+						if Plane and C.human.SeatPart.Name == "Seat" then
 							local HitCode = Plane:FindFirstChild("HitCode")
 							if HitCode and HitCode.Value == "Plane" then
 								tag.Enabled = C.enHacks.Render_IslandBombBase and Team.Value ~= plr.Team.Name and Team.Value ~= ""
@@ -3741,7 +3741,7 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function()
 				for num, part in ipairs(StringWaitForChild(workspace,"Setting.WaterColliders"):GetChildren()) do
 					if part:IsA("BasePart") then
-						TS:Create(part,TweenInfo.new(1),{Position=Vector3.new(part.Position.X, -52 
+						TS:Create(part,TweenInfo.new(C.enHacks.Blatant_NavalLevitationHeight/23),{Position=Vector3.new(part.Position.X, -52 
 							+ (C.AvailableHacks.Blatant[326].Enabled and C.enHacks.Blatant_NavalLevitationHeight or 0), part.Position.Z)}):Play()
 					end
 				end
@@ -3749,7 +3749,7 @@ C.AvailableHacks ={
 			["MySeatAdded"]=function(seatPart)
 				local Ship = seatPart.Parent
 				local HitCode = Ship:WaitForChild("HitCode",5)
-				if HitCode and HitCode.Value ~= "Ship" then
+				if HitCode and HitCode.Value ~= "Ship" and seatPart.Name=="Seat" then
 					C.AvailableHacks.Blatant[326].Enabled = false
 				else
 					C.AvailableHacks.Blatant[326].Enabled = true

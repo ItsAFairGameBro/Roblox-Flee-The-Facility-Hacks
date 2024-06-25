@@ -3741,17 +3741,17 @@ C.AvailableHacks ={
 				end
 				while true do
 					while canRun() and not C.isInGame(C.char) do
-						--print("isn't in game")
+						print("isn't in game")
 						task.wait(10)
 					end
 					if canRun() then
 						local FF = C.char:FindFirstChildWhichIsA("ForceField")
 						if FF then
-							--print("ff wait")
+							print("ff wait")
 							FF.Destroying:Wait() -- Wait until we're defenseless!
-							--print"ff gone"
+							print"ff gone"
 						else
-							--print"fired"
+							print"fired"
 							C.RemoteEvent:FireServer("Teleport", {
 									[1] = "Harbour",
 									[2] = ""
@@ -3759,13 +3759,13 @@ C.AvailableHacks ={
 							RunS.RenderStepped:Wait()
 						end
 					else
-						--print"exited"
+						print"exited"
 						break
 					end
 				end
 			end,
 			["MyStartUp"]=function()
-				C.AvailableHacks.Blatant[328].ActivateFunction()
+				C.AvailableHacks.Blatant[330].ActivateFunction()
 			end,
 		},
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))

@@ -2629,7 +2629,6 @@ C.AvailableHacks ={
 						local ActionClone = C.AddAction(Info)
 						while Info.Enabled and TeamVal.Value == "" and ActionClone and ActionClone.Parent do
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
-							
 							RunS.RenderStepped:Wait()
 						end
 						return activate(false) -- Disable it
@@ -3623,14 +3622,35 @@ C.AvailableHacks ={
 				local MainVelocity = LineVelocity.Parent
 				local LowestAcceptablePoint = 10
 				local PullUpSpeed = 12
+				
+				local BoundingSize = Vector3.new(10240,1000,16384)
+				local BoundingCF = CFrame.new(0, BoundingSize.Y/2 + LowestAcceptablePoint, 0)
+				local function ClosestPointOnPart(PartCF, PartSize, Point)
+					local Transform = PartCF:pointToObjectSpace(Point) -- Transform into local space
+					local HalfSize = PartSize * 0.5
+					return PartCF * Vector3.new( -- Clamp & transform into world space
+						math.clamp(Transform.x, -HalfSize.x, HalfSize.x),
+						math.clamp(Transform.y, -HalfSize.y, HalfSize.y),
+						math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
+					)
+				end
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" then
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
-						local PullUpSpeed = (LowestAcceptablePoint - seatPart.Position.Y) * PullUpSpeed
-						if C.enHacks.Blatant_NavalAntiWater
-							and seatPart.Position.Y < LowestAcceptablePoint and OldVelocity.Y < PullUpSpeed then
-							MainVelocity.AssemblyLinearVelocity = Vector3.new(OldVelocity.X,PullUpSpeed,OldVelocity.Z)
+						local GetOutSpeed = (ClosestPointOnPart(BoundingCF, BoundingSize, seatPart.Position) - seatPart.Position) * PullUpSpeed
+						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
+							local NewX, NewY, NewZ = OldVelocity.X, OldVelocity.Y, OldVelocity.Z
+							if math.abs(GetOutSpeed.X) > .5 then
+								NewX = GetOutSpeed.X
+							end
+							if math.abs(GetOutSpeed.Y) > .5 then
+								NewY = GetOutSpeed.Y
+							end
+							if math.abs(GetOutSpeed.Z) > .5 then
+								NewZ = GetOutSpeed.Z
+							end
+							MainVelocity.AssemblyLinearVelocity = Vector3.new(NewX,NewY,NewZ)
 						end
 						RunS.RenderStepped:Wait()
 					end

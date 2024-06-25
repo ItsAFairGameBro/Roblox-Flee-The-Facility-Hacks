@@ -3885,11 +3885,12 @@ C.AvailableHacks ={
 				end	
 				if newValue then
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
+						task.wait(1)
 						if instance.Name == "Bomb" and instance.Parent then
 							local closestBasePart, dist = C.getClosestBase()
 							if closestBasePart then
-								closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
-								for s = 0, 10, 1 do
+								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
+								for s = 0, 1, 1 do
 									firetouchinterest(instance,closestBasePart,0)
 									task.wait()
 									firetouchinterest(instance,closestBasePart,1)

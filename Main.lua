@@ -3738,16 +3738,17 @@ C.AvailableHacks ={
 					end
 					if canRun() then
 						local FF = C.char:FindFirstChildWhichIsA("ForceField")
-						--if FF then
-						--	FF.AncestryChanged:Wait() -- Wait until we're defenseless!
-						--else
-							--local actionClone = C.AddAction(Info)
+						if FF then
+							FF.AncestryChanged:Wait() -- Wait until we're defenseless!
+						elseif C.human.SeatPart then
+							C.human:GetPropertyChangedSignal("SeatPart"):Wait()
+						else
 							C.RemoteEvent:FireServer("Teleport", {
 									[1] = "Harbour",
 									[2] = ""
 								})
 							RunS.RenderStepped:Wait()
-						--end
+						end
 					else
 						break
 					end

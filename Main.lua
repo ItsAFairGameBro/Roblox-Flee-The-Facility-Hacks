@@ -3850,6 +3850,7 @@ C.AvailableHacks ={
 					if canRun() then
 						local FF = C.char:FindFirstChildWhichIsA("ForceField")
 						if FF then
+							DS:AddItem(FF,5) -- Delete it after 5 seconds!
 							FF.AncestryChanged:Wait() -- Wait until we're defenseless!
 						elseif C.human.SeatPart then
 							C.human:GetPropertyChangedSignal("SeatPart"):Wait()
@@ -3858,7 +3859,7 @@ C.AvailableHacks ={
 									[1] = "Harbour",
 									[2] = ""
 								})
-							RunS.RenderStepped:Wait()
+							task.wait(2) -- Wait a bit so it doesn't lag!
 						end
 					else
 						break

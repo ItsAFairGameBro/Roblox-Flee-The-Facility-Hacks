@@ -2655,17 +2655,17 @@ C.AvailableHacks ={
 				end)
 				local function AddToCFrameDetection(part)
 					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("CFrame"):Connect(function()
-						warn("Teleport!")
 						newInput = C.char:GetPivot()
 						if (newInput.Position - lastInput.Position).Magnitude > 16 then
 							if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
 								teleported = true
+								teleportMyself(lastInput)
 							end
 						end
 					end))
 				end
 				for num, part in ipairs(C.char:GetChildren()) do
-					if part:IsA("BasePart") then
+					if part:IsA("BasePart") and part.Name == "Head" then
 						AddToCFrameDetection(part)
 					end
 				end

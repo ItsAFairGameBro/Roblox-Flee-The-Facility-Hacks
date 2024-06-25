@@ -53,20 +53,21 @@ return function(C,_SETTINGS)
 			["Title"]="Teleport Detection",
 			["Desc"]="Prints when you can possibly get teleported",
 			["Shortcut"]="Developer_PrintPartTeleports",
-			["Default"]=true,
+			["Default"]=false,
 			["DontActivate"]=true,
 			["Functs"]={},
 			["Universes"] = {"Global"},
 			["ActivateFunction"]=function(newValue)
+				local whitelistedNames = {"UpperTorso", "Torso", "Head", "Head", "HumanoidRootPart"} 
 				for num, funct in ipairs(C.AvailableHacks.Developer[3].Functs) do
 					funct:Disconnect()
 				end C.AvailableHacks.Developer[3].Functs = {}
 				if newValue then
-					for num, instance in ipairs(C.char and C.char:GetDescendants() or {}) do
-						if instance:IsA("BasePart") then
-							instance:GetPropertyChangedSignal("CFrame"):Connect(function()
-								print(instance:GetFullName():gsub(C.char:GetFullName(),"Char.") .. " Teleport Detected!")
-							end)
+					for num, instance in ipairs(C.char and C.char:GetChildren() or {}) do
+						if instance:IsA("BasePart") or table.find(whitelistedNames,instance.Name) then
+							table.insert(C.AvailableHacks.Developer[3].Functs,instance:GetPropertyChangedSignal("CFrame"):Connect(function()
+								print(instance:GetFullName():gsub(C.char:GetFullName(),"Char") .. " Teleported!")
+							end))
 						end
 					end
 				end

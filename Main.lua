@@ -629,6 +629,7 @@ local function teleport_module_teleportQueue()
 				or (C.human.RigType == Enum.HumanoidRigType.R15 and C.char:FindFirstChild("UpperTorso"))
 			if C.char.PrimaryPart then
 				C.LastTeleportLoc = currentTP
+				C.LastLoc = currentTP
 				C.char:PivotTo(currentTP)
 				plr:SetAttribute("LastTP",os.clock())
 			end
@@ -2647,19 +2648,19 @@ C.AvailableHacks ={
 								teleported = false
 							end
 						else--]]
-							lastInput = C.char:GetPivot()
+						C.LastLoc = C.char:GetPivot()
 						--end
 						RunS.RenderStepped:Wait()
 					end
 				end)
 				local function TeleportDetected()
 					newInput = C.char:GetPivot()
-					if (newInput.Position - lastInput.Position).Magnitude > 16 then
-						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
+					--if (newInput.Position - lastInput.Position).Magnitude > 16 then
+						if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
 							C.LastTeleportLoc = lastInput
 							C.char:PivotTo(lastInput)
 						end
-					end
+					--end
 				end
 				local function AddToCFrameDetection(part)
 					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("Position"):Connect(TeleportDetected))

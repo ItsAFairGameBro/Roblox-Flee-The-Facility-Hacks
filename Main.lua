@@ -2664,7 +2664,11 @@ C.AvailableHacks ={
 						end
 					end))
 				end
-				AddToCFrameDetection(CenterPart)
+				for num, part in ipairs(C.char:GetChildren()) do
+					if part:IsA("BasePart") then
+						AddToCFrameDetection(part)
+					end
+				end
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Blatant[5].ActivateFunction(C.enHacks.Blatant_TeleportBack)
@@ -3450,7 +3454,7 @@ C.AvailableHacks ={
 				end
 			end,
 			["MySeatAdded"]=function(seatPart)
-				C.AvailableHacks.Blatant[320].MySeatRemoved()
+				C.AvailableHacks.Blatant[320].MySeatRemoved(seatPart)
 				local Vehicle = seatPart.Parent
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				local FuelLeft = Vehicle:FindFirstChild("Fuel")

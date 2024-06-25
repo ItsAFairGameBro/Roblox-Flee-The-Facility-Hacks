@@ -2641,7 +2641,7 @@ C.AvailableHacks ={
 				task.spawn(function()
 					while CanRun() do
 						if teleported then
-							if (newInput - C.char:GetPivot()).Magnitude < 25 then
+							if (newInput.Position - C.char:GetPivot().Position).Magnitude < 25 then
 								teleportMyself(lastInput)
 							else
 								teleported = false

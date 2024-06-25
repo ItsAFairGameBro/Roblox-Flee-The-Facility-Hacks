@@ -2588,6 +2588,9 @@ C.AvailableHacks ={
 				if not Base then return end
 				local Team = Base:WaitForChild("Team",5)
 				if not Team then return end
+				local Plane = C.human and C.human.SeatPart and C.human.SeatPart.Parent
+				local HitCode = Plane:FindFirstChild("HitCode")
+				if not HitCode or HitCode.Value ~= "Plane" then return end
 				tag.Enabled = C.enHacks.Render_IslandBombBase and Team.Value ~= plr.Team.Name and Team.Value ~= ""
 			end,
 			["MyPlayerAdded"]=function()
@@ -2603,7 +2606,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				newTag.Name = "IslandBomb"
 				newTag.Parent=GuiElements.HackGUI
-				newTag.StudsOffsetWorldSpace = Vector3.new(0, 45, 0)
+				newTag.StudsOffsetWorldSpace = Vector3.new(0, 120, 0)
 				newTag.ExtentsOffsetWorldSpace = Vector3.zero
 
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -2643,7 +2646,6 @@ C.AvailableHacks ={
 				setChangedProperty(TeamVal,"Value",UpdVisibiltiy)
 				UpdVisibiltiy()
 				newTag.Adornee=MainBody
-				newTag.Enabled = C.enHacks.Render_IslandCaptureButton
 			end,
 			["DockAdded"]=function(dock)
 				C.AvailableHacks.Render[36].IslandAdded(dock)

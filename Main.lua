@@ -628,8 +628,8 @@ local function teleport_module_teleportQueue()
 				(C.human.RigType == Enum.HumanoidRigType.R6 and C.char:FindFirstChild("Torso"))
 				or (C.human.RigType == Enum.HumanoidRigType.R15 and C.char:FindFirstChild("UpperTorso"))
 			if C.char.PrimaryPart then
-				C.char:SetPrimaryPartCFrame(currentTP)
 				C.LastTeleportLoc = currentTP
+				C.char:PivotTo(currentTP)
 				plr:SetAttribute("LastTP",os.clock())
 			end
 			table.remove(TPStack,1)

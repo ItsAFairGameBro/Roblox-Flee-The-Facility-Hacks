@@ -3741,28 +3741,25 @@ C.AvailableHacks ={
 				end
 				while true do
 					while canRun() and not C.isInGame(C.char) do
-						print("isn't in game")
+						--print("isn't in game")
 						task.wait(10)
 					end
 					if canRun() then
 						local FF = C.char:FindFirstChildWhichIsA("ForceField")
 						if FF then
-							print("ff wait")
+							--print("ff wait")
 							FF.Destroying:Wait() -- Wait until we're defenseless!
-							print"ff gone"
+							--print"ff gone"
 						else
-							print"fired"
-							C.RemoteEvent:FireServer({
-								[1] = "Teleport",
-								[2] = {
+							--print"fired"
+							C.RemoteEvent:FireServer("Teleport", {
 									[1] = "Harbour",
 									[2] = ""
-								}
-							})
+								})
 							RunS.RenderStepped:Wait()
 						end
 					else
-						print"exited"
+						--print"exited"
 						break
 					end
 				end

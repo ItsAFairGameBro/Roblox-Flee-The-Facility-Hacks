@@ -2663,7 +2663,7 @@ C.AvailableHacks ={
 				end
 				local function AddToCFrameDetection(part)
 					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("Position"):Connect(TeleportDetected))
-					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("CFrame"):Connect(TeleportDetected))
+					--table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("CFrame"):Connect(TeleportDetected))
 				end
 				for num, part in ipairs(C.char:GetChildren()) do
 					if part:IsA("BasePart") then--and part.Name == "Head" then

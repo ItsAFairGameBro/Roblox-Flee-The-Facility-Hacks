@@ -2717,7 +2717,7 @@ C.AvailableHacks ={
 					or (C.human.RigType == Enum.HumanoidRigType.R6 and C.char:WaitForChild("Torso",2)) or C.char:WaitForChild("HumanoidRootPart")
 				local newInput = nil
 				C.LastLoc = CenterPart:GetPivot() -- Inital Starting Position
-				local blockTeleports = C.gameUniverse ~= "NavalWarefare"
+				local blockTeleports = C.gameUniverse ~= "NavalWarefare" or (C.isInGame and C.isInGame(C.char))
 				local function CanRun()
 					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and CenterPart and C.enHacks.Blatant_TeleportBack
 				end

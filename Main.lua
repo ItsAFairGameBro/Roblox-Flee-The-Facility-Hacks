@@ -2654,7 +2654,7 @@ C.AvailableHacks ={
 					end
 				end)
 				local function AddToCFrameDetection(part)
-					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("CFrame"):Connect(function()
+					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("Position"):Connect(function()
 						newInput = C.char:GetPivot()
 						if (newInput.Position - lastInput.Position).Magnitude > 16 then
 							if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
@@ -3745,15 +3745,16 @@ C.AvailableHacks ={
 					end
 					if canRun() then
 						local FF = C.char:FindFirstChildWhichIsA("ForceField")
-						if FF then
-							FF.AncestryChanged:Wait() -- Wait until we're defenseless!
-						else
+						--if FF then
+						--	FF.AncestryChanged:Wait() -- Wait until we're defenseless!
+						--else
+							--local actionClone = C.AddAction(Info)
 							C.RemoteEvent:FireServer("Teleport", {
 									[1] = "Harbour",
 									[2] = ""
 								})
 							RunS.RenderStepped:Wait()
-						end
+						--end
 					else
 						break
 					end

@@ -676,13 +676,27 @@ function C.RemoveAllTags(obj)
 		obj:RemoveTag(tag)
 	end
 end
-function C.DestroyInstancelTags(instance)
+function C.DestroyInstanceTags(instance)
 	C.RemoveAllTags(instance)
 	instance:Destroy()
 end
 function C.DestroyAllTaggedObjects(tag)
 	for _, obj in ipairs(CS:GetTagged(tag)) do
-		C.DestroyInstancelTags(obj)
+		C.DestroyInstanceTags(obj)
+	end
+end
+function C.DestroyAllWhichIsA(object: Instance, name: string)
+	for _, obj in ipairs(object:GetChildren()) do
+		if obj:IsA(name) then
+			obj:Destroy()
+		end
+	end
+end
+function C.DestroyAllOfClass(object: Instance, name: string)
+	for _, obj in ipairs(object:GetChildren()) do
+		if obj.ClassName == name then
+			obj:Destroy()
+		end
 	end
 end
 local print, warn = C.Modules.Env(C,_SETTINGS)
@@ -3580,6 +3594,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[325].Funct:Disconnect()
 					C.AvailableHacks.Blatant[325].Funct=nil
 				end
+				C.RemoveAction("Plane Refuel")
 			end,
 		},
 		[326]={
@@ -3651,6 +3666,34 @@ C.AvailableHacks ={
 				if C.AvailableHacks.Blatant[327].Funct then
 					C.AvailableHacks.Blatant[327].Funct:Disconnect()
 				end C.AvailableHacks.Blatant[327].Funct = nil
+			end,
+		},
+		[328]={
+			["Type"]="ExTextButton",
+			["Title"]="Free Tools",
+			["Desc"]="Invisible & Free Tools",
+			["Shortcut"]="Blatant_NavalWarefareFreeTools",
+			["Default"]=false,
+			["DontActivate"]=true,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				if newValue then
+					for num, tool in ipairs(RS:GetDescendants()) do
+						if tool:IsA("Tool") then
+							local clonedTool = tool:Clone()
+							C.DestroyAllWhichIsA(clonedTool, "BasePart")
+							C.DestroyAllOfClass(clonedTool, "Script")
+							clonedTool:AddTag("RemoveOnDestroy")
+							clonedTool:AddTag("FakeTool")
+							clonedTool.Parent = plr.Backpack
+						end
+					end
+				else
+					C.DestroyAllTaggedObjects("FakeTool")
+				end
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Blatant[328].ActivateFunction(C.enHacks.Blatant_NavalWarefareFreeTools)
 			end,
 		},
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))

@@ -2647,7 +2647,8 @@ C.AvailableHacks ={
 					newInput = C.char:GetPivot()
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
-							teleportMyself(lastInput)
+							--teleportMyself(lastInput)
+							C.char:PivotTo(lastInput)
 						end
 					end
 					CenterPart:GetPropertyChangedSignal("CFrame"):Wait()
@@ -3483,6 +3484,8 @@ C.AvailableHacks ={
 				end
 			end,
 			["MySeatRemoved"]=function()
+				C.human.SeatPart.PrimaryPart.AssemblyLinearVelocity = Vector3.zero
+				C.human.SeatPart.PrimaryPart.AssemblyAngularVelocity = Vector3.zero
 				for num, funct in ipairs(C.AvailableHacks.Blatant[320].Functs) do
 					funct:Disconnect()
 				end C.AvailableHacks.Blatant[320].Functs = {}
@@ -3556,7 +3559,7 @@ C.AvailableHacks ={
 			["MySeatAdded"]=function(seatPart)
 				C.AvailableHacks.Blatant[325].MySeatRemoved()
 				local Plane = seatPart.Parent
-				local HitCode = Plane:WaitForChild("HitCode")
+				local HitCode = Plane:WaitForChild("HitCode",5)
 				if HitCode and HitCode.Value == "Plane" then
 					local BombC = Plane:WaitForChild("BombC")
 					local function canRun()
@@ -12109,10 +12112,13 @@ local function CharacterAdded(theirChar,firstRun)
 		C.defaultFunction(isMyChar and "MyDeath" or "OthersDeath",inputFunctions)
 	end)}
 	if isMyChar then
+		local lastSeat
 		C.objectFuncts[theirHumanoid]["Seated"] = {theirHumanoid.Seated:Connect(function(active,seatPart)
-			C.defaultFunction(active and "MySeatAdded" or "MySeatRemoved",{seatPart})
+			C.defaultFunction(active and "MySeatAdded" or "MySeatRemoved",{seatPart or lastSeat})
+			lastSeat = seatPart
 		end)}
 		if theirHumanoid.SeatPart then
+			lastSeat = theirHumanoid.SeatPart
 			C.defaultFunction("MySeatAdded",{theirHumanoid.SeatPart})
 		end
 	end

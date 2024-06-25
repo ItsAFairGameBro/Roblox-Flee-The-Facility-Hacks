@@ -3888,7 +3888,7 @@ C.AvailableHacks ={
 						if instance.Name == "Bomb" and instance.Parent then
 							local closestBasePart, dist = C.getClosestBase()
 							if closestBasePart then
-								for s = 0, 10, 1 do
+								for s = 0, 2, 1 do
 									firetouchinterest(instance,closestBasePart,0)
 									task.wait()
 									firetouchinterest(instance,closestBasePart,1)

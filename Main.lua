@@ -2657,7 +2657,7 @@ C.AvailableHacks ={
 					if (newInput.Position - lastInput.Position).Magnitude > 16 then
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
 							C.LastTeleportLoc = lastInput
-							teleportMyself(lastInput)
+							C.char:PivotTo(lastInput)
 						end
 					end
 				end

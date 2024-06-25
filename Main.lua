@@ -2641,6 +2641,8 @@ C.AvailableHacks ={
 					while CanRun() do
 						if not teleported then
 							lastInput = C.char:GetPivot()
+						else
+							teleported = false
 						end
 						RunS.RenderStepped:Wait()
 					end

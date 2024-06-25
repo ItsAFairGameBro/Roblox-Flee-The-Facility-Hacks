@@ -3556,9 +3556,10 @@ C.AvailableHacks ={
 						if BombC.Value == 0  then
 							local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
 							local HarborMain = Harbor:WaitForChild("MainBody")
-							local actionClone, info = C.AddAction({Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
+							local Info = {Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
 								Plane:PivotTo(Origin)
-							end,})
+							end,}
+							local actionClone, info = C.AddAction(Info)
 							actionClone.Time.Text = "~3s"
 							while canRun() and info.Enabled do
 								if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then

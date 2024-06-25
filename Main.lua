@@ -3535,7 +3535,9 @@ C.AvailableHacks ={
 			["Funct"]=nil,
 			["MySeatAdded"]=function(seatPart)
 				local Vehicle = seatPart.Parent
-				local VehicleType = Vehicle:WaitForChild("HitCode").Value
+				local HitCode = Vehicle:WaitForChild("HitCode",5)
+				if not HitCode then return end
+				local VehicleType = HitCode.Value
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				local MainVelocity = LineVelocity.Parent
 				local LowestAcceptablePoint = 10
@@ -3640,7 +3642,8 @@ C.AvailableHacks ={
 			end,
 			["MySeatAdded"]=function(seatPart)
 				local Ship = seatPart.Parent
-				if Ship:WaitForChild("HitCode").Value ~= "Ship" then
+				local HitCode = Ship:WaitForChild("HitCode",5)
+				if HitCode and HitCode.Value ~= "Ship" then
 					C.AvailableHacks.Blatant[326].Enabled = false
 				else
 					C.AvailableHacks.Blatant[326].Enabled = true
@@ -3663,7 +3666,8 @@ C.AvailableHacks ={
 			["MySeatAdded"]=function(seatPart)
 				C.AvailableHacks.Blatant[327].MySeatRemoved()
 				local Ship = seatPart.Parent
-				if Ship:WaitForChild("HitCode").Value ~= "Ship" then
+				local HitCode = Ship:WaitForChild("HitCode",5)
+				if HitCode and HitCode.Value ~= "Ship" then
 					return
 				end
 				local function CanRun()
@@ -3717,6 +3721,49 @@ C.AvailableHacks ={
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Blatant[328].ActivateFunction(C.enHacks.Blatant_NavalWarefareFreeTools)
+			end,
+		},
+		[330]={
+			["Type"]="ExTextButton",
+			["Title"]="[PREMIUM ONLY] God Mode",
+			["Desc"]="Only works in planes and when unseated",
+			["Shortcut"]="Blatant_NavalWarefareGodMode",
+			["Default"]=false,
+			["DontActivate"]=true,
+			["Universes"]={"NavalWarefare"},
+			["Deb"]=0,
+			["ActivateFunction"]=function()
+				C.AvailableHacks.Blatant[330].Deb += 1
+				local saveDeb = C.AvailableHacks.Blatant[330].Deb
+				local function canRun()
+					return saveDeb == C.AvailableHacks.Blatant[330].Deb and C.enHacks.Blatant_NavalWarefareGodMode 
+						and not C.isCleared and C.char and C.human and C.human.Health>0
+				end
+				while true do
+					while canRun() and not C.isInGame(C.char) do
+						task.wait(10)
+					end
+					if canRun() then
+						local FF = C.char:FindFirstChildWhichIsA("ForceField")
+						if FF then
+							FF.Destroying:Wait() -- Wait until we're defenseless!
+						else
+							C.RemoteEvent:FireServer({
+								[1] = "Teleport",
+								[2] = {
+									[1] = "Harbour",
+									[2] = ""
+								}
+							})
+							RunS.RenderStepped:Wait()
+						end
+					else
+						break
+					end
+				end
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Blatant[328].ActivateFunction()
 			end,
 		},
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))

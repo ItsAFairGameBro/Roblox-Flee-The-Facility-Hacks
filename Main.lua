@@ -2653,16 +2653,20 @@ C.AvailableHacks ={
 						RunS.RenderStepped:Wait()
 					end
 				end)
-				local function AddToCFrameDetection(part)
-					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("Position"):Connect(function()
-						newInput = C.char:GetPivot()
-						if (newInput.Position - lastInput.Position).Magnitude > 16 then
-							if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
-								C.LastTeleportLoc = lastInput
-								C.char:PivotTo(lastInput)
-							end
+				local function TeleportDetected()
+					newInput = C.char:GetPivot()
+					if (newInput.Position - lastInput.Position).Magnitude > 16 then
+						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
+							C.LastTeleportLoc = lastInput
+							C.char:PivotTo(lastInput)
+							RunS.RenderStepped:Wait()
+							C.char:PivotTo(lastInput)
 						end
-					end))
+					end
+				end
+				local function AddToCFrameDetection(part)
+					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("Position"):Connect(TeleportDetected))
+					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("CFrame"):Connect(TeleportDetected))
 				end
 				for num, part in ipairs(C.char:GetChildren()) do
 					if part:IsA("BasePart") and part.Name == "Head" then

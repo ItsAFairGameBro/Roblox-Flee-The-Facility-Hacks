@@ -27,7 +27,7 @@ return function(C,_SETTINGS)
 		[2]={
 			["Type"]="ExTextButton",
 			["Title"]="Get Collisions Groups",
-			["Desc"]="Gets all possible collision groups, and prints it to the chat",
+			["Desc"]="Gets all possible collision groups, and prints it to the console",
 			["Shortcut"]="Developer_PrintCollisionGroups",
 			["Default"]=true,
 			["DontActivate"]=true,
@@ -46,6 +46,33 @@ return function(C,_SETTINGS)
 						print("\t"..val2.name,PhysicsS:CollisionGroupsAreCollidable(val2.name,val.name),"\n")
 					end
 				end
+			end,
+		},
+		[3]={
+			["Type"]="ExTextButton",
+			["Title"]="Teleport Detection",
+			["Desc"]="Prints when you can possibly get teleported",
+			["Shortcut"]="Developer_PrintPartTeleports",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Functs"]={},
+			["Universes"] = {"Global"},
+			["ActivateFunction"]=function(newValue)
+				for num, funct in ipairs(C.AvailableHacks.Developer[3].Functs) do
+					funct:Disconnect()
+				end C.AvailableHacks.Developer[3].Functs = {}
+				if newValue then
+					for num, instance in ipairs(C.char and C.char:GetDescendants() or {}) do
+						if instance:IsA("BasePart") then
+							instance:GetPropertyChangedSignal("CFrame"):Connect(function()
+								print(instance:GetFullName():gsub(C.char:GetFullName(),"Char.") .. " Teleport Detected!")
+							end)
+						end
+					end
+				end
+			end,
+			["MyStartUp"]=function()
+				C.AvailableHacks.Developer[3].ActivateFunction(C.enHacks.Developer_PrintPartTeleports)
 			end,
 		}
 	}

@@ -2648,7 +2648,7 @@ C.AvailableHacks ={
 							end
 						end
 						if not teleported then
-							--lastInput = C.char:GetPivot()
+							lastInput = C.char:GetPivot()
 						end
 						RunS.RenderStepped:Wait()
 					end

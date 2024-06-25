@@ -2656,10 +2656,10 @@ C.AvailableHacks ={
 				local function TeleportDetected()
 					newInput = C.char:GetPivot()
 					--if (newInput.Position - lastInput.Position).Magnitude > 16 then
-						if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
-							C.LastTeleportLoc = lastInput
-							C.char:PivotTo(lastInput)
-						end
+					if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
+						C.LastTeleportLoc = C.LastLoc
+						C.char:PivotTo(C.LastLoc)
+					end
 					--end
 				end
 				local function AddToCFrameDetection(part)

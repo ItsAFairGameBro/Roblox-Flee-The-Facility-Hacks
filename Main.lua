@@ -3485,9 +3485,12 @@ C.AvailableHacks ={
 					print("Warning, Vehicle Type has no BodyVelocity:",Vehicle)
 				end
 			end,
-			["MySeatRemoved"]=function()
-				C.human.SeatPart.PrimaryPart.AssemblyLinearVelocity = Vector3.zero
-				C.human.SeatPart.PrimaryPart.AssemblyAngularVelocity = Vector3.zero
+			["MySeatRemoved"]=function(seatPart)
+				local Vehicle = seatPart.Parent
+				if Vehicle and Vehicle.PrimaryPart then
+					Vehicle.PrimaryPart.AssemblyLinearVelocity = Vector3.zero
+					Vehicle.PrimaryPart.AssemblyAngularVelocity = Vector3.zero
+				end
 				for num, funct in ipairs(C.AvailableHacks.Blatant[320].Functs) do
 					funct:Disconnect()
 				end C.AvailableHacks.Blatant[320].Functs = {}

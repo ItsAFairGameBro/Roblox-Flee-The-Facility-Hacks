@@ -2593,8 +2593,12 @@ C.AvailableHacks ={
 			["MyPlayerAdded"]=function()
 				C.AvailableHacks.Render[36].Funct = plr:GetPropertyChangedSignal("Team"):Connect(C.AvailableHacks.Render[36].ActivateFunction)
 			end,
-			["MySeatAdded"]=C.AvailableHacks.Render[36].ActivateFunction,
-			["MySeatRemoved"]=C.AvailableHacks.Render[36].ActivateFunction,
+			["MySeatAdded"]=function()
+				C.AvailableHacks.Render[36].ActivateFunction()
+			end,
+			["MySeatRemoved"]=function()
+				C.AvailableHacks.Render[36].ActivateFunction()
+			end,
 			["IslandAdded"]=function(island)
 				local newTag=C.ToggleTag:Clone()
 				newTag.Name = "IslandBomb"
@@ -2641,7 +2645,9 @@ C.AvailableHacks ={
 				newTag.Adornee=MainBody
 				newTag.Enabled = C.enHacks.Render_IslandCaptureButton
 			end,
-			["DockAdded"]=C.AvailableHacks.Render[36].IslandAdded
+			["DockAdded"]=function(dock)
+				C.AvailableHacks.Render[36].IslandAdded(dock)
+			end
 		},
 
 	},

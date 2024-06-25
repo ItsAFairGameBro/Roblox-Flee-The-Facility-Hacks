@@ -10970,7 +10970,7 @@ C.AvailableHacks ={
 	},
 	["Commands"]={
 		[2]={
-			["Type"]="ExTextButton",
+			["Type"]="ExTextButton",["CategoryAlias"]="Developer",
 			["Title"]="Clear Consoles",
 			["Desc"]="Activate To Clear Consoles",
 			["Shortcut"]="ClearConsole",
@@ -10993,7 +10993,7 @@ C.AvailableHacks ={
 		},
 		[3]={
 			["Type"]="ExTextButton",
-			["Title"]="Get Console Logs",
+			["Title"]="Get Console Logs", ["CategoryAlias"]="Developer",
 			["Desc"]="Activate To See Console Logs",
 			["Shortcut"]="GetConsoleLogs",
 			["Default"]=true,
@@ -11027,7 +11027,7 @@ C.AvailableHacks ={
 		},
 		[24]={
 			["Type"]="ExTextButton",
-			["Title"]="Reset",
+			["Title"]="Reset", ["CategoryAlias"]="Developer",
 			["Desc"]="Activate To Reset Character",
 			["Shortcut"]="Reset",
 			["Default"]=true,
@@ -12153,7 +12153,8 @@ for categoryName, differentHacks in pairs(C.AvailableHacks) do
 			continue -- skip this lolo!
 		end
 		local overrideCategoryName = hack.CategoryAlias or categoryName
-		local canPass = overrideCategoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,C.gameUniverse))) or (not hack.Universes and not hack.Places and C.gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,C.gameName)));
+		local canPass = overrideCategoryName=="Basic" or (((hack.Universes and (table.find(hack.Universes,"Global") or table.find(hack.Universes,C.gameUniverse))) or (not hack.Universes and not hack.Places and C.gameName=="FleeMain")) or (hack.Places and table.find(hack.Places,C.gameName)))
+			and (overrideCategoryName~="Developer" or _SETTINGS.developer);
 		if canPass then
 			if not newButton or not newProperty or overrideCategoryName ~= categoryName then
 				local Data = GuiElements.TempStoreCache[overrideCategoryName]

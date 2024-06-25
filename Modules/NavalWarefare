@@ -49,6 +49,20 @@ return function(C,_SETTINGS)
 
 		return closest, distance
 	end
+	function C.getClosestBase()
+		local selBase, maxDist = nil, math.huge
+		for baseType, bases in ipairs(C.Bases) do
+			for num, base in ipairs(bases) do
+				if base.Team.Value ~= "" and base.Team.Value ~= plr.Team.Name then
+					local d = (base.PrimaryPart.Position - C.char.PrimaryPart.Position).Magnitude
+					if d < maxDist then
+						selBase, maxDist = base, d
+					end
+				end
+			end
+		end
+		return maxDist, maxDist
+	end
 	getgenv().isInGame = C.isInGame
 	if C.gameUniverse=="NavalWarefare" then
 		C.RemoteEvent = RS:WaitForChild("Event") -- image naming something "Event"
@@ -77,6 +91,5 @@ return function(C,_SETTINGS)
 		for num, instance in ipairs(workspace:GetChildren()) do
 			newChild(instance)
 		end
-		print("Finished YE2P!")
 	end
 end

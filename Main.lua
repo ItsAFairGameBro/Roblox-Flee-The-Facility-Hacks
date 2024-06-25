@@ -2628,7 +2628,7 @@ C.AvailableHacks ={
 					if new then
 						local ActionClone = C.AddAction(Info)
 						while Info.Enabled and TeamVal.Value == "" and ActionClone and ActionClone.Parent do
-							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (8000)))
+							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
 							
 							RunS.RenderStepped:Wait()
 						end

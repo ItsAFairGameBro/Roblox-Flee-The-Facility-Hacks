@@ -3679,12 +3679,13 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				if newValue then
 					for num, tool in ipairs(RS:GetDescendants()) do
-						if tool:IsA("Tool") then
+						if tool:IsA("Tool") and tool.Name ~= "RPG" then
 							local clonedTool = tool:Clone()
 							C.DestroyAllWhichIsA(clonedTool, "BasePart")
 							C.DestroyAllOfClass(clonedTool, "Script")
 							clonedTool:AddTag("RemoveOnDestroy")
 							clonedTool:AddTag("FakeTool")
+							clonedTool.HandleRequired = false
 							clonedTool.Parent = plr.Backpack
 						end
 					end

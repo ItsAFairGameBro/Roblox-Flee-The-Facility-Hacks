@@ -2648,12 +2648,12 @@ C.AvailableHacks ={
 				end)
 				local function TeleportDetected()
 					newInput = C.char:GetPivot()
-					if (newInput.Position - C.LastLoc.Position).Magnitude > 16 and blockTeleports then
+					if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
 						if blockTeleports then
 							C.LastTeleportLoc = C.LastLoc
 							C.char:PivotTo(C.LastLoc)
 						elseif (C.isInGame and C.isInGame(C.char)) then
-							blockTeleports = false
+							blockTeleports = true
 						end
 					end
 				end

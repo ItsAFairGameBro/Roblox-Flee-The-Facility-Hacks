@@ -3623,7 +3623,7 @@ C.AvailableHacks ={
 				local LowestAcceptablePoint = 10
 				local PullUpSpeed = 12
 				
-				local BoundingSize = Vector3.new(10240,1000,16384)
+				local BoundingSize = Vector3.new(10240,math.huge,16384)
 				local BoundingCF = CFrame.new(0, BoundingSize.Y/2 + LowestAcceptablePoint, 0)
 				local function ClosestPointOnPart(PartCF, PartSize, Point)
 					local Transform = PartCF:pointToObjectSpace(Point) -- Transform into local space

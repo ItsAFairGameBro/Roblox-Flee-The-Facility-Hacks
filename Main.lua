@@ -3548,7 +3548,6 @@ C.AvailableHacks ={
 					local function canRun()
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
 					end
-					local Origin = Plane:GetPivot()
 					local function CheckDORefuel()
 						if not canRun() then
 							return
@@ -3556,6 +3555,7 @@ C.AvailableHacks ={
 						if BombC.Value == 0  then
 							local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
 							local HarborMain = Harbor:WaitForChild("MainBody")
+							local Origin = Plane:GetPivot()
 							local Info = {Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
 								Plane:PivotTo(Origin)
 							end,}

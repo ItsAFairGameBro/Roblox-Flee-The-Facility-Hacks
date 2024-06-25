@@ -2653,6 +2653,7 @@ C.AvailableHacks ={
 							C.LastTeleportLoc = C.LastLoc
 							C.char:PivotTo(C.LastLoc)
 						elseif (C.isInGame and C.isInGame(C.char)) then
+							task.wait(.5)
 							blockTeleports = true
 						end
 					end

@@ -2640,16 +2640,15 @@ C.AvailableHacks ={
 				end
 				task.spawn(function()
 					while CanRun() do
-						if teleported then
+						--[[if teleported then
 							if (newInput.Position - C.char:GetPivot().Position).Magnitude < 25 then
 								teleportMyself(lastInput)
 							else
 								teleported = false
 							end
-						end
-						if not teleported then
+						else--]]
 							lastInput = C.char:GetPivot()
-						end
+						--end
 						RunS.RenderStepped:Wait()
 					end
 				end)
@@ -2659,8 +2658,6 @@ C.AvailableHacks ={
 						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
 							C.LastTeleportLoc = lastInput
 							C.char:PivotTo(lastInput)
-							RunS.RenderStepped:Wait()
-							C.char:PivotTo(lastInput)
 						end
 					end
 				end
@@ -2669,7 +2666,7 @@ C.AvailableHacks ={
 					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("CFrame"):Connect(TeleportDetected))
 				end
 				for num, part in ipairs(C.char:GetChildren()) do
-					if part:IsA("BasePart") and part.Name == "Head" then
+					if part:IsA("BasePart") then--and part.Name == "Head" then
 						AddToCFrameDetection(part)
 					end
 				end

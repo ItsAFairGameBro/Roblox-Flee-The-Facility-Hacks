@@ -2613,7 +2613,7 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				newTag.Name = "IslandBomb"
 				newTag.Parent=GuiElements.HackGUI
-				newTag.StudsOffsetWorldSpace = Vector3.new(0, 120, 0)
+				newTag.StudsOffsetWorldSpace = Vector3.new(0, 60, 0)
 				newTag.ExtentsOffsetWorldSpace = Vector3.zero
 
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -2629,6 +2629,7 @@ C.AvailableHacks ={
 				local isEn = false
 				local Info = {Name="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
 				local function activate(new)
+					print("Activate")
 					isEn = new
 					button.Text = isEn and "Pause" or "Bomb"
 					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,255)
@@ -3987,7 +3988,7 @@ C.AvailableHacks ={
 					--plr:SetAttribute("CameraMinZoomDistance",plr.CameraMinZoomDistance)
 					plr.CameraMinZoomDistance=.5--minimum
 					--plr:SetAttribute("CameraMaxZoomDistance",plr.CameraMaxZoomDistance)
-					plr.CameraMaxZoomDistance=1e3--maximum
+					plr.CameraMaxZoomDistance=1e4--maximum
 					--plr:SetAttribute("CameraMode",plr.CameraMode.Name)
 					plr.CameraMode=Enum.CameraMode.Classic
 				end
@@ -4789,7 +4790,7 @@ C.AvailableHacks ={
 		[14] = {
 			["Type"]="ExTextButton",
 			["Title"]="Disable Error Logging",
-			["Desc"]="Disables Error Logging",
+			["Desc"]="Prevents Errors From Being Detected!",
 			["Default"]=true,
 			["Shortcut"]="Utility_DisableErrorLogging",
 			["Universes"]={"FlagWars","Global"},

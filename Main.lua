@@ -3559,9 +3559,9 @@ C.AvailableHacks ={
 							local Info = {Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
 								Plane:PivotTo(Origin)
 							end,}
-							local actionClone, info = C.AddAction(Info)
+							local actionClone = C.AddAction(Info)
 							actionClone.Time.Text = "~3s"
-							while canRun() and info.Enabled do
+							while canRun() and Info.Enabled do
 								if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
 									Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,15,0))
 								end

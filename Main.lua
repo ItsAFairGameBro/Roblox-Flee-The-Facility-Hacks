@@ -3886,11 +3886,11 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
 						if instance.Name == "Bomb" then
-							local closestBase, dist = C.getClosestBase()
-							print("RESS",closestBase,dist)
-							if closestBase then
-								firetouchinterest(instance,closestBase.PrimaryPart,0)
-								print("Fired Bomb At",closestBase.Name)
+							local closestBasePart, dist = C.getClosestBase()
+							print("RESS",closestBasePart,dist)
+							if closestBasePart then
+								firetouchinterest(instance,closestBasePart,0)
+								print("Fired Bomb At",closestBasePart.Parent.Name)
 							end
 						end
 					end)

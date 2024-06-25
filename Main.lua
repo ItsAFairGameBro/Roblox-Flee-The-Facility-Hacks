@@ -2631,7 +2631,8 @@ C.AvailableHacks ={
 				if not C.enHacks.Blatant_TeleportBack then
 					return
 				end
-				local CenterPart = (C.gameName == "FleeMain" and C.char:FindFirstChild("HumanoidRootPart")) or C.char:FindFirstChild("Torso") or C.char.PrimaryPart
+				local CenterPart = (C.gameName == "FleeMain" and C.char:FindFirstChild("HumanoidRootPart")) 
+					or (C.human.RigType == Enum.HumanoidRigType.R6 and C.char:WaitForChild("Torso")) or C.char:WaitForChild("HumanoidRootPart")
 				local lastInput,newInput = CenterPart:GetPivot(), nil
 				local teleported = false
 				local function CanRun()

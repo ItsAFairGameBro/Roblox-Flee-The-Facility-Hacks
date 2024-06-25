@@ -3681,11 +3681,11 @@ C.AvailableHacks ={
 					for num, tool in ipairs(RS:GetDescendants()) do
 						if tool:IsA("Tool") and tool.Name ~= "RPG" then
 							local clonedTool = tool:Clone()
-							C.DestroyAllWhichIsA(clonedTool, "BasePart")
+							task.delay(2,C.DestroyAllWhichIsA,clonedTool, "BasePart")
 							C.DestroyAllOfClass(clonedTool, "Script")
 							clonedTool:AddTag("RemoveOnDestroy")
 							clonedTool:AddTag("FakeTool")
-							clonedTool.HandleRequired = false
+							clonedTool.RequiresHandle = false
 							clonedTool.Parent = plr.Backpack
 						end
 					end

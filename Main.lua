@@ -2585,13 +2585,18 @@ C.AvailableHacks ={
 					return
 				end
 				local Base = tag.Adornee.Parent
-				if not Base then return end
-				local Team = Base:WaitForChild("Team",5)
-				if not Team then return end
-				local Plane = C.human and C.human.SeatPart and C.human.SeatPart.Parent
-				local HitCode = Plane:FindFirstChild("HitCode")
-				if not HitCode or HitCode.Value ~= "Plane" then return end
-				tag.Enabled = C.enHacks.Render_IslandBombBase and Team.Value ~= plr.Team.Name and Team.Value ~= ""
+				if Base then 
+					local Team = Base:WaitForChild("Team",5)
+					if Team then
+						local Plane = C.human and C.human.SeatPart and C.human.SeatPart.Parent
+						if Plane then
+							local HitCode = Plane:FindFirstChild("HitCode")
+							if HitCode and HitCode.Value == "Plane" then
+								tag.Enabled = C.enHacks.Render_IslandBombBase and Team.Value ~= plr.Team.Name and Team.Value ~= ""
+							end
+						end
+					end
+				end
 			end,
 			["MyPlayerAdded"]=function()
 				C.AvailableHacks.Render[36].Funct = plr:GetPropertyChangedSignal("Team"):Connect(C.AvailableHacks.Render[36].ActivateFunction)

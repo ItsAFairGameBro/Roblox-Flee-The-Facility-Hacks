@@ -4120,6 +4120,7 @@ C.AvailableHacks ={
 					end
 				end
 				local function cameraChanged()
+					task.wait(.5)
 					local newCameraType = camera.CameraType
 					if newCameraType == Enum.CameraType.Custom and C.enHacks.Util_Fix then
 						camera.CameraType = Enum.CameraType.Track
@@ -4128,7 +4129,7 @@ C.AvailableHacks ={
 					end
 				end
 				setChangedProperty(camera,"CameraType", (newValue and cameraChanged or nil));
-				cameraChanged()
+				task.delay(1.5,cameraChanged)
 				--[[local function textBoxSelected(TextBox)
 					if TextBox.TextScaled then
 						textScaledTL.Font = TextBox.Font

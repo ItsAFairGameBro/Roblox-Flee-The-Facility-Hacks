@@ -2634,33 +2634,24 @@ C.AvailableHacks ={
 				end
 				local CenterPart = (C.gameName == "FleeMain" and C.char:FindFirstChild("HumanoidRootPart")) 
 					or (C.human.RigType == Enum.HumanoidRigType.R6 and C.char:WaitForChild("Torso")) or C.char:WaitForChild("HumanoidRootPart")
-				local lastInput,newInput = CenterPart:GetPivot(), nil
+				local newInput = nil
+				C.LastLoc = CenterPart:GetPivot() -- Inital Starting Position
 				local teleported = false
 				local function CanRun()
 					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and CenterPart and C.enHacks.Blatant_TeleportBack
 				end
 				task.spawn(function()
 					while CanRun() do
-						--[[if teleported then
-							if (newInput.Position - C.char:GetPivot().Position).Magnitude < 25 then
-								teleportMyself(lastInput)
-							else
-								teleported = false
-							end
-						else--]]
 						C.LastLoc = C.char:GetPivot()
-						--end
 						RunS.RenderStepped:Wait()
 					end
 				end)
 				local function TeleportDetected()
 					newInput = C.char:GetPivot()
-					--if (newInput.Position - lastInput.Position).Magnitude > 16 then
 					if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
 						C.LastTeleportLoc = C.LastLoc
 						C.char:PivotTo(C.LastLoc)
 					end
-					--end
 				end
 				local function AddToCFrameDetection(part)
 					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("Position"):Connect(TeleportDetected))
@@ -3727,7 +3718,7 @@ C.AvailableHacks ={
 		},
 		[330]={
 			["Type"]="ExTextButton",
-			["Title"]="[PREMIUM ONLY] God Mode",
+			["Title"]="NEENOO's God Mode",
 			["Desc"]="Only works in planes and when unseated",
 			["Shortcut"]="Blatant_NavalWarefareGodMode",
 			["Default"]=false,

@@ -3541,12 +3541,14 @@ C.AvailableHacks ={
 			["MySeatAdded"]=function(seatPart)
 				C.AvailableHacks.Blatant[320].MySeatRemoved(seatPart)
 				local Vehicle = seatPart.Parent
-				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
-				local FuelLeft = Vehicle:FindFirstChild("Fuel")
+				local HitCode = Vehicle:WaitForChild("HitCode",5)
 				local FlyButton = StringWaitForChild(PlayerGui,"ScreenGui.InfoFrame.Fly")
 				--The "BodyVelocity" is actually "LineVelocity"
-				if LineVelocity then
+				if HitCode and (HitCode.Value == "Ship" or HitCode.Value == "Plane") then
+					local MainBody = Vehicle:WaitForChild("MainBody")
+					local LineVelocity = MainBody:WaitForChild("BodyVelocity")
 					local VehicleType = Vehicle:WaitForChild("HitCode").Value
+					local FuelLeft = HitCode.Value == "Plane" and Vehicle:WaitForChild("Fuel")
 					local AlignOrientation = LineVelocity.Parent:FindFirstChildWhichIsA("AlignOrientation")
 					local lastSet
 					local function Upd()
@@ -3577,11 +3579,7 @@ C.AvailableHacks ={
 						AlignOrientation.MaxTorque = isOn and (33.5e3 * TurnMult) or 0
 					end
 					table.insert(C.AvailableHacks.Blatant[320].Functs,LineVelocity:GetPropertyChangedSignal("VectorVelocity"):Connect(Upd))
-					--table.insert(C.AvailableHacks.Blatant[320].Functs,LineVelocity:GetPropertyChangedSignal("MaxAxesForce"):Connect(Upd))
-					--table.insert(C.AvailableHacks.Blatant[320].Functs,LineVelocity:GetPropertyChangedSignal("MaxAxesForce"):Connect(Upd))
 					Upd()
-				else
-					print("Warning, Vehicle Type has no BodyVelocity:",Vehicle)
 				end
 			end,
 			["MySeatRemoved"]=function(seatPart)
@@ -3601,7 +3599,7 @@ C.AvailableHacks ={
 			["Desc"]="How much faster vehicles that you drive turn",
 			["Shortcut"]="Blatant_NavalVehicleTurnSpeed",
 			["Default"]=1,
-			["MinBound"]=0.1,
+			["MinBound"]=0,
 			["MaxBound"]=100,
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function()
@@ -3612,8 +3610,8 @@ C.AvailableHacks ={
 		},
 		[322]={
 			["Type"]="ExTextButton",
-			["Title"]="Anti Water", ["CategoryAlias"] = "Vehicle",
-			["Desc"]="Prevents your plane from going into the Pacific!",
+			["Title"]="Anti Bounds", ["CategoryAlias"] = "Vehicle",
+			["Desc"]="Prevents your plane from going into the Pacific or exiting!",
 			["Shortcut"]="Blatant_NavalAntiWater",
 			["Default"]=false,
 			["Universes"]={"NavalWarefare"},
@@ -3640,7 +3638,7 @@ C.AvailableHacks ={
 					)
 				end
 				--The "BodyVelocity" is actually "LineVelocity"
-				if VehicleType=="Plane" then
+				if VehicleType=="Plane" or VehicleType == "Ship" then
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
 						local GetOutSpeed = (ClosestPointOnPart(BoundingCF, BoundingSize, seatPart.Position) - seatPart.Position) * PullUpSpeed
@@ -3730,7 +3728,7 @@ C.AvailableHacks ={
 		[326]={
 			["Type"]="ExTextBox",
 			["Title"]="Vehicle Levitation Height", ["CategoryAlias"] = "Vehicle",
-			["Desc"]="How high off the ground the ships float (",
+			["Desc"]="How high off the ground the ships float",
 			["Shortcut"]="Blatant_NavalLevitationHeight",
 			["Default"]=0,
 			["MinBound"]=-50,
@@ -3871,6 +3869,33 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[330].ActivateFunction()
 			end,
 		},
+		[335]={
+			["Type"]="ExTextButton",
+			["Title"]="Projectile Instant Hit", ["CategoryAlias"] = "Weapon",
+			["Desc"]="Makes all projectiles instantly hit the nearest base",
+			["Shortcut"]="Blatant_NavalInstantHit",
+			["Default"]=false,
+			["Funct"]=nil,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				-- Disconnect funct and set up childadded workspace event for the projectiles
+				if C.AvailableHacks.Blatant[335].Funct then
+					C.AvailableHacks.Blatant[335].Funct:Disconnect()
+					C.AvailableHacks.Blatant[335].Funct=nil
+				end	
+				if newValue then
+					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
+						if instance.Name == "Bomb" then
+							local closestBase, dist = C.GetClosestBase()
+							if closestBase then
+								firetouchinterest(instance,closestBase.PrimaryPart,0)
+								print("Fired Bomb At",closestBase.Name)
+							end
+						end
+					end)
+				end
+			end,
+		},--]]
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
 	},
 	["Utility"]={

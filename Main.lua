@@ -3748,7 +3748,7 @@ C.AvailableHacks ={
 						local FF = C.char:FindFirstChildWhichIsA("ForceField")
 						if FF then
 							print("ff wait")
-							FF.Destroying:Wait() -- Wait until we're defenseless!
+							FF.AncestryChanged:Wait() -- Wait until we're defenseless!
 							print"ff gone"
 						else
 							print"fired"

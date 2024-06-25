@@ -2619,15 +2619,14 @@ C.AvailableHacks ={
 			["Desc"]="Instantly teleport back",
 			["Shortcut"]="Blatant_TeleportBack",
 			["Default"]=false,
-			["Funct"]=nil,
+			["Functs"]={},
 			["DontActivate"]=true,
 			["Universes"]={"Global"},
 			["Deb"]=0,
 			["ActivateFunction"]=function(newValue)
-				if C.AvailableHacks.Blatant[5].Funct then
-					C.AvailableHacks.Blatant[5].Funct:Disconnect()
-					C.AvailableHacks.Blatant[5].Funct = nil
-				end
+				for num, funct in ipairs(C.AvailableHacks.Blatant[5].Functs) do
+					funct:Disconnect()
+				end C.AvailableHacks.Blatant[5].Functs = {}
 				C.AvailableHacks.Blatant[5].Deb += 1 local SaveDeb = C.AvailableHacks.Blatant[5].Deb
 				if not C.enHacks.Blatant_TeleportBack then
 					return
@@ -2643,16 +2642,19 @@ C.AvailableHacks ={
 						RunS.RenderStepped:Wait()
 					end
 				end)
-				while CanRun() do
-					newInput = C.char:GetPivot()
-					if (newInput.Position - lastInput.Position).Magnitude > 16 then
-						if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
-							--teleportMyself(lastInput)
-							C.char:PivotTo(lastInput)
+				local function AddToCFrameDetection(part)
+					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("CFrame"):Connect(function()
+						newInput = C.char:GetPivot()
+						if (newInput.Position - lastInput.Position).Magnitude > 16 then
+							if (newInput.Position - C.LastTeleportLoc.Position).Magnitude > 16 then
+								teleportMyself(lastInput)
+								--C.char:PivotTo(lastInput)
+								newInput = lastInput
+							end
 						end
-					end
-					CenterPart:GetPropertyChangedSignal("CFrame"):Wait()
+					end))
 				end
+				AddToCFrameDetection(CenterPart)
 			end,
 			["MyStartUp"]=function()
 				C.AvailableHacks.Blatant[5].ActivateFunction(C.enHacks.Blatant_TeleportBack)

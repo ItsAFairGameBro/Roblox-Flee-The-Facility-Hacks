@@ -2506,7 +2506,7 @@ C.AvailableHacks ={
 		},
 		[33]={
 			["Type"]="ExTextButton",
-			["Title"]="Island Capture Button",
+			["Title"]="ESP Island Capture",
 			["Desc"]="Auto captures from wherever you are",
 			["Shortcut"]="Render_IslandCaptureButton",
 			["Default"]=false,
@@ -2567,6 +2567,81 @@ C.AvailableHacks ={
 				newTag.Adornee=FlagPad
 				newTag.Enabled = C.enHacks.Render_IslandCaptureButton
 			end,
+		},
+		[36]={
+			["Type"]="ExTextButton",
+			["Title"]="ESP Loop Bomb",
+			["Desc"]="Auto captures from wherever you are",
+			["Shortcut"]="Render_IslandBombBase",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				for num, tag in pairs(CS:GetTagged("GameHackDisplays2")) do
+					C.AvailableHacks.Render[36].RefreshEn(tag)
+				end
+			end,
+			["RefreshEn"]=function(tag)
+				if not tag.Adornee then
+					return
+				end
+				local Base = tag.Adornee.Parent
+				if not Base then return end
+				local Team = Base:WaitForChild("Team",5)
+				if not Team then return end
+				tag.Enabled = C.enHacks.Render_IslandBombBase and Team.Value ~= plr.Team.Name and Team.Value ~= ""
+			end,
+			["MyPlayerAdded"]=function()
+				C.AvailableHacks.Render[36].Funct = plr:GetPropertyChangedSignal("Team"):Connect(C.AvailableHacks.Render[36].ActivateFunction)
+			end,
+			["MySeatAdded"]=C.AvailableHacks.Render[36].ActivateFunction,
+			["MySeatRemoved"]=C.AvailableHacks.Render[36].ActivateFunction,
+			["IslandAdded"]=function(island)
+				local newTag=C.ToggleTag:Clone()
+				newTag.Name = "IslandBomb"
+				newTag.Parent=GuiElements.HackGUI
+				newTag.StudsOffsetWorldSpace = Vector3.new(0, 45, 0)
+				newTag.ExtentsOffsetWorldSpace = Vector3.zero
+
+				CS:AddTag(newTag,"RemoveOnDestroy")
+				CS:AddTag(newTag,"GameHackDisplays2")
+				setChangedProperty(island,"Parent",function()
+					newTag:Destroy()
+				end)
+				local TeamVal = island:WaitForChild("Team")
+				local HPVal = island:WaitForChild("HP")
+				local HitCode = island:WaitForChild("HitCode").Value
+				local MainBody = island:WaitForChild("MainBody")
+				local button = newTag:WaitForChild("Toggle")
+				local isEn = false
+				local Info = {Name="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
+				local function activate(new)
+					isEn = new
+					button.Text = isEn and "Pause" or "Bomb"
+					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,255)
+					if new then
+						local ActionClone = C.AddAction(Info)
+						while Info.Enabled and TeamVal.Value == "" and ActionClone and ActionClone.Parent do
+							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (8000)))
+							
+							RunS.RenderStepped:Wait()
+						end
+						return activate(false) -- Disable it
+					end
+					C.RemoveAction(Info.Name)
+				end
+				button.MouseButton1Up:Connect(function()
+					activate(not isEn)
+				end)
+				activate(isEn)
+				local function UpdVisibiltiy()
+					C.AvailableHacks.Render[36].RefreshEn(newTag)
+				end
+				setChangedProperty(TeamVal,"Value",UpdVisibiltiy)
+				UpdVisibiltiy()
+				newTag.Adornee=MainBody
+				newTag.Enabled = C.enHacks.Render_IslandCaptureButton
+			end,
+			["DockAdded"]=C.AvailableHacks.Render[36].IslandAdded
 		},
 
 	},

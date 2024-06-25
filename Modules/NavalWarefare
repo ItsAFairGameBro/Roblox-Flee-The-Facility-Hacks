@@ -53,7 +53,7 @@ return function(C,_SETTINGS)
 		local selBase, maxDist = nil, math.huge
 		for baseType, bases in ipairs(C.Bases) do
 			for num, base in ipairs(bases) do
-				if base.Team.Value ~= "" and base.Team.Value ~= plr.Team.Name then
+				if base.Team.Value ~= "" and base.Team.Value ~= plr.Team.Name and base.HP.Value > 0 then
 					local d = (base.PrimaryPart.Position - C.char.PrimaryPart.Position).Magnitude
 					if d < maxDist then
 						selBase, maxDist = base, d

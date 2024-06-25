@@ -72,15 +72,15 @@ return function(C,_SETTINGS)
 			local num
 			if table.find(BasesToLookFor,instance.Name) then
 				local HitCode = instance:WaitForChild("HitCode")
-				table.insert(C.Bases,instance)
 				local ID = instance.Name:find("Dock") and "Dock" or instance.Name -- Dock or Island
+				table.insert(C.Bases[ID],instance)
 				C.defaultFunction(ID .. "Added",{instance})
 				C.objectFuncts[instance] = C.objectFuncts[instance] or {}
 				C.objectFuncts[instance]["Destroying"] = {instance.Destroying:Connect(function()
 					--Disconnect the event
 					num = table.find(BasesToLookFor, instance)
 					if num then
-						table.remove(C.Bases,num)
+						table.remove(C.Bases[ID],num)
 					end
 					C.defaultFunction(ID .. "Removed",{instance})
 					C.objectFuncts[instance] = nil

@@ -3888,6 +3888,7 @@ C.AvailableHacks ={
 						if instance.Name == "Bomb" and instance.Parent then
 							local closestBasePart, dist = C.getClosestBase()
 							if closestBasePart then
+								closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
 								for s = 0, 2, 1 do
 									firetouchinterest(instance,closestBasePart,0)
 									task.wait()

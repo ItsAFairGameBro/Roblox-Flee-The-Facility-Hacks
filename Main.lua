@@ -3545,9 +3545,7 @@ C.AvailableHacks ={
 				local HitCode = Plane:WaitForChild("HitCode")
 				if HitCode and HitCode.Value == "Plane" then
 					local BombC = Plane:WaitForChild("BombC")
-					print("Plane Seat")
 					local function canRun()
-						print("Check",Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared)
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
 					end
 					local Origin = Plane:GetPivot()
@@ -3556,7 +3554,7 @@ C.AvailableHacks ={
 							return
 						end
 						if BombC.Value == 0  then
-							local Harbor = workspace:WaitForChild(plr.Team.Name.."Harbor")
+							local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Harbor")
 							local HarborMain = Harbor:WaitForChild("MainBody")
 							local actionClone, info = C.AddAction({Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
 								Plane:PivotTo(Origin)

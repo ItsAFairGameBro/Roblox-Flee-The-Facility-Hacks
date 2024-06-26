@@ -10971,7 +10971,7 @@ C.AvailableHacks ={
 	},
 	["Commands"]={
 		[1]={
-			["Type"]="ExTextButton",["CategoryAlias"]="Developer",
+			["Type"]="ExTextButton",
 			["Title"]="Teleport To Next",
 			["Desc"]="Also sets your spawnpoint",
 			["Shortcut"]="TeleportWithSpawn",
@@ -11017,7 +11017,7 @@ C.AvailableHacks ={
 					end
 					local MainBody = Target:WaitForChild("MainBody")
 					if MainBody then
-						teleportMyself(MainBody.CFrame * Vector3.new(0,C.getHumanoidHeight(C.char) + MainBody.Size.Y/2,0))
+						teleportMyself(MainBody.CFrame * CFrame.new(0,C.getHumanoidHeight(C.char) + MainBody.Size.Y/2,0))
 					end
 				end
 			end,

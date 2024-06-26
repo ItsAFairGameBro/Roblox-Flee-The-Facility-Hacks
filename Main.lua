@@ -11020,10 +11020,11 @@ C.AvailableHacks ={
 						Target = workspace:WaitForChild(Data[1])
 					end
 					local MainBody = Target:WaitForChild("MainBody")
-					if MainBody then
+					if MainBody and C.human and C.human.Health>0 then
 						teleportMyself(
 							CFrame.new(MainBody:GetPivot().Position) * CFrame.new(0,C.getHumanoidHeight(C.char)
 								+ (Data[1]=="Island" and MainBody.Size.X or MainBody.Size.Y)/2,0))
+						task.wait(1)
 						if C.isInGame then
 							StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform").Visible = not C.isInGame(C.char)
 						end

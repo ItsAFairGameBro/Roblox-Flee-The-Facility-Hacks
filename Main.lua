@@ -10975,7 +10975,7 @@ C.AvailableHacks ={
 			["Title"]="Teleport To Next",
 			["Desc"]="Also sets your spawnpoint",
 			["Shortcut"]="TeleportWithSpawn",
-			["Default"]=true,
+			["Default"]="Lobby",
 			["DontActivate"]=true,
 			["Options"]={
 				[0]={
@@ -11018,6 +11018,9 @@ C.AvailableHacks ={
 					local MainBody = Target:WaitForChild("MainBody")
 					if MainBody then
 						teleportMyself(MainBody.CFrame * CFrame.new(0,C.getHumanoidHeight(C.char) + MainBody.Size.Y/2,0))
+						if C.isInGame then
+							StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform").Visible = not C.isInGame(C.char)
+						end
 					end
 				end
 			end,

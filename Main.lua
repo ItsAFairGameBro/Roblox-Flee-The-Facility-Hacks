@@ -2645,6 +2645,7 @@ C.AvailableHacks ={
 								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
 								if BombC.Value > 0 then
 									C.RemoteEvent:FireServer("bomb")
+									task.wait(1/3) -- wait for it to spawn!
 								end
 							elseif BombC.Value == 0 and C.enHacks["Blatant_NavalInstantRefuel"] then
 								break

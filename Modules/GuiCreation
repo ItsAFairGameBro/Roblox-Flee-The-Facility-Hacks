@@ -592,6 +592,13 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 		return ActionClone
 	end
 	
+	function C.GetAction(name)
+		local actionInstance = ActionsList:FindFirstChild(name)
+		if actionInstance then
+			return actionInstance
+		end
+	end
+	
 	function C.RemoveAction(name)
 		local actionInstance = ActionsList:FindFirstChild(name)
 		if actionInstance then

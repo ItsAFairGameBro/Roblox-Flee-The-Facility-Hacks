@@ -2645,9 +2645,9 @@ C.AvailableHacks ={
 								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
 								if BombC.Value > 0 then
 									C.RemoteEvent:FireServer("bomb")
-									
 								end
 							elseif BombC.Value == 0 and not C.enHacks["Blatant_NavalInstantRefuel"] then
+								print("break",BombC.Value,C.enHacks["Blatant_NavalInstantRefuel"])
 								break
 							end
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
@@ -3915,13 +3915,12 @@ C.AvailableHacks ={
 							local closestBasePart, dist = C.getClosestBase()
 							if closestBasePart then
 								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
-								for s = 0, 1, 1 do
+								--for s = 0, 1, 1 do
 									firetouchinterest(instance,closestBasePart,0)
-									task.wait()
-									firetouchinterest(instance,closestBasePart,1)
-									task.wait()
-								end
-								print("Fired Bomb At",closestBasePart.Parent.Name)
+									--task.wait()
+									--firetouchinterest(instance,closestBasePart,1)
+									--task.wait()
+								--end
 							end
 						end
 					end)

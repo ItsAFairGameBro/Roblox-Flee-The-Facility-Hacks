@@ -3708,11 +3708,11 @@ C.AvailableHacks ={
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
 					end
 					local function CheckDORefuel()
+						task.wait(2/3) -- wait for the bomb to spawn!
 						if not canRun() then
 							return
 						end
 						if BombC.Value == 0  then
-							task.wait(2/3) -- wait for the bomb to spawn!
 							local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
 							local HarborMain = Harbor:WaitForChild("MainBody")
 							local MainBody = Plane:WaitForChild("MainBody")

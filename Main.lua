@@ -2637,21 +2637,26 @@ C.AvailableHacks ={
 						local PlaneMB = Plane:WaitForChild("MainBody")
 						local BombC = Plane:WaitForChild("BombC")
 						local ActionClone = C.AddAction(Info)
+						local WhileIn = 0
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
 								PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 130, 0))
 								--PlaneMB.AssemblyLinearVelocity = Vector3.new()
 								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
-								if BombC.Value > 0 then
-									task.wait(.8)
+								if BombC.Value > 0 and WhileIn>.7 then
 									C.RemoteEvent:FireServer("bomb")
 								end
 							elseif BombC.Value == 0 and not C.enHacks.Blatant_NavalInstantRefuel then
 								break
 							end
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
-							RunS.RenderStepped:Wait()
+							if ((PlaneMB:GetPivot().Position - IslandBody.Position)/Vector3.new(1,1000,1)).Magnitude < 100 then
+								WhileIn += RunS.RenderStepped:Wait()
+							else
+								WhileIn = 0
+								RunS.RenderStepped:Wait()
+							end
 						end
 						return basebomb_activate(false) -- Disable it
 					end

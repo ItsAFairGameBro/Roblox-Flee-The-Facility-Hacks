@@ -3847,8 +3847,11 @@ C.AvailableHacks ={
 						and not C.isCleared and C.char and C.human and C.human.Health>0
 				end
 				while true do
-					while canRun() and not C.isInGame(C.char) do
-						task.wait(10) -- Assuming the FF lasts for at most 10 seconds
+					if canRun() and not C.isInGame(C.char) then
+						while canRun() and not C.isInGame(C.char) do
+							task.wait(10) -- Assuming the FF lasts for at most 10 seconds
+						end
+						task.wait(3)
 					end
 					if canRun() then
 						--[[local FF = C.char:FindFirstChildWhichIsA("ForceField")

@@ -2644,7 +2644,8 @@ C.AvailableHacks ={
 								PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 130, 0))
 								--PlaneMB.AssemblyLinearVelocity = Vector3.new()
 								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
-								if BombC.Value > 0 and WhileIn>.7 then
+								if BombC.Value > 0 and WhileIn>1 then
+									WhileIn = 0
 									C.RemoteEvent:FireServer("bomb")
 								end
 							elseif BombC.Value == 0 and not C.enHacks.Blatant_NavalInstantRefuel then

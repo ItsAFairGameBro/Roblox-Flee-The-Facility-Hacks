@@ -3927,12 +3927,12 @@ C.AvailableHacks ={
 							local closestBasePart, dist = C.getClosestBase()
 							if closestBasePart then
 								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
-								--for s = 0, 1, 1 do
+								for s = 0, 1, 1 do
 									firetouchinterest(instance,closestBasePart,0)
-									--task.wait()
-									--firetouchinterest(instance,closestBasePart,1)
-									--task.wait()
-								--end
+									task.wait()
+									firetouchinterest(instance,closestBasePart,1)
+									task.wait()
+								end
 							end
 						end
 					end)

@@ -2560,6 +2560,7 @@ C.AvailableHacks ={
 				end)
 				activate(isEn)
 				local function UpdVisibiltiy()
+					print("TEAM CHANGED")
 					button.Visible = TeamVal.Value == ""
 				end
 				setChangedProperty(TeamVal,"Value",UpdVisibiltiy)

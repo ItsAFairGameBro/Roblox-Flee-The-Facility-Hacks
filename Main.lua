@@ -2644,7 +2644,6 @@ C.AvailableHacks ={
 								--PlaneMB.AssemblyLinearVelocity = Vector3.new()
 								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
 								if BombC.Value > 0 then
-									RunS.RenderStepped:Wait() -- For it to render
 									C.RemoteEvent:FireServer("bomb")
 								end
 							elseif BombC.Value == 0 and not C.enHacks.Blatant_NavalInstantRefuel then
@@ -3714,7 +3713,7 @@ C.AvailableHacks ={
 					local function CheckDORefuel(newBomb)
 						if newBomb ~= nil then
 							print("WAiting")
-							task.wait(2/3) -- wait for the bomb to spawn!
+							task.wait(3) -- wait for the bomb to spawn!
 						end
 						if not canRun() then
 							return

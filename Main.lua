@@ -2646,8 +2646,8 @@ C.AvailableHacks ={
 								if BombC.Value > 0 then
 									C.RemoteEvent:FireServer("bomb")
 								end
-							elseif BombC.Value == 0 and not C.enHacks["Blatant_NavalInstantRefuel"] then
-								print("break",BombC.Value,C.enHacks["Blatant_NavalInstantRefuel"])
+							elseif BombC.Value == 0 and not C.enHacks.Blatant_NavalInstantRefuel then
+								print("break",BombC.Value,C.enHacks.Blatant_NavalInstantRefuel)
 								break
 							end
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
@@ -3691,11 +3691,14 @@ C.AvailableHacks ={
 			["Desc"]="Auto Re-Fuels at Harbor after bombs run out. Teleports back as well.",
 			["Shortcut"]="Blatant_NavalInstantRefuel",
 			["Default"]=false,
+			["DontActivate"]=true,
 			["Universes"]={"NavalWarefare"},
 			["Funct"]=nil,
 			["ActivateFunction"]=function(newValue)
 				if not newValue then
 					C.RemoveAction("Plane Refuel") -- Cancel the action
+				elseif C.human.SeatPart then
+					C.AvailableHacks.Blatant[325].MySeatAdded(C.human.SeatPart)
 				end
 			end,
 			["MySeatAdded"]=function(seatPart)
@@ -3707,12 +3710,14 @@ C.AvailableHacks ={
 					local function canRun()
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
 					end
-					local function CheckDORefuel()
-						task.wait(2/3) -- wait for the bomb to spawn!
+					local function CheckDORefuel(newBomb)
+						if newBomb ~= nil then
+							task.wait(2/3) -- wait for the bomb to spawn!
+						end
 						if not canRun() then
 							return
 						end
-						if BombC.Value == 0  then
+						if BombC.Value == 0 and C.enHacks.Blatant_NavalInstantRefuel then
 							local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
 							local HarborMain = Harbor:WaitForChild("MainBody")
 							local MainBody = Plane:WaitForChild("MainBody")

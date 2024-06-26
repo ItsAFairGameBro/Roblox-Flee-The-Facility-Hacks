@@ -2640,7 +2640,7 @@ C.AvailableHacks ={
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
 							if not C.GetAction("Plane Refuel") then
-								PlaneMB:PivotTo(IslandBody:GetPivot() * CFrame.new(0, 15, 0))
+								PlaneMB:PivotTo(IslandBody:GetPivot() * CFrame.new(0, 45, 0))
 								PlaneMB.AssemblyLinearVelocity = Vector3.new()
 								PlaneMB.AssemblyAngularVelocity = Vector3.new()
 							elseif BombC.Value == 0 and C.enHacks["Blatant_NavalInstantRefuel"] then

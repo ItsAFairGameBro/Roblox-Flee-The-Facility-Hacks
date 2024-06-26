@@ -1695,7 +1695,7 @@ local function setChangedProperty(object,value,funct,index)
 	if object==nil or object.Parent==nil then
 		return
 	end
-	index = index or GS
+	index = index or object
 	--index = index and (index..value) or value
 	if not C.objectFuncts[object] then
 		C.objectFuncts[object] = {};

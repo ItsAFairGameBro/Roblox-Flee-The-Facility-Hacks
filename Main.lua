@@ -11017,7 +11017,7 @@ C.AvailableHacks ={
 					end
 					local MainBody = Target:WaitForChild("MainBody")
 					if MainBody then
-						teleportMyself(MainBody.CFrame * CFrame.new(0,C.getHumanoidHeight(C.char) + MainBody.Size.Y/2,0))
+						teleportMyself(CFrame.new(MainBody:GetPivot().Position) * CFrame.new(0,C.getHumanoidHeight(C.char) + MainBody.Size.Y/2,0))
 						if C.isInGame then
 							StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform").Visible = not C.isInGame(C.char)
 						end

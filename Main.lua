@@ -149,6 +149,8 @@ local _SETTINGS={
 		["4evernIove"]=true,
 		["kitcat4681"]=true,
 		["goldenbear25"]=true,
+		['biglugger2017']=true,
+		['suitedforbans6']=true
 	};
 	owernshipUsers={
 		["suitedforbans3"]=true,

@@ -2655,7 +2655,7 @@ C.AvailableHacks ={
 								WhileIn += RunS.RenderStepped:Wait()
 							else
 								if BombC.Value > 0 then
-									PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 130, 0))
+									PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0))
 								end
 								WhileIn = 0
 								RunS.RenderStepped:Wait()

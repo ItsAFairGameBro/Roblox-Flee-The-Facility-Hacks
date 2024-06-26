@@ -2639,7 +2639,7 @@ C.AvailableHacks ={
 						local ActionClone = C.AddAction(Info)
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
-							if not C.GetAction("Plane Refuel") then
+							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
 								PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 130, 0))
 								--PlaneMB.AssemblyLinearVelocity = Vector3.new()
 								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
@@ -3712,6 +3712,7 @@ C.AvailableHacks ={
 					end
 					local function CheckDORefuel(newBomb)
 						if newBomb ~= nil then
+							print("WAiting")
 							task.wait(2/3) -- wait for the bomb to spawn!
 						end
 						if not canRun() then

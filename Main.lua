@@ -3518,8 +3518,8 @@ C.AvailableHacks ={
 						else
 							actionClone.Time.Text = "(Waiting)"
 						end
-						C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
-						C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
+						--C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
+						--C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
 						RunS.RenderStepped:Wait()
 					end
 				else

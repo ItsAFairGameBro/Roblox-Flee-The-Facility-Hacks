@@ -2628,25 +2628,25 @@ C.AvailableHacks ={
 				local button = newTag:WaitForChild("Toggle")
 				local isEn = false
 				local Info = {Name="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
-				local function activate(new)
+				local function basebomb_activate(new)
 					print("Activate")
 					isEn = new
 					button.Text = isEn and "Pause" or "Bomb"
 					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,255)
 					if new then
 						local ActionClone = C.AddAction(Info)
-						while Info.Enabled and TeamVal.Value == "" and ActionClone and ActionClone.Parent do
+						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent do
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
 							RunS.RenderStepped:Wait()
 						end
-						return activate(false) -- Disable it
+						return basebomb_activate(false) -- Disable it
 					end
 					C.RemoveAction(Info.Name)
 				end
 				button.MouseButton1Up:Connect(function()
-					activate(not isEn)
+					basebomb_activate(not isEn)
 				end)
-				activate(isEn)
+				basebomb_activate(isEn)
 				local function UpdVisibiltiy()
 					C.AvailableHacks.Render[36].RefreshEn(newTag)
 				end
@@ -10970,6 +10970,64 @@ C.AvailableHacks ={
 
 	},
 	["Commands"]={
+		[1]={
+			["Type"]="ExTextButton",["CategoryAlias"]="Developer",
+			["Title"]="Teleport To Next",
+			["Desc"]="Also sets your spawnpoint",
+			["Shortcut"]="TeleportWithSpawn",
+			["Default"]=true,
+			["DontActivate"]=true,
+			["Options"]={
+				[0]={
+					["Title"]="Lobby",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
+				[1]={
+					["Title"]="Ally Harbor",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
+				[2]={
+					["Title"]="Island 1",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
+				[3]={
+					["Title"]="Island 2",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
+				[4]={
+					["Title"]="Island 3",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
+			},
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				local Teleports={{"USDock"},{"Island","A"},{"Island","B"},{"Island","C"},{"JapanDock"}}
+				if newValue ~= 0 then
+					local Data = Teleports[plr.Team.Name=="USA" and newValue or (#Teleports-newValue+1)]
+					local Target
+					if Data[1] == "Island" then
+						for num, base in ipairs(C.Bases.Island) do
+							if base:WaitForChild("IslandCode").Value == Data[2] then
+								Target = base
+								break
+							end
+						end
+					else
+						Target = workspace:WaitForChild(Data[1])
+					end
+					local MainBody = Target:WaitForChild("MainBody")
+					if MainBody then
+						teleportMyself(MainBody.CFrame * Vector3.new(0,C.getHumanoidHeight(C.char) + MainBody.Size.Y/2,0))
+					end
+				end
+			end,
+			["MyStartUp"]=function()
+				while #C.Bases.Island < 3 do--StringWaitForChild(workspace,"VariableFolder.TimerVal").Value > 0 do
+					task.wait(1)
+				end
+				C.AvailableHacks.Commands[1].ActivateFunction(C.enHacks.TeleportWithSpawn)
+			end,
+		},
 		[2]={
 			["Type"]="ExTextButton",["CategoryAlias"]="Developer",
 			["Title"]="Clear Consoles",

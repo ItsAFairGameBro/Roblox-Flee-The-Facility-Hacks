@@ -2560,7 +2560,6 @@ C.AvailableHacks ={
 				end)
 				activate(isEn)
 				local function UpdVisibiltiy()
-					print("TEAM CHANGED")
 					button.Visible = TeamVal.Value == ""
 				end
 				setChangedProperty(TeamVal,"Value",UpdVisibiltiy,"Render_IslandCaptureButton")
@@ -2644,6 +2643,9 @@ C.AvailableHacks ={
 								PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 45, 0))
 								PlaneMB.AssemblyLinearVelocity = Vector3.new()
 								PlaneMB.AssemblyAngularVelocity = Vector3.new()
+								if BombC.Value > 0 then
+									C.RemoteEvent:FireServer("Bomb")
+								end
 							elseif BombC.Value == 0 and C.enHacks["Blatant_NavalInstantRefuel"] then
 								break
 							end

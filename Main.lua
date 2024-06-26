@@ -2641,10 +2641,10 @@ C.AvailableHacks ={
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
 							if not C.GetAction("Plane Refuel") then
 								PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 130, 0))
-								PlaneMB.AssemblyLinearVelocity = Vector3.new()
-								PlaneMB.AssemblyAngularVelocity = Vector3.new()
+								--PlaneMB.AssemblyLinearVelocity = Vector3.new()
+								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
 								if BombC.Value > 0 then
-									C.RemoteEvent:FireServer("Bomb")
+									C.RemoteEvent:FireServer("bomb")
 								end
 							elseif BombC.Value == 0 and C.enHacks["Blatant_NavalInstantRefuel"] then
 								break

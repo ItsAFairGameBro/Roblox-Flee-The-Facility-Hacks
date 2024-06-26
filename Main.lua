@@ -10975,7 +10975,7 @@ C.AvailableHacks ={
 			["Title"]="Teleport To Next",
 			["Desc"]="Also sets your spawnpoint",
 			["Shortcut"]="TeleportWithSpawn",
-			["Default"]="Lobby",
+			["Default"]=0,
 			["DontActivate"]=true,
 			["Options"]={
 				[0]={
@@ -10998,12 +10998,16 @@ C.AvailableHacks ={
 					["Title"]="Island 3",
 					["TextColor"]=newColor3(255, 255, 255),
 				},
+				[5]={
+					["Title"]="Enemy Harbor",
+					["TextColor"]=newColor3(255, 255, 255),
+				},
 			},
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)
 				local Teleports={{"USDock"},{"Island","A"},{"Island","B"},{"Island","C"},{"JapanDock"}}
 				if newValue ~= 0 then
-					local Data = Teleports[plr.Team.Name=="USA" and newValue or (#Teleports-newValue+1)]
+					local Data = Teleports[plr.Team.Name=="USA" and newValue or (#Teleports-newValue)]
 					local Target
 					if Data[1] == "Island" then
 						for num, base in ipairs(C.Bases.Island) do

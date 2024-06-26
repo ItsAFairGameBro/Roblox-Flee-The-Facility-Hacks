@@ -10972,7 +10972,7 @@ C.AvailableHacks ={
 	["Commands"]={
 		[1]={
 			["Type"]="ExTextButton",
-			["Title"]="Teleport To Next",
+			["Title"]="Spawn Location",
 			["Desc"]="Also sets your spawnpoint",
 			["Shortcut"]="TeleportWithSpawn",
 			["Default"]=0,
@@ -11004,7 +11004,7 @@ C.AvailableHacks ={
 				},
 			},
 			["Universes"]={"NavalWarefare"},
-			["ActivateFunction"]=function(newValue)
+			["SpawnFunction"]=function(newValue)
 				local Teleports={{"USDock"},{"Island","A"},{"Island","B"},{"Island","C"},{"JapanDock"}}
 				if newValue ~= 0 then
 					local Data = Teleports[plr.Team.Name=="USA" and newValue or (#Teleports-newValue+1)]
@@ -11021,10 +11021,10 @@ C.AvailableHacks ={
 					end
 					local MainBody = Target:WaitForChild("MainBody")
 					if MainBody and C.human and C.human.Health>0 then
+						task.wait(1)
 						teleportMyself(
 							CFrame.new(MainBody:GetPivot().Position) * CFrame.new(0,C.getHumanoidHeight(C.char)
 								+ (Data[1]=="Island" and MainBody.Size.X or MainBody.Size.Y)/2,0))
-						task.wait(1)
 						if C.isInGame then
 							StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform").Visible = not C.isInGame(C.char)
 						end
@@ -11035,7 +11035,8 @@ C.AvailableHacks ={
 				while #C.Bases.Island < 3 do--StringWaitForChild(workspace,"VariableFolder.TimerVal").Value > 0 do
 					task.wait(1)
 				end
-				C.AvailableHacks.Commands[1].ActivateFunction(C.enHacks.TeleportWithSpawn)
+				task.wait(1)
+				C.AvailableHacks.Commands[1].SpawnFunction(C.enHacks.TeleportWithSpawn)
 			end,
 		},
 		[2]={

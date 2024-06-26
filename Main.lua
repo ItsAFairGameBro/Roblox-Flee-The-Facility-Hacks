@@ -10991,7 +10991,7 @@ C.AvailableHacks ={
 		[1]={
 			["Type"]="ExTextButton",
 			["Title"]="Spawn Location",
-			["Desc"]="Also sets your spawnpoint",
+			["Desc"]="Sets your spawnpoint",
 			["Shortcut"]="TeleportWithSpawn",
 			["Default"]=0,
 			["DontActivate"]=true,
@@ -11048,12 +11048,14 @@ C.AvailableHacks ={
 					end
 				end
 			end,
-			["MyStartUp"]=function()
+			["MyStartUp"]=function(myPlr,myChar,firstRun)
 				while #C.Bases.Island < 3 do--StringWaitForChild(workspace,"VariableFolder.TimerVal").Value > 0 do
 					task.wait(1)
 				end
 				task.wait(.5)
-				C.AvailableHacks.Commands[1].SpawnFunction(C.enHacks.TeleportWithSpawn)
+				if not firstRun then
+					C.AvailableHacks.Commands[1].SpawnFunction(C.enHacks.TeleportWithSpawn)
+				end
 			end,
 		},
 		[2]={

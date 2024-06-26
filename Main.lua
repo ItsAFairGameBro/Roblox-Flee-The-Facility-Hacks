@@ -11007,7 +11007,7 @@ C.AvailableHacks ={
 			["ActivateFunction"]=function(newValue)
 				local Teleports={{"USDock"},{"Island","A"},{"Island","B"},{"Island","C"},{"JapanDock"}}
 				if newValue ~= 0 then
-					local Data = Teleports[plr.Team.Name=="USA" and newValue or (#Teleports-newValue)]
+					local Data = Teleports[plr.Team.Name=="USA" and newValue or (#Teleports-newValue+1)]
 					local Target
 					if Data[1] == "Island" then
 						for num, base in ipairs(C.Bases.Island) do

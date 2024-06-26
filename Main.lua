@@ -3849,16 +3849,16 @@ C.AvailableHacks ={
 				while canRun() do
 					if canRun() and not C.isInGame(C.char) then
 						while canRun() and not C.isInGame(C.char) do
-							task.wait(10) -- Assuming the FF lasts for at most 10 seconds
+							task.wait(4) -- FF lasts for 20 seconds so we good
 						end
 					end
 					if canRun() then
-						--[[local FF = C.char:FindFirstChildWhichIsA("ForceField")
+						local FF = C.char:FindFirstChildWhichIsA("ForceField")
 						if FF then
 							FF.Visible = false
-							DS:AddItem(FF,12) -- Delete it after 12 seconds!
+							DS:AddItem(FF,15) -- Delete it after 15 seconds!
 							FF.AncestryChanged:Wait() -- Wait until we're defenseless!
-						else--]]if C.human.SeatPart then
+						elseif C.human.SeatPart then
 							C.human:GetPropertyChangedSignal("SeatPart"):Wait()
 						else
 							C.RemoteEvent:FireServer("Teleport", {
@@ -11023,7 +11023,6 @@ C.AvailableHacks ={
 					end
 					local MainBody = Target:WaitForChild("MainBody")
 					if MainBody and C.human and C.human.Health>0 then
-						task.wait(1)
 						teleportMyself(
 							CFrame.new(MainBody:GetPivot().Position) * CFrame.new(0,C.getHumanoidHeight(C.char)
 								+ (Data[1]=="Island" and MainBody.Size.X or MainBody.Size.Y)/2,0))
@@ -11037,7 +11036,7 @@ C.AvailableHacks ={
 				while #C.Bases.Island < 3 do--StringWaitForChild(workspace,"VariableFolder.TimerVal").Value > 0 do
 					task.wait(1)
 				end
-				task.wait(1)
+				task.wait(.5)
 				C.AvailableHacks.Commands[1].SpawnFunction(C.enHacks.TeleportWithSpawn)
 			end,
 		},

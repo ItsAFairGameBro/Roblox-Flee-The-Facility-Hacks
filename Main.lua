@@ -2738,14 +2738,14 @@ C.AvailableHacks ={
 				end)
 				local function TeleportDetected()
 					newInput = C.char:GetPivot()
-					if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
-						if blockTeleports then
+					if blockTeleports then
+						if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
 							C.LastTeleportLoc = C.LastLoc
 							C.char:PivotTo(C.LastLoc)
-						elseif (C.isInGame and C.isInGame(C.char)) then
-							task.wait(.5)
-							blockTeleports = true
 						end
+					elseif (C.isInGame and C.isInGame(C.char)) then
+						task.wait(.5)
+						blockTeleports = true
 					end
 				end
 				local function AddToCFrameDetection(part)
@@ -3846,12 +3846,11 @@ C.AvailableHacks ={
 					return saveDeb == C.AvailableHacks.Blatant[330].Deb and C.enHacks.Blatant_NavalWarefareGodMode 
 						and not C.isCleared and C.char and C.human and C.human.Health>0
 				end
-				while true do
+				while canRun() do
 					if canRun() and not C.isInGame(C.char) then
 						while canRun() and not C.isInGame(C.char) do
 							task.wait(10) -- Assuming the FF lasts for at most 10 seconds
 						end
-						task.wait(3)
 					end
 					if canRun() then
 						--[[local FF = C.char:FindFirstChildWhichIsA("ForceField")

@@ -2563,7 +2563,7 @@ C.AvailableHacks ={
 					print("TEAM CHANGED")
 					button.Visible = TeamVal.Value == ""
 				end
-				setChangedProperty(TeamVal,"Value",UpdVisibiltiy)
+				setChangedProperty(TeamVal,"Value",UpdVisibiltiy,"Render_IslandCaptureButton")
 				UpdVisibiltiy()
 				newTag.Adornee=FlagPad
 				newTag.Enabled = C.enHacks.Render_IslandCaptureButton

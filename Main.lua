@@ -2571,7 +2571,7 @@ C.AvailableHacks ={
 		[36]={
 			["Type"]="ExTextButton",
 			["Title"]="ESP Loop Bomb",
-			["Desc"]="Auto captures from wherever you are",
+			["Desc"]="Continuously Bombs",
 			["Shortcut"]="Render_IslandBombBase",
 			["Default"]=false,
 			["Universes"]={"NavalWarefare"},
@@ -2624,18 +2624,28 @@ C.AvailableHacks ={
 				local TeamVal = island:WaitForChild("Team")
 				local HPVal = island:WaitForChild("HP")
 				local HitCode = island:WaitForChild("HitCode").Value
-				local MainBody = island:WaitForChild("MainBody")
+				local IslandBody = island:WaitForChild("MainBody")
 				local button = newTag:WaitForChild("Toggle")
 				local isEn = false
 				local Info = {Name="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
 				local function basebomb_activate(new)
-					print("Activate")
 					isEn = new
 					button.Text = isEn and "Pause" or "Bomb"
 					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,255)
 					if new then
+						local Plane = C.human.SeatPart.Parent
+						local PlaneMB = Plane:WaitForChild("MainBody")
+						local BombC = Plane:WaitForChild("BombC")
 						local ActionClone = C.AddAction(Info)
-						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent do
+						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
+							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
+							if C.HasAction("Plane Refuel") then
+								PlaneMB:PivotTo(IslandBody:GetPivot() * CFrame.new(0, 15, 0))
+								PlaneMB.AssemblyLinearVelocity = Vector3.new()
+								PlaneMB.AssemblyAngularVelocity = Vector3.new()
+							elseif BombC.Value == 0 and C.enHacks["Blatant_NavalInstantRefuel"] then
+								break
+							end
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
 							RunS.RenderStepped:Wait()
 						end
@@ -2652,7 +2662,7 @@ C.AvailableHacks ={
 				end
 				setChangedProperty(TeamVal,"Value",UpdVisibiltiy)
 				UpdVisibiltiy()
-				newTag.Adornee=MainBody
+				newTag.Adornee=IslandBody
 			end,
 			["DockAdded"]=function(dock)
 				C.AvailableHacks.Render[36].IslandAdded(dock)
@@ -3700,6 +3710,7 @@ C.AvailableHacks ={
 						if BombC.Value == 0  then
 							local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
 							local HarborMain = Harbor:WaitForChild("MainBody")
+							local MainBody = Plane:WaitForChild("MainBody")
 							local Origin = Plane:GetPivot()
 							local Info = {Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
 								Plane:PivotTo(Origin)
@@ -3710,6 +3721,8 @@ C.AvailableHacks ={
 								if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
 									Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,15,0))
 								end
+								MainBody.AssemblyLinearVelocity = Vector3.new()
+								MainBody.AssemblyAngularVelocity = Vector3.new()
 								RunS.RenderStepped:Wait()
 							end
 						else -- Refueled!

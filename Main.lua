@@ -3724,7 +3724,7 @@ C.AvailableHacks ={
 							actionClone.Time.Text = "~3s"
 							while canRun() and Info.Enabled do
 								if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
-									Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,15,0))
+									Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,45,15))
 								end
 								MainBody.AssemblyLinearVelocity = Vector3.new()
 								MainBody.AssemblyAngularVelocity = Vector3.new()

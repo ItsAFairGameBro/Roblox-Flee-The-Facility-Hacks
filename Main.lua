@@ -3851,12 +3851,12 @@ C.AvailableHacks ={
 						task.wait(10) -- Assuming the FF lasts for at most 10 seconds
 					end
 					if canRun() then
-						local FF = C.char:FindFirstChildWhichIsA("ForceField")
+						--[[local FF = C.char:FindFirstChildWhichIsA("ForceField")
 						if FF then
 							FF.Visible = false
 							DS:AddItem(FF,12) -- Delete it after 12 seconds!
 							FF.AncestryChanged:Wait() -- Wait until we're defenseless!
-						elseif C.human.SeatPart then
+						else--]]if C.human.SeatPart then
 							C.human:GetPropertyChangedSignal("SeatPart"):Wait()
 						else
 							C.RemoteEvent:FireServer("Teleport", {

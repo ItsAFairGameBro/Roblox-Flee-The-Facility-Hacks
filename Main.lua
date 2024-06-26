@@ -2645,9 +2645,9 @@ C.AvailableHacks ={
 								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
 								if BombC.Value > 0 then
 									C.RemoteEvent:FireServer("bomb")
-									task.wait(1/3) -- wait for it to spawn!
+									
 								end
-							elseif BombC.Value == 0 and C.enHacks["Blatant_NavalInstantRefuel"] then
+							elseif BombC.Value == 0 and not C.enHacks["Blatant_NavalInstantRefuel"] then
 								break
 							end
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
@@ -3712,6 +3712,7 @@ C.AvailableHacks ={
 							return
 						end
 						if BombC.Value == 0  then
+							task.wait(2/3) -- wait for the bomb to spawn!
 							local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
 							local HarborMain = Harbor:WaitForChild("MainBody")
 							local MainBody = Plane:WaitForChild("MainBody")

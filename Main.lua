@@ -2639,7 +2639,7 @@ C.AvailableHacks ={
 						local ActionClone = C.AddAction(Info)
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
-							if C.HasAction("Plane Refuel") then
+							if C.GetAction("Plane Refuel") then
 								PlaneMB:PivotTo(IslandBody:GetPivot() * CFrame.new(0, 15, 0))
 								PlaneMB.AssemblyLinearVelocity = Vector3.new()
 								PlaneMB.AssemblyAngularVelocity = Vector3.new()

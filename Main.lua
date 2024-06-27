@@ -8848,6 +8848,7 @@ C.AvailableHacks ={
 			["Desc"]="Attempts to disable all new killbricks",
 			["Shortcut"]="Blatant_NavalWarefareKillBricks",
 			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)
 				local SeaFloorGroup = StringWaitForChild(workspace,"Setting.SeaFloor")
 				for num, seaFloorPart in ipairs(SeaFloorGroup:GetChildren()) do

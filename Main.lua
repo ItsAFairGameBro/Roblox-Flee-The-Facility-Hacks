@@ -8842,7 +8842,21 @@ C.AvailableHacks ={
 				C.AvailableHacks.Beast[77].ActivateFunction(C.enHacks.Beast_CaptureAllSurvivors)
 			end,
 		},
-
+		[80]={
+			["Type"]="ExTextButton",
+			["Title"]="No Killbricks",
+			["Desc"]="Attempts to disable all new killbricks",
+			["Shortcut"]="Blatant_NavalWarefareKillBricks",
+			["Default"]=false,
+			["ActivateFunction"]=function(newValue)
+				local SeaFloorGroup = StringWaitForChild(workspace,"Setting.SeaFloor")
+				for num, seaFloorPart in ipairs(SeaFloorGroup:GetChildren()) do
+					if seaFloorPart:IsA("BasePart") then
+						seaFloorPart.CanTouch = not newValue
+					end
+				end
+			end
+		},
 	},
 	["Runner"]={
 		[3]={

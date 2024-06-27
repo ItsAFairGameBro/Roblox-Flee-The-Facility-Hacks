@@ -13154,6 +13154,7 @@ task.spawn(function()
 	end	--]]
 	table.insert(C.functs,game:GetService("NetworkClient").ChildRemoved:Connect(function()
 		SG:SetCore("DevConsoleVisible", true)
+		GS:ClearError()
 		print(("Client/Server Kick Has Occured (%.2f)"):format(time()))
 	end))
 	local getcallingscript = getcallingscript

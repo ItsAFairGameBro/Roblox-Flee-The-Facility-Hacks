@@ -3945,6 +3945,22 @@ C.AvailableHacks ={
 			end,
 		},--]]
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
+		[350]={
+			["Type"]="ExTextButton",
+			["Title"]="No Killbricks",
+			["Desc"]="Attempts to disable all new killbricks",
+			["Shortcut"]="Blatant_NavalWarefareKillBricks",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				local SeaFloorGroup = StringWaitForChild(workspace,"Setting.SeaFloor")
+				for num, seaFloorPart in ipairs(SeaFloorGroup:GetChildren()) do
+					if seaFloorPart:IsA("BasePart") then
+						seaFloorPart.CanTouch = not newValue
+					end
+				end
+			end
+		},	
 	},
 	["Utility"]={
 		[1]={
@@ -8841,22 +8857,6 @@ C.AvailableHacks ={
 			["MyBeastAdded"]=function()
 				C.AvailableHacks.Beast[77].ActivateFunction(C.enHacks.Beast_CaptureAllSurvivors)
 			end,
-		},
-		[80]={
-			["Type"]="ExTextButton",
-			["Title"]="No Killbricks",
-			["Desc"]="Attempts to disable all new killbricks",
-			["Shortcut"]="Blatant_NavalWarefareKillBricks",
-			["Default"]=false,
-			["Universes"]={"NavalWarefare"},
-			["ActivateFunction"]=function(newValue)
-				local SeaFloorGroup = StringWaitForChild(workspace,"Setting.SeaFloor")
-				for num, seaFloorPart in ipairs(SeaFloorGroup:GetChildren()) do
-					if seaFloorPart:IsA("BasePart") then
-						seaFloorPart.CanTouch = not newValue
-					end
-				end
-			end
 		},
 	},
 	["Runner"]={

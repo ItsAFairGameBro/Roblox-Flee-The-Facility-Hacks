@@ -2762,15 +2762,16 @@ C.AvailableHacks ={
 				end)
 				local function TeleportDetected()
 					newInput = C.char:GetPivot()
-					if blockTeleports then
+					if blockTeleports or (C.isInGame and C.isInGame(C.char)) then
 						if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
 							C.LastTeleportLoc = C.LastLoc
 							C.char:PivotTo(C.LastLoc)
 						end
+						
 					elseif (C.isInGame and C.isInGame(C.char)) then
 						task.wait(.5)
-						blockTeleports = true
 					end
+					blockTeleports = true
 				end
 				local function AddToCFrameDetection(part)
 					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("Position"):Connect(TeleportDetected))
@@ -3553,7 +3554,7 @@ C.AvailableHacks ={
 		[320]={
 			["Type"]="ExTextBox",
 			["Title"]="Vehicle Speed Multiplier", ["CategoryAlias"] = "Vehicle",
-			["Desc"]="How much faster vehicles that you drive go. Max For Ships Is x1.4 Unless AutoTeleportBack is enabled",
+			["Desc"]="How much faster vehicles that you drive go. Max For Ships Is x1.4 Unless Vehicle.AutoTeleportBack is enabled",
 			["Shortcut"]="Blatant_NavalVehicleSpeed",
 			["Default"]=1,
 			["MinBound"]=-100,

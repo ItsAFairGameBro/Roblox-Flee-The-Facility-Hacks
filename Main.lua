@@ -1460,7 +1460,7 @@ C.CommandFunctions = {
 		Type="",
 		AfterTxt="%s",
 		Run=function(args)
-			SG:SetCore("DevConsoleVisible", true)
+			SG:SetCore("DevConsoleVisible", SG:GetCore("DevConsoleVisible"))
 			return true
 		end,
 	},
@@ -13156,6 +13156,12 @@ task.spawn(function()
 		SG:SetCore("DevConsoleVisible", true)
 		GS:ClearError()
 		print(("Client/Server Kick Has Occured (%.2f)"):format(time()))
+		local ErrorMessage = StringWaitForChild(game:GetService("CoreGui"),"RobloxPromptGui.promptOverlay.ErrorPrompt.MessageArea.ErrorFrame.ErrorMessage",5)
+		if ErrorMessage then
+			warn(ErrorMessage.Text)
+		else
+			warn("Error Message Not Found, Yielding Failed")
+		end
 	end))
 	local getcallingscript = getcallingscript
 	local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower

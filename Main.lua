@@ -1460,7 +1460,7 @@ C.CommandFunctions = {
 		Type="",
 		AfterTxt="%s",
 		Run=function(args)
-			SG:SetCore("DevConsoleVisible", SG:GetCore("DevConsoleVisible"))
+			SG:SetCore("DevConsoleVisible",not SG:GetCore("DevConsoleVisible"))
 			return true
 		end,
 	},

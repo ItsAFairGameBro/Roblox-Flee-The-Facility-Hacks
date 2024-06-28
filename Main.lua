@@ -2749,7 +2749,7 @@ C.AvailableHacks ={
 				local CenterPart = (C.gameName == "FleeMain" and C.char:FindFirstChild("HumanoidRootPart")) 
 					or (C.human.RigType == Enum.HumanoidRigType.R6 and C.char:WaitForChild("Torso",2)) or C.char:WaitForChild("HumanoidRootPart")
 				local newInput = nil
-				C.LastLoc = CenterPart:GetPivot() -- Inital Starting Position
+				C.LastLoc = C.char:GetPivot() -- Inital Starting Position
 				local blockTeleports = C.gameUniverse ~= "NavalWarefare" or (C.isInGame and C.isInGame(C.char))
 				local function CanRun()
 					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and CenterPart and C.enHacks.Blatant_TeleportBack
@@ -3908,7 +3908,7 @@ C.AvailableHacks ={
 				end
 			end,
 			["MyStartUp"]=function()
-				C.AvailableHacks.Blatant[330].ActivateFunction()
+				task.delay(2,C.AvailableHacks.Blatant[330].ActivateFunction)
 			end,
 		},
 		[335]={

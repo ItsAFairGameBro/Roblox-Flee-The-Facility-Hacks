@@ -3512,7 +3512,7 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Blatant[316].Funct = UIS.InputBegan:Connect(function(inputObject,gameProcessed)
 						if inputObject.KeyCode == Enum.KeyCode.F then
-							while UIS:IsKeyDown(Enum.KeyCode.F) do
+							while UIS:IsKeyDown(Enum.KeyCode.F) and C.enHacks.Blatant_NavalAutoAim do
 								local u = C.getClosest()
 								if u then
 									local v = u.Parent:FindFirstChild("HumanoidRootPart")
@@ -11158,8 +11158,10 @@ C.AvailableHacks ={
 			["Universes"]={"NavalWarefare"},
 			["UpdInGame"]=function()
 				local RemoveUniform = StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform")
+				local ShouldBeDead = C.isInGame(C.char)
 				--RemoveUniform.Visible = not C.isInGame(C.char)
-				RemoveUniform.AnchorPoint = C.isInGame(C.char) and Vector2.new(1, 0.5) or Vector2.new(0,.5)
+				RemoveUniform.Position = ShouldBeDead and UDim2.fromScale(-1,.5) or UDim2.fromScale(0,.5)
+				RemoveUniform.AnchorPoint = ShouldBeDead and Vector2.new(1, 0.5) or Vector2.new(0,.5)
 				--setChangedProperty(RemoveUniform,"Visible",C.AvailableHacks.Commands[1].UpdInGame)
 			end,
 			["SpawnFunction"]=function(newValue)

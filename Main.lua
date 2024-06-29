@@ -3768,7 +3768,7 @@ C.AvailableHacks ={
 							Plane:PivotTo(Origin)
 						end,}
 						local actionClone = C.AddAction(Info)
-						actionClone.Time.Text = "~2s"
+						actionClone:WaitForChild("Time").Text = "~2s"
 						while canRun(true) and Info.Enabled do
 							if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
 								Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,45,15))

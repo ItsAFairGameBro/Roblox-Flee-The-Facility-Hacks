@@ -131,7 +131,9 @@ return function(C,_SETTINGS)
 				end
 				local start = os.clock()
 				
-				print(("Looped through %i instances in %.2f seconds!"):format(loop(game),os.clock()-start))
+				warn("[Attribute Search] Search Beggining...")
+				
+				warn(("[Attribute Search] Search Finished! Loop through %i instances in %.2f seconds!"):format(loop(game),os.clock()-start))
 			end,			
 		}
 	}

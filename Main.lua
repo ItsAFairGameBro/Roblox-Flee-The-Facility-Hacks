@@ -4018,7 +4018,7 @@ C.AvailableHacks ={
 				end	
 				if newValue then
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
-						task.wait(1)
+						task.wait(.2)
 						if instance.Name == "Bomb" and instance.Parent then
 							local closestBasePart, dist = C.getClosestBase()
 							if closestBasePart then

@@ -510,7 +510,7 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	Time.Position = UDim2.new(0, 0, 0.485714287, 0)
 	Time.Size = UDim2.new(0.519761801, 0, 0.5, 0)
 	Time.Font = Enum.Font.SourceSans
-	Time.Text = "34 m, 24 s"
+	Time.Text = "ERROR"
 	Time.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Time.TextScaled = true
 	Time.TextSize = 14.000

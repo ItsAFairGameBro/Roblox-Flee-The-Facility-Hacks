@@ -550,7 +550,7 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 		info.Tags = info.Tags or {}
 		local ActionClone = ActionsEx:Clone()
 		ActionClone.Name = info.Name
-		ActionClone.Title.Text = info.Name:gsub("/"," "):gsub("_"," "):gsub("%l%u",function(old) return old:sub(1,1) .. " " .. old:sub(2) end)
+		ActionClone.Title.Text = (info.Title or info.Name):gsub("/"," "):gsub("_"," "):gsub("%l%u",function(old) return old:sub(1,1) .. " " .. old:sub(2) end)
 		ActionClone.Visible = true
 		local StopEvent = Instance.new("BindableEvent",ActionClone)
 		StopEvent.Name = "StopEvent"
@@ -613,11 +613,20 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 		end
 	end
 	
-	function C.PurgeActionsWithTag(tagName:string)
+	function C.GetActionsWithTag(tagName:string)
+		local Items = {}
 		for name, data in pairs(getgenv().ActionsList) do
 			if table.find(data.Tags,tagName) then
 				C.RemoveAction(name)
+				Items[name] = data
 			end
+		end
+		return Items
+	end
+	
+	function C.PurgeActionsWithTag(tagName:string)
+		for name, data in pairs(C.GetActionsWithTag(tagName)) do
+			C.RemoveAction(name)
 		end
 	end
 

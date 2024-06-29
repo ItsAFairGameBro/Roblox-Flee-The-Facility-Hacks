@@ -2645,8 +2645,8 @@ C.AvailableHacks ={
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
-								--PlaneMB.AssemblyLinearVelocity = Vector3.new()
-								--PlaneMB.AssemblyAngularVelocity = Vector3.new()
+								PlaneMB.AssemblyLinearVelocity = Vector3.new()
+								PlaneMB.AssemblyAngularVelocity = Vector3.new()
 								if BombC.Value > 0 and WhileIn>1 then
 									WhileIn = 0
 									C.RemoteEvent:FireServer("bomb")
@@ -2655,7 +2655,7 @@ C.AvailableHacks ={
 								break
 							end
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
-							if ((PlaneMB:GetPivot().Position - IslandBody.Position)/Vector3.new(1,1000,1)).Magnitude < 100 then
+							if ((PlaneMB:GetPivot().Position - IslandBody.Position)/Vector3.new(1,1000,1)).Magnitude < 300 then
 								WhileIn += RunS.RenderStepped:Wait()
 							else
 								if BombC.Value > 0 then

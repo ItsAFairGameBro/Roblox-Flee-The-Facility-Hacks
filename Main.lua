@@ -3590,6 +3590,9 @@ C.AvailableHacks ={
 						local SpeedMult = (VehicleType=="Plane" and C.enHacks.Blatant_NavalVehicleSpeed 
 							or math.min(C.enHacks.Blatant_NavalAutoTeleportBack and math.huge or 1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed or 1
+						if C.GetAction("LoopBomb") or C.GetAction("Plane Refuel") then
+							SpeedMult = 0 -- Override to stop it from moving!
+						end
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						if FuelLeft then
 							if C.enHacks.Blatant_NavalInfPlaneFuel then

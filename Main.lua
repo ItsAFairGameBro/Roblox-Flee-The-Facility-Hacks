@@ -3646,13 +3646,18 @@ C.AvailableHacks ={
 			["Universes"]={"NavalWarefare"},
 			["Funct"]=nil,
 			["ToggleColliders"]=function(Vehicle,Enabled)
+				if not Vehicle then
+					return
+				end
 				local MainPart, Colliders = Vehicle:FindFirstChild("MainPart"), Vehicle:FindFirstChild("Colliders")
 				if MainPart then
 					MainPart.CanTouch = not Enabled
+					print("Set MainPart",MainPart.CanTouch)
 				end
 				if Colliders then
 					for num, collider in ipairs(Colliders:GetChildren()) do
 						collider.CanTouch = not Enabled
+						print("Set Collder",collider.Name,collider.CanTouch)
 					end
 				end
 			end,

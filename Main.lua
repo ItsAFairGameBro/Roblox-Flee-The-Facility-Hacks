@@ -2633,7 +2633,6 @@ C.AvailableHacks ={
 				local isEn = false
 				local Info = {Name="LoopBomb",Title="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
 				local function basebomb_activate(new)
-					print("BaseBomb CLick")
 					isEn = new
 					button.Text = isEn and "Pause" or "Bomb"
 					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,255)
@@ -2644,7 +2643,7 @@ C.AvailableHacks ={
 						local ActionClone = C.AddAction(Info)
 						local WhileIn = 0
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
-							and C.human.SeatPart and C.human.SeatPart.Parent == Plane and HPVal.Value <= 0 do
+							and C.human.SeatPart and C.human.SeatPart.Parent == Plane and HPVal.Value > 0 do
 							local TargetCF = CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0)
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
 								PlaneMB.AssemblyLinearVelocity = TargetCF.Position - PlaneMB.Position

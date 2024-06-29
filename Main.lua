@@ -2633,6 +2633,7 @@ C.AvailableHacks ={
 				local isEn = false
 				local Info = {Name="LoopBomb",Title="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
 				local function basebomb_activate(new)
+					print("BaseBomb CLick")
 					isEn = new
 					button.Text = isEn and "Pause" or "Bomb"
 					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,255)

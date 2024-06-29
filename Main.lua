@@ -3694,7 +3694,7 @@ C.AvailableHacks ={
 						--{PartCF,PartSize,isBlacklist} (All Three Arguments Required)
 						local ListedAreas = {{BoundingCF,BoundingSize,false},{HarborCF,HarborSize,true}}
 						for num, data in ipairs(ListedAreas) do
-							if C.IsInBox(data[1],data[2],seatPart.Position) == data[3] then
+							if C.IsInBox and C.IsInBox(data[1],data[2],seatPart.Position) == data[3] then
 								GetOutSpeed += 
 									((data[3] and C.ClosestPointOnPartSurface or C.ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
 										- seatPart.Position) * (data[3] and PullUpSpeed/3 or PullUpSpeed)

@@ -2648,7 +2648,7 @@ C.AvailableHacks ={
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
 								PlaneMB.AssemblyLinearVelocity = TargetCF - PlaneMB.Position
 								PlaneMB.AssemblyAngularVelocity = Vector3.new()
-								if BombC.Value > 0 and WhileIn>1 then
+								if BombC.Value > 0 and WhileIn>.2 then
 									WhileIn = 0
 									C.RemoteEvent:FireServer("bomb")
 								end

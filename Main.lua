@@ -3822,8 +3822,8 @@ C.AvailableHacks ={
 					["Title"]="50%",
 					["TextColor"]=Color3.fromRGB(223, 208, 0),
 				},
-				[75]={
-					["Title"]="75%",
+				[99]={
+					["Title"]="99%",
 					["TextColor"]=Color3.fromRGB(0, 216, 25),
 				},
 			},

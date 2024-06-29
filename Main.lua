@@ -12223,7 +12223,7 @@ local initilizationTypes = ({
 			table.insert(putIntoArray,{Type=Type,Vals=Vals})
 		end
 		table.sort(putIntoArray,function(a,b)
-			return tostring(a.Type):lower() > tostring(b.Type):lower()
+			return tostring(a.Type):lower() < tostring(b.Type):lower()
 		end)
 		--local lastClick = os.clock()-10
 		local function cycle(delta)

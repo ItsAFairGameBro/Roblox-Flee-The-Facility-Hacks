@@ -41,7 +41,7 @@ return function(C,_SETTINGS)
 			["ActivateFunction"]=function(newValue)
 				local CollisionGroups = PhysicsS:GetRegisteredCollisionGroups()
 				for key, val in ipairs(CollisionGroups) do
-					print(val.name.." (" .. val.mask ..") collides:")
+					print(val.name.." (id=" .. key ..") collides:")
 					for num, val2 in pairs(CollisionGroups) do
 						print("\t"..val2.name,PhysicsS:CollisionGroupsAreCollidable(val2.name,val.name),"\n")
 					end
@@ -75,6 +75,50 @@ return function(C,_SETTINGS)
 			["MyStartUp"]=function()
 				C.AvailableHacks.Developer[3].ActivateFunction(C.enHacks.Developer_PrintPartTeleports)
 			end,
+		},
+		[5]={
+			["Type"]="ExTextButton",
+			["Title"]="Find Attributes",
+			["Desc"]="Prints all attributes and where they occur!",
+			["Shortcut"]="Developer_PrintPartTeleports",
+			["Default"]=false,
+			["DontActivate"]=true,
+			["Functs"]={},
+			["Universes"] = {"Global"},
+			["ActivateFunction"]=function(newValue)
+				local ignoreParent = {[game.CoreGui]=true}
+				local ignoreList = {["OrgColor"]=true,["OrgTrans"]=true,["OriginalCollide"]=true,["WeirdCanCollide"]=true,["Opened"]=true,["SaveVolume"]=true}
+				local function printAtt(obj)
+					for _,instance in ipairs(ignoreList) do
+						if instance:IsAncestorOf(obj) then
+							return
+						end 
+					end
+					local printStr
+					for attribute, val in pairs(obj:GetAttributes()) do
+						if not ignoreList[attribute] then
+							if not printStr then
+								printStr = "\tOBJ ["..obj:GetFullName().."]:"
+							end
+							printStr..="\n\t\t"..attribute.."="..val
+						end
+					end
+					if printStr then
+						print(printStr)
+					end
+				end
+				function loop(obj)
+					printAtt(obj)
+					for num, instance in ipairs(obj:GetChildren()) do
+						loop(instance)
+						if num%40==0 then
+							game["Run Service"].RenderStepped:Wait()
+						end
+					end
+				end
+
+				loop(game)
+			end,			
 		}
 	}
 end

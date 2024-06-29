@@ -93,7 +93,7 @@ return function(C,_SETTINGS)
 			},
 			["ActivateFunction"]=function(newValue)
 				local ignoreParent = {[game.CoreGui]=true}
-				local ignoreList = {["OrgColor"]=true,["OrgTrans"]=true,['wallclip']=true,['HackGUI1']=true,
+				local ignoreList = {["OrgColor"]=true,["OrgTrans"]=true,['wallclip']=true,['HackGUI1']=true,["LastTP"]=true,
 					["OriginalCollide"]=true,["WeirdCanCollide"]=true,["Opened"]=true,["SaveVolume"]=true}
 				local instsScanned = 0
 				local function printAtt(obj)

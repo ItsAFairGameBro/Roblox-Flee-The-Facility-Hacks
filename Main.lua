@@ -2643,7 +2643,7 @@ C.AvailableHacks ={
 						local BombC = Plane:WaitForChild("BombC")
 						local ActionClone = C.AddAction(Info)
 						
-						local IslandLoc = IslandBody:GetPivot()
+						local IslandLoc
 						
 						local HalfSize = IslandBody.Size/4 -- Make it a quarter so it doesn't miss!
 						local Randomizer = Random.new()
@@ -2651,19 +2651,18 @@ C.AvailableHacks ={
 						local XOfffset,ZOffset
 						local TargetCF
 						
-						local function CalculateNew()
-							XOfffset,ZOffset = Randomizer:NextNumber(-HalfSize.X,HalfSize.X), Randomizer:NextNumber(-HalfSize.Z,HalfSize.Z)
+						local function CalculateNew(Regenerate)
+							if Regenerate or not XOfffset then
+								XOfffset,ZOffset = Randomizer:NextNumber(-HalfSize.X,HalfSize.X), Randomizer:NextNumber(-HalfSize.Z,HalfSize.Z)
+							end
+							IslandLoc = IslandBody:GetPivot()
 							TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
 						end
-						
-						CalculateNew()
-						
+												
 						local WhileIn = 0
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane and HPVal.Value > 0 do
-							if Randomizer:NextInteger(1,5) == 1 then
-								CalculateNew()
-							end
+							CalculateNew(Randomizer:NextInteger(1,5) == 1)
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
 								PlaneMB.AssemblyLinearVelocity = TargetCF.Position - PlaneMB.Position
 								--PlaneMB.AssemblyAngularVelocity = Vector3.zero
@@ -4016,7 +4015,7 @@ C.AvailableHacks ={
 		},
 		[335]={
 			["Type"]="ExTextButton",
-			["Title"]="Projectile Instant Hit", ["CategoryAlias"] = "Weapon",
+			["Title"]="Bomb Instant Hit", ["CategoryAlias"] = "Weapon",
 			["Desc"]="Makes all projectiles instantly hit the nearest base",
 			["Shortcut"]="Blatant_NavalInstantHit",
 			["Default"]=false,
@@ -4062,6 +4061,17 @@ C.AvailableHacks ={
 						seaFloorPart.CanTouch = not newValue
 					end
 				end
+			end
+		},	
+		[351]={
+			["Type"]="ExTextButton", ["CategoryAlias"]="Vehicle",
+			["Title"]="[WIP] NO FLY ZONE",
+			["Desc"]="Absorbs all enemy planes to your ship",
+			["Shortcut"]="Blatant_NavalWarefareNoFlyZonef",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				
 			end
 		},	
 	},

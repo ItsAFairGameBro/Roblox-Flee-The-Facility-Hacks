@@ -3754,6 +3754,7 @@ C.AvailableHacks ={
 					local HP = Plane:WaitForChild("HP")
 					local BombC = Plane:WaitForChild("BombC")
 					local function canRun(toRun)
+						print("MinHealth",C.enHacks.Blatant_NavalInstantRepair*C.DataStorage[Plane.Name].Health,HP.Value)
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
 							and (not toRun or 
 								((C.enHacks.Blatant_NavalInstantRefuel and BombC.Value == 0) 

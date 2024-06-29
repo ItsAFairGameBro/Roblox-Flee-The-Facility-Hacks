@@ -2590,8 +2590,8 @@ C.AvailableHacks ={
 				end
 				local Base = tag.Adornee.Parent
 				if Base then 
-					local Team = Base:WaitForChild("Team",5)
-					if Team then
+					local Team, HP = Base:WaitForChild("Team",5), Base:WaitForChild("HP")
+					if Team and HP and HP.Value > 0 then
 						local Plane = C.human and C.human.SeatPart and C.human.SeatPart.Parent
 						if Plane and C.human.SeatPart.Name == "Seat" then
 							local HitCode = Plane:FindFirstChild("HitCode")
@@ -3601,7 +3601,7 @@ C.AvailableHacks ={
 							or math.min(C.enHacks.Blatant_NavalAutoTeleportBack and math.huge or 1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed or 1
 						if C.GetAction("LoopBomb") or C.GetAction("Plane Refuel") then
-							SpeedMult,TurnMult = 0, 0 -- Override to stop it from moving!
+							SpeedMult,TurnMult = -0.2, 0 -- Override to stop it from moving!
 						end
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						if FuelLeft then

@@ -3732,13 +3732,13 @@ C.AvailableHacks ={
 		},
 		[325]={
 			["Type"]="ExTextButton",
-			["Title"]="Plane Instant Refuel", ["CategoryAlias"] = "Vehicle",
+			["Title"]="Plane Instant Restock", ["CategoryAlias"] = "Vehicle",
 			["Desc"]="Auto Re-Fuels at Harbor after bombs run out. Teleports back as well.",
 			["Shortcut"]="Blatant_NavalInstantRefuel",
 			["Default"]=false,
 			["DontActivate"]=true,
 			["Universes"]={"NavalWarefare"},
-			["Funct"]=nil,
+			["Functs"]={},
 			["ActivateFunction"]=function(newValue)
 				if not newValue then
 					C.RemoveAction("Plane Refuel") -- Cancel the action
@@ -3751,10 +3751,13 @@ C.AvailableHacks ={
 				local Plane = seatPart.Parent
 				local HitCode = Plane:WaitForChild("HitCode",5)
 				if HitCode and HitCode.Value == "Plane" then
+					local HP = Plane:WaitForChild("HP")
 					local BombC = Plane:WaitForChild("BombC")
-					local function canRun()
+					local function canRun(toRun)
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
-							and (C.enHacks.Blatant_NavalInstantRefuel or C.enHacks.Blatant_NavalRefuelHP)
+							and (not toRun or 
+								((C.enHacks.Blatant_NavalInstantRefuel and BombC.Value == 0) 
+									or C.enHacks.Blatant_NavalInstantRepair*C.DataStorage[Plane.Name].Health>=HP.Value))
 					end
 					local function HarborRefuel()
 						local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
@@ -3766,7 +3769,7 @@ C.AvailableHacks ={
 						end,}
 						local actionClone = C.AddAction(Info)
 						actionClone.Time.Text = "~2s"
-						while canRun() and Info.Enabled do
+						while canRun(true) and Info.Enabled do
 							if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
 								Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,45,15))
 							end
@@ -3782,23 +3785,51 @@ C.AvailableHacks ={
 						if not canRun() then
 							return
 						end
-						if BombC.Value == 0 and C.enHacks.Blatant_NavalInstantRefuel then
-							
+						if canRun(true) then
+							HarborRefuel()
 						else -- Refueled!
 							C.RemoveAction("Plane Refuel")
 						end
 					end
-					C.AvailableHacks.Blatant[325].Funct = BombC.Changed:Connect(CheckDORefuel)
+					table.insert(C.AvailableHacks.Blatant[325].Functs,BombC.Changed:Connect(CheckDORefuel))
+					table.insert(C.AvailableHacks.Blatant[325].Functs,HP.Changed:Connect(CheckDORefuel))
 					CheckDORefuel()
 				end
 			end,
 			["MySeatRemoved"]=function()
-				if C.AvailableHacks.Blatant[325].Funct then
-					C.AvailableHacks.Blatant[325].Funct:Disconnect()
-					C.AvailableHacks.Blatant[325].Funct=nil
-				end
+				for num, funct in ipairs(C.AvailableHacks.Blatant[325].Functs) do
+					funct:Disconnect()
+				end C.AvailableHacks.Blatant[325].Functs = {}
 				C.RemoveAction("Plane Refuel")
 			end,
+		},
+		[324]={
+			["Type"]="ExTextButton",
+			["Title"]="Plane Instant Repair", ["CategoryAlias"] = "Vehicle",
+			["Desc"]="Repairs when this health or lower is reached on a Plane. Requires NavalInstantRefuel.",
+			["Shortcut"]="Blatant_NavalInstantRepair",
+			["Default"]=false,
+			["Options"]={
+				[false]={
+					["Title"]="OFF",
+					["TextColor"]=Color3.fromRGB(170,0,170),
+				},
+				[25]={
+					["Title"]="25%",
+					["TextColor"]=Color3.fromRGB(170, 0, 3),
+				},
+				[50]={
+					["Title"]="50%",
+					["TextColor"]=Color3.fromRGB(223, 208, 0),
+				},
+				[75]={
+					["Title"]="75%",
+					["TextColor"]=Color3.fromRGB(0, 216, 25),
+				},
+			},
+			["DontActivate"]=true,
+			["Universes"]={"NavalWarefare"},
+			["Funct"]=nil,
 		},
 		[326]={
 			["Type"]="ExTextBox",

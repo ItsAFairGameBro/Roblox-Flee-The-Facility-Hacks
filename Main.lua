@@ -11121,6 +11121,11 @@ C.AvailableHacks ={
 				},
 			},
 			["Universes"]={"NavalWarefare"},
+			["UpdInGame"]=function()
+				local RemoveUniform = StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform")
+				RemoveUniform.Visible = not C.isInGame(C.char)
+				setChangedProperty(RemoveUniform,"Visible",C.AvailableHacks.Commands[1].UpdInGame)
+			end,
 			["SpawnFunction"]=function(newValue)
 				local Teleports={{"USDock"},{"Island","A"},{"Island","B"},{"Island","C"},{"JapanDock"}}
 				if newValue ~= 0 then
@@ -11141,6 +11146,9 @@ C.AvailableHacks ={
 						teleportMyself(
 							CFrame.new(MainBody:GetPivot().Position) * CFrame.new(0,C.getHumanoidHeight(C.char)
 								+ (Data[1]=="Island" and MainBody.Size.X or MainBody.Size.Y)/2,0))
+						if C.gameUniverse == "NavalWarefare" then
+							C.AvailableHacks.Commands[1].UpdInGame()
+						end
 					end
 				end
 				C.AvailableHacks.Blatant[5].BlockTeleports = newValue ~= 0
@@ -11150,14 +11158,7 @@ C.AvailableHacks ={
 					task.wait(1)
 				end
 				task.wait(.5)
-				if C.gameUniverse == "NavalWarefare" then
-					local RemoveUniform = StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform")
-					local function UpdUniform()
-						RemoveUniform.Visible = not C.isInGame(C.char)
-					end
-					setChangedProperty(RemoveUniform,"Visible",UpdUniform)
-					UpdUniform()
-				end
+
 				if not firstRun then
 					C.AvailableHacks.Commands[1].SpawnFunction(C.enHacks.TeleportWithSpawn)
 				end

@@ -4,6 +4,9 @@ local CS = game:GetService("CollectionService")
 local isStudio = RunS:IsStudio()
 return function(C,_SETTINGS)
 	--PRINT ENVIRONMENT START
+	C.TempFolder = Instance.new("Folder",workspace)
+	C.TempFolder.Name = "TempFolder"
+	C.TempFolder:AddTag("RemoveOnDestroy")
 	local function printInstances(...)
 		local printVal = ""
 		for num, val in pairs({...}) do
@@ -87,7 +90,7 @@ return function(C,_SETTINGS)
 		end
 		local newPart=C.TestPart:Clone()
 		newPart.Position=position
-		newPart.Parent=workspace.Camera
+		newPart.Parent=C.TempFolder
 		newPart:AddTag("RemoveOnDestroy")
 		DS:AddItem(newPart,timer or 5)
 	end
@@ -95,7 +98,7 @@ return function(C,_SETTINGS)
 		if not _SETTINGS.hitBoxesEnabled then
 			return
 		end
-		if workspace.Camera:FindFirstChild(name) then
+		if C.TempFolder:FindFirstChild(name) then
 			return
 		end
 		local newPart=Instance.new("Part")
@@ -105,7 +108,7 @@ return function(C,_SETTINGS)
 		newPart.Transparency = .75
 		newPart.Anchored = true
 		newPart.Name = name
-		newPart.Parent=workspace.Camera
+		newPart.Parent=C.TempFolder
 		newPart:AddTag("RemoveOnDestroy")
 	end
 	function C.getHumanoidHeight(model)

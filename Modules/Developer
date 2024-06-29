@@ -93,7 +93,9 @@ return function(C,_SETTINGS)
 			},
 			["ActivateFunction"]=function(newValue)
 				local ignoreParent = {[game.CoreGui]=true}
-				local ignoreList = {["OrgColor"]=true,["OrgTrans"]=true,["OriginalCollide"]=true,["WeirdCanCollide"]=true,["Opened"]=true,["SaveVolume"]=true}
+				local ignoreList = {["OrgColor"]=true,["OrgTrans"]=true,['wallclip']=true,['HackGUI1']=true,
+					["OriginalCollide"]=true,["WeirdCanCollide"]=true,["Opened"]=true,["SaveVolume"]=true}
+				local instsScanned = 0
 				local function printAtt(obj)
 					for _,instance in ipairs(ignoreList) do
 						if instance:IsAncestorOf(obj) then
@@ -113,17 +115,23 @@ return function(C,_SETTINGS)
 						print(printStr)
 					end
 				end
-				local function loop(obj)
+				local function loop(obj,instsScanned)
+					instsScanned = (instsScanned or 0) + 1
 					printAtt(obj)
+					if table.find(ignoreParent,obj) then
+						return -- don't go through ignoreparents!
+					end
 					for num, instance in ipairs(obj:GetChildren()) do
-						loop(instance)
+						loop(instance,instsScanned)
 						if num%40==0 then
 							game["Run Service"].RenderStepped:Wait()
 						end
 					end
+					return instsScanned
 				end
-
-				loop(game)
+				local start = os.clock()
+				
+				print(("Looped through %i instances in %.2f seconds!"):format(loop(game),os.clock()-start))
 			end,			
 		}
 	}

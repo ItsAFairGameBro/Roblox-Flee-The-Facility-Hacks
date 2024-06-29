@@ -88,7 +88,25 @@ return function(C,_SETTINGS)
 		local newPart=C.TestPart:Clone()
 		newPart.Position=position
 		newPart.Parent=workspace.Camera
-		DS:AddItem(newPart,5)
+		newPart:AddTag("RemoveOnDestroy")
+		DS:AddItem(newPart,timer or 5)
+	end
+	function C.createTestBlock(name,cframe,size)
+		if not _SETTINGS.hitBoxesEnabled then
+			return
+		end
+		if workspace.Camera:FindFirstChild(name) then
+			return
+		end
+		local newPart=Instance.new("Part")
+		newPart.CFrame= cframe
+		newPart.Size = size or Vector3.new(4,1.2,2)
+		newPart.Color = Color3.fromRGB(200)
+		newPart.Transparency = .75
+		newPart.Anchored = true
+		newPart.Name = name
+		newPart.Parent=workspace.Camera
+		newPart:AddTag("RemoveOnDestroy")
 	end
 	function C.getHumanoidHeight(model)
 		local Humanoid=model:WaitForChild("Humanoid")

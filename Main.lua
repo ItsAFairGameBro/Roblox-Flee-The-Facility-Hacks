@@ -3682,8 +3682,8 @@ C.AvailableHacks ={
 				local BoundingSize = Vector3.new(10240,20e3,16384)
 				local BoundingCF = CFrame.new(0, BoundingSize.Y/2 + LowestAcceptablePoint, 0)
 
-				local HarborSize = HarborMainBody.Size+Vector3.new(60,120,60)
-				local HarborCF = HarborMainBody.CFrame*CFrame.new(0,60,0)
+				local HarborSize = HarborMainBody.Size+Vector3.new(60,220,60)
+				local HarborCF = HarborMainBody.CFrame*CFrame.new(0,-40,0)
 				C.createTestBlock("EnemyHarborBoundingBox",HarborCF,HarborSize)
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" or VehicleType == "Ship" then
@@ -11137,13 +11137,17 @@ C.AvailableHacks ={
 					local Target
 					if Data[1] == "Island" then
 						for num, base in ipairs(C.Bases.Island) do
-							if base:WaitForChild("IslandCode").Value == Data[2] then
+							local IslandCode = base:WaitForChild("IslandCode",1e-3)
+							if IslandCode and IslandCode.Value == Data[2] then
 								Target = base
 								break
 							end
 						end
 					else
 						Target = workspace:WaitForChild(Data[1])
+					end
+					if not Target then
+						return
 					end
 					local MainBody = Target:WaitForChild("MainBody")
 					if MainBody and C.human and C.human.Health>0 then

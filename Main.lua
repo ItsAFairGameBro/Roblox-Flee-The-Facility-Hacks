@@ -2617,7 +2617,6 @@ C.AvailableHacks ={
 				local newTag=C.ToggleTag:Clone()
 				newTag.Name = "LoopBombESP"
 				newTag.Parent=GuiElements.HackGUI
-				newTag.StudsOffsetWorldSpace = Vector3.new(0, 60, 0)
 				newTag.ExtentsOffsetWorldSpace = Vector3.zero
 
 				CS:AddTag(newTag,"RemoveOnDestroy")
@@ -2633,10 +2632,11 @@ C.AvailableHacks ={
 				local button = newTag:WaitForChild("Toggle")
 				local isEn = false
 				local Info = {Name="LoopBomb",Title="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
+				newTag.StudsOffsetWorldSpace = Vector3.new(0, HitCode=="Dock" and 120 or 60, 0)
 				local function basebomb_activate(new)
 					isEn = new
 					button.Text = isEn and "Pause" or "Bomb"
-					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or Color3.fromRGB(170,255)
+					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or (HitCode=="Dock" and Color3.fromRGB(170,0,255) or Color3.fromRGB(170,255))
 					if new then
 						local Plane = C.human.SeatPart.Parent
 						local PlaneMB = Plane:WaitForChild("MainBody")

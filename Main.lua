@@ -2656,7 +2656,7 @@ C.AvailableHacks ={
 							end
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
 							local Distance = ((PlaneMB:GetPivot().Position - IslandBody.Position)/Vector3.new(1,1000,1)).Magnitude
-							if Distance > 70 then
+							if Distance > 70 and not C.GetAction("Plane Refuel") then
 								PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0))
 							end
 							if Distance < 300 then

@@ -2644,8 +2644,9 @@ C.AvailableHacks ={
 						local WhileIn = 0
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
+							local TargetCF = CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0)
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
-								PlaneMB.AssemblyLinearVelocity = Vector3.new()
+								PlaneMB.AssemblyLinearVelocity = TargetCF - PlaneMB.Position
 								PlaneMB.AssemblyAngularVelocity = Vector3.new()
 								if BombC.Value > 0 and WhileIn>1 then
 									WhileIn = 0
@@ -2657,7 +2658,7 @@ C.AvailableHacks ={
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
 							local Distance = ((PlaneMB:GetPivot().Position - IslandBody.Position)/Vector3.new(1,1000,1)).Magnitude
 							if Distance > 70 and not C.GetAction("Plane Refuel") then
-								PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0))
+								PlaneMB:PivotTo(TargetCF)
 							end
 							if Distance < 300 then
 								WhileIn += RunS.RenderStepped:Wait()

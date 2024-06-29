@@ -85,6 +85,12 @@ return function(C,_SETTINGS)
 			["DontActivate"]=true,
 			["Functs"]={},
 			["Universes"] = {"Global"},
+			["Options"]={
+				[true]={
+					["Title"]="ACTIVATE",
+					["TextColor"]=Color3.fromRGB(0,170),
+				},
+			},
 			["ActivateFunction"]=function(newValue)
 				local ignoreParent = {[game.CoreGui]=true}
 				local ignoreList = {["OrgColor"]=true,["OrgTrans"]=true,["OriginalCollide"]=true,["WeirdCanCollide"]=true,["Opened"]=true,["SaveVolume"]=true}

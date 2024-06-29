@@ -2655,12 +2655,12 @@ C.AvailableHacks ={
 							if Regenerate or not XOfffset then
 								XOfffset,ZOffset = Randomizer:NextNumber(-HalfSize.X,HalfSize.X), Randomizer:NextNumber(-HalfSize.Z,HalfSize.Z)
 							end
-							IslandLoc = IslandBody:GetPivot()
+							IslandLoc = IslandBody:GetPivot() * CFrame.new(IslandBody.AssemblyLinearVelocity)
 							TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
 						end
 												
 						local WhileIn = 0
-						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
+						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent and island.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane and HPVal.Value > 0 do
 							CalculateNew(Randomizer:NextInteger(1,5) == 1)
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then

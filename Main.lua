@@ -120,7 +120,7 @@ local readfile = not isStudio and readfile
 local isfile = not isStudio and isfile
 local makefolder = not isStudio and makefolder
 local writefile = not isStudio and writefile
-	
+
 --DEBUG--
 local _SETTINGS={
 	botModeEnabled=GlobalSettings.botModeEnabled;
@@ -1956,8 +1956,8 @@ C.AvailableHacks ={
 									local instance = result and result.Instance
 									local Character = instance and instance.Parent and instance.Parent.Parent and instance.Parent.Parent.Parent
 										and ((instance.Parent:FindFirstChild("Humanoid") and instance.Parent)
-										or (instance.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent)
-										or (instance.Parent.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent.Parent))
+											or (instance.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent)
+											or (instance.Parent.Parent.Parent:FindFirstChild("Humanoid") and instance.Parent.Parent.Parent))
 									if Character and Character ~= theirChar then
 										return true
 									end
@@ -2207,7 +2207,7 @@ C.AvailableHacks ={
 					task.spawn(SetMiniGameResultFunction)--]]
 				end
 				setChangedProperty(ActionProgress,"Value",ActionChanged)
-				
+
 				ActionChanged()
 			end,
 		},
@@ -2526,7 +2526,7 @@ C.AvailableHacks ={
 				newTag.Parent=GuiElements.HackGUI
 				newTag.StudsOffsetWorldSpace = Vector3.new(0, 45, 0)
 				newTag.ExtentsOffsetWorldSpace = Vector3.zero
-				
+
 				CS:AddTag(newTag,"RemoveOnDestroy")
 				CS:AddTag(newTag,"GameHackDisplays")
 				setChangedProperty(island,"Parent",function()
@@ -3169,7 +3169,7 @@ C.AvailableHacks ={
 				localScript2 = Instance.new("LocalScript")
 				localScript2.Name = "LocalScript2"
 				localScript2.Parent = oldParent
-				
+
 				Instance.new("Folder",localScript1).Name = "FakeDummy"
 				Instance.new("Folder",localScript2).Name = "FakeDummy"
 			end,
@@ -3289,7 +3289,7 @@ C.AvailableHacks ={
 				C.AvailableHacks.Blatant[300].RunStats(list)
 			end,
 			["MyStartUp"]=function()
-			--	task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
+				--	task.delay(2.5,C.AvailableHacks.Blatant[300].ActivateFunction)
 				table.insert(C.functs,plr:WaitForChild("Backpack").ChildAdded:Connect(function(newTool)
 					if newTool:GetAttribute("Modded") then
 						return
@@ -3318,11 +3318,11 @@ C.AvailableHacks ={
 					end
 					return false
 				end)--]]
-				
 
-				-- retarded gun mods (re-equip your weapon)
-				--local old2; old2 = hookmetamethod(game, "__index", function(this, index)
-				--end)
+
+			-- retarded gun mods (re-equip your weapon)
+			--local old2; old2 = hookmetamethod(game, "__index", function(this, index)
+			--end)
 			--end,
 		},
 		[301]={
@@ -3336,7 +3336,7 @@ C.AvailableHacks ={
 				local function getClosest()
 					local myHRP = C.char and C.char.PrimaryPart
 					if not C.human or C.human.Health <= 0 or not myHRP then return end
-					
+
 
 					local closest = nil;
 					local distance = math.huge;
@@ -3353,7 +3353,7 @@ C.AvailableHacks ={
 						if not theirHead then continue end
 						local ForceField = theirChar.FindFirstChildWhichIsA(theirChar,"ForceField")
 						if ForceField and ForceField.Visible then continue end
-						
+
 						local d = (theirHead.Position - myHRP.Position).Magnitude
 
 						if d < distance then
@@ -3373,14 +3373,14 @@ C.AvailableHacks ={
 							local dataTbl = args[3]
 							dataTbl["part"] = ClosestHead
 							dataTbl["h"] = ClosestHead
-							
+
 							--[[dataTbl["p"] = ClosestHead.Position
 							dataTbl["d"] = Distance
 							dataTbl["m"] = ClosestHead.Material
 							dataTbl['n'] = -(ClosestHead.Position - C.char.PrimaryPart.Position).Unit
 							dataTbl["maxDist"] = Distance + .3
 							dataTbl["t"] = 1--]]
-							
+
 							--dataTbl[""] = ClosestHead
 							--print("DataTbl",dataTbl)
 							return "replace", args
@@ -3602,7 +3602,7 @@ C.AvailableHacks ={
 						local isOn = (LineVelocity.MaxForce > 10 and (not FuelLeft or (FuelLeft:GetAttribute("RealFuel") or FuelLeft.Value) > 0)) or 
 							(FlyButton.BackgroundColor3.R*255>250 and C.enHacks.Blatant_NavalInfPlaneFuel) or VehicleType == "Ship"
 						LineVelocity.VectorVelocity = lastSet
-						
+
 						LineVelocity.MaxAxesForce = Vector3.new(1000,1000,1000) * SpeedMult
 						LineVelocity.MaxForce = isOn and ((VehicleType=="Ship" and 49.281604e6 or 31.148e3) * math.max(1,SpeedMult/6)) or 0 --* SpeedMult/8) or 0
 						AlignOrientation.Responsiveness = 20 * (TurnMult/16)
@@ -3678,10 +3678,10 @@ C.AvailableHacks ={
 				local MainVelocity = LineVelocity.Parent
 				local LowestAcceptablePoint = 10
 				local PullUpSpeed = 30
-				
+
 				local BoundingSize = Vector3.new(10240,20e3,16384)
 				local BoundingCF = CFrame.new(0, BoundingSize.Y/2 + LowestAcceptablePoint, 0)
-				
+
 				local HarborSize = HarborMainBody.Size+Vector3.new(60,120,60)
 				local HarborCF = HarborMainBody.CFrame*CFrame.new(0,60,0)
 				C.createTestBlock("EnemyHarborBoundingBox",HarborCF,HarborSize)
@@ -3694,12 +3694,14 @@ C.AvailableHacks ={
 						--{PartCF,PartSize,isBlacklist} (All Three Arguments Required)
 						local ListedAreas = {{BoundingCF,BoundingSize,false},{HarborCF,HarborSize,true}}
 						for num, data in ipairs(ListedAreas) do
-							if C.IsInBox and C.IsInBox(data[1],data[2],seatPart.Position) == data[3] then
+							if not C.IsInBox then
+								warn("C.iSinbox not found/loaded!")
+								continue
+							end
+							if  C.IsInBox(data[1],data[2],seatPart.Position) == data[3] then
 								GetOutSpeed += 
 									((data[3] and C.ClosestPointOnPartSurface or C.ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
 										- seatPart.Position) * (data[3] and PullUpSpeed/3 or PullUpSpeed)
-							else
-								warn("C.iSinbox not found/loaded!")
 							end
 						end
 						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
@@ -3967,9 +3969,9 @@ C.AvailableHacks ={
 							C.human:GetPropertyChangedSignal("SeatPart"):Wait()
 						else
 							C.RemoteEvent:FireServer("Teleport", {
-									[1] = "Harbour",
-									[2] = ""
-								})
+								[1] = "Harbour",
+								[2] = ""
+							})
 							task.wait(2) -- Wait a bit so it doesn't lag!
 						end
 					else
@@ -4159,7 +4161,7 @@ C.AvailableHacks ={
 					local canContinue = false
 					if not canContinue and C.enHacks.Util_ForceAllowSpectate and (not _SETTINGS.ExactCallerName or tostring(caller)=="LocalGuiScript") then
 						local debugTraceBack = debug.traceback("",1)
-						
+
 						for num, str in ipairs(theirPlr == plr and allowedEndValues or allowedEndValues2) do
 							if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
 								canContinue = true
@@ -6393,7 +6395,7 @@ C.AvailableHacks ={
 						error("Purposeful Error!")
 					end
 					local RunScript = getcallingscript()
-					
+
 					print(traceback((`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"} and Disabled={RunScript.Disabled}`)))
 					print(getfen())
 					if C.gameUniverse == "FlagWars" then
@@ -6411,8 +6413,8 @@ C.AvailableHacks ={
 						end
 						--error(`22The script has successfully intercepted an attempted kick from: {RunScript:GetFullName()} {RunScript.Parent or "nilpar"}`)
 						--taskwait(69)
-					--else
-						
+						--else
+
 					end
 					return true, nil
 				end))
@@ -11625,7 +11627,7 @@ C.AvailableHacks ={
 					local DataModule = C.requireModule(DataService)
 					--DataModule.HookFunction = nil
 					local IgnoreTypesList = {"LookDir","FloorPos","CheckOwnsAsset","GetServerTime"}
-					
+
 					for name, funct in pairs(DataModule) do
 						if typeof(funct) == "function" and (name=="FireServer") then-- or name=="InvokeServer") then
 							warn("Hooked",name)
@@ -11680,7 +11682,7 @@ C.AvailableHacks ={
 				end
 			end,
 		},
-		
+
 	}
 }
 function C.defaultFunction(functName,args)
@@ -12293,7 +12295,7 @@ local initilizationTypes = ({
 			table.insert(C.functs, button.Destroying:Connect(function()
 				bindableEvent:Destroy()
 			end))
-			
+
 			bindableEvent.Parent=button
 			return bindableEvent.Event
 		end
@@ -12323,7 +12325,7 @@ local initilizationTypes = ({
 			refreshTypes.ExTextBox(hackFrame, hackInfo);
 		end);
 		table.insert(C.functs, myFocusLost_CONNECTION);
-		
+
 	end,
 })
 loadSaveData()
@@ -12392,7 +12394,7 @@ for categoryName, differentHacks in pairs(C.AvailableHacks) do
 			if C.enHacks[hack.Shortcut] ~= nil then
 				warn(`⚠️⚠️HACK TYPE DUPLICATE FOUND: {hack.Shortcut} in {overrideCategoryName}, ONE IS {differentHacks.Title}⚠️⚠️`)	
 			end
-			
+
 			hack.Options = (hack.Options or (defaultOptionsTable))
 			assert(C.getDictLength(hack.Options)>0,("Options Table Empty for "..overrideCategoryName.." "..hack.Title))
 			local overrideDefault
@@ -13003,7 +13005,7 @@ local function updateCurrentMap(newMap,firstRun)
 		local clonedMap = C.Map;
 		C.Map = nil; C.Beast = nil;
 		C.defaultFunction("CleanUp",{clonedMap});
-		
+
 		C.PurgeActionsWithTag("Game")
 		C.PurgeActionsWithTag("Computer")
 		C.PurgeActionsWithTag("ComputerHack")
@@ -13107,16 +13109,16 @@ if C.gameName=="FleeMain" then
 			ResetPCEvents()
 			lastPC_time = os.clock()
 			C.RemoveAction(lastHackedPC.Name)
-			
+
 			trigger_setTriggers("LastPC",{Computer=false,AllowExceptions = {lastHackedPC}})
 			local timeNeeded = 15--(math.max((70)/_SETTINGS.minSpeedBetweenPCs,_SETTINGS.absMinTimeBetweenPCs))
 			C.AddAction({Name="PC CoolDown",Tags={"Game","Computer"},Stop=function(onRequest)
 
 				--task.delay(timeNeeded,function()
-					--if (os.clock() - lastPC_time) >= timeNeeded then
-					trigger_setTriggers("LastPC",{Computer=true})
-					print("Triggers Enabled After",timeNeeded)
-					--end
+				--if (os.clock() - lastPC_time) >= timeNeeded then
+				trigger_setTriggers("LastPC",{Computer=true})
+				print("Triggers Enabled After",timeNeeded)
+				--end
 				--end)
 			end, Time=timeNeeded,})
 			print("Triggers Disabled")	
@@ -13278,13 +13280,13 @@ task.spawn(function()
 	local debris = DS.AddItem
 	local destroy = workspace.Destroy
 	local tblPack = table.pack
-	
+
 	local connList = {}
-	
+
 	local function set(parent)
 		parent.Parent = RunS
 	end
-	
+
 	local function conn(int)
 		if typeof(int) == "Instance" and int.ClassName == "RemoteEvent" then
 			if not connList[int] then
@@ -13334,8 +13336,8 @@ task.spawn(function()
 		while not C.BAC do
 			RunS.RenderStepped:Wait()
 		end--]]
-		--print("Removing BAC...")
-		--task.wait(5)
+	--print("Removing BAC...")
+	--task.wait(5)
 		--[[for num, connection in ipairs(C.GetHardValue(C.BAC,"Changed",{yield=true})) do
 			connection:Disconnect()
 			print("ConnectionChanged",num)
@@ -13345,22 +13347,22 @@ task.spawn(function()
 			print("ConnectionDestroyed",num)
 		end
 		task.wait(2)--]]
-		--C.BAC.Disabled = true
-		--C.BAC:Destroy()
-		--print("BAC Removed!")
-		--C.BAC = nil
-		--task.wait(2)--]]
-		--task.wait(2)
-		--C.BAC.Enabled = false
-		
-		--C.BAC.Enabled = true
-		--C.BAC.Enabled = false
-		--C.BAC.Enabled = true
+	--C.BAC.Disabled = true
+	--C.BAC:Destroy()
+	--print("BAC Removed!")
+	--C.BAC = nil
+	--task.wait(2)--]]
+	--task.wait(2)
+	--C.BAC.Enabled = false
 
-		--print(("Haha is %s; before %s"):format(C.BAC:GetFullName(),tostring(sethiddenproperty(C.BAC,"Enabled",false))))
-		
-		--getgenv().BAC = C.BAC
-		
+	--C.BAC.Enabled = true
+	--C.BAC.Enabled = false
+	--C.BAC.Enabled = true
+
+	--print(("Haha is %s; before %s"):format(C.BAC:GetFullName(),tostring(sethiddenproperty(C.BAC,"Enabled",false))))
+
+	--getgenv().BAC = C.BAC
+
 	--end
 end)
 

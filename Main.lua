@@ -2646,16 +2646,28 @@ C.AvailableHacks ={
 						local IslandLoc = IslandBody:GetPivot()
 						
 						local HalfSize = IslandBody.Size/4 -- Make it a quarter so it doesn't miss!
+						local Randomizer = Random.new()
+						
+						local XOfffset,ZOffset
+						local TargetCF
+						
+						local function CalculateNew()
+							XOfffset,ZOffset = Randomizer:NextNumber(-HalfSize.X,HalfSize.X), Randomizer:NextNumber(-HalfSize.Z,HalfSize.Z)
+							TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
+						end
+						
+						CalculateNew()
 						
 						local WhileIn = 0
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane and HPVal.Value > 0 do
-							local XOfffset,ZOffset = Random.new():NextNumber(-HalfSize.X,HalfSize.X), Random.new():NextNumber(-HalfSize.Z,HalfSize.Z)
-							local TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
+							if Randomizer:NextInteger(1,5) == 1 then
+								CalculateNew()
+							end
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
 								PlaneMB.AssemblyLinearVelocity = TargetCF.Position - PlaneMB.Position
-								PlaneMB.AssemblyAngularVelocity = Vector3.new()
-								if BombC.Value > 0 and WhileIn>1 then
+								--PlaneMB.AssemblyAngularVelocity = Vector3.zero
+								if BombC.Value > 0 and WhileIn>.5 then
 									WhileIn = 0
 									C.RemoteEvent:FireServer("bomb")
 								end
@@ -11146,8 +11158,9 @@ C.AvailableHacks ={
 			["Universes"]={"NavalWarefare"},
 			["UpdInGame"]=function()
 				local RemoveUniform = StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform")
-				RemoveUniform.Visible = not C.isInGame(C.char)
-				setChangedProperty(RemoveUniform,"Visible",C.AvailableHacks.Commands[1].UpdInGame)
+				--RemoveUniform.Visible = not C.isInGame(C.char)
+				RemoveUniform.AnchorPoint = C.isInGame(C.char) and Vector2.new(1, 0.5) or Vector2.new(0,.5)
+				--setChangedProperty(RemoveUniform,"Visible",C.AvailableHacks.Commands[1].UpdInGame)
 			end,
 			["SpawnFunction"]=function(newValue)
 				local Teleports={{"USDock"},{"Island","A"},{"Island","B"},{"Island","C"},{"JapanDock"}}
@@ -11173,12 +11186,12 @@ C.AvailableHacks ={
 						teleportMyself(
 							CFrame.new(MainBody:GetPivot().Position) * CFrame.new(0,C.getHumanoidHeight(C.char)
 								+ (Data[1]=="Island" and MainBody.Size.X or MainBody.Size.Y)/2,0))
-						if C.gameUniverse == "NavalWarefare" then
-							C.AvailableHacks.Commands[1].UpdInGame()
-						end
 					end
 				end
 				C.AvailableHacks.Blatant[5].BlockTeleports = newValue ~= 0
+				if C.gameUniverse == "NavalWarefare" then
+					C.AvailableHacks.Commands[1].UpdInGame()
+				end
 			end,
 			["MyStartUp"]=function(myPlr,myChar,firstRun)
 				while #C.Bases.Island < 3 or StringWaitForChild(workspace,"VariableFolder.TimerVal").Value < 0 do

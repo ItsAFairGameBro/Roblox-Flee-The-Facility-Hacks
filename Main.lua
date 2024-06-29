@@ -3991,15 +3991,9 @@ C.AvailableHacks ={
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)
 				local SeaFloorGroup = StringWaitForChild(workspace,"Setting.SeaFloor")
-				SeaFloorGroup.AncestryChanged:Connect(function()
-					warn("Group gone")
-				end)
 				for num, seaFloorPart in ipairs(SeaFloorGroup:GetChildren()) do
 					if seaFloorPart:IsA("BasePart") then
 						seaFloorPart.CanTouch = not newValue
-						seaFloorPart.AncestryChanged:Connect(function()
-							print("Part gone")
-						end)
 					end
 				end
 			end
@@ -11116,15 +11110,12 @@ C.AvailableHacks ={
 						teleportMyself(
 							CFrame.new(MainBody:GetPivot().Position) * CFrame.new(0,C.getHumanoidHeight(C.char)
 								+ (Data[1]=="Island" and MainBody.Size.X or MainBody.Size.Y)/2,0))
-						if C.isInGame then
-							
-						end
 					end
 				end
 				C.AvailableHacks.Blatant[5].BlockTeleports = newValue ~= 0
 			end,
 			["MyStartUp"]=function(myPlr,myChar,firstRun)
-				while #C.Bases.Island < 3 do--StringWaitForChild(workspace,"VariableFolder.TimerVal").Value > 0 do
+				while #C.Bases.Island < 3 or StringWaitForChild(workspace,"VariableFolder.TimerVal").Value < 0 do
 					task.wait(1)
 				end
 				task.wait(.5)

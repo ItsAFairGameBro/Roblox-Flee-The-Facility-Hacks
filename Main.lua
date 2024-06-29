@@ -3701,6 +3701,8 @@ C.AvailableHacks ={
 							-- Clamp Z to the edge
 							clampedZ = (Transform.z > 0 and HalfSize.z or -HalfSize.z)
 						end
+						
+						print("Inside")
 
 						return PartCF * Vector3.new(clampedX, clampedY, clampedZ)
 					else
@@ -3713,7 +3715,7 @@ C.AvailableHacks ={
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
 						local GetOutSpeed = Vector3.zero
-						for num, data in ipairs({{BoundingCF,BoundingSize}}) do--,{HarborMainBody.CFrame,HarborMainBody.Size+Vector3.up*130,true}}) do
+						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame,HarborMainBody.Size+Vector3.up*130,true}}) do
 							GetOutSpeed += 
 								((data[3] and ClosestPointOnPartEdge or ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
 									- seatPart.Position) * PullUpSpeed

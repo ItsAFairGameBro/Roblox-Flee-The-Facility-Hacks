@@ -4082,19 +4082,18 @@ C.AvailableHacks ={
 					for num, plane in ipairs(C.Planes) do
 						local PlaneMainBody = plane:WaitForChild("MainBody",5)
 						local PlaneTeamVal = plane:WaitForChild("Team",5)
-						print("Plane",plane.Owner.Value)
 
 						if PlaneMainBody and PlaneTeamVal.Value ~= plr.Team.Name then
 							for num2, ship in ipairs(C.Ships) do
 								local ShipMainBody = ship:WaitForChild("MainBody",5)
 								local ShipTeamVal = ship:WaitForChild("Team",5)
 								if ShipTeamVal and ShipTeamVal.Value ~= PlaneTeamVal.Value then
-									print("Ship Found")
 									local HP = ship:WaitForChild("HP")
 									if HP and HP.Value > 2000 then
-										firetouchinterest(PlaneMainBody,ShipMainBody,0)
+										print("Fired On Plane",plane.Owner.Value)
+										firetouchinterest(ShipMainBody,PlaneMainBody,0)
 										RunS.RenderStepped:Wait()
-										firetouchinterest(PlaneMainBody,ShipMainBody,1)
+										firetouchinterest(ShipMainBody,PlaneMainBody,1)
 										break
 									end
 								end

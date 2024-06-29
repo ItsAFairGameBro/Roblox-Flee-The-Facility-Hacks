@@ -3757,7 +3757,7 @@ C.AvailableHacks ={
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
 							and (not toRun or 
 								((C.enHacks.Blatant_NavalInstantRefuel and BombC.Value == 0) 
-									or C.enHacks.Blatant_NavalInstantRepair*C.DataStorage[Plane.Name].Health>=HP.Value))
+									or (C.enHacks.Blatant_NavalInstantRepair and (C.enHacks.Blatant_NavalInstantRepair*C.DataStorage[Plane.Name].Health>=HP.Value))))
 					end
 					local function HarborRefuel()
 						local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")

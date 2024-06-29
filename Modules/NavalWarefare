@@ -86,24 +86,25 @@ return function(C,_SETTINGS)
 		C.RemoteEvent = RS:WaitForChild("Event") -- image naming something "Event"
 		local BasesToLookFor = {"USDock","JapanDock","Island"}
 		C.Bases = {Dock={},Island={}}
+		C.Planes, C.Ships = {}, {}
 		local function newChild(instance)
 			local instData = C.DataStorage[instance.Name]
 			if instData then
 				--if instData.Type == "Base" then
 				local HitCode = instance:WaitForChild("HitCode")
 				local ID = instData.Base or instData.Type -- Dock or Island
-				if C.Bases[ID] then
-					table.insert(C.Bases[ID],instance)
+				local SelectTbl = C[instData.Type.."s"]
+				if SelectTbl[ID] then
+					SelectTbl = SelectTbl[ID]
 				end
+				table.insert(SelectTbl,instance)
 				C.defaultFunction(ID .. "Added",{instance})
 				C.objectFuncts[instance] = C.objectFuncts[instance] or {}
 				C.objectFuncts[instance]["Destroying"] = {instance.Destroying:Connect(function()
 					--Disconnect the event
-					if C.Bases[ID] then
-						local num = table.find(BasesToLookFor, instance)
-						if num then
-							table.remove(C.Bases[ID],num)
-						end
+					local num = table.find(SelectTbl, instance)
+					if num then
+						table.remove(SelectTbl,num)
 					end
 					C.defaultFunction(ID .. "Removed",{instance})
 					C.objectFuncts[instance] = nil

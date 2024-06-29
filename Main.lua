@@ -3649,7 +3649,7 @@ C.AvailableHacks ={
 				if not Vehicle then
 					return
 				end
-				local MainPart, Colliders = Vehicle:FindFirstChild("MainPart"), Vehicle:FindFirstChild("Colliders")
+				local MainPart, Colliders = Vehicle:FindFirstChild("MainBody"), Vehicle:FindFirstChild("Collider")
 				if MainPart then
 					MainPart.CanTouch = not Enabled
 					print("Set MainPart",MainPart.CanTouch)

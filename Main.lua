@@ -11201,6 +11201,8 @@ C.AvailableHacks ={
 
 				if not firstRun then
 					C.AvailableHacks.Commands[1].SpawnFunction(C.enHacks.TeleportWithSpawn)
+				elseif C.gameUniverse == "NavalWarefare" then
+					C.AvailableHacks.Commands[1].UpdInGame()
 				end
 			end,
 		},

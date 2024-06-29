@@ -2615,7 +2615,7 @@ C.AvailableHacks ={
 			end,
 			["IslandAdded"]=function(island)
 				local newTag=C.ToggleTag:Clone()
-				newTag.Name = "IslandBomb"
+				newTag.Name = "LoopBombESP"
 				newTag.Parent=GuiElements.HackGUI
 				newTag.StudsOffsetWorldSpace = Vector3.new(0, 60, 0)
 				newTag.ExtentsOffsetWorldSpace = Vector3.zero
@@ -2643,7 +2643,7 @@ C.AvailableHacks ={
 						local ActionClone = C.AddAction(Info)
 						local WhileIn = 0
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
-							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
+							and C.human.SeatPart and C.human.SeatPart.Parent == Plane and HPVal.Value <= 0 do
 							local TargetCF = CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0)
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
 								PlaneMB.AssemblyLinearVelocity = TargetCF.Position - PlaneMB.Position
@@ -2684,7 +2684,10 @@ C.AvailableHacks ={
 			end,
 			["DockAdded"]=function(dock)
 				C.AvailableHacks.Render[36].IslandAdded(dock)
-			end
+			end,
+			["ShipAdded"]=function(ship)
+				C.AvailableHacks.Render[36].IslandAdded(ship)
+			end,
 		},
 
 	},
@@ -3591,7 +3594,7 @@ C.AvailableHacks ={
 							or math.min(C.enHacks.Blatant_NavalAutoTeleportBack and math.huge or 1.8,C.enHacks.Blatant_NavalVehicleSpeed))
 						local TurnMult = C.enHacks.Blatant_NavalVehicleTurnSpeed or 1
 						if C.GetAction("LoopBomb") or C.GetAction("Plane Refuel") then
-							SpeedMult = 0 -- Override to stop it from moving!
+							SpeedMult,TurnMult = 0, 0 -- Override to stop it from moving!
 						end
 						lastSet = SpeedMult * LineVelocity.VectorVelocity
 						if FuelLeft then
@@ -3779,7 +3782,9 @@ C.AvailableHacks ={
 							end
 						end,}
 						local actionClone = C.AddAction(Info)
-						actionClone:WaitForChild("Time").Text = "~2s"
+						if actionClone then
+							actionClone:WaitForChild("Time").Text = "~2s"
+						end
 						while canRun(true) and Info.Enabled do
 							if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
 								Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,45,15))

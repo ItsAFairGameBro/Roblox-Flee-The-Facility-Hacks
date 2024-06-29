@@ -2641,10 +2641,16 @@ C.AvailableHacks ={
 						local PlaneMB = Plane:WaitForChild("MainBody")
 						local BombC = Plane:WaitForChild("BombC")
 						local ActionClone = C.AddAction(Info)
+						
+						local IslandLoc = IslandBody:GetPivot()
+						
+						local HalfSize = IslandBody.Size/2
+						local XOfffset,ZOffset = Random.new():NextNumber(-HalfSize.X,HalfSize.X), Random.new():NextNumber(-HalfSize.Z,HalfSize.Z)
+						local TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
+						
 						local WhileIn = 0
 						while Info.Enabled and TeamVal.Value ~= "" and TeamVal.Value ~= plr.Team.Name and ActionClone and ActionClone.Parent
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane and HPVal.Value > 0 do
-							local TargetCF = CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0)
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
 								PlaneMB.AssemblyLinearVelocity = TargetCF.Position - PlaneMB.Position
 								PlaneMB.AssemblyAngularVelocity = Vector3.new()

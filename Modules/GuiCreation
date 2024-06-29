@@ -63,10 +63,11 @@ return function(C,createToggleButton,textFont,textFont2,textFont3,mainZIndex)
 	GuiElements.HackGUI.DisplayOrder = (50);
 
 	ExTextButton.Name = "ExTextButton";
-	ExTextButton.Parent = RS;
+	ExTextButton.Parent = nil;
 	ExTextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255);
 	ExTextButton.BackgroundTransparency = 1.000;
 	ExTextButton.Size = UDim2.new(1, -6, 0, 40);
+	ExTextButton:AddTag("RemoveOnDestroy")
 	GuiElements.TextBoxExamples["ExTextButton"] = ExTextButton;
 
 	local Title = Instance.new("TextLabel");

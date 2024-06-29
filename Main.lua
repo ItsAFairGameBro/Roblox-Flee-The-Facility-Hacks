@@ -156,7 +156,7 @@ local _SETTINGS={
 		["suitedforbans3"]=true,
 	};
 	MyDefaults = {BotFarmRunner = (GlobalSettings.botModeEnabled and "Freeze")},
-	hitBoxesEnabled=((GlobalSettings.botModeEnabled and false) or GlobalSettings.hitBoxesEnabled),
+	hitBoxesEnabled=((GlobalSettings.botModeEnabled and false) or GlobalSettings.hitBoxesEnabled or true),
 	minSpeedBetweenPCs=18, --minimum time to hack between computers is 6 sec otherwise kick
 	absMinTimeBetweenPCs=15, --abs min time to hack, overrides minspeed
 	botBeastBreakMin=13.5, --in minutes

@@ -80,7 +80,7 @@ return function(C,_SETTINGS)
 			["Type"]="ExTextButton",
 			["Title"]="Find Attributes",
 			["Desc"]="Prints all attributes and where they occur!",
-			["Shortcut"]="Developer_PrintPartTeleports",
+			["Shortcut"]="Developer_PrintPartAttributes",
 			["Default"]=false,
 			["DontActivate"]=true,
 			["Functs"]={},

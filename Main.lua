@@ -3682,74 +3682,23 @@ C.AvailableHacks ={
 				local BoundingSize = Vector3.new(10240,20e3,16384)
 				local BoundingCF = CFrame.new(0, BoundingSize.Y/2 + LowestAcceptablePoint, 0)
 				
-				local HarborSize = HarborMainBody.Size+Vector3.new(60,1200,60)
+				local HarborSize = HarborMainBody.Size+Vector3.new(60,120,60)
 				local HarborCF = HarborMainBody.CFrame*CFrame.new(0,60,0)
 				C.createTestBlock("EnemyHarborBoundingBox",HarborCF,HarborSize)
-				local function ClosestPointOnPart(PartCF, PartSize, Point)
-					local Transform = PartCF:pointToObjectSpace(Point) -- Transform into local space
-					local HalfSize = PartSize * 0.5
-					return PartCF * Vector3.new( -- Clamp & transform into world space
-						math.clamp(Transform.x, -HalfSize.x, HalfSize.x),
-						math.clamp(Transform.y, -HalfSize.y, HalfSize.y),
-						math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
-					)
-				end
-				local function ClosestPointOnPartSurface(PartCF, PartSize, Point)
-					local Transform = PartCF:pointToObjectSpace(Point) -- Transform into local space
-					local HalfSize = PartSize * 0.5
-
-					-- Check if the point is inside the block
-					if math.abs(Transform.x) <= HalfSize.x and
-						math.abs(Transform.y) <= HalfSize.y and
-						math.abs(Transform.z) <= HalfSize.z then
-						-- Calculate distances to each face
-						local distances = {
-							xMin = math.abs(Transform.x + HalfSize.x),
-							xMax = math.abs(Transform.x - HalfSize.x),
-							yMin = math.abs(Transform.y + HalfSize.y),
-							yMax = math.abs(Transform.y - HalfSize.y),
-							zMin = math.abs(Transform.z + HalfSize.z),
-							zMax = math.abs(Transform.z - HalfSize.z)
-						}
-
-						-- Determine the minimum distance to a surface
-						local minDistance = math.min(distances.xMin, distances.xMax, distances.yMin, distances.yMax, distances.zMin, distances.zMax)
-
-						-- Create a new vector for the clamped point
-						local clampedPoint
-
-						-- Project the point to the closest surface
-						if minDistance == distances.xMin then
-							clampedPoint = Vector3.new(-HalfSize.x, Transform.y, Transform.z)
-						elseif minDistance == distances.xMax then
-							clampedPoint = Vector3.new(HalfSize.x, Transform.y, Transform.z)
-						elseif minDistance == distances.yMin then
-							clampedPoint = Vector3.new(Transform.x, -HalfSize.y, Transform.z)
-						elseif minDistance == distances.yMax then
-							clampedPoint = Vector3.new(Transform.x, HalfSize.y, Transform.z)
-						elseif minDistance == distances.zMin then
-							clampedPoint = Vector3.new(Transform.x, Transform.y, -HalfSize.z)
-						elseif minDistance == distances.zMax then
-							clampedPoint = Vector3.new(Transform.x, Transform.y, HalfSize.z)
-						end
-
-						-- Transform back to world space and return the point on the surface
-						return PartCF * clampedPoint
-					else
-						-- Point is outside the block, return the original point
-						return Point
-					end
-				end
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" or VehicleType == "Ship" then
 					C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,true)
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
 						local GetOutSpeed = Vector3.zero
-						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborCF,HarborSize,true}}) do
-							GetOutSpeed += 
-								((data[3] and ClosestPointOnPartSurface or ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
-									- seatPart.Position) * (data[3] and PullUpSpeed/3 or PullUpSpeed)
+						--{PartCF,PartSize,isBlacklist} (All Three Arguments Required)
+						local ListedAreas = {{BoundingCF,BoundingSize,false},{HarborCF,HarborSize,true}}
+						for num, data in ipairs(ListedAreas) do
+							if C.IsInBox(data[1],data[2],seatPart.Position) == data[3] then
+								GetOutSpeed += 
+									((data[3] and C.ClosestPointOnPartSurface or C.ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
+										- seatPart.Position) * (data[3] and PullUpSpeed/3 or PullUpSpeed)
+							end
 						end
 						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
 							local NewX, NewY, NewZ = OldVelocity.X, OldVelocity.Y, OldVelocity.Z
@@ -4042,9 +3991,15 @@ C.AvailableHacks ={
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)
 				local SeaFloorGroup = StringWaitForChild(workspace,"Setting.SeaFloor")
+				SeaFloorGroup.AncestryChanged:Connect(function()
+					warn("Group gone")
+				end)
 				for num, seaFloorPart in ipairs(SeaFloorGroup:GetChildren()) do
 					if seaFloorPart:IsA("BasePart") then
 						seaFloorPart.CanTouch = not newValue
+						seaFloorPart.AncestryChanged:Connect(function()
+							print("Part gone")
+						end)
 					end
 				end
 			end
@@ -11162,7 +11117,7 @@ C.AvailableHacks ={
 							CFrame.new(MainBody:GetPivot().Position) * CFrame.new(0,C.getHumanoidHeight(C.char)
 								+ (Data[1]=="Island" and MainBody.Size.X or MainBody.Size.Y)/2,0))
 						if C.isInGame then
-							StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform").Visible = not C.isInGame(C.char)
+							
 						end
 					end
 				end
@@ -11173,6 +11128,14 @@ C.AvailableHacks ={
 					task.wait(1)
 				end
 				task.wait(.5)
+				if C.gameUniverse == "NavalWarefare" then
+					local RemoveUniform = StringWaitForChild(PlayerGui,"ScreenGui.RemoveUniform")
+					local function UpdUniform()
+						RemoveUniform.Visible = not C.isInGame(C.char)
+					end
+					setChangedProperty(RemoveUniform,"Visible",UpdUniform)
+					UpdUniform()
+				end
 				if not firstRun then
 					C.AvailableHacks.Commands[1].SpawnFunction(C.enHacks.TeleportWithSpawn)
 				end

@@ -3650,6 +3650,8 @@ C.AvailableHacks ={
 				local HitCode = Vehicle:WaitForChild("HitCode",5)
 				if not HitCode then return end
 				local VehicleType = HitCode.Value
+				local Harbor = C.Bases[plr.Team.Name=="Japan" and "JapanDock" or "USDock"] 
+				local HarborMainBody = Harbor:WaitForChild("MainBody")
 				local LineVelocity = Vehicle:FindFirstChild("BodyVelocity",true)
 				local MainVelocity = LineVelocity.Parent
 				local LowestAcceptablePoint = 10
@@ -3670,7 +3672,10 @@ C.AvailableHacks ={
 				if VehicleType=="Plane" or VehicleType == "Ship" then
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
-						local GetOutSpeed = (ClosestPointOnPart(BoundingCF, BoundingSize, seatPart.Position) - seatPart.Position) * PullUpSpeed
+						local GetOutSpeed = Vector3.zero
+						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame,HarborMainBody.Size+Vector3.one*100}}) do
+							GetOutSpeed += (ClosestPointOnPart(data[1], data[2], seatPart.Position) - seatPart.Position) * PullUpSpeed
+						end
 						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
 							local NewX, NewY, NewZ = OldVelocity.X, OldVelocity.Y, OldVelocity.Z
 							if math.abs(GetOutSpeed.X) > .5 then

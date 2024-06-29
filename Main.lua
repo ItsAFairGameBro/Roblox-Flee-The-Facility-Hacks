@@ -212,7 +212,8 @@ function C.LoadModules()
 			else
 				local TheURL = ModuleLoaderLink:format(moduleName)
 				if not getgenv().SavedHttp[TheURL] then
-					local success, result = pcall(request,{Url=TheURL,Method="GET",Headers={["Cache-Control"]="no-cache"}})
+					local success, result = pcall(request,{Url=TheURL,Method="GET"})
+					--,Headers={["Cache-Control"]="no-cache"}})
 					local failMessage = (not success and result) or (not result.Success and "HttpReq Fail")
 					if failMessage then
 						warn("FLEEMASTERHACKV1: Failed to load module "..moduleName.." because "..failMessage)
@@ -3689,7 +3690,7 @@ C.AvailableHacks ={
 						math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
 					)
 				end
-				local function ClosestPointOnPartEdge(PartCF, PartSize, Point)
+				local function ClosestPointOnPartSurface(PartCF, PartSize, Point)
 					local Transform = PartCF:pointToObjectSpace(Point) -- Transform into local space
 					local HalfSize = PartSize * 0.5
 
@@ -3697,35 +3698,36 @@ C.AvailableHacks ={
 					if math.abs(Transform.x) <= HalfSize.x and
 						math.abs(Transform.y) <= HalfSize.y and
 						math.abs(Transform.z) <= HalfSize.z then
-						-- Clamp the coordinates to the edges
-						local clampedX = math.clamp(Transform.x, -HalfSize.x, HalfSize.x)
-						local clampedY = math.clamp(Transform.y, -HalfSize.y, HalfSize.y)
-						local clampedZ = math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
-
-						-- Determine the distances to the faces
+						-- Calculate distances to each face
 						local distances = {
-							math.abs(Transform.x - clampedX),
-							math.abs(Transform.y - clampedY),
-							math.abs(Transform.z - clampedZ)
+							xMin = HalfSize.x - Transform.x,
+							xMax = Transform.x + HalfSize.x,
+							yMin = HalfSize.y - Transform.y,
+							yMax = Transform.y + HalfSize.y,
+							zMin = HalfSize.z - Transform.z,
+							zMax = Transform.z + HalfSize.z
 						}
 
-						-- Find the maximum distance, which determines which coordinate to clamp to an edge
-						local maxDistance = math.max(distances[1], distances[2], distances[3])
+						-- Determine the minimum distance to a surface
+						local minDistance = math.min(distances.xMin, distances.xMax, distances.yMin, distances.yMax, distances.zMin, distances.zMax)
 
-						if maxDistance == distances[1] then
-							-- Clamp X to the edge
-							clampedX = (Transform.x > 0 and HalfSize.x or -HalfSize.x)
-						elseif maxDistance == distances[2] then
-							-- Clamp Y to the edge
-							clampedY = (Transform.y > 0 and HalfSize.y or -HalfSize.y)
-						else
-							-- Clamp Z to the edge
-							clampedZ = (Transform.z > 0 and HalfSize.z or -HalfSize.z)
+						-- Project the point to the closest surface
+						if minDistance == distances.xMin then
+							Transform.x = -HalfSize.x
+						elseif minDistance == distances.xMax then
+							Transform.x = HalfSize.x
+						elseif minDistance == distances.yMin then
+							Transform.y = -HalfSize.y
+						elseif minDistance == distances.yMax then
+							Transform.y = HalfSize.y
+						elseif minDistance == distances.zMin then
+							Transform.z = -HalfSize.z
+						elseif minDistance == distances.zMax then
+							Transform.z = HalfSize.z
 						end
-						
-						print("Inside")
 
-						return PartCF * Vector3.new(clampedX, clampedY, clampedZ)
+						-- Transform back to world space and return the point on the surface
+						return PartCF * Vector3.new(Transform.x, Transform.y, Transform.z)
 					else
 						-- Point is outside the block, return the original point
 						return Point
@@ -3739,7 +3741,7 @@ C.AvailableHacks ={
 						local GetOutSpeed = Vector3.zero
 						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame,HarborMainBody.Size+Vector3.new(0,1,0)*130,true}}) do
 							GetOutSpeed += 
-								((data[3] and ClosestPointOnPartEdge or ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
+								((data[3] and ClosestPointOnPartSurface or ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
 									- seatPart.Position) * PullUpSpeed
 						end
 						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
@@ -3796,33 +3798,36 @@ C.AvailableHacks ={
 					local BombC = Plane:WaitForChild("BombC")
 					local function canRun()
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
+							and (C.enHacks.Blatant_NavalInstantRefuel or C.enHacks.Blatant_NavalRefuelHP)
+					end
+					local function HarborRefuel()
+						local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
+						local HarborMain = Harbor:WaitForChild("MainBody")
+						local MainBody = Plane:WaitForChild("MainBody")
+						local Origin = Plane:GetPivot()
+						local Info = {Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
+							Plane:PivotTo(Origin)
+						end,}
+						local actionClone = C.AddAction(Info)
+						actionClone.Time.Text = "~2s"
+						while canRun() and Info.Enabled do
+							if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
+								Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,45,15))
+							end
+							MainBody.AssemblyLinearVelocity = Vector3.new()
+							MainBody.AssemblyAngularVelocity = Vector3.new()
+							RunS.RenderStepped:Wait()
+						end
 					end
 					local function CheckDORefuel(newBomb)
 						if newBomb ~= nil then
-							print("WAiting")
 							task.wait(1/3) -- wait for the bomb to spawn!
 						end
 						if not canRun() then
 							return
 						end
 						if BombC.Value == 0 and C.enHacks.Blatant_NavalInstantRefuel then
-							local Harbor = workspace:WaitForChild(plr.Team.Name:gsub("USA","US").."Dock")
-							local HarborMain = Harbor:WaitForChild("MainBody")
-							local MainBody = Plane:WaitForChild("MainBody")
-							local Origin = Plane:GetPivot()
-							local Info = {Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
-								Plane:PivotTo(Origin)
-							end,}
-							local actionClone = C.AddAction(Info)
-							actionClone.Time.Text = "~3s"
-							while canRun() and Info.Enabled do
-								if (Plane:GetPivot().Position - HarborMain.Position).Magnitude > 30 then
-									Plane:PivotTo(HarborMain:GetPivot() * CFrame.new(0,45,15))
-								end
-								MainBody.AssemblyLinearVelocity = Vector3.new()
-								MainBody.AssemblyAngularVelocity = Vector3.new()
-								RunS.RenderStepped:Wait()
-							end
+							
 						else -- Refueled!
 							C.RemoveAction("Plane Refuel")
 						end

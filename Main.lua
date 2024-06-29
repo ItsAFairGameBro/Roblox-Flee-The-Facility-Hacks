@@ -4067,12 +4067,46 @@ C.AvailableHacks ={
 			["Type"]="ExTextButton", ["CategoryAlias"]="Vehicle",
 			["Title"]="[WIP] NO FLY ZONE",
 			["Desc"]="Absorbs all enemy planes to your ship",
-			["Shortcut"]="Blatant_NavalWarefareNoFlyZonef",
+			["Shortcut"]="Blatant_NavalWarefareNoFlyZone",
 			["Default"]=false,
+			['DontActivate']=true,
+			["Deb"]=0,
 			["Universes"]={"NavalWarefare"},
 			["ActivateFunction"]=function(newValue)
-				
-			end
+				C.AvailableHacks.Blatant[351].Deb += 1
+				local saveDeb = C.AvailableHacks.Blatant[351].Deb
+				local function CanRun()
+					return saveDeb == C.AvailableHacks.Blatant[351].Deb and C.enHacks.Blatant_NavalWarefareNoFlyZone
+				end
+				while CanRun() do
+					for num, plane in ipairs(C.Planes) do
+						local PlaneMainBody = plane:WaitForChild("MainBody",5)
+						local PlaneTeamVal = plane:WaitForChild("Team",5)
+						print("Plane",plane.Owner.Value)
+
+						if PlaneMainBody and PlaneTeamVal.Value ~= plr.Team.Name then
+							for num2, ship in ipairs(C.Ships) do
+								local ShipMainBody = ship:WaitForChild("MainBody",5)
+								local ShipTeamVal = ship:WaitForChild("Team",5)
+								if ShipTeamVal and ShipTeamVal.Value ~= PlaneTeamVal.Value then
+									print("Ship Found")
+									local HP = ship:WaitForChild("HP")
+									if HP and HP.Value > 2000 then
+										firetouchinterest(PlaneMainBody,ShipMainBody,0)
+										RunS.RenderStepped:Wait()
+										firetouchinterest(PlaneMainBody,ShipMainBody,1)
+										break
+									end
+								end
+							end
+						end
+					end
+					RunS.RenderStepped:Wait()
+				end
+			end,
+			['MyStartUp']=function()
+				C.AvailableHacks.Blatant[351].ActivateFunction()
+			end,
 		},	
 	},
 	["Utility"]={

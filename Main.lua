@@ -2646,7 +2646,7 @@ C.AvailableHacks ={
 							and C.human.SeatPart and C.human.SeatPart.Parent == Plane do
 							local TargetCF = CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0)
 							if not C.GetAction("Plane Refuel") and BombC.Value > 0 then
-								PlaneMB.AssemblyLinearVelocity = TargetCF - PlaneMB.Position
+								PlaneMB.AssemblyLinearVelocity = TargetCF.Position - PlaneMB.Position
 								PlaneMB.AssemblyAngularVelocity = Vector3.new()
 								if BombC.Value > 0 and WhileIn>.2 then
 									WhileIn = 0

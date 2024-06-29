@@ -2625,6 +2625,7 @@ C.AvailableHacks ={
 				setChangedProperty(island,"Parent",function()
 					newTag:Destroy()
 				end)
+				local IslandData = C.DataStorage[island.Name]
 				local TeamVal = island:WaitForChild("Team")
 				local HPVal = island:WaitForChild("HP")
 				local HitCode = island:WaitForChild("HitCode").Value
@@ -2644,7 +2645,7 @@ C.AvailableHacks ={
 						
 						local IslandLoc = IslandBody:GetPivot()
 						
-						local HalfSize = IslandBody.Size/2
+						local HalfSize = IslandBody.Size/4 -- Make it a quarter so it doesn't miss!
 						local XOfffset,ZOffset = Random.new():NextNumber(-HalfSize.X,HalfSize.X), Random.new():NextNumber(-HalfSize.Z,HalfSize.Z)
 						local TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
 						
@@ -2661,7 +2662,7 @@ C.AvailableHacks ={
 							elseif BombC.Value == 0 and not C.enHacks.Blatant_NavalInstantRefuel then
 								break
 							end
-							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
+							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / IslandData.Health))
 							local Distance = ((PlaneMB:GetPivot().Position - IslandBody.Position)/Vector3.new(1,1000,1)).Magnitude
 							if Distance > 70 and not C.GetAction("Plane Refuel") then
 								PlaneMB:PivotTo(TargetCF)

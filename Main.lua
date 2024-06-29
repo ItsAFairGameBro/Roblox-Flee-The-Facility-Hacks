@@ -2631,7 +2631,7 @@ C.AvailableHacks ={
 				local IslandBody = island:WaitForChild("MainBody")
 				local button = newTag:WaitForChild("Toggle")
 				local isEn = false
-				local Info = {Name="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
+				local Info = {Name="LoopBomb",Title="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
 				local function basebomb_activate(new)
 					isEn = new
 					button.Text = isEn and "Pause" or "Bomb"
@@ -2655,12 +2655,13 @@ C.AvailableHacks ={
 								break
 							end
 							ActionClone.Time.Text = ("%.2f%%"):format(100-100 * (HPVal.Value / (HitCode=="Dock" and 25e3 or 8e3)))
-							if ((PlaneMB:GetPivot().Position - IslandBody.Position)/Vector3.new(1,1000,1)).Magnitude < 300 then
+							local Distance = ((PlaneMB:GetPivot().Position - IslandBody.Position)/Vector3.new(1,1000,1)).Magnitude
+							if Distance > 70 then
+								PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0))
+							end
+							if Distance < 300 then
 								WhileIn += RunS.RenderStepped:Wait()
 							else
-								if BombC.Value > 0 then
-									PlaneMB:PivotTo(CFrame.new(IslandBody:GetPivot().Position) * CFrame.new(0, 250, 0))
-								end
 								WhileIn = 0
 								RunS.RenderStepped:Wait()
 							end
@@ -3769,7 +3770,9 @@ C.AvailableHacks ={
 						local MainBody = Plane:WaitForChild("MainBody")
 						local Origin = Plane:GetPivot()
 						local Info = {Name="Plane Refuel",Tags={"RemoveOnDestroy"},Stop=function(onRequest)
-							Plane:PivotTo(Origin)
+							if not C.GetAction("LoopBomb") then
+								Plane:PivotTo(Origin)
+							end
 						end,}
 						local actionClone = C.AddAction(Info)
 						actionClone:WaitForChild("Time").Text = "~2s"

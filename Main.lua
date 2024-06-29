@@ -634,7 +634,7 @@ local function teleport_module_teleportQueue()
 			if C.char.PrimaryPart then
 				C.LastTeleportLoc = currentTP
 				C.LastLoc = currentTP
-				C.char:PivotTo(currentTP)
+				C.char:SetPrimaryPartCFrame(currentTP)
 				plr:SetAttribute("LastTP",os.clock())
 			end
 			table.remove(TPStack,1)
@@ -3815,11 +3815,11 @@ C.AvailableHacks ={
 					["TextColor"]=Color3.fromRGB(170,0,170),
 				},
 				[25]={
-					["Title"]="25%",
+					["Title"]="50%",
 					["TextColor"]=Color3.fromRGB(170, 0, 3),
 				},
 				[50]={
-					["Title"]="50%",
+					["Title"]="75%",
 					["TextColor"]=Color3.fromRGB(223, 208, 0),
 				},
 				[99]={

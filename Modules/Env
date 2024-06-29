@@ -106,7 +106,8 @@ return function(C,_SETTINGS)
 		newPart.Size = size or Vector3.new(4,1.2,2)
 		newPart.Color = Color3.fromRGB(200)
 		newPart.Transparency = .75
-		newPart.Anchored = true
+		newPart.Anchored, newPart.CanCollide = true, false
+		newPart.CanTouch, newPart.CanQuery = false, false
 		newPart.Name = name
 		newPart.Parent=C.TempFolder
 		newPart:AddTag("RemoveOnDestroy")

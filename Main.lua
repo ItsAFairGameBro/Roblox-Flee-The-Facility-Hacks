@@ -3645,6 +3645,17 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Universes"]={"NavalWarefare"},
 			["Funct"]=nil,
+			["ToggleColliders"]=function(Vehicle,Enabled)
+				local MainPart, Colliders = Vehicle:FindFirstChild("MainPart"), Vehicle:FindFirstChild("Colliders")
+				if MainPart then
+					MainPart.CanTouch = not Enabled
+				end
+				if Colliders then
+					for num, collider in ipairs(Colliders:GetChildren()) do
+						collider.CanTouch = not Enabled
+					end
+				end
+			end,
 			["MySeatAdded"]=function(seatPart)
 				local Vehicle = seatPart.Parent
 				local HitCode = Vehicle:WaitForChild("HitCode",5)
@@ -3712,6 +3723,7 @@ C.AvailableHacks ={
 				end
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" or VehicleType == "Ship" then
+					C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,true)
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
 						local GetOutSpeed = Vector3.zero
@@ -3736,6 +3748,10 @@ C.AvailableHacks ={
 						RunS.RenderStepped:Wait()
 					end
 				end
+			end,
+			["MySeatRemoved"]=function(seatPart)
+				local Vehicle = seatPart.Parent
+				C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,false)
 			end,
 		},
 		[323]={

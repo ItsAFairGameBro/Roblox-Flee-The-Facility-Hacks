@@ -3668,13 +3668,55 @@ C.AvailableHacks ={
 						math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
 					)
 				end
+				local function ClosestPointOnPartEdge(PartCF, PartSize, Point)
+					local Transform = PartCF:pointToObjectSpace(Point) -- Transform into local space
+					local HalfSize = PartSize * 0.5
+
+					-- Check if the point is inside the block
+					if math.abs(Transform.x) <= HalfSize.x and
+						math.abs(Transform.y) <= HalfSize.y and
+						math.abs(Transform.z) <= HalfSize.z then
+						-- Clamp the coordinates to the edges
+						local clampedX = math.clamp(Transform.x, -HalfSize.x, HalfSize.x)
+						local clampedY = math.clamp(Transform.y, -HalfSize.y, HalfSize.y)
+						local clampedZ = math.clamp(Transform.z, -HalfSize.z, HalfSize.z)
+
+						-- Determine the distances to the faces
+						local distances = {
+							math.abs(Transform.x - clampedX),
+							math.abs(Transform.y - clampedY),
+							math.abs(Transform.z - clampedZ)
+						}
+
+						-- Find the maximum distance, which determines which coordinate to clamp to an edge
+						local maxDistance = math.max(distances[1], distances[2], distances[3])
+
+						if maxDistance == distances[1] then
+							-- Clamp X to the edge
+							clampedX = (Transform.x > 0 and HalfSize.x or -HalfSize.x)
+						elseif maxDistance == distances[2] then
+							-- Clamp Y to the edge
+							clampedY = (Transform.y > 0 and HalfSize.y or -HalfSize.y)
+						else
+							-- Clamp Z to the edge
+							clampedZ = (Transform.z > 0 and HalfSize.z or -HalfSize.z)
+						end
+
+						return PartCF * Vector3.new(clampedX, clampedY, clampedZ)
+					else
+						-- Point is outside the block, return the original point
+						return Point
+					end
+				end
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" or VehicleType == "Ship" then
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
 						local GetOutSpeed = Vector3.zero
-						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame,HarborMainBody.Size+Vector3.one*130}}) do
-							GetOutSpeed += (ClosestPointOnPart(data[1], data[2], seatPart.Position) - seatPart.Position) * PullUpSpeed
+						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame,HarborMainBody.Size+Vector3.one*130,true}}) do
+							GetOutSpeed += 
+								((data[3] and ClosestPointOnPartEdge or ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
+									- seatPart.Position) * PullUpSpeed
 						end
 						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
 							local NewX, NewY, NewZ = OldVelocity.X, OldVelocity.Y, OldVelocity.Z

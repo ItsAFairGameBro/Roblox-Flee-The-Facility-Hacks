@@ -3698,6 +3698,8 @@ C.AvailableHacks ={
 								GetOutSpeed += 
 									((data[3] and C.ClosestPointOnPartSurface or C.ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
 										- seatPart.Position) * (data[3] and PullUpSpeed/3 or PullUpSpeed)
+							else
+								warn("C.iSinbox not found/loaded!")
 							end
 						end
 						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then

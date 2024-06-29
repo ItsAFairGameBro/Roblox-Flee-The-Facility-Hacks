@@ -3743,7 +3743,7 @@ C.AvailableHacks ={
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
 						local GetOutSpeed = Vector3.zero
-						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame*CFrame.new(0,60,0),HarborMainBody.Size+Vector3.new(60,120,60),true}}) do
+						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame*CFrame.new(0,60,0),HarborMainBody.Size+Vector3.new(60,1200,60),true}}) do
 							GetOutSpeed += 
 								((data[3] and ClosestPointOnPartSurface or ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
 									- seatPart.Position) * (data[3] and PullUpSpeed*3 or PullUpSpeed)

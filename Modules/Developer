@@ -88,11 +88,11 @@ return function(C,_SETTINGS)
 			["Options"]={
 				[true]={
 					["Title"]="ACTIVATE",
-					["TextColor"]=Color3.fromRGB(0,170),
+					["TextColor"]=Color3.fromRGB(170,0,170),
 				},
 			},
 			["ActivateFunction"]=function(newValue)
-				local ignoreParent = {[game.CoreGui]=true}
+				local ignoreParents = {[game.CoreGui]=true}
 				local ignoreList = {["OrgColor"]=true,["OrgTrans"]=true,['wallclip']=true,['HackGUI1']=true,["LastTP"]=true,
 					["OriginalCollide"]=true,["WeirdCanCollide"]=true,["Opened"]=true,["SaveVolume"]=true}
 				local instsScanned = 0
@@ -118,11 +118,11 @@ return function(C,_SETTINGS)
 				local function loop(obj,instsScanned)
 					instsScanned = (instsScanned or 0) + 1
 					printAtt(obj)
-					if table.find(ignoreParent,obj) then
+					if ignoreParents[obj] then
 						return -- don't go through ignoreparents!
 					end
 					for num, instance in ipairs(obj:GetChildren()) do
-						loop(instance,instsScanned)
+						instsScanned = loop(instance,instsScanned)
 						if num%40==0 then
 							game["Run Service"].RenderStepped:Wait()
 						end
@@ -133,7 +133,7 @@ return function(C,_SETTINGS)
 				
 				warn("[Attribute Search] Search Beggining...")
 				
-				warn(("[Attribute Search] Search Finished! Loop through %i instances in %.2f seconds!"):format(loop(game),os.clock()-start))
+				warn(("[Attribute Search] Search Finished! Loop through %s instances in %.2f seconds!"):format(C.comma_value(loop(game)),os.clock()-start))
 			end,			
 		}
 	}

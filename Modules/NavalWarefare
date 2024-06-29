@@ -3,6 +3,20 @@ local PS = game:GetService("Players")
 
 local plr = PS.LocalPlayer
 return function(C,_SETTINGS)
+	C.DataStorage={
+		["USDock"]={Health=25e3,Base="Dock"},
+		["JapanDock"]={Health=25e3,Base="Dock"},
+		["Island"]={Health=8e3,Base="Island"},
+		["Carrier"]={Health=10e3},
+		["Battleship"]={Health=10e3},
+		["Bomber"]={Health=100},
+		["Torpedo Bomber"]={Health=100},
+		["Large Bomber"]={Health=300},
+		["Destroyer"]={Health=2500},
+		["Cruiser"]={Health=3500},
+		["Heavy Cruiser"]={Health=5500},
+		["Submarine"]={Health=1000},
+	}
 	function C.isInGame(theirChar)
 		if theirChar and theirChar.Name == "InviClone" then
 			theirChar = C.char

@@ -3746,7 +3746,7 @@ C.AvailableHacks ={
 						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame*CFrame.new(0,60,0),HarborMainBody.Size+Vector3.new(60,120,60),true}}) do
 							GetOutSpeed += 
 								((data[3] and ClosestPointOnPartSurface or ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
-									- seatPart.Position) * PullUpSpeed
+									- seatPart.Position) * (data[3] and PullUpSpeed*3 or PullUpSpeed)
 						end
 						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
 							local NewX, NewY, NewZ = OldVelocity.X, OldVelocity.Y, OldVelocity.Z

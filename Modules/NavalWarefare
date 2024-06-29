@@ -4,18 +4,20 @@ local PS = game:GetService("Players")
 local plr = PS.LocalPlayer
 return function(C,_SETTINGS)
 	C.DataStorage={
-		["USDock"]={Health=25e3,Base="Dock"},
-		["JapanDock"]={Health=25e3,Base="Dock"},
-		["Island"]={Health=8e3,Base="Island"},
-		["Carrier"]={Health=10e3},
-		["Battleship"]={Health=10e3},
-		["Bomber"]={Health=100},
-		["Torpedo Bomber"]={Health=100},
-		["Large Bomber"]={Health=300},
-		["Destroyer"]={Health=2500},
-		["Cruiser"]={Health=3500},
-		["Heavy Cruiser"]={Health=5500},
-		["Submarine"]={Health=1000},
+		["USDock"]={Health=25e3,Base="Dock",Type="Base"},
+		["JapanDock"]={Health=25e3,Base="Dock",Type="Base"},
+		["Island"]={Health=8e3,Base="Island",Type="Base"},
+		
+		["Carrier"]={Health=10e3,Type="Ship"},
+		["Battleship"]={Health=10e3,Type="Ship"},
+		["Destroyer"]={Health=2500,Type="Ship"},
+		["Cruiser"]={Health=3500,Type="Ship"},
+		["Heavy Cruiser"]={Health=5500,Type="Ship"},
+		["Submarine"]={Health=1000,Type="Ship"},
+		
+		["Bomber"]={Health=100,Type="Plane"},
+		["Torpedo Bomber"]={Health=100,Type="Plane"},
+		["Large Bomber"]={Health=300,Type="Plane"},
 	}
 	function C.isInGame(theirChar)
 		if theirChar and theirChar.Name == "InviClone" then
@@ -85,22 +87,29 @@ return function(C,_SETTINGS)
 		local BasesToLookFor = {"USDock","JapanDock","Island"}
 		C.Bases = {Dock={},Island={}}
 		local function newChild(instance)
-			local num
-			if table.find(BasesToLookFor,instance.Name) then
+			local instData = C.DataStorage[instance.Name]
+			if instData then
+				--if instData.Type == "Base" then
 				local HitCode = instance:WaitForChild("HitCode")
-				local ID = instance.Name:find("Dock") and "Dock" or instance.Name -- Dock or Island
-				table.insert(C.Bases[ID],instance)
+				local ID = instData.Base or instData.Type -- Dock or Island
+				if C.Bases[ID] then
+					table.insert(C.Bases[ID],instance)
+				end
 				C.defaultFunction(ID .. "Added",{instance})
 				C.objectFuncts[instance] = C.objectFuncts[instance] or {}
 				C.objectFuncts[instance]["Destroying"] = {instance.Destroying:Connect(function()
 					--Disconnect the event
-					num = table.find(BasesToLookFor, instance)
-					if num then
-						table.remove(C.Bases[ID],num)
+					if C.Bases[ID] then
+						local num = table.find(BasesToLookFor, instance)
+						if num then
+							table.remove(C.Bases[ID],num)
+						end
 					end
 					C.defaultFunction(ID .. "Removed",{instance})
 					C.objectFuncts[instance] = nil
 				end)}
+				--end
+
 			end
 		end
 		table.insert(C.functs,workspace.ChildAdded:Connect(newChild))

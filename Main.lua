@@ -3687,7 +3687,7 @@ C.AvailableHacks ={
 				C.createTestBlock("EnemyHarborBoundingBox",HarborCF,HarborSize)
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" or VehicleType == "Ship" then
-					C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,true)
+					C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,false) -- Disable CanTouch colliders
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
 						local GetOutSpeed = Vector3.zero
@@ -3723,7 +3723,7 @@ C.AvailableHacks ={
 			end,
 			["MySeatRemoved"]=function(seatPart)
 				local Vehicle = seatPart.Parent
-				C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,false)
+				C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,true) -- Disable CanTouch colliders
 			end,
 		},
 		[323]={

@@ -3711,28 +3711,32 @@ C.AvailableHacks ={
 						-- Determine the minimum distance to a surface
 						local minDistance = math.min(distances.xMin, distances.xMax, distances.yMin, distances.yMax, distances.zMin, distances.zMax)
 
+						-- Create a new vector for the clamped point
+						local clampedPoint = Vector3.new(Transform.x, Transform.y, Transform.z)
+
 						-- Project the point to the closest surface
 						if minDistance == distances.xMin then
-							Transform.x = -HalfSize.x
+							clampedPoint = Vector3.new(-HalfSize.x, Transform.y, Transform.z)
 						elseif minDistance == distances.xMax then
-							Transform.x = HalfSize.x
+							clampedPoint = Vector3.new(HalfSize.x, Transform.y, Transform.z)
 						elseif minDistance == distances.yMin then
-							Transform.y = -HalfSize.y
+							clampedPoint = Vector3.new(Transform.x, -HalfSize.y, Transform.z)
 						elseif minDistance == distances.yMax then
-							Transform.y = HalfSize.y
+							clampedPoint = Vector3.new(Transform.x, HalfSize.y, Transform.z)
 						elseif minDistance == distances.zMin then
-							Transform.z = -HalfSize.z
+							clampedPoint = Vector3.new(Transform.x, Transform.y, -HalfSize.z)
 						elseif minDistance == distances.zMax then
-							Transform.z = HalfSize.z
+							clampedPoint = Vector3.new(Transform.x, Transform.y, HalfSize.z)
 						end
 
 						-- Transform back to world space and return the point on the surface
-						return PartCF * Vector3.new(Transform.x, Transform.y, Transform.z)
+						return PartCF * clampedPoint
 					else
 						-- Point is outside the block, return the original point
 						return Point
 					end
 				end
+
 				--The "BodyVelocity" is actually "LineVelocity"
 				if VehicleType=="Plane" or VehicleType == "Ship" then
 					C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,true)

@@ -166,6 +166,7 @@ local _SETTINGS={
 	defaultCharacterWalkSpeed=SP.CharacterWalkSpeed,
 	defaultCharacterJumpPower=SP.CharacterJumpPower,
 	developer=true,
+	ExactCallerName=false,--not working right now, but its CheckCaller before overriding name functions!
 }
 
 if not _SETTINGS.myBots[plr.Name:lower()] then
@@ -2736,6 +2737,7 @@ C.AvailableHacks ={
 			["Default"]=false,
 			["Functs"]={},
 			["DontActivate"]=true,
+			["BlockTeleports"]=false,
 			["Universes"]={"Global"},
 			["Deb"]=0,
 			["ActivateFunction"]=function(newValue)
@@ -2750,7 +2752,7 @@ C.AvailableHacks ={
 					or (C.human.RigType == Enum.HumanoidRigType.R6 and C.char:WaitForChild("Torso",2)) or C.char:WaitForChild("HumanoidRootPart")
 				local newInput = nil
 				C.LastLoc = C.char:GetPivot() -- Inital Starting Position
-				local blockTeleports = C.gameUniverse ~= "NavalWarefare" or (C.isInGame and C.isInGame(C.char))
+				C.AvailableHacks.Blatant[5].BlockTeleports = C.gameUniverse ~= "NavalWarefare" or (C.isInGame and C.isInGame(C.char))
 				local function CanRun()
 					return C.AvailableHacks.Blatant[5].Deb == SaveDeb and C.char and CenterPart and C.enHacks.Blatant_TeleportBack
 				end
@@ -2762,16 +2764,15 @@ C.AvailableHacks ={
 				end)
 				local function TeleportDetected()
 					newInput = C.char:GetPivot()
-					if blockTeleports or (C.isInGame and C.isInGame(C.char)) then
+					if C.AvailableHacks.Blatant[5].BlockTeleports then
 						if (newInput.Position - C.LastLoc.Position).Magnitude > 16 then
 							C.LastTeleportLoc = C.LastLoc
 							C.char:PivotTo(C.LastLoc)
 						end
-						
 					elseif (C.isInGame and C.isInGame(C.char)) then
 						task.wait(.5)
+						C.AvailableHacks.Blatant[5].BlockTeleports = true
 					end
-					blockTeleports = true
 				end
 				local function AddToCFrameDetection(part)
 					table.insert(C.AvailableHacks.Blatant[5].Functs,part:GetPropertyChangedSignal("Position"):Connect(TeleportDetected))
@@ -4087,11 +4088,9 @@ C.AvailableHacks ={
 
 				C.SetTempValue("Util_ForceAllowSpectate",newValue and function(theirPlr,caller,instance_name,instance_value)
 					local canContinue = false
-					if not canContinue and C.enHacks.Util_ForceAllowSpectate and caller.Name=="LocalGuiScript" then
+					if not canContinue and C.enHacks.Util_ForceAllowSpectate and (not _SETTINGS.ExactCallerName or tostring(caller)=="LocalGuiScript") then
 						local debugTraceBack = debug.traceback("",1)
-						--if theirPlr ~= plr then
-						--print(debugTraceBack)
-						--end
+						
 						for num, str in ipairs(theirPlr == plr and allowedEndValues or allowedEndValues2) do
 							if debugTraceBack:sub(debugTraceBack:len()-str:len()+1) == str then
 								canContinue = true
@@ -4100,7 +4099,7 @@ C.AvailableHacks ={
 						end
 					end
 
-					if caller.Name == "LocalGuiScript" then
+					if (not _SETTINGS.ExactCallerName or tostring(caller)=="LocalGuiScript") then
 						if canContinue then
 							if theirPlr == plr then
 								if instance_name=="Health" then
@@ -11080,6 +11079,7 @@ C.AvailableHacks ={
 						end
 					end
 				end
+				C.AvailableHacks.Blatant[5].BlockTeleports = newValue ~= 0
 			end,
 			["MyStartUp"]=function(myPlr,myChar,firstRun)
 				while #C.Bases.Island < 3 do--StringWaitForChild(workspace,"VariableFolder.TimerVal").Value > 0 do

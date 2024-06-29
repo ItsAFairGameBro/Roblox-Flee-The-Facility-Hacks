@@ -100,14 +100,14 @@ return function(C,_SETTINGS)
 							if not printStr then
 								printStr = "\tOBJ ["..obj:GetFullName().."]:"
 							end
-							printStr..="\n\t\t"..attribute.."="..val
+							printStr..="\n\t\t"..attribute.."="..tostring(val)
 						end
 					end
 					if printStr then
 						print(printStr)
 					end
 				end
-				function loop(obj)
+				local function loop(obj)
 					printAtt(obj)
 					for num, instance in ipairs(obj:GetChildren()) do
 						loop(instance)

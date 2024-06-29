@@ -3681,6 +3681,10 @@ C.AvailableHacks ={
 				
 				local BoundingSize = Vector3.new(10240,20e3,16384)
 				local BoundingCF = CFrame.new(0, BoundingSize.Y/2 + LowestAcceptablePoint, 0)
+				
+				local HarborSize = HarborMainBody.Size+Vector3.new(60,1200,60)
+				local HarborCF = HarborMainBody.CFrame*CFrame.new(0,60,0)
+				C.createTestBlock("EnemyHarborBoundingBox",HarborCF,HarborSize)
 				local function ClosestPointOnPart(PartCF, PartSize, Point)
 					local Transform = PartCF:pointToObjectSpace(Point) -- Transform into local space
 					local HalfSize = PartSize * 0.5
@@ -3730,6 +3734,7 @@ C.AvailableHacks ={
 						end
 
 						-- Transform back to world space and return the point on the surface
+						C.createTestPart(PartCF * clampedPoint)
 						return PartCF * clampedPoint
 					else
 						-- Point is outside the block, return the original point
@@ -3743,10 +3748,10 @@ C.AvailableHacks ={
 					while C.human and C.human.SeatPart == seatPart do
 						local OldVelocity = MainVelocity.AssemblyLinearVelocity
 						local GetOutSpeed = Vector3.zero
-						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborMainBody.CFrame*CFrame.new(0,60,0),HarborMainBody.Size+Vector3.new(60,1200,60),true}}) do
+						for num, data in ipairs({{BoundingCF,BoundingSize},{HarborCF,HarborSize,true}}) do
 							GetOutSpeed += 
 								((data[3] and ClosestPointOnPartSurface or ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
-									- seatPart.Position) * (data[3] and PullUpSpeed*3 or PullUpSpeed)
+									- seatPart.Position) * (data[3] and PullUpSpeed/3 or PullUpSpeed)
 						end
 						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
 							local NewX, NewY, NewZ = OldVelocity.X, OldVelocity.Y, OldVelocity.Z

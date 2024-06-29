@@ -3649,7 +3649,12 @@ C.AvailableHacks ={
 				if not Vehicle then
 					return
 				end
-				local MainPart, Colliders = Vehicle:FindFirstChild("MainBody"), Vehicle:FindFirstChild("Collider")
+				for num, part in ipairs(Vehicle:GetDescendants()) do
+					if part:IsA("BasePart") then
+						part.CanTouch = Enabled
+					end
+				end
+				--[[local MainPart, Colliders = Vehicle:FindFirstChild("MainBody"), Vehicle:FindFirstChild("Collider")
 				if MainPart then
 					MainPart.CanTouch = not Enabled
 					print("Set MainPart",MainPart.CanTouch)
@@ -3659,7 +3664,7 @@ C.AvailableHacks ={
 						collider.CanTouch = not Enabled
 						print("Set Collder",collider.Name,collider.CanTouch)
 					end
-				end
+				end--]]
 			end,
 			["MySeatAdded"]=function(seatPart)
 				local Vehicle = seatPart.Parent

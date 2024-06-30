@@ -4033,7 +4033,7 @@ C.AvailableHacks ={
 		[335]={
 			["Type"]="ExTextButton",
 			["Title"]="Bomb Instant Hit", ["CategoryAlias"] = "Weapon",
-			["Desc"]="Makes all projectiles instantly hit a target",
+			["Desc"]="Makes all bombs instantly hit a target",
 			["Shortcut"]="Blatant_NavalInstantHit",
 			["Default"]=false,
 			["Funct"]=nil,
@@ -4047,11 +4047,11 @@ C.AvailableHacks ={
 					["Title"] = "BASE",
 					["TextColor"] = newColor3(0,0,255),
 				}),
-				["User"] = ({
+				--[[["User"] = ({
 					["Title"] = "USERS",
 					["TextColor"] = newColor3(0,0,255),
 				}),
-				--[[["Ship"] = ({
+				["Ship"] = ({
 					["Title"] = "USERS",
 					["TextColor"] = newColor3(0,0,255),
 				}),--]]
@@ -4069,6 +4069,51 @@ C.AvailableHacks ={
 							local closestBasePart = 
 								(C.enHacks.Blatant_NavalInstantHit=="Base" and C.getClosestBase()
 									or C.enHacks.Blatant_NavalInstantHit=="User" and C.getClosest()
+								)
+							if closestBasePart then
+								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
+								for s = 0, 1, 1 do
+									firetouchinterest(instance,closestBasePart,0)
+									task.wait()
+									firetouchinterest(instance,closestBasePart,1)
+									task.wait()
+								end
+							end
+						end
+					end)
+				end
+			end,
+		},
+		[339]={
+			["Type"]="ExTextButton",
+			["Title"]="Projectile Instant Hit", ["CategoryAlias"] = "Weapon",
+			["Desc"]="Makes all projectiles instantly hit a target",
+			["Shortcut"]="Blatant_NavalProjectileInstantHit",
+			["Default"]=false,
+			["Funct"]=nil,
+			["Universes"]={"NavalWarefare"},
+			["Options"]={
+				[false] = ({
+					["Title"] = "OFF",
+					["TextColor"] = newColor3(255),
+				}),
+				["User"] = ({
+					["Title"] = "USERS",
+					["TextColor"] = newColor3(255,0,255),
+				}),
+			},
+			["ActivateFunction"]=function(newValue)
+				-- Disconnect funct and set up childadded workspace event for the projectiles
+				if C.AvailableHacks.Blatant[335].Funct then
+					C.AvailableHacks.Blatant[335].Funct:Disconnect()
+					C.AvailableHacks.Blatant[335].Funct=nil
+				end	
+				if newValue then
+					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
+						task.wait(.1)
+						if instance.Name == "projectile" and instance.Parent then
+							local closestBasePart = 
+								(C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest()
 								)
 							if closestBasePart then
 								print("Hit",closestBasePart)

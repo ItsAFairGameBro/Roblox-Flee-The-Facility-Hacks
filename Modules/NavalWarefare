@@ -35,8 +35,9 @@ return function(C,_SETTINGS)
 		return true, player.Team -- Player exists!
 	end
 	function C.getClosest(canBeInLobby:boolean,notSeated:boolean)
+		print("closest run")
 		local myHRP = C.char and C.char.PrimaryPart
-		if not C.human or C.human.Health <= 0 or not myHRP then return end
+		if not C.human or C.human.Health <= 0 or not myHRP then print('0') return end
 
 
 		local closest = nil;

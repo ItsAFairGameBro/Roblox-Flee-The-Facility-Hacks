@@ -7,14 +7,14 @@ return function(C,_SETTINGS)
 		["USDock"]={Health=25e3,Base="Dock",Type="Base"},
 		["JapanDock"]={Health=25e3,Base="Dock",Type="Base"},
 		["Island"]={Health=8e3,Base="Island",Type="Base"},
-		
+
 		["Carrier"]={Health=10e3,Type="Ship"},
 		["Battleship"]={Health=10e3,Type="Ship"},
 		["Destroyer"]={Health=2500,Type="Ship"},
 		["Cruiser"]={Health=3500,Type="Ship"},
 		["Heavy Cruiser"]={Health=5500,Type="Ship"},
 		["Submarine"]={Health=1000,Type="Ship"},
-		
+
 		["Bomber"]={Health=100,Type="Plane"},
 		["Torpedo Bomber"]={Health=100,Type="Plane"},
 		["Large Bomber"]={Health=300,Type="Plane"},
@@ -35,9 +35,9 @@ return function(C,_SETTINGS)
 		return true, player.Team -- Player exists!
 	end
 	function C.getClosest(canBeInLobby:boolean,notSeated:boolean)
-		--print("closest run")
+		print("closest run")
 		local myHRP = C.char and C.char.PrimaryPart
-		if not C.human or C.human.Health <= 0 or not myHRP then  return end
+		if not C.human or C.human.Health <= 0 or not myHRP then print('a')  return end
 
 
 		local closest = nil;
@@ -45,18 +45,18 @@ return function(C,_SETTINGS)
 
 
 		for i, v in pairs(PS.GetPlayers(PS)) do
-			if v == plr then  continue end
-			if _SETTINGS.whitelistedUsers[plr.Name:lower()] then continue end
+			if v == plr then print('b') continue end
+			if _SETTINGS.whitelistedUsers[plr.Name:lower()] then print('c') continue end
 			local theirChar = v.Character
-			if not theirChar then continue end
+			if not theirChar then print('d') continue end
 			local isInGame,team = C.isInGame(theirChar)
-			if not isInGame and not canBeInLobby then continue end
-			if team == plr.Team then continue end
+			if not isInGame and not canBeInLobby then print('e') continue end
+			if team == plr.Team then print('f') continue end
 			local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
-			if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
-			if notSeated and (theirHumanoid.SeatPart or theirChar.FindFirstChild(theirChar,"ForceFieldVar")) then continue end --  then print( end
+			if not theirHumanoid or theirHumanoid.Health <= 0 then print('g') continue end
+			if notSeated and (theirHumanoid.SeatPart or theirChar.FindFirstChild(theirChar,"ForceFieldVar")) then print('h') continue end
 			local theirHead = theirChar.FindFirstChild(theirChar,"Head")
-			if not theirHead then continue end
+			if not theirHead then print('j') continue end
 
 			local d = (theirHead.Position - myHRP.Position).Magnitude
 

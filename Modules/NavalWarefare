@@ -34,7 +34,7 @@ return function(C,_SETTINGS)
 
 		return true, player.Team -- Player exists!
 	end
-	function C.getClosest()
+	function C.getClosest(canBeDead)
 		local myHRP = C.char and C.char.PrimaryPart
 		if not C.human or C.human.Health <= 0 or not myHRP then return end
 
@@ -49,7 +49,7 @@ return function(C,_SETTINGS)
 			local theirChar = v.Character
 			if not theirChar then continue end
 			local isInGame,team = C.isInGame(theirChar)
-			if not isInGame then continue end
+			if not isInGame and not canBeDead then continue end
 			if team == plr.Team then continue end
 			local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
 			if not theirHumanoid or theirHumanoid.Health <= 0 then continue end

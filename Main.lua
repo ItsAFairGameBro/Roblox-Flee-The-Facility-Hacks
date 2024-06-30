@@ -4075,7 +4075,7 @@ C.AvailableHacks ={
 			["Type"]="ExTextBox",
 			["Title"]="Enemy Ship Hitbox Expander",
 			["Desc"]="",
-			["Shortcut"]="Blatant_NavalHitboxExpander",
+			["Shortcut"]="Blatant_NavalHitboxExpander2",
 			["Default"]=0,
 			["MinBound"]=-20,
 			["MaxBound"]=20,
@@ -4083,7 +4083,7 @@ C.AvailableHacks ={
 			["ShipAdded"]=function(ship)
 				local MainBody = ship:WaitForChild("MainBody")
 				local Team = ship:WaitForChild("Team")
-				local ExpandSize = Team.Value == plr.Team.Name and 0 or C.enHacks.Blatant_NavalHitboxExpander
+				local ExpandSize = Team.Value == plr.Team.Name and 0 or C.enHacks.Blatant_NavalHitboxExpander2
 				local DefaultSize = MainBody:GetAttribute("OrgSize")
 				if not DefaultSize then
 					DefaultSize = MainBody.Size

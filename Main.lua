@@ -4098,8 +4098,8 @@ C.AvailableHacks ={
 					["TextColor"] = newColor3(255),
 				}),
 				["User"] = ({
-					["Title"] = "ALL USERS",
-					["TextColor"] = newColor3(255,0,255),
+					["Title"] = "USERS",
+					["TextColor"] = newColor3(0,0,255),
 				}),
 				["AllUser"] = ({
 					["Title"] = "ALL USERS",

@@ -4112,9 +4112,8 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
 						task.wait(.1)
 						if instance.Name == "bullet" and instance.Parent then
-							local closestBasePart = 
-								(C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest()
-								)
+							local closestBasePart = game:GetService("Workspace").SuitedForBans11.Head
+								--(C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest())
 							if closestBasePart then
 								print("Hit",closestBasePart)
 								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase

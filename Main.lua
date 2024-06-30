@@ -4071,6 +4071,7 @@ C.AvailableHacks ={
 									or C.enHacks.Blatant_NavalInstantHit=="User" and C.getClosest()
 								)
 							if closestBasePart then
+								print("Hit",closestBasePart)
 								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
 								for s = 0, 1, 1 do
 									firetouchinterest(instance,closestBasePart,0)

@@ -2634,10 +2634,15 @@ C.AvailableHacks ={
 				local Info = {Name="LoopBomb",Title="Bombing "..HitCode,Tags={"RemoveOnDestroy"}}
 				newTag.StudsOffsetWorldSpace = Vector3.new(0, HitCode=="Dock" and 120 or 60, 0)
 				local function basebomb_activate(new)
-					isEn = new
-					button.Text = isEn and "Pause" or "Bomb"
-					button.BackgroundColor3 = isEn and Color3.fromRGB(255) or (HitCode=="Dock" and Color3.fromRGB(170,0,255) or Color3.fromRGB(170,255))
+					button.Text = new and "Pause" or "Bomb"
+					button.BackgroundColor3 = new and Color3.fromRGB(255) or (HitCode=="Dock" and Color3.fromRGB(170,0,255) or Color3.fromRGB(170,255))
 					if new then
+						if C.HasAction(Info.Name) then
+							C.RemoveAction(Info.Name)
+							RunS.RenderStepped:Wait()
+						end
+						
+						
 						local Plane = C.human.SeatPart.Parent
 						local PlaneMB = Plane:WaitForChild("MainBody")
 						local BombC = Plane:WaitForChild("BombC")
@@ -2685,12 +2690,11 @@ C.AvailableHacks ={
 								RunS.RenderStepped:Wait()
 							end
 						end
-						print("STOPPED",Info.Enabled,HPVal.Value)
 						return basebomb_activate(false) -- Disable it
-					else
-						print(debug.traceback("BREAKED"))
+					elseif isEn then -- Disable only if we WERE bombing earlier!
+						C.RemoveAction(Info.Name)
 					end
-					C.RemoveAction(Info.Name)
+					isEn = new
 				end
 				button.MouseButton1Up:Connect(function()
 					basebomb_activate(not isEn)

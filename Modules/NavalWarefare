@@ -123,4 +123,4 @@ return function(C,_SETTINGS)
 			newChild(instance)
 		end
 	end
-end
+end 

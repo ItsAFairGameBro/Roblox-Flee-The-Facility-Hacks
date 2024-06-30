@@ -181,8 +181,9 @@ if not _SETTINGS.myBots[plr.Name:lower()] then
 	end
 end
 
-if not table.find(_SETTINGS.developerUsers,plr.Name)then
+if not table.find(_SETTINGS.developerUsers,plr.Name:lower()) then
 	GlobalSettings.BetterConsole = false
+	_SETTINGS.developer = false
 end
 
 --local NameTagEx,HackGUI

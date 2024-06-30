@@ -4092,11 +4092,13 @@ C.AvailableHacks ={
 				MainBody.Size += 2 * Vector3.one * ExpandSize -- Times two in order to expand in EVERY direction
 			end,
 			["ActivateFunction"]=function(newValue)
-				for num, tag in pairs(CS:GetTagged("GameHackDisplays2")) do
-					C.AvailableHacks.Render[36].RefreshEn(tag)
+				for num, ship in ipairs(C.Ships) do
+					C.AvailableHacks.Render[36].ShipAdded(ship)
 				end
 			end,
-			
+			["MyTeamAdded"]=function(newTeam)
+				C.AvailableHacks.Blatant[352].ActivateFunction()
+			end,
 		},
 		--]]
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
@@ -13038,6 +13040,10 @@ local function PlayerAdded(theirPlr)
 			end;
 		end;
 		C.ConnectPlrTSM(theirPlr,getscriptfunction(theirTSM))
+	elseif C.gameUniverse == "NavalWarefare" and isMe then
+		table.insert(C.playerEvents[theirPlr.UserId], plr:GetPropertyChangedSignal("Team"):Connect(function(new)
+			C.defaultFunction("MyTeamAdded", {plr.Team});
+		end))
 	end
 	--end
 end;

@@ -4126,7 +4126,9 @@ C.AvailableHacks ={
 							local closestBasePart = (C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest(false,true))
 								or (C.enHacks.Blatant_NavalProjectileInstantHit=="AllUser" and C.getClosest(true,true))
 							if closestBasePart then
-								workspace.Camera.CameraSubject = closestBasePart.Parent.Humanoid
+								if C.enHacks.Blatant_NavalProjectileDyingEnemies then
+									workspace.Camera.CameraSubject = closestBasePart.Parent.Humanoid
+								end
 								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
 								for s = 0, 1, 1 do
 									firetouchinterest(instance,closestBasePart,0)
@@ -4139,6 +4141,28 @@ C.AvailableHacks ={
 					end)
 				else
 					workspace.Camera.CameraSubject = C.human
+				end
+			end,
+		},
+		[340]={
+			["Type"]="ExTextButton",
+			["Title"]="Spectate Dying Enemies", ["CategoryAlias"] = "Weapon",
+			["Desc"]="Watch all enemies you kill with Projectile Instant Kill",
+			["Shortcut"]="Blatant_NavalProjectileDyingEnemies",
+			["Default"]=false,
+			["Funct"]=nil,
+			["Universes"]={"NavalWarefare"},
+			["ActivateFunction"]=function(newValue)
+				if C.AvailableHacks.Blatant[340].Funct then
+					C.AvailableHacks.Blatant[340].Funct:Disconnect()
+					C.AvailableHacks.Blatant[340].Funct=nil
+				end	
+				if newValue then
+					C.AvailableHacks.Blatant[340].Funct = UIS.InputEnded:Connect(function(inputobject, gameProcessedEvent)
+						if not gameProcessedEvent and inputobject.KeyCode == Enum.KeyCode.F then
+							workspace.Camera.CameraSubject = C.human
+						end
+					end)
 				end
 			end,
 		},

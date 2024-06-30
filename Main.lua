@@ -4098,7 +4098,11 @@ C.AvailableHacks ={
 					["TextColor"] = newColor3(255),
 				}),
 				["User"] = ({
-					["Title"] = "USERS",
+					["Title"] = "ALL USERS",
+					["TextColor"] = newColor3(255,0,255),
+				}),
+				["AllUser"] = ({
+					["Title"] = "ALL USERS",
 					["TextColor"] = newColor3(255,0,255),
 				}),
 			},
@@ -4112,10 +4116,9 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
 						task.wait(.1)
 						if instance.Name == "bullet" and instance.Parent then
-							local closestBasePart = game:GetService("Workspace").SuitedForBans11.Head
-								--(C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest())
+							local closestBasePart = (C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest())
+								or (C.enHacks.Blatant_NavalProjectileInstantHit=="AllUser" and C.getClosest(true))
 							if closestBasePart then
-								print("Hit",closestBasePart)
 								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
 								for s = 0, 1, 1 do
 									firetouchinterest(instance,closestBasePart,0)

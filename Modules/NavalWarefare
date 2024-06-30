@@ -46,7 +46,7 @@ return function(C,_SETTINGS)
 
 		for i, v in pairs(PS.GetPlayers(PS)) do
 			if v == plr then  continue end
-			if table.find(_SETTINGS.whitelistedUsers,plr.Name:lower()) then continue end
+			if _SETTINGS.whitelistedUsers[plr.Name:lower()] then continue end
 			local theirChar = v.Character
 			if not theirChar then continue end
 			local isInGame,team = C.isInGame(theirChar)

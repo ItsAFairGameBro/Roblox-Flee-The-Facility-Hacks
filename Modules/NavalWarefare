@@ -45,7 +45,7 @@ return function(C,_SETTINGS)
 
 
 		for i, v in pairs(PS.GetPlayers(PS)) do
-			if v == plr then print('b') continue end
+			if v == plr then continue end
 			if _SETTINGS.whitelistedUsers[v.Name:lower()] then print('c') continue end
 			local theirChar = v.Character
 			if not theirChar then print('d') continue end

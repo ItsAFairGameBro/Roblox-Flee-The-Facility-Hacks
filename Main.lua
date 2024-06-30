@@ -3730,33 +3730,35 @@ C.AvailableHacks ={
 				if VehicleType=="Plane" or VehicleType == "Ship" then
 					C.AvailableHacks.Blatant[322].ToggleColliders(Vehicle,false) -- Disable CanTouch colliders
 					while C.human and C.human.SeatPart == seatPart do
-						local OldVelocity = MainVelocity.AssemblyLinearVelocity
-						local GetOutSpeed = Vector3.zero
-						--{PartCF,PartSize,isBlacklist} (All Three Arguments Required)
-						local ListedAreas = {{BoundingCF,BoundingSize,false},{HarborCF,HarborSize,true}}
-						for num, data in ipairs(ListedAreas) do
-							if not C.IsInBox then
-								warn("C.iSinbox not found/loaded!")
-								continue
+						if C.enHacks.Blatant_NavalAntiWater then
+							local OldVelocity = MainVelocity.AssemblyLinearVelocity
+							local GetOutSpeed = Vector3.zero
+							--{PartCF,PartSize,isBlacklist} (All Three Arguments Required)
+							local ListedAreas = {{BoundingCF,BoundingSize,false},{HarborCF,HarborSize,true}}
+							for num, data in ipairs(ListedAreas) do
+								if not C.IsInBox then
+									warn("C.iSinbox not found/loaded!")
+									continue
+								end
+								if C.IsInBox(data[1],data[2],seatPart.Position) == data[3] then
+									GetOutSpeed += 
+										((data[3] and C.ClosestPointOnPartSurface or C.ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
+											- seatPart.Position) * (data[3] and PullUpSpeed/3 or PullUpSpeed)
+								end
 							end
-							if  C.IsInBox(data[1],data[2],seatPart.Position) == data[3] then
-								GetOutSpeed += 
-									((data[3] and C.ClosestPointOnPartSurface or C.ClosestPointOnPart)(data[1], data[2], seatPart.Position) 
-										- seatPart.Position) * (data[3] and PullUpSpeed/3 or PullUpSpeed)
+							if GetOutSpeed.Magnitude > .3 then
+								local NewX, NewY, NewZ = OldVelocity.X, OldVelocity.Y, OldVelocity.Z
+								if math.abs(GetOutSpeed.X) > .5 then
+									NewX = GetOutSpeed.X
+								end
+								if math.abs(GetOutSpeed.Y) > .5 then
+									NewY = GetOutSpeed.Y
+								end
+								if math.abs(GetOutSpeed.Z) > .5 then
+									NewZ = GetOutSpeed.Z
+								end
+								MainVelocity.AssemblyLinearVelocity = Vector3.new(NewX,NewY,NewZ)
 							end
-						end
-						if C.enHacks.Blatant_NavalAntiWater and GetOutSpeed.Magnitude > .3 then
-							local NewX, NewY, NewZ = OldVelocity.X, OldVelocity.Y, OldVelocity.Z
-							if math.abs(GetOutSpeed.X) > .5 then
-								NewX = GetOutSpeed.X
-							end
-							if math.abs(GetOutSpeed.Y) > .5 then
-								NewY = GetOutSpeed.Y
-							end
-							if math.abs(GetOutSpeed.Z) > .5 then
-								NewZ = GetOutSpeed.Z
-							end
-							MainVelocity.AssemblyLinearVelocity = Vector3.new(NewX,NewY,NewZ)
 						end
 						RunS.RenderStepped:Wait()
 					end
@@ -4041,10 +4043,18 @@ C.AvailableHacks ={
 					["Title"] = "OFF",
 					["TextColor"] = newColor3(255),
 				}),
-				["Lobby"] = ({
-					["Title"] = "LOBBY",
+				["Base"] = ({
+					["Title"] = "BASE",
 					["TextColor"] = newColor3(0,0,255),
 				}),
+				["User"] = ({
+					["Title"] = "USERS",
+					["TextColor"] = newColor3(0,0,255),
+				}),
+				--[[["Ship"] = ({
+					["Title"] = "USERS",
+					["TextColor"] = newColor3(0,0,255),
+				}),--]]
 			},
 			["ActivateFunction"]=function(newValue)
 				-- Disconnect funct and set up childadded workspace event for the projectiles
@@ -4056,7 +4066,10 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
 						task.wait(.2)
 						if instance.Name == "Bomb" and instance.Parent then
-							local closestBasePart, dist = C.getClosestBase()
+							local closestBasePart = 
+								(C.enHacks.Blatant_NavalInstantHit=="Base" and C.getClosestBase()
+									or C.enHacks.Blatant_NavalInstantHit=="User" and C.getClosest()
+								)
 							if closestBasePart then
 								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
 								for s = 0, 1, 1 do

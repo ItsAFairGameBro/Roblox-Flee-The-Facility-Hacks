@@ -4088,11 +4088,12 @@ C.AvailableHacks ={
 				local Team = ship:WaitForChild("Team")
 				local ExpandSize = Team.Value == plr.Team.Name and 0 or C.enHacks.Blatant_NavalHitboxExpander
 				local DefaultSize = MainBody:GetAttribute("OrgSize")
+				print(ExpandSize)
 				if not DefaultSize then
 					DefaultSize = MainBody.Size
 					MainBody:SetAttribute("OrgSize",DefaultSize)
 				end
-				MainBody.Size += 2 * Vector3.one * ExpandSize -- Times two in order to expand in EVERY direction
+				MainBody.Size = DefaultSize + 2 * Vector3.one * ExpandSize -- Times two in order to expand in EVERY direction
 			end,
 			["ActivateFunction"]=function(newValue)
 				print(C.enHacks.Blatant_NavalHitboxExpander)

@@ -44,18 +44,18 @@ return function(C,_SETTINGS)
 
 
 		for i, v in pairs(PS.GetPlayers(PS)) do
-			if v == plr then continue end
-			if table.find(_SETTINGS.whitelistedUsers,plr.Name:lower()) then continue end
+			if v == plr then  print("a")continue end
+			if table.find(_SETTINGS.whitelistedUsers,plr.Name:lower()) then print("b")continue end
 			local theirChar = v.Character
-			if not theirChar then continue end
+			if not theirChar then print("c")continue end
 			local isInGame,team = C.isInGame(theirChar)
-			if not isInGame and not canBeInLobby then continue end
-			if team == plr.Team then continue end
+			if not isInGame and not canBeInLobby then print("d")continue end
+			if team == plr.Team then print("e")continue end
 			local theirHumanoid = theirChar.FindFirstChildOfClass(theirChar,"Humanoid")
-			if not theirHumanoid or theirHumanoid.Health <= 0 then continue end
-			if notSeated and (theirHumanoid.SeatPart or theirChar.FindFirstChild(theirChar,"ForceFieldVar")) then continue end --  then continue end
+			if not theirHumanoid or theirHumanoid.Health <= 0 then print("f")continue end
+			if notSeated and (theirHumanoid.SeatPart or theirChar.FindFirstChild(theirChar,"ForceFieldVar")) then print("g")continue end --  then print( end
 			local theirHead = theirChar.FindFirstChild(theirChar,"Head")
-			if not theirHead then continue end
+			if not theirHead then print("h")continue end
 
 			local d = (theirHead.Position - myHRP.Position).Magnitude
 

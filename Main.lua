@@ -2655,7 +2655,7 @@ C.AvailableHacks ={
 							if Regenerate or not XOfffset then
 								XOfffset,ZOffset = Randomizer:NextNumber(-HalfSize.X,HalfSize.X), Randomizer:NextNumber(-HalfSize.Z,HalfSize.Z)
 							end
-							IslandLoc = IslandBody:GetPivot() + (-IslandBody.AssemblyLinearVelocity * 16)
+							IslandLoc = IslandBody:GetPivot() + (IslandBody.AssemblyLinearVelocity * 3)
 							TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
 						end
 												
@@ -2687,6 +2687,8 @@ C.AvailableHacks ={
 						end
 						print("STOPPED",Info.Enabled,HPVal.Value)
 						return basebomb_activate(false) -- Disable it
+					else
+						print(debug.traceback("BREAKED"))
 					end
 					C.RemoveAction(Info.Name)
 				end

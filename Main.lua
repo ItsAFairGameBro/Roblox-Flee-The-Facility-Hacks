@@ -2655,7 +2655,7 @@ C.AvailableHacks ={
 							if Regenerate or not XOfffset then
 								XOfffset,ZOffset = Randomizer:NextNumber(-HalfSize.X,HalfSize.X), Randomizer:NextNumber(-HalfSize.Z,HalfSize.Z)
 							end
-							IslandLoc = IslandBody:GetPivot() * CFrame.new(IslandBody.AssemblyLinearVelocity)
+							IslandLoc = IslandBody:GetPivot() * CFrame.new(IslandBody.AssemblyLinearVelocity * 16)
 							TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
 						end
 												

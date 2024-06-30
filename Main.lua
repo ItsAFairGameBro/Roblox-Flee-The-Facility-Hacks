@@ -4095,6 +4095,7 @@ C.AvailableHacks ={
 				MainBody.Size += 2 * Vector3.one * ExpandSize -- Times two in order to expand in EVERY direction
 			end,
 			["ActivateFunction"]=function(newValue)
+				print(C.enHacks.Blatant_NavalHitboxExpander)
 				for num, ship in ipairs(C.Ships) do
 					C.AvailableHacks.Render[36].ShipAdded(ship)
 				end

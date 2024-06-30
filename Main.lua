@@ -4111,7 +4111,7 @@ C.AvailableHacks ={
 				if newValue then
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
 						task.wait(.1)
-						if instance.Name == "projectile" and instance.Parent then
+						if instance.Name == "bullet" and instance.Parent then
 							local closestBasePart = 
 								(C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest()
 								)

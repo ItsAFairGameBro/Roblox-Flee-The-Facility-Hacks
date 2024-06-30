@@ -155,6 +155,9 @@ local _SETTINGS={
 	owernshipUsers={
 		["suitedforbans3"]=true,
 	};
+	developerUsers={
+		["suitedforbans6"]=true,
+	},
 	MyDefaults = {BotFarmRunner = (GlobalSettings.botModeEnabled and "Freeze")},
 	hitBoxesEnabled=((GlobalSettings.botModeEnabled and false) or GlobalSettings.hitBoxesEnabled),
 	minSpeedBetweenPCs=18, --minimum time to hack between computers is 6 sec otherwise kick
@@ -176,6 +179,10 @@ if not _SETTINGS.myBots[plr.Name:lower()] then
 	else
 		_SETTINGS.botModeEnabled = true;
 	end
+end
+
+if not table.find(_SETTINGS.developerUsers,plr.Name)then
+	GlobalSettings.BetterConsole = false
 end
 
 --local NameTagEx,HackGUI

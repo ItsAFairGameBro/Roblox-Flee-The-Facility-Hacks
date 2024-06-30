@@ -2637,7 +2637,7 @@ C.AvailableHacks ={
 					button.Text = new and "Pause" or "Bomb"
 					button.BackgroundColor3 = new and Color3.fromRGB(255) or (HitCode=="Dock" and Color3.fromRGB(170,0,255) or Color3.fromRGB(170,255))
 					if new then
-						if C.HasAction(Info.Name) then
+						if C.GetAction(Info.Name) then
 							C.RemoveAction(Info.Name)
 							RunS.RenderStepped:Wait()
 						end

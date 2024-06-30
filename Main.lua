@@ -4116,9 +4116,10 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
 						task.wait(.1)
 						if instance.Name == "bullet" and instance.Parent then
-							local closestBasePart = (C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest())
-								or (C.enHacks.Blatant_NavalProjectileInstantHit=="AllUser" and C.getClosest(true))
+							local closestBasePart = (C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest(false,true))
+								or (C.enHacks.Blatant_NavalProjectileInstantHit=="AllUser" and C.getClosest(true,true))
 							if closestBasePart then
+								workspace.Camera.CameraSubject = closestBasePart.Parent.Humanoid
 								--closestBasePart = game:GetService("Workspace").JapanDock.Decoration.ConcreteBases.ConcreteBase
 								for s = 0, 1, 1 do
 									firetouchinterest(instance,closestBasePart,0)
@@ -4129,6 +4130,8 @@ C.AvailableHacks ={
 							end
 						end
 					end)
+				else
+					workspace.Camera.CameraSubject = C.human
 				end
 			end,
 		},

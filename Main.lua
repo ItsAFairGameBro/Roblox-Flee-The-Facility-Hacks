@@ -71,7 +71,7 @@ local reloadFunction = lastRunningEnv.ReloadFunction--function()
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
 GlobalSettings.MinimumHeight = GlobalSettings.MinimumHeight or 1.5
-GlobalSettings.BetterConsole = true
+GlobalSettings.BetterConsole = false
 GlobalSettings.AlwaysRefreshModules = false -- Always refreshs Modules on refresh, no caching! May cause errors.
 
 local getID="HackGUI1"
@@ -220,8 +220,7 @@ function C.LoadModules()
 			else
 				local TheURL = ModuleLoaderLink:format(moduleName)
 				if not getgenv().SavedHttp[TheURL] then
-					local success, result = pcall(request,{Url=TheURL,Method="GET"})
-					--,Headers={["Cache-Control"]="no-cache"}})
+					local success, result = pcall(request,{Url=TheURL,Method="GET",Headers={["Cache-Control"]="no-cache"}})
 					local failMessage = (not success and result) or (not result.Success and "HttpReq Fail")
 					if failMessage then
 						warn("FLEEMASTERHACKV1: Failed to load module "..moduleName.." because "..failMessage)
@@ -3565,6 +3564,9 @@ C.AvailableHacks ={
 					local actionClone = C.AddAction({Name=Title,Tags={"RemoveOnDestroy"},Stop=function(onRequest)
 						C.refreshEnHack["Blatant_NavalLoopKill"](false)
 					end,})
+					if not actionClone then
+						return
+					end
 					if not C.AvailableHacks.Blatant[317].LastSpotted and C.char and C.char.PrimaryPart then
 						C.AvailableHacks.Blatant[317].LastSpotted = C.char:GetPivot()
 					end

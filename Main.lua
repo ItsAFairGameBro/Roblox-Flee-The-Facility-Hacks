@@ -2690,6 +2690,7 @@ C.AvailableHacks ={
 								RunS.RenderStepped:Wait()
 							end
 						end
+						isEn = true
 						return basebomb_activate(false) -- Disable it
 					elseif isEn then -- Disable only if we WERE bombing earlier!
 						C.RemoveAction(Info.Name)

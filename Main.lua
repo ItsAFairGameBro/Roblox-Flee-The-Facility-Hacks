@@ -2685,6 +2685,7 @@ C.AvailableHacks ={
 								RunS.RenderStepped:Wait()
 							end
 						end
+						print("STOPPED",Info.Enabled,HPVal.Value)
 						return basebomb_activate(false) -- Disable it
 					end
 					C.RemoveAction(Info.Name)
@@ -3546,14 +3547,15 @@ C.AvailableHacks ={
 					if not C.AvailableHacks.Blatant[317].LastSpotted and C.char and C.char.PrimaryPart then
 						C.AvailableHacks.Blatant[317].LastSpotted = C.char:GetPivot()
 					end
+					local Time = actionClone:FindFirstChild("Time")
 					local saveChar = C.char
-					while C.enHacks.Blatant_NavalLoopKill and C.char == saveChar and C.char.PrimaryPart and C.human and C.human.Health>0 do
+					while Time and C.enHacks.Blatant_NavalLoopKill and C.char == saveChar and C.char.PrimaryPart and C.human and C.human.Health>0 do
 						local theirHead, dist = C.getClosest()
 						if theirHead then
 							teleportMyself(theirHead.Parent:GetPivot() * CFrame.new(0,100,0))
-							actionClone.Time.Text = theirHead.Parent.Name
+							Time.Text = theirHead.Parent.Name
 						else
-							actionClone.Time.Text = "(Waiting)"
+							Time.Text = "(Waiting)"
 						end
 						--C.char.PrimaryPart.AssemblyLinearVelocity = Vector3.new()
 						--C.char.PrimaryPart.AssemblyAngularVelocity = Vector3.new()
@@ -4016,11 +4018,21 @@ C.AvailableHacks ={
 		[335]={
 			["Type"]="ExTextButton",
 			["Title"]="Bomb Instant Hit", ["CategoryAlias"] = "Weapon",
-			["Desc"]="Makes all projectiles instantly hit the nearest base",
+			["Desc"]="Makes all projectiles instantly hit a target",
 			["Shortcut"]="Blatant_NavalInstantHit",
 			["Default"]=false,
 			["Funct"]=nil,
 			["Universes"]={"NavalWarefare"},
+			["Options"]={
+				[false] = ({
+					["Title"] = "OFF",
+					["TextColor"] = newColor3(255),
+				}),
+				["Lobby"] = ({
+					["Title"] = "LOBBY",
+					["TextColor"] = newColor3(0,0,255),
+				}),
+			},
 			["ActivateFunction"]=function(newValue)
 				-- Disconnect funct and set up childadded workspace event for the projectiles
 				if C.AvailableHacks.Blatant[335].Funct then
@@ -4063,7 +4075,7 @@ C.AvailableHacks ={
 				end
 			end
 		},	
-		[351]={
+		--[[[351]={
 			["Type"]="ExTextButton", ["CategoryAlias"]="Vehicle",
 			["Title"]="[WIP] NO FLY ZONE",
 			["Desc"]="Absorbs all enemy planes to your ship",
@@ -4106,7 +4118,7 @@ C.AvailableHacks ={
 			['MyStartUp']=function()
 				C.AvailableHacks.Blatant[351].ActivateFunction()
 			end,
-		},	
+		},--]]	
 	},
 	["Utility"]={
 		[1]={

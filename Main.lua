@@ -2614,6 +2614,11 @@ C.AvailableHacks ={
 				C.AvailableHacks.Render[36].ActivateFunction()
 			end,
 			["IslandAdded"]=function(island)
+				local DropOffset = 250
+				local TimeFromDropToExpl = math.sqrt(DropOffset/workspace.Gravity)
+				
+				
+				
 				local newTag=C.ToggleTag:Clone()
 				newTag.Name = "LoopBombESP"
 				newTag.Parent=GuiElements.HackGUI
@@ -2660,8 +2665,8 @@ C.AvailableHacks ={
 							if Regenerate or not XOfffset then
 								XOfffset,ZOffset = Randomizer:NextNumber(-HalfSize.X,HalfSize.X), Randomizer:NextNumber(-HalfSize.Z,HalfSize.Z)
 							end
-							IslandLoc = IslandBody:GetPivot() + (IslandBody.AssemblyLinearVelocity * 3)
-							TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,250,0)
+							IslandLoc = IslandBody:GetPivot() + (IslandBody.AssemblyLinearVelocity * TimeFromDropToExpl)
+							TargetCF = IslandLoc * CFrame.new(XOfffset,0,ZOffset) + Vector3.new(0,DropOffset,0)
 						end
 												
 						local WhileIn = 0

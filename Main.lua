@@ -2710,6 +2710,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Render[36].RefreshEn(newTag)
 				end
 				setChangedProperty(TeamVal,"Value",UpdVisibiltiy)
+				setChangedProperty(HPVal,"Value",UpdVisibiltiy)
 				UpdVisibiltiy()
 				newTag.Adornee=IslandBody
 			end,
@@ -4069,7 +4070,33 @@ C.AvailableHacks ={
 					end)
 				end
 			end,
-		},--]]
+		},
+		[352]={
+			["Type"]="ExTextBox",
+			["Title"]="Enemy Ship Hitbox Expander",
+			["Desc"]="",
+			["Shortcut"]="Blatant_NavalHitboxExpander",
+			["Default"]=false,
+			["Universes"]={"NavalWarefare"},
+			["ShipAdded"]=function(ship)
+				local MainBody = ship:WaitForChild("MainBody")
+				local Team = MainBody:WaitForChild("Team")
+				local ExpandSize = Team.Value == plr.Team.Name and 0 or C.enHacks.Blatant_NavalHitboxExpander
+				local DefaultSize = MainBody:GetAttribute("OrgSize")
+				if not DefaultSize then
+					DefaultSize = MainBody.Size
+					MainBody:SetAttribute("OrgSize",DefaultSize)
+				end
+				MainBody.Size += 2 * Vector3.one * ExpandSize -- Times two in order to expand in EVERY direction
+			end,
+			["ActivateFunction"]=function(newValue)
+				for num, tag in pairs(CS:GetTagged("GameHackDisplays2")) do
+					C.AvailableHacks.Render[36].RefreshEn(tag)
+				end
+			end,
+			
+		},
+		--]]
 		--game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:PivotTo(game.Players.LocalPlayer.Character.Humanoid.SeatPart.Parent:GetPivot()+Vector3.new(0,30,0))
 		[350]={
 			["Type"]="ExTextButton",
@@ -13354,6 +13381,8 @@ local function CloseMenu(actionName, inputState, inputObject)
 	end
 end
 CAS:BindActionAtPriority("CloseMenu"..C.saveIndex,CloseMenu,true,1e5,Enum.KeyCode.V)
+
+getgenv().C, getgenv()._SETTINGS = C, _SETTINGS
 
 task.spawn(function()
 	--[[for num, event in ipairs(RS:GetDescendants()) do

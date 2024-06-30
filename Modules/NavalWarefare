@@ -88,6 +88,9 @@ return function(C,_SETTINGS)
 		C.Bases = {Dock={},Island={}}
 		C.Planes, C.Ships = {}, {}
 		local function newChild(instance)
+			if instance.ClassName ~= "Model" then
+				return
+			end
 			local instData = C.DataStorage[instance.Name]
 			if instData then
 				--if instData.Type == "Base" then

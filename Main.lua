@@ -149,9 +149,9 @@ local _SETTINGS={
 		["4evernIove"]=true,
 		["kitcat4681"]=true,
 		["goldenbear25"]=true,
-		--['biglugger2017']=true,
-		--['suitedforbans6']=true,
-		--['suitedforbans11']=true
+		['biglugger2017']=true,
+		['suitedforbans6']=true,
+		['suitedforbans11']=true,
 	};
 	owernshipUsers={
 		["suitedforbans3"]=true,
@@ -3810,6 +3810,7 @@ C.AvailableHacks ={
 				local HitCode = Plane:WaitForChild("HitCode",5)
 				if HitCode and HitCode.Value == "Plane" then
 					local HP = Plane:WaitForChild("HP")
+					--local AmmoC = Plane:WaitForChild("Ammo")
 					local BombC = Plane:WaitForChild("BombC")
 					local function canRun(toRun)
 						return Plane and Plane.Parent and C.human and seatPart == C.human.SeatPart and not C.isCleared
@@ -3854,6 +3855,7 @@ C.AvailableHacks ={
 						end
 					end
 					table.insert(C.AvailableHacks.Blatant[325].Functs,BombC.Changed:Connect(CheckDORefuel))
+					table.insert(C.AvailableHacks.Blatant[325].Functs,HP.Changed:Connect(CheckDORefuel))
 					table.insert(C.AvailableHacks.Blatant[325].Functs,HP.Changed:Connect(CheckDORefuel))
 					CheckDORefuel()
 				end

@@ -4125,9 +4125,7 @@ C.AvailableHacks ={
 					C.AvailableHacks.Blatant[335].Funct=nil
 				end	
 				if newValue then
-					print("initalized")
 					C.AvailableHacks.Blatant[335].Funct = workspace.ChildAdded:Connect(function(instance)
-						print("begin")
 						task.wait(.1)
 						if instance.Name == "bullet" and instance.Parent and UIS:IsKeyDown(Enum.KeyCode.F) then
 							local closestBasePart = (C.enHacks.Blatant_NavalProjectileInstantHit=="User" and C.getClosest(false,true))

@@ -4101,6 +4101,7 @@ C.AvailableHacks ={
 			["Desc"]="Makes all projectiles instantly hit a target",
 			["Shortcut"]="Blatant_NavalProjectileInstantHit",
 			["Default"]=false,
+			["DontActivate"]=true,
 			["Funct"]=nil,
 			["Universes"]={"NavalWarefare"},
 			["Options"]={
@@ -4147,6 +4148,12 @@ C.AvailableHacks ={
 					end)
 				else
 					workspace.Camera.CameraSubject = C.human
+				end
+			end,
+			["MyStartUp"]=function(myPlr,myChar,firstRun)
+				if firstRun then
+					task.wait(2)
+					C.AvailableHacks.Blatant[339].ActivateFunction(C.enHacks.Blatant_NavalProjectileDyingEnemies)
 				end
 			end,
 		},

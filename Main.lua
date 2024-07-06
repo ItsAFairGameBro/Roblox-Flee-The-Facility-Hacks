@@ -1158,7 +1158,8 @@ C.CommandFunctions = {
 			end
 			local currentChar = getgenv().currentDesc[theirPlr.Name]
 			if C.gameUniverse == "NavalWarefare" then
-				task.wait(2)
+				task.wait(3)
+				print("Morphed")
 			end
 			if firstRun and not currentChar then
 				local JoinPlayerMorphDesc = getgenv().JoinPlayerMorphDesc

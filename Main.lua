@@ -158,7 +158,7 @@ local _SETTINGS={
 	};
 	developerUsers={
 		["suitedforbans6"]=true,
-		['suiteforbans10']=true,
+		['suitedforbans10']=true,
 	},
 	MyDefaults = {BotFarmRunner = (GlobalSettings.botModeEnabled and "Freeze")},
 	hitBoxesEnabled=((GlobalSettings.botModeEnabled and false) or GlobalSettings.hitBoxesEnabled),

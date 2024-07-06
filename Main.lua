@@ -953,7 +953,7 @@ C.CommandFunctions = {
 		AfterTxt="%s",
 		RequiresRefresh=true,
 		Run=function(args)
-			workspace.CurrentCamera.CameraSubject = args[1].Character.Humanoid
+			workspace.CurrentCamera.CameraSubject = args[1][1].Character.Humanoid
 			return true,"Successful"
 		end,
 	},

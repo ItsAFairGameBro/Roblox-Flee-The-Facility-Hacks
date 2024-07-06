@@ -948,6 +948,15 @@ C.CommandFunctions = {
 			return true,"Successful"
 		end,
 	},
+	["spectate"]={
+		Type="Player",
+		AfterTxt="%s",
+		RequiresRefresh=true,
+		Run=function(args)
+			workspace.CurrentCamera.CameraSubject = args[1].Character.Humanoid
+			return true,"Successful"
+		end,
+	},
 	["morph"]={
 		Type="Players",
 		AfterTxt=" to %s%s",

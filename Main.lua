@@ -71,7 +71,7 @@ local reloadFunction = lastRunningEnv.ReloadFunction--function()
 local GlobalSettings = lastRunningEnv.GlobalSettings or {}
 local isTeleportingAllowed = GlobalSettings.isTeleportingAllowed~=false
 GlobalSettings.MinimumHeight = GlobalSettings.MinimumHeight or 1.5
-GlobalSettings.BetterConsole = false
+GlobalSettings.BetterConsole = true
 GlobalSettings.AlwaysRefreshModules = false -- Always refreshs Modules on refresh, no caching! May cause errors.
 
 local getID="HackGUI1"

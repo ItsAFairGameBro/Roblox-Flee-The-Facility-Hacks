@@ -238,6 +238,7 @@ function C.LoadModules()
 			--print("✅Module "..moduleName..": "..tostring(C.Modules[moduleName]))
 			ModulesLoaded += 1
 		end)
+		task.wait(1/4)
 	end
 	while (ModulesLoaded < #ModuleNames) and not C.isCleared do
 		RunS.RenderStepped:Wait()

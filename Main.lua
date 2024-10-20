@@ -202,7 +202,7 @@ if not getgenv().SavedHttp or GlobalSettings.AlwaysRefreshModules then
 	getgenv().SavedHttp = {}
 end
 function C.LoadModules()
-	local ModuleLoaderLink = "https://github.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/raw/main/Modules/%s"
+	local ModuleLoaderLink = "https://raw.githubusercontent.com/ItsAFairGameBro/Roblox-Flee-The-Facility-Hacks/main/Modules/%s"
 
 	local ModuleNames = {"GuiCreation","BetterConsole","DraggableModule","Env","SimplePathfinding","Raycast"}
 	if C.gameName == "FleeMain" or C.gameName == "NavalWarefare" then
@@ -238,7 +238,7 @@ function C.LoadModules()
 			--print("✅Module "..moduleName..": "..tostring(C.Modules[moduleName]))
 			ModulesLoaded += 1
 		end)
-		task.wait(1/4)
+		task.wait(0.1)
 	end
 	while (ModulesLoaded < #ModuleNames) and not C.isCleared do
 		RunS.RenderStepped:Wait()
@@ -5487,7 +5487,7 @@ C.AvailableHacks ={
 						local cf = camera.CFrame
 
 						local charCF = C.char:GetPivot()
-						local MoveDirection = C.PlayerControlModule and C.PlayerControlModule:GetMoveVector() or C.human.MoveDirection
+						local MoveDirection = C.PlayerControlModule	 and C.PlayerControlModule:GetMoveVector() or C.human.MoveDirection
 						local right = MoveDirection.X;
 						local up = MoveDirection.Y;
 						local forward = -MoveDirection.Z;
